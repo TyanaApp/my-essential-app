@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Users, Navigation, Layers, Search } from 'lucide-react';
+import { MapPin, Users, Navigation, Search, Loader2 } from 'lucide-react';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useGoogleMaps } from '@/contexts/GoogleMapsContext';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -12,19 +14,55 @@ interface SafePlace {
   type: 'gym' | 'studio' | 'clinic' | 'safe_zone';
   rating: number;
   verified: boolean;
+  lat: number;
+  lng: number;
 }
+
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%',
+};
+
+const defaultCenter = {
+  lat: 56.9496,
+  lng: 24.1052,
+};
+
+const mapOptions: google.maps.MapOptions = {
+  disableDefaultUI: true,
+  zoomControl: true,
+  styles: [
+    { elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#1a1a2e' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#8b8b8b' }] },
+    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2d2d44' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e0e1a' }] },
+    { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#252540' }] },
+  ],
+};
 
 const MapPage = () => {
   const { t } = useLanguage();
+  const { isLoaded, loadError } = useGoogleMaps();
   const [selectedTab, setSelectedTab] = useState<'places' | 'users'>('places');
   const [searchQuery, setSearchQuery] = useState('');
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
 
   const safePlaces: SafePlace[] = [
-    { id: '1', name: 'Wellness Gym', type: 'gym', rating: 4.8, verified: true },
-    { id: '2', name: 'Yoga Studio', type: 'studio', rating: 4.9, verified: true },
-    { id: '3', name: 'Health Clinic', type: 'clinic', rating: 4.7, verified: true },
-    { id: '4', name: 'Meditation Center', type: 'safe_zone', rating: 4.6, verified: false },
+    { id: '1', name: 'Wellness Gym', type: 'gym', rating: 4.8, verified: true, lat: 56.9516, lng: 24.1132 },
+    { id: '2', name: 'Yoga Studio', type: 'studio', rating: 4.9, verified: true, lat: 56.9476, lng: 24.0982 },
+    { id: '3', name: 'Health Clinic', type: 'clinic', rating: 4.7, verified: true, lat: 56.9446, lng: 24.1202 },
+    { id: '4', name: 'Meditation Center', type: 'safe_zone', rating: 4.6, verified: false, lat: 56.9556, lng: 24.0902 },
   ];
+
+  const onLoad = useCallback((map: google.maps.Map) => {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(() => {
+    setMap(null);
+  }, []);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -33,6 +71,14 @@ const MapPage = () => {
       case 'clinic': return '🏥';
       case 'safe_zone': return '🛡️';
       default: return '📍';
+    }
+  };
+
+  const handlePlaceClick = (place: SafePlace) => {
+    setSelectedPlace(place.id);
+    if (map) {
+      map.panTo({ lat: place.lat, lng: place.lng });
+      map.setZoom(15);
     }
   };
 
@@ -82,25 +128,44 @@ const MapPage = () => {
         </div>
       </div>
 
-      {/* Map placeholder */}
-      <div className="mx-6 mb-4 rounded-xl overflow-hidden bg-secondary h-48 relative">
-        <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 text-muted-foreground">
-          <Navigation className="w-12 h-12" />
-          <p className="font-exo text-sm">Map coming soon</p>
-          <p className="font-exo text-xs">Configure Google Maps API key</p>
-        </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-primary animate-pulse" />
-          <div className="absolute top-1/2 left-1/2 w-4 h-4 rounded-full bg-bio-cyan animate-pulse" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute top-1/3 right-1/4 w-3 h-3 rounded-full bg-bio-magenta animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
+      {/* Map */}
+      <div className="mx-6 mb-4 rounded-xl overflow-hidden h-48 relative">
+        {loadError ? (
+          <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 text-muted-foreground bg-secondary">
+            <Navigation className="w-12 h-12" />
+            <p className="font-exo text-sm">Map unavailable</p>
+          </div>
+        ) : !isLoaded ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-secondary">
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          </div>
+        ) : (
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={defaultCenter}
+            zoom={13}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+            options={mapOptions}
+          >
+            {safePlaces.map((place) => (
+              <Marker
+                key={place.id}
+                position={{ lat: place.lat, lng: place.lng }}
+                onClick={() => handlePlaceClick(place)}
+              />
+            ))}
+          </GoogleMap>
+        )}
       </div>
 
       {/* Places list */}
       <div className="px-6 pb-24 space-y-3">
-        <AnimatedList>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-3"
+        >
           {safePlaces
             .filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
             .map((place, index) => (
@@ -110,7 +175,12 @@ const MapPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="bg-card border-border hover:border-primary/50 transition-colors cursor-pointer">
+                <Card 
+                  className={`bg-card border-border hover:border-primary/50 transition-colors cursor-pointer ${
+                    selectedPlace === place.id ? 'border-primary' : ''
+                  }`}
+                  onClick={() => handlePlaceClick(place)}
+                >
                   <CardContent className="p-4 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-2xl">
                       {getTypeIcon(place.type)}
@@ -134,20 +204,10 @@ const MapPage = () => {
                 </Card>
               </motion.div>
             ))}
-        </AnimatedList>
+        </motion.div>
       </div>
     </div>
   );
 };
-
-const AnimatedList = ({ children }: { children: React.ReactNode }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    className="space-y-3"
-  >
-    {children}
-  </motion.div>
-);
 
 export default MapPage;
