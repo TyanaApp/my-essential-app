@@ -83,7 +83,7 @@ const MapPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="p-6 pb-4">
         <motion.h1 

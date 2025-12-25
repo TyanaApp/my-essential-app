@@ -266,8 +266,7 @@ const HistoryPage = () => {
   }, [deleteEvent]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden pb-24 bg-background">
-      <StarParticles />
+    <div className="min-h-screen relative overflow-hidden pb-24">
 
       <HistoryHeader
         onAddClick={() => setIsQuickAddOpen(true)}

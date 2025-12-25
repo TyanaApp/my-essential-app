@@ -19,7 +19,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6 pb-24">
+    <div className="min-h-screen p-6 pb-24">
       <motion.h1 
         className="text-2xl font-nasa font-bold text-foreground mb-6"
         initial={{ opacity: 0, y: -20 }}
