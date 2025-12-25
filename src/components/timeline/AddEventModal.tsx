@@ -18,15 +18,15 @@ interface AddEventModalProps {
   }) => void;
 }
 
-const iconOptions: { icon: LucideIcon; name: string }[] = [
-  { icon: Briefcase, name: 'Work' },
-  { icon: Heart, name: 'Health' },
-  { icon: Plane, name: 'Travel' },
-  { icon: Trophy, name: 'Achievement' },
-  { icon: Baby, name: 'Family' },
-  { icon: Target, name: 'Goal' },
-  { icon: Globe, name: 'Adventure' },
-  { icon: ShieldPlus, name: 'Medical' },
+const iconOptions: { icon: LucideIcon; name: string; iconName: string }[] = [
+  { icon: Briefcase, name: 'Work', iconName: 'Briefcase' },
+  { icon: Heart, name: 'Health', iconName: 'Heart' },
+  { icon: Plane, name: 'Travel', iconName: 'Plane' },
+  { icon: Trophy, name: 'Achievement', iconName: 'Trophy' },
+  { icon: Baby, name: 'Family', iconName: 'Baby' },
+  { icon: Target, name: 'Goal', iconName: 'Target' },
+  { icon: Globe, name: 'Adventure', iconName: 'Globe' },
+  { icon: ShieldPlus, name: 'Medical', iconName: 'ShieldPlus' },
 ];
 
 const AddEventModal: React.FC<AddEventModalProps> = ({ isOpen, onClose, onAdd }) => {

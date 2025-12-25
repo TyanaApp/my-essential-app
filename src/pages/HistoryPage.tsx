@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, ShieldPlus, Globe, PersonStanding, Baby, Target, Plus, LucideIcon } from 'lucide-react';
+import { Plus, LucideIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -9,30 +9,13 @@ import DNAHelix from '@/components/timeline/DNAHelix';
 import TimelineCard from '@/components/timeline/TimelineCard';
 import ContextInsightModal from '@/components/timeline/ContextInsightModal';
 import AddEventModal from '@/components/timeline/AddEventModal';
-
-interface LifeEvent {
-  title: string;
-  date: string;
-  type: 'trigger' | 'goal';
-  status: string;
-  icon: LucideIcon;
-}
+import { useLifeEvents, LifeEvent, getIconByName } from '@/hooks/useLifeEvents';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const HistoryPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-
-  const [leftEvents, setLeftEvents] = useState<LifeEvent[]>([
-    { title: 'Job Change', date: '01/23', type: 'trigger', status: 'stress peak', icon: Briefcase },
-    { title: 'Illness', date: '06/23', type: 'trigger', status: 'goal', icon: ShieldPlus },
-    { title: 'Trip', date: '09/23', type: 'goal', status: 'stress peak', icon: Globe },
-  ]);
-
-  const [rightEvents, setRightEvents] = useState<LifeEvent[]>([
-    { title: 'Marathon', date: '05/24', type: 'trigger', status: 'stress peak', icon: PersonStanding },
-    { title: 'Pregnancy', date: '08/24', type: 'goal', status: 'stress peak', icon: Baby },
-    { title: 'Big Project', date: '12/24', type: 'trigger', status: 'stress peak', icon: Target },
-  ]);
+  const { leftEvents, rightEvents, isLoading, addEvent } = useLifeEvents();
 
   const [selectedEvent, setSelectedEvent] = useState<LifeEvent | null>(null);
   const [isInsightModalOpen, setIsInsightModalOpen] = useState(false);
@@ -44,21 +27,39 @@ const HistoryPage = () => {
   };
 
   const handleAITwinSync = (message: string) => {
-    // Navigate to Twin page and pass the message
     toast.success('Syncing with AI Twin...', { duration: 2000 });
-    // Store message in sessionStorage to be picked up by Twin page
     sessionStorage.setItem('aiTwinMessage', message);
     navigate('/twin');
   };
 
-  const handleAddEvent = (newEvent: LifeEvent) => {
-    // Add to the shorter column for balance
-    if (leftEvents.length <= rightEvents.length) {
-      setLeftEvents([...leftEvents, newEvent]);
-    } else {
-      setRightEvents([...rightEvents, newEvent]);
-    }
-    toast.success(`"${newEvent.title}" added to timeline!`);
+  const handleAddEvent = async (newEvent: {
+    title: string;
+    date: string;
+    type: 'trigger' | 'goal';
+    status: string;
+    icon: LucideIcon;
+  }) => {
+    // Find icon name from the icon component
+    const iconName = Object.entries({
+      Briefcase: 'Briefcase',
+      ShieldPlus: 'ShieldPlus',
+      Globe: 'Globe',
+      PersonStanding: 'PersonStanding',
+      Baby: 'Baby',
+      Target: 'Target',
+      Heart: 'Heart',
+      Plane: 'Plane',
+      Trophy: 'Trophy',
+    }).find(([, name]) => getIconByName(name) === newEvent.icon)?.[1] || 'Target';
+
+    await addEvent({
+      title: newEvent.title,
+      date: newEvent.date,
+      type: newEvent.type,
+      status: newEvent.status,
+      icon: newEvent.icon,
+      iconName,
+    });
   };
 
   return (
@@ -78,31 +79,48 @@ const HistoryPage = () => {
 
         {/* Events grid - two columns */}
         <div className="relative z-10 grid grid-cols-2 gap-x-16 gap-y-8 pt-4">
-          {/* Left column */}
-          <div className="flex flex-col gap-8">
-            {leftEvents.map((event, i) => (
-              <TimelineCard
-                key={`left-${event.title}-${i}`}
-                {...event}
-                side="left"
-                index={i}
-                onClick={() => handleCardClick(event)}
-              />
-            ))}
-          </div>
-          
-          {/* Right column */}
-          <div className="flex flex-col gap-8">
-            {rightEvents.map((event, i) => (
-              <TimelineCard
-                key={`right-${event.title}-${i}`}
-                {...event}
-                side="right"
-                index={i}
-                onClick={() => handleCardClick(event)}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <>
+              <div className="flex flex-col gap-8">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={`left-skeleton-${i}`} className="w-[130px] h-[160px] rounded-2xl bg-white/10" />
+                ))}
+              </div>
+              <div className="flex flex-col gap-8">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={`right-skeleton-${i}`} className="w-[130px] h-[160px] rounded-2xl bg-white/10 ml-auto" />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Left column */}
+              <div className="flex flex-col gap-8">
+                {leftEvents.map((event, i) => (
+                  <TimelineCard
+                    key={`left-${event.id || event.title}-${i}`}
+                    {...event}
+                    side="left"
+                    index={i}
+                    onClick={() => handleCardClick(event)}
+                  />
+                ))}
+              </div>
+              
+              {/* Right column */}
+              <div className="flex flex-col gap-8">
+                {rightEvents.map((event, i) => (
+                  <TimelineCard
+                    key={`right-${event.id || event.title}-${i}`}
+                    {...event}
+                    side="right"
+                    index={i}
+                    onClick={() => handleCardClick(event)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
