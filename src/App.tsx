@@ -3,25 +3,50 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { AuthProvider } from "./contexts/AuthContext";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { GoogleMapsProvider } from "./contexts/GoogleMapsContext";
+import Layout from "./components/Layout";
+import Intro from "./pages/Intro";
+import Auth from "./pages/Auth";
+import Today from "./pages/Today";
+import MapPage from "./pages/MapPage";
+import Twin from "./pages/Twin";
+import HistoryPage from "./pages/HistoryPage";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthProvider>
+              <GoogleMapsProvider>
+                <Routes>
+                  <Route path="/" element={<Intro />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route element={<Layout />}>
+                    <Route path="/today" element={<Today />} />
+                    <Route path="/map" element={<MapPage />} />
+                    <Route path="/twin" element={<Twin />} />
+                    <Route path="/history" element={<HistoryPage />} />
+                    <Route path="/profile" element={<Profile />} />
+                  </Route>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </GoogleMapsProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </LanguageProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
