@@ -4,90 +4,129 @@
 
 @layer base {
   :root {
-    --background: 270 30% 8%;
-    --foreground: 45 50% 95%;
+    /* Light Theme - Clean Medical Futurism */
+    --background: 220 20% 97%;
+    --foreground: 240 20% 15%;
 
-    --card: 270 25% 12%;
-    --card-foreground: 45 50% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 20% 15%;
 
-    --popover: 270 25% 12%;
-    --popover-foreground: 45 50% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 20% 15%;
 
-    --primary: 43 60% 60%;
-    --primary-foreground: 280 30% 15%;
+    --primary: 260 60% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 270 20% 18%;
-    --secondary-foreground: 45 50% 95%;
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 240 20% 25%;
 
-    --muted: 270 15% 20%;
-    --muted-foreground: 270 10% 60%;
+    --muted: 220 15% 90%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 280 40% 25%;
-    --accent-foreground: 45 50% 95%;
+    --accent: 180 55% 45%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 270 20% 20%;
-    --input: 270 20% 20%;
-    --ring: 43 60% 60%;
+    --border: 220 15% 85%;
+    --input: 220 15% 85%;
+    --ring: 260 60% 55%;
 
     --radius: 0.75rem;
 
-    --golden: 43 60% 60%;
-    --golden-glow: 43 70% 70%;
-    --deep-purple: 280 30% 15%;
-    --bio-cyan: 180 60% 50%;
-    --bio-purple: 270 60% 60%;
+    /* Brand Colors */
+    --golden: 43 60% 50%;
+    --golden-glow: 43 70% 60%;
+    --deep-purple: 260 40% 35%;
+    --bio-cyan: 180 60% 45%;
+    --bio-purple: 260 55% 55%;
     --bio-magenta: 300 50% 50%;
 
-    --sidebar-background: 270 25% 10%;
-    --sidebar-foreground: 45 50% 95%;
-    --sidebar-primary: 43 60% 60%;
-    --sidebar-primary-foreground: 280 30% 15%;
-    --sidebar-accent: 270 20% 18%;
-    --sidebar-accent-foreground: 45 50% 95%;
-    --sidebar-border: 270 20% 20%;
-    --sidebar-ring: 43 60% 60%;
+    /* Success/Warning/Info */
+    --success: 142 70% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 200 80% 50%;
+    --info-foreground: 0 0% 100%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 20% 15%;
+    --sidebar-primary: 260 60% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 95%;
+    --sidebar-accent-foreground: 240 20% 25%;
+    --sidebar-border: 220 15% 88%;
+    --sidebar-ring: 260 60% 55%;
+
+    /* Surface layers for depth */
+    --surface-1: 220 20% 98%;
+    --surface-2: 220 15% 95%;
+    --surface-3: 220 15% 92%;
   }
 
   .dark {
-    --background: 270 30% 8%;
-    --foreground: 45 50% 95%;
+    /* Dark Theme - Premium Medical */
+    --background: 240 20% 7%;
+    --foreground: 220 20% 95%;
 
-    --card: 270 25% 12%;
-    --card-foreground: 45 50% 95%;
+    --card: 240 18% 11%;
+    --card-foreground: 220 20% 95%;
 
-    --popover: 270 25% 12%;
-    --popover-foreground: 45 50% 95%;
+    --popover: 240 18% 11%;
+    --popover-foreground: 220 20% 95%;
 
-    --primary: 43 60% 60%;
-    --primary-foreground: 280 30% 15%;
+    --primary: 260 55% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 270 20% 18%;
-    --secondary-foreground: 45 50% 95%;
+    --secondary: 240 15% 18%;
+    --secondary-foreground: 220 20% 90%;
 
-    --muted: 270 15% 20%;
-    --muted-foreground: 270 10% 60%;
+    --muted: 240 12% 20%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 280 40% 25%;
-    --accent-foreground: 45 50% 95%;
+    --accent: 180 55% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 270 20% 20%;
-    --input: 270 20% 20%;
-    --ring: 43 60% 60%;
+    --border: 240 15% 20%;
+    --input: 240 15% 20%;
+    --ring: 260 55% 60%;
 
-    --sidebar-background: 270 25% 10%;
-    --sidebar-foreground: 45 50% 95%;
-    --sidebar-primary: 43 60% 60%;
-    --sidebar-primary-foreground: 280 30% 15%;
-    --sidebar-accent: 270 20% 18%;
-    --sidebar-accent-foreground: 45 50% 95%;
-    --sidebar-border: 270 20% 20%;
-    --sidebar-ring: 43 60% 60%;
+    /* Brand Colors - adjusted for dark */
+    --golden: 43 65% 55%;
+    --golden-glow: 43 75% 65%;
+    --deep-purple: 260 35% 25%;
+    --bio-cyan: 180 65% 55%;
+    --bio-purple: 260 60% 65%;
+    --bio-magenta: 300 55% 55%;
+
+    /* Success/Warning/Info - dark mode */
+    --success: 142 65% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 85% 55%;
+    --warning-foreground: 0 0% 10%;
+    --info: 200 75% 55%;
+    --info-foreground: 0 0% 100%;
+
+    /* Sidebar - dark */
+    --sidebar-background: 240 18% 9%;
+    --sidebar-foreground: 220 20% 95%;
+    --sidebar-primary: 260 55% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 15% 15%;
+    --sidebar-accent-foreground: 220 20% 90%;
+    --sidebar-border: 240 15% 18%;
+    --sidebar-ring: 260 55% 60%;
+
+    /* Surface layers for depth - dark */
+    --surface-1: 240 18% 10%;
+    --surface-2: 240 16% 14%;
+    --surface-3: 240 14% 18%;
   }
 }
 

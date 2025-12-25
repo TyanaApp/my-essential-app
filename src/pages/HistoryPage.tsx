@@ -266,12 +266,7 @@ const HistoryPage = () => {
   }, [deleteEvent]);
 
   return (
-    <div 
-      className="min-h-screen relative overflow-hidden pb-24"
-      style={{
-        background: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)',
-      }}
-    >
+    <div className="min-h-screen relative overflow-hidden pb-24 bg-background">
       <StarParticles />
 
       <HistoryHeader
