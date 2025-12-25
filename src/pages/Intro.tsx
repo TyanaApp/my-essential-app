@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LogIn, UserPlus, Sparkles } from 'lucide-react';
@@ -13,6 +13,14 @@ const Intro = () => {
   const { t } = useLanguage();
   const { user, loading } = useAuth();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Set slow playback rate
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.5;
+    }
+  }, []);
 
   // Redirect if already logged in
   React.useEffect(() => {
@@ -37,29 +45,39 @@ const Intro = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Background particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-primary/30"
-            initial={{ 
-              x: Math.random() * window.innerWidth, 
-              y: Math.random() * window.innerHeight,
-              opacity: 0.3 
-            }}
-            animate={{ 
-              y: [null, Math.random() * -200],
-              opacity: [0.3, 0.8, 0.3]
-            }}
-            transition={{ 
-              duration: 4 + Math.random() * 4, 
-              repeat: Infinity,
-              delay: Math.random() * 2 
-            }}
-          />
-        ))}
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Video background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute w-full h-full object-cover"
+          style={{
+            filter: 'brightness(0.4) saturate(1.2)',
+          }}
+        >
+          <source src="https://res.cloudinary.com/dncljzzoe/video/upload/v1766704908/5453622-uhd_3840_2160_24fps_vvhvmh.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Neon purple overlay */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(168, 85, 247, 0.15) 50%, rgba(192, 38, 211, 0.2) 100%)',
+            mixBlendMode: 'overlay',
+          }}
+        />
+        
+        {/* Dark vignette for readability */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 20%, rgba(0, 0, 0, 0.7) 100%)',
+          }}
+        />
       </div>
 
       {/* Language switcher */}
