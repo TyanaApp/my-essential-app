@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Calendar, Map, Users, History, User } from "lucide-react";
+import tyanaLogo from '@/assets/tyana-logo.png';
 
 const navItems = [
   { path: "/today", label: "Today", icon: Calendar },
@@ -15,11 +16,22 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 pb-20">
+      {/* Top header with logo */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+        <div className="flex items-center justify-center h-12 px-4">
+          <img 
+            src={tyanaLogo} 
+            alt="TYANA" 
+            className="h-5 dark:invert dark:brightness-200"
+          />
+        </div>
+      </header>
+
+      <main className="flex-1 pt-12 pb-20">
         <Outlet />
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border">
+      <nav className="fixed bottom-0 left-0 right-0 bg-card/80 backdrop-blur-xl border-t border-border/50">
         <div className="flex justify-around items-center h-16 max-w-md mx-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
