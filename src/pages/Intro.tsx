@@ -5,10 +5,11 @@ import { LogIn, UserPlus, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import LanguageSelector from '@/components/LanguageSelector';
 
 const Intro = () => {
   const navigate = useNavigate();
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const { user, loading } = useAuth();
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -61,20 +62,8 @@ const Intro = () => {
       </div>
 
       {/* Language switcher */}
-      <div className="absolute top-6 right-6 z-10 flex gap-2">
-        {(['en', 'ru', 'lv'] as const).map((lang) => (
-          <button
-            key={lang}
-            onClick={() => setLanguage(lang)}
-            className={`px-3 py-1 rounded-full text-sm font-exo transition-all ${
-              language === lang 
-                ? 'bg-primary text-primary-foreground' 
-                : 'bg-secondary text-secondary-foreground hover:bg-accent'
-            }`}
-          >
-            {lang.toUpperCase()}
-          </button>
-        ))}
+      <div className="absolute top-6 right-6 z-10">
+        <LanguageSelector variant="compact" />
       </div>
 
       {/* Main content */}
