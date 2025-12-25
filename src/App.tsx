@@ -7,6 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { GoogleMapsProvider } from "./contexts/GoogleMapsContext";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Intro from "./pages/Intro";
 import Auth from "./pages/Auth";
 import Today from "./pages/Today";
@@ -31,7 +32,11 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Intro />} />
                   <Route path="/auth" element={<Auth />} />
-                  <Route element={<Layout />}>
+                  <Route element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }>
                     <Route path="/today" element={<Today />} />
                     <Route path="/map" element={<MapPage />} />
                     <Route path="/twin" element={<Twin />} />
