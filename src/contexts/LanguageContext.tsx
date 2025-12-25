@@ -99,6 +99,51 @@ const translations: Translations = {
   connectHealth: { en: 'Connect Health', ru: 'Подключить здоровье', lv: 'Savienot veselību' },
   syncWearableData: { en: 'Sync data from your wearable', ru: 'Синхронизировать данные с часов', lv: 'Sinhronizēt datus no ierīces' },
   
+  // Now section
+  why: { en: 'Why?', ru: 'Почему?', lv: 'Kāpēc?' },
+  energyExplanation: { en: 'Energy explanation', ru: 'Объяснение энергии', lv: 'Enerģijas skaidrojums' },
+  sleepImpact: { en: 'Sleep: 7.5h (+12%)', ru: 'Сон: 7.5ч (+12%)', lv: 'Miegs: 7.5h (+12%)' },
+  stressImpact: { en: 'Stress: Low (+8%)', ru: 'Стресс: Низкий (+8%)', lv: 'Stress: Zems (+8%)' },
+  cycleImpact: { en: 'Cycle: Follicular (+5%)', ru: 'Цикл: Фолликулярная (+5%)', lv: 'Cikls: Folikulāra (+5%)' },
+  trend: { en: 'trend', ru: 'тренд', lv: 'tendence' },
+  todaysFocus: { en: "Today's Focus", ru: 'Фокус дня', lv: 'Šodienas fokuss' },
+  mainAdvice: { en: 'Prioritize recovery today', ru: 'Приоритет — восстановление', lv: 'Prioritāte — atjaunošanās' },
+  goToBedEarly: { en: 'Go to bed before 11pm', ru: 'Лечь до 23:00', lv: 'Gulēt pirms 23:00' },
+  walk20min: { en: '20 min walk after lunch', ru: 'Прогулка 20 мин после обеда', lv: '20 min pastaiga pēc pusdienām' },
+  limitCaffeine: { en: 'Limit caffeine after 2pm', ru: 'Ограничить кофеин после 14:00', lv: 'Ierobežot kofeīnu pēc 14:00' },
+  
+  // Soon section
+  cycleTimeline: { en: 'Cycle Timeline', ru: 'Таймлайн цикла', lv: 'Cikla laika skala' },
+  nextKeyMoments: { en: 'Next Key Moments', ru: 'Ключевые моменты', lv: 'Galvenie momenti' },
+  pmsIn: { en: 'PMS in', ru: 'ПМС через', lv: 'PMS pēc' },
+  ovulationIn: { en: 'Ovulation in', ru: 'Овуляция через', lv: 'Ovulācija pēc' },
+  periodIn: { en: 'Period in', ru: 'Менструация через', lv: 'Menstruācija pēc' },
+  days: { en: 'days', ru: 'дней', lv: 'dienas' },
+  preparePlan: { en: 'Prepare plan', ru: 'Подготовить план', lv: 'Sagatavot plānu' },
+  follicular: { en: 'Follicular', ru: 'Фолликулярная', lv: 'Folikulāra' },
+  ovulation: { en: 'Ovulation', ru: 'Овуляция', lv: 'Ovulācija' },
+  luteal: { en: 'Luteal', ru: 'Лютеиновая', lv: 'Luteāla' },
+  menstrual: { en: 'Menstrual', ru: 'Менструация', lv: 'Menstruācija' },
+  riskWindow: { en: 'Risk window', ru: 'Окно риска', lv: 'Riska logs' },
+  
+  // Path section
+  essential: { en: 'Essential', ru: 'Важно', lv: 'Būtiski' },
+  optional: { en: 'Optional', ru: 'По желанию', lv: 'Pēc izvēles' },
+  makeTodayLighter: { en: 'Make today lighter', ru: 'Облегчить день', lv: 'Atvieglot dienu' },
+  taskCleared: { en: 'Non-essential tasks cleared', ru: 'Неважные задачи убраны', lv: 'Nebūtiski uzdevumi noņemti' },
+  
+  // What If section
+  habitSimulator: { en: 'Habit Simulator', ru: 'Симулятор привычек', lv: 'Ieradumu simulators' },
+  whatIfAsk: { en: 'What if I...', ru: 'Что будет, если...', lv: 'Kas notiks, ja es...' },
+  plusHourSleep: { en: '+1 hour sleep', ru: '+1 час сна', lv: '+1 stunda miega' },
+  noCoffee: { en: 'No coffee', ru: 'Без кофе', lv: 'Bez kafijas' },
+  noAlcohol: { en: 'No alcohol', ru: 'Без алкоголя', lv: 'Bez alkohola' },
+  energyChange: { en: 'energy', ru: 'энергии', lv: 'enerģijas' },
+  stressChange: { en: 'stress', ru: 'стресса', lv: 'stresa' },
+  beforeAfter: { en: 'Before vs After', ru: 'Было vs Станет', lv: 'Pirms vs Pēc' },
+  turnIntoExperiment: { en: 'Turn into experiment', ru: 'Превратить в эксперимент', lv: 'Pārvērst eksperimentā' },
+  experimentDays: { en: 'days experiment', ru: 'дней эксперимент', lv: 'dienu eksperiments' },
+  
   // AI
   dailyAdvice: { en: 'Daily Advice', ru: 'Совет дня', lv: 'Dienas padoms' },
   aiTwinSays: { en: 'AI Twin says', ru: 'AI Twin говорит', lv: 'AI Twin saka' },
