@@ -55,6 +55,7 @@ export default {
         "golden-glow": "hsl(var(--golden-glow))",
         "deep-purple": "hsl(var(--deep-purple))",
         "bio-cyan": "hsl(var(--bio-cyan))",
+        "bio-purple": "hsl(var(--bio-purple))",
         "bio-magenta": "hsl(var(--bio-magenta))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
