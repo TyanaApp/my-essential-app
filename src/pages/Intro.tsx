@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import LanguageSelector from '@/components/LanguageSelector';
+import tyanaLogo from '@/assets/tyana-logo.png';
 
 const Intro = () => {
   const navigate = useNavigate();
@@ -83,16 +84,16 @@ const Intro = () => {
           <motion.div 
             className="mb-6"
             animate={{ 
-              filter: ['drop-shadow(0 0 20px hsl(43 60% 60% / 0.3))', 'drop-shadow(0 0 40px hsl(43 60% 60% / 0.6))', 'drop-shadow(0 0 20px hsl(43 60% 60% / 0.3))']
+              filter: ['drop-shadow(0 0 20px hsl(260 60% 50% / 0.3))', 'drop-shadow(0 0 40px hsl(260 60% 50% / 0.5))', 'drop-shadow(0 0 20px hsl(260 60% 50% / 0.3))']
             }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <Sparkles className="w-16 h-16 text-primary mx-auto" />
+            <img 
+              src={tyanaLogo} 
+              alt="TYANA" 
+              className="h-12 mx-auto dark:invert dark:brightness-200"
+            />
           </motion.div>
-          
-          <h1 className="text-4xl font-nasa font-bold text-gradient-golden mb-4">
-            {t('appName')}
-          </h1>
           <p className="text-sm font-exo text-muted-foreground tracking-[0.3em] mb-2">
             {t('tagline')}
           </p>
