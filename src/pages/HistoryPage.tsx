@@ -13,7 +13,7 @@ import EmptyTimeline from '@/components/history/EmptyTimeline';
 import TimelineEvent, { TimelineEventData, EventType } from '@/components/history/TimelineEvent';
 import FilterModal, { FilterState } from '@/components/history/FilterModal';
 import SmartSuggestion from '@/components/history/SmartSuggestion';
-import EventDetailsModal from '@/components/history/EventDetailsModal';
+import EventDetailsScreen from '@/components/history/EventDetailsScreen';
 import QuickAddScreen from '@/components/history/QuickAddScreen';
 import AddEventScreen from '@/components/history/AddEventScreen';
 import PeriodInsightsModal from '@/components/history/PeriodInsightsModal';
@@ -223,7 +223,7 @@ const HistoryPage = () => {
         onAdd={handleAddEvent}
       />
 
-      <EventDetailsModal
+      <EventDetailsScreen
         isOpen={isDetailsOpen}
         onClose={() => setIsDetailsOpen(false)}
         event={selectedEvent}
