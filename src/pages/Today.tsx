@@ -4,17 +4,70 @@ import { Plus, Activity, Moon, Brain, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import HealthInputModal, { HealthData } from '@/components/HealthInputModal';
 
 const Today = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [healthData, setHealthData] = useState({
+    sleep: 7.5,
+    mood: 78,
+    stress: 32,
+  });
   const [energyLevel] = useState(72);
 
+  const handleSaveHealthData = (data: HealthData) => {
+    setHealthData({
+      sleep: data.sleep,
+      mood: data.mood,
+      stress: data.stress,
+    });
+  };
+
+  const getMoodLabel = (value: number) => {
+    if (value < 40) return t('low');
+    if (value < 70) return t('moderate');
+    return t('good');
+  };
+
+  const getStressLabel = (value: number) => {
+    if (value < 30) return t('low');
+    if (value < 60) return t('moderate');
+    return t('high');
+  };
+
   const healthMetrics = [
-    { icon: Moon, label: t('sleep'), value: '7.5h', sublabel: t('good'), color: 'text-bio-cyan' },
-    { icon: Activity, label: t('stress'), value: t('low'), sublabel: '32%', color: 'text-green-400' },
-    { icon: Brain, label: t('mood'), value: t('good'), sublabel: '78%', color: 'text-primary' },
-    { icon: Heart, label: t('heartRate'), value: '68', sublabel: t('bpm'), color: 'text-bio-magenta' },
+    { 
+      icon: Moon, 
+      label: t('sleep'), 
+      value: `${healthData.sleep}h`, 
+      sublabel: healthData.sleep >= 7 ? t('good') : t('low'), 
+      color: 'text-bio-cyan' 
+    },
+    { 
+      icon: Activity, 
+      label: t('stress'), 
+      value: getStressLabel(healthData.stress), 
+      sublabel: `${healthData.stress}%`, 
+      color: healthData.stress < 50 ? 'text-green-400' : 'text-bio-magenta' 
+    },
+    { 
+      icon: Brain, 
+      label: t('mood'), 
+      value: getMoodLabel(healthData.mood), 
+      sublabel: `${healthData.mood}%`, 
+      color: 'text-primary' 
+    },
+    { 
+      icon: Heart, 
+      label: t('heartRate'), 
+      value: '68', 
+      sublabel: t('bpm'), 
+      color: 'text-bio-magenta' 
+    },
   ];
+
+  const dateLocale = language === 'ru' ? 'ru-RU' : language === 'lv' ? 'lv-LV' : 'en-US';
 
   return (
     <div className="min-h-screen bg-background p-6 pb-24">
@@ -28,7 +81,7 @@ const Today = () => {
           {t('today')}
         </h1>
         <p className="text-muted-foreground font-exo">
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+          {new Date().toLocaleDateString(dateLocale, { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </motion.div>
 
@@ -155,9 +208,17 @@ const Today = () => {
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5 }}
+        onClick={() => setIsModalOpen(true)}
       >
         <Plus className="w-6 h-6" />
       </motion.button>
+
+      {/* Health Input Modal */}
+      <HealthInputModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveHealthData}
+      />
     </div>
   );
 };

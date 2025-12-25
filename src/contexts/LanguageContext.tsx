@@ -94,6 +94,14 @@ const translations: Translations = {
   today: { en: 'Today', ru: 'Сегодня', lv: 'Šodien' },
   twin: { en: 'Twin', ru: 'Близнец', lv: 'Dvīnis' },
   history: { en: 'History', ru: 'История', lv: 'Vēsture' },
+
+  // Manual Input
+  addData: { en: 'Add Health Data', ru: 'Добавить данные', lv: 'Pievienot datus' },
+  save: { en: 'Save', ru: 'Сохранить', lv: 'Saglabāt' },
+  cancel: { en: 'Cancel', ru: 'Отмена', lv: 'Atcelt' },
+  sleepHours: { en: 'Sleep (hours)', ru: 'Сон (часы)', lv: 'Miegs (stundas)' },
+  moodLevel: { en: 'Mood Level', ru: 'Уровень настроения', lv: 'Garastāvokļa līmenis' },
+  dataSaved: { en: 'Data saved successfully', ru: 'Данные сохранены', lv: 'Dati saglabāti' },
 };
 
 interface LanguageContextType {
@@ -105,7 +113,8 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  // Default to Russian
+  const [language, setLanguage] = useState<Language>('ru');
 
   const t = (key: string): string => {
     const translation = translations[key];
@@ -125,7 +134,7 @@ export const useLanguage = () => {
   if (!context) {
     console.warn('useLanguage was called outside of LanguageProvider, using defaults');
     return {
-      language: 'en' as Language,
+      language: 'ru' as Language,
       setLanguage: () => {},
       t: (key: string) => key,
     };
