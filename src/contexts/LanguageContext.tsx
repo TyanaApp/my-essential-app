@@ -70,10 +70,34 @@ const translations: Translations = {
   // What-If Engine
   whatIfTitle: { en: 'What if I change my habits?', ru: 'Что если изменить привычки?', lv: 'Kas notiks, ja mainīšu ieradumus?' },
   whatIfPlaceholder: { en: 'Ask AI: What if I...', ru: 'Спросите ИИ: Что если я...', lv: 'Jautājiet AI: Kas notiks, ja es...' },
+  whatIfExplore: { en: 'Explore possibilities', ru: 'Исследуйте возможности', lv: 'Izpētiet iespējas' },
   moreSleep: { en: '+1 hour sleep', ru: '+1 час сна', lv: '+1 stunda miega' },
   lessCaffeine: { en: 'Less caffeine', ru: 'Меньше кофеина', lv: 'Mazāk kofeīna' },
   morningWorkout: { en: 'Morning workouts', ru: 'Утренние тренировки', lv: 'Rīta treniņi' },
   meditation: { en: '10 min meditation', ru: '10 мин медитации', lv: '10 min meditācija' },
+  skipWorkout: { en: 'Skip workout', ru: 'Пропустить тренировку', lv: 'Izlaist treniņu' },
+  betterFocus: { en: 'Better focus tomorrow', ru: 'Лучший фокус завтра', lv: 'Labāka koncentrēšanās rīt' },
+  stableEnergy: { en: 'More stable energy', ru: 'Более стабильная энергия', lv: 'Stabilāka enerģija' },
+  lessRecovery: { en: 'Slower recovery', ru: 'Медленное восстановление', lv: 'Lēnāka atjaunošanās' },
+  
+  // Today sections
+  nextHours: { en: 'Next hours', ru: 'Ближайшие часы', lv: 'Nākamās stundas' },
+  todaysPath: { en: "Today's path", ru: 'Путь на сегодня', lv: 'Šodienas ceļš' },
+  postLunchDip: { en: 'Post-lunch dip expected', ru: 'Ожидается спад после обеда', lv: 'Gaidāms kritums pēc pusdienām' },
+  afternoonRecovery: { en: 'Afternoon recovery', ru: 'Дневное восстановление', lv: 'Pēcpusdienas atjaunošanās' },
+  eveningWind: { en: 'Evening wind down', ru: 'Вечерний отдых', lv: 'Vakara atslābināšanās' },
+  drinkWater: { en: 'Drink 2L water', ru: 'Выпить 2л воды', lv: 'Izdzert 2L ūdens' },
+  
+  // Quick check-in
+  howIsYourEnergy: { en: 'How is your energy?', ru: 'Как ваша энергия?', lv: 'Kāda ir jūsu enerģija?' },
+  howIsYourMood: { en: 'How is your mood?', ru: 'Как ваше настроение?', lv: 'Kāds ir jūsu garastāvoklis?' },
+  tapToSelect: { en: 'Tap to select (1-10)', ru: 'Нажмите для выбора (1-10)', lv: 'Pieskarieties, lai izvēlētos (1-10)' },
+  almostDone: { en: 'Almost done!', ru: 'Почти готово!', lv: 'Gandrīz pabeigts!' },
+  tenSecCheckIn: { en: '10-sec check-in', ru: '10-сек проверка', lv: '10 sek pārbaude' },
+  
+  // Connect health
+  connectHealth: { en: 'Connect Health', ru: 'Подключить здоровье', lv: 'Savienot veselību' },
+  syncWearableData: { en: 'Sync data from your wearable', ru: 'Синхронизировать данные с часов', lv: 'Sinhronizēt datus no ierīces' },
   
   // AI
   dailyAdvice: { en: 'Daily Advice', ru: 'Совет дня', lv: 'Dienas padoms' },
