@@ -21,49 +21,35 @@ const SmartSuggestion: React.FC<SmartSuggestionProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 50, scale: 0.9 }}
-          className="fixed bottom-24 left-4 right-4 z-40"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 30 }}
+          className="fixed bottom-20 left-3 right-3 z-40"
         >
-          <div className="p-4 rounded-2xl shadow-2xl bg-primary border border-primary/50 backdrop-blur-md">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-primary-foreground" />
+          <div className="p-3 rounded-xl shadow-xl bg-primary border border-primary/50 backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary-foreground shrink-0" />
+              <p className="text-primary-foreground text-xs flex-1 line-clamp-2">{message}</p>
+              <div className="flex gap-1 shrink-0">
+                <button
+                  onClick={onAccept}
+                  className="px-2 py-1 rounded bg-primary-foreground text-primary text-xs font-medium"
+                >
+                  Да
+                </button>
+                <button
+                  onClick={onDismiss}
+                  className="px-2 py-1 rounded bg-primary-foreground/20 text-primary-foreground text-xs"
+                >
+                  Нет
+                </button>
+                <button
+                  onClick={onExplain}
+                  className="p-1 rounded bg-primary-foreground/20 text-primary-foreground"
+                >
+                  <HelpCircle className="w-3 h-3" />
+                </button>
               </div>
-              <div className="flex-1">
-                <p className="text-primary-foreground text-sm leading-relaxed mb-3">
-                  {message}
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={onAccept}
-                    className="px-4 py-1.5 rounded-full bg-primary-foreground text-primary text-sm font-medium hover:bg-primary-foreground/90 transition-colors"
-                  >
-                    Да
-                  </button>
-                  <button
-                    onClick={onDismiss}
-                    className="px-4 py-1.5 rounded-full bg-primary-foreground/20 text-primary-foreground text-sm font-medium hover:bg-primary-foreground/30 transition-colors"
-                  >
-                    Не сейчас
-                  </button>
-                  <button
-                    onClick={onExplain}
-                    className="p-1.5 rounded-full bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30 transition-colors"
-                    aria-label="Узнать почему"
-                  >
-                    <HelpCircle className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-              <button
-                onClick={onDismiss}
-                className="w-6 h-6 rounded-full bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
-                aria-label="Закрыть"
-              >
-                <X className="w-3 h-3 text-primary-foreground" />
-              </button>
             </div>
           </div>
         </motion.div>
