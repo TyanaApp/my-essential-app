@@ -207,31 +207,26 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
             exit={{ opacity: 0, y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           >
-            <div
-              className="rounded-t-3xl p-5"
-              style={{
-                background: 'linear-gradient(180deg, #1e1e2f 0%, #151521 100%)',
-              }}
-            >
-              <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-4" />
+            <div className="rounded-t-3xl p-5 bg-card border-t border-border">
+              <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-4" />
 
               {/* Header */}
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-semibold text-white text-lg">Быстрое добавление</h3>
+                <h3 className="font-semibold text-card-foreground text-lg">Быстрое добавление</h3>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsVoiceMode(!isVoiceMode)}
                     className={`p-2 rounded-full transition-all ${
-                      isVoiceMode ? 'bg-bio-cyan/20 text-bio-cyan' : 'bg-white/5 text-gray-400'
+                      isVoiceMode ? 'bg-accent/20 text-accent' : 'bg-muted text-muted-foreground'
                     }`}
                   >
                     {isVoiceMode ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
                   </button>
                   <button
                     onClick={resetAndClose}
-                    className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20"
+                    className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
                   >
-                    <X className="w-4 h-4 text-white" />
+                    <X className="w-4 h-4 text-muted-foreground" />
                   </button>
                 </div>
               </div>
@@ -239,15 +234,15 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
               {/* Voice Mode */}
               {isVoiceMode && (
                 <motion.div
-                  className="mb-5 p-4 rounded-xl bg-white/5 border border-bio-cyan/30"
+                  className="mb-5 p-4 rounded-xl bg-muted border border-accent/30"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <Sparkles className="w-5 h-5 text-bio-cyan" />
-                    <span className="text-sm text-gray-300">Скажи одним предложением</span>
+                    <Sparkles className="w-5 h-5 text-accent" />
+                    <span className="text-sm text-foreground">Скажи одним предложением</span>
                   </div>
-                  <p className="text-xs text-gray-500 mb-3">
+                  <p className="text-xs text-muted-foreground mb-3">
                     Пример: "С утра болит голова на 6 из 10"
                   </p>
                   <div className="flex gap-2">
@@ -255,12 +250,12 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                       value={voiceText}
                       onChange={(e) => setVoiceText(e.target.value)}
                       placeholder="Или напиши здесь..."
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 flex-1"
+                      className="bg-secondary border-border text-foreground placeholder:text-muted-foreground flex-1"
                     />
                     <Button
                       onClick={handleVoiceInput}
                       variant="outline"
-                      className={`${isListening ? 'bg-red-500/20 border-red-500/50 text-red-400' : 'bg-bio-cyan/20 border-bio-cyan/50 text-bio-cyan'}`}
+                      className={`${isListening ? 'bg-destructive/20 border-destructive/50 text-destructive' : 'bg-accent/20 border-accent/50 text-accent'}`}
                     >
                       <Mic className={`w-4 h-4 ${isListening ? 'animate-pulse' : ''}`} />
                     </Button>
@@ -272,7 +267,7 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                         toast.success('Готово. Мы начнём отслеживать влияние.');
                         resetAndClose();
                       }}
-                      className="w-full mt-3 bg-gradient-to-r from-bio-purple to-bio-cyan"
+                      className="w-full mt-3 bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                       <Save className="w-4 h-4 mr-2" />
                       Сохранить
@@ -293,14 +288,14 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                         onClick={() => handleCategorySelect(cat.id)}
                         className={`p-3 rounded-xl flex flex-col items-center gap-2 transition-all ${
                           isSelected
-                            ? 'bg-white/10 border border-white/20'
-                            : 'bg-white/5 hover:bg-white/10'
+                            ? 'bg-secondary border border-primary/30'
+                            : 'bg-muted hover:bg-muted/80'
                         }`}
                       >
                         <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cat.color} flex items-center justify-center opacity-80`}>
                           <Icon className="w-5 h-5 text-white" />
                         </div>
-                        <span className="text-xs text-gray-300">{cat.label}</span>
+                        <span className="text-xs text-foreground">{cat.label}</span>
                       </button>
                     );
                   })}
@@ -314,7 +309,7 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                   animate={{ opacity: 1, height: 'auto' }}
                   className="mb-4"
                 >
-                  <Label className="text-gray-400 text-xs mb-2 block">Выбери тип:</Label>
+                  <Label className="text-muted-foreground text-xs mb-2 block">Выбери тип:</Label>
                   <div className="grid grid-cols-4 gap-2">
                     {getOptionsForCategory(selectedCategory).map((opt) => {
                       const Icon = opt.icon;
@@ -322,10 +317,10 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                         <button
                           key={opt.id}
                           onClick={() => handleOptionSelect(opt)}
-                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 flex flex-col items-center gap-1 transition-all"
+                          className="p-2 rounded-lg bg-muted hover:bg-muted/80 flex flex-col items-center gap-1 transition-all"
                         >
                           <Icon className={`w-5 h-5 ${opt.color}`} />
-                          <span className="text-[10px] text-gray-400">{opt.label}</span>
+                          <span className="text-[10px] text-muted-foreground">{opt.label}</span>
                         </button>
                       );
                     })}
@@ -340,11 +335,11 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-4"
                 >
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-muted">
                     {selectedOption && (
                       <>
                         <selectedOption.icon className={`w-6 h-6 ${selectedOption.color}`} />
-                        <span className="text-white font-medium">{selectedOption.label}</span>
+                        <span className="text-foreground font-medium">{selectedOption.label}</span>
                       </>
                     )}
                     {!selectedOption && selectedCategory && (
@@ -354,12 +349,12 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                             {React.createElement(quickCategories.find(c => c.id === selectedCategory)!.icon, { className: 'w-4 h-4 text-white' })}
                           </div>
                         )}
-                        <span className="text-white font-medium">{quickCategories.find(c => c.id === selectedCategory)?.label}</span>
+                        <span className="text-foreground font-medium">{quickCategories.find(c => c.id === selectedCategory)?.label}</span>
                       </>
                     )}
                     <button
                       onClick={() => { setSelectedOption(null); setSelectedCategory(null); }}
-                      className="ml-auto text-gray-400 hover:text-white"
+                      className="ml-auto text-muted-foreground hover:text-foreground"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -369,21 +364,21 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                   {selectedCategory === 'medication' && (
                     <div className="space-y-3">
                       <div>
-                        <Label className="text-gray-300 text-sm">Название</Label>
+                        <Label className="text-foreground text-sm">Название</Label>
                         <Input
                           value={medicationName}
                           onChange={(e) => setMedicationName(e.target.value)}
                           placeholder="Например: Ибупрофен"
-                          className="bg-white/5 border-white/10 text-white mt-1"
+                          className="bg-secondary border-border text-foreground mt-1"
                         />
                       </div>
                       <div>
-                        <Label className="text-gray-300 text-sm">Дозировка</Label>
+                        <Label className="text-foreground text-sm">Дозировка</Label>
                         <Input
                           value={medicationDose}
                           onChange={(e) => setMedicationDose(e.target.value)}
                           placeholder="Например: 400мг"
-                          className="bg-white/5 border-white/10 text-white mt-1"
+                          className="bg-secondary border-border text-foreground mt-1"
                         />
                       </div>
                     </div>
@@ -391,14 +386,14 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
 
                   {/* Time */}
                   <div>
-                    <Label className="text-gray-300 text-sm mb-2 block">Время</Label>
+                    <Label className="text-foreground text-sm mb-2 block">Время</Label>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setTimeMode('now')}
                         className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all ${
                           timeMode === 'now'
-                            ? 'bg-bio-cyan/20 text-bio-cyan border border-bio-cyan/30'
-                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                            ? 'bg-accent/20 text-accent border border-accent/30'
+                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                         }`}
                       >
                         <Clock className="w-4 h-4" />
@@ -408,8 +403,8 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                         onClick={() => setTimeMode('custom')}
                         className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
                           timeMode === 'custom'
-                            ? 'bg-bio-cyan/20 text-bio-cyan border border-bio-cyan/30'
-                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                            ? 'bg-accent/20 text-accent border border-accent/30'
+                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                         }`}
                       >
                         Выбрать
@@ -420,7 +415,7 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                         type="datetime-local"
                         value={customTime}
                         onChange={(e) => setCustomTime(e.target.value)}
-                        className="bg-white/5 border-white/10 text-white mt-2"
+                        className="bg-secondary border-border text-foreground mt-2"
                       />
                     )}
                   </div>
@@ -428,8 +423,8 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                   {/* Intensity (for symptoms) */}
                   {selectedCategory === 'symptom' && (
                     <div>
-                      <Label className="text-gray-300 text-sm mb-2 block">
-                        Интенсивность: <span className="text-bio-cyan font-semibold">{intensity}/10</span>
+                      <Label className="text-foreground text-sm mb-2 block">
+                        Интенсивность: <span className="text-primary font-semibold">{intensity}/10</span>
                       </Label>
                       <div className="flex gap-1">
                         {Array.from({ length: 11 }, (_, i) => (
@@ -438,8 +433,8 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                             onClick={() => setIntensity(i)}
                             className={`flex-1 h-8 rounded-md text-xs font-medium transition-all ${
                               intensity === i
-                                ? i <= 3 ? 'bg-green-500 text-white' : i <= 6 ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white'
-                                : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                                ? i <= 3 ? 'bg-success text-success-foreground' : i <= 6 ? 'bg-warning text-warning-foreground' : 'bg-destructive text-destructive-foreground'
+                                : 'bg-muted text-muted-foreground hover:bg-muted/80'
                             }`}
                           >
                             {i}
@@ -451,7 +446,7 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
 
                   {/* Duration */}
                   <div>
-                    <Label className="text-gray-300 text-sm mb-2 block">Длительность</Label>
+                    <Label className="text-foreground text-sm mb-2 block">Длительность</Label>
                     <div className="flex gap-2">
                       {['1ч', '6ч', 'День', 'Несколько дней'].map((d) => (
                         <button
@@ -459,8 +454,8 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                           onClick={() => setDuration(d)}
                           className={`flex-1 py-2 rounded-lg text-xs font-medium transition-all ${
                             duration === d
-                              ? 'bg-bio-purple/20 text-bio-purple border border-bio-purple/30'
-                              : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                              ? 'bg-primary/20 text-primary border border-primary/30'
+                              : 'bg-muted text-muted-foreground hover:bg-muted/80'
                           }`}
                         >
                           {d}
@@ -472,19 +467,19 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                   {/* Private toggle */}
                   <button
                     onClick={() => setIsPrivate(!isPrivate)}
-                    className="flex items-center gap-3 w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-3 w-full p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
                   >
-                    <Lock className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-300 flex-1 text-left">
+                    <Lock className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm text-foreground flex-1 text-left">
                       Приватное событие
                     </span>
                     <div
                       className={`w-10 h-6 rounded-full transition-colors relative ${
-                        isPrivate ? 'bg-bio-purple' : 'bg-white/10'
+                        isPrivate ? 'bg-primary' : 'bg-secondary'
                       }`}
                     >
                       <div
-                        className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                        className={`absolute top-1 w-4 h-4 rounded-full bg-primary-foreground transition-transform ${
                           isPrivate ? 'left-5' : 'left-1'
                         }`}
                       />
@@ -494,7 +489,7 @@ const QuickAddScreen: React.FC<QuickAddScreenProps> = ({ isOpen, onClose, onAdd 
                   {/* Save Button */}
                   <Button
                     onClick={handleSave}
-                    className="w-full bg-gradient-to-r from-bio-purple to-bio-cyan hover:opacity-90 text-white"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Сохранить

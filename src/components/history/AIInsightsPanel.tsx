@@ -63,7 +63,7 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
     <div className="px-4 mb-4">
       <motion.div
         layout
-        className="bg-gradient-to-br from-violet-500/10 to-cyan-500/10 border border-violet-500/20 rounded-2xl overflow-hidden"
+        className="bg-card border border-border rounded-2xl overflow-hidden"
       >
         {/* Header */}
         <button
@@ -71,12 +71,12 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
           className="w-full flex items-center justify-between p-4"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/30 to-cyan-500/30 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-violet-400" />
+            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div className="text-left">
-              <h3 className="text-white font-medium text-sm">ИИ-наблюдения</h3>
-              <p className="text-gray-400 text-xs">
+              <h3 className="text-card-foreground font-medium text-sm">ИИ-наблюдения</h3>
+              <p className="text-muted-foreground text-xs">
                 {pendingDetections.length} обнаружений • {activeHypotheses.length} гипотез
               </p>
             </div>
@@ -84,14 +84,14 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
           
           <div className="flex items-center gap-2">
             {totalInsights > 0 && (
-              <span className="w-5 h-5 rounded-full bg-violet-500 text-white text-xs flex items-center justify-center font-medium">
+              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-medium">
                 {totalInsights}
               </span>
             )}
             {isExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-5 h-5 text-muted-foreground" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-5 h-5 text-muted-foreground" />
             )}
           </div>
         </button>
@@ -111,8 +111,8 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                   onClick={() => setActiveTab('detections')}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     activeTab === 'detections'
-                      ? 'bg-violet-500/30 text-violet-300'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                      ? 'bg-primary/20 text-primary'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
                   }`}
                 >
                   Обнаружения ({pendingDetections.length})
@@ -121,8 +121,8 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                   onClick={() => setActiveTab('hypotheses')}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     activeTab === 'hypotheses'
-                      ? 'bg-cyan-500/30 text-cyan-300'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                      ? 'bg-accent/20 text-accent'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
                   }`}
                 >
                   Гипотезы ({activeHypotheses.length})
@@ -135,8 +135,8 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                   <>
                     {pendingDetections.length === 0 ? (
                       <div className="text-center py-6">
-                        <AlertCircle className="w-8 h-8 text-gray-500 mx-auto mb-2" />
-                        <p className="text-gray-400 text-sm">Нет новых обнаружений</p>
+                        <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                        <p className="text-muted-foreground text-sm">Нет новых обнаружений</p>
                       </div>
                     ) : (
                       pendingDetections.map(detection => (
@@ -156,9 +156,9 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                   <>
                     {activeHypotheses.length === 0 ? (
                       <div className="text-center py-6">
-                        <AlertCircle className="w-8 h-8 text-gray-500 mx-auto mb-2" />
-                        <p className="text-gray-400 text-sm">Пока нет гипотез</p>
-                        <p className="text-gray-500 text-xs mt-1">
+                        <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                        <p className="text-muted-foreground text-sm">Пока нет гипотез</p>
+                        <p className="text-muted-foreground/70 text-xs mt-1">
                           Добавь больше данных, и ИИ найдёт связи
                         </p>
                       </div>
@@ -178,7 +178,7 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
 
               {/* Disclaimer */}
               <div className="px-4 pb-4">
-                <p className="text-gray-500 text-xs text-center">
+                <p className="text-muted-foreground text-xs text-center">
                   Это гипотезы ИИ, не медицинские диагнозы. Твоя обратная связь улучшает точность.
                 </p>
               </div>
