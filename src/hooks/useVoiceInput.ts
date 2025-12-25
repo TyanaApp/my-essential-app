@@ -68,16 +68,26 @@ export const useVoiceInput = (onTranscription: (text: string) => void) => {
         body: { audio: base64Audio }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Transcription error:', error);
+        toast.error('Голосовой ввод временно недоступен');
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Voice-to-text service error:', data.error);
+        toast.error('Голосовой ввод временно недоступен');
+        return;
+      }
 
       if (data?.text) {
         onTranscription(data.text);
       } else {
-        toast.error('Не удалось распознать речь');
+        toast.error('Не удалось распознать речь. Попробуйте ещё раз.');
       }
     } catch (error) {
       console.error('Transcription error:', error);
-      toast.error('Ошибка распознавания речи');
+      toast.error('Голосовой ввод временно недоступен');
     } finally {
       setIsProcessing(false);
     }

@@ -73,7 +73,23 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenAI API error:', errorText);
-      throw new Error(`OpenAI API error: ${errorText}`);
+      
+      // Parse error to provide specific error codes
+      let errorCode = 'api_error';
+      try {
+        const errorJson = JSON.parse(errorText);
+        if (errorJson.error?.code === 'insufficient_quota') {
+          errorCode = 'quota_exceeded';
+        }
+      } catch {}
+      
+      return new Response(
+        JSON.stringify({ error: errorCode, message: 'Voice recognition service error' }),
+        {
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const result = await response.json();
