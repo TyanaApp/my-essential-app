@@ -310,20 +310,20 @@ const HistoryPage = () => {
         onDenyHypothesis={handleDenyHypothesis}
       />
 
-      {/* Action Buttons */}
-      <div className="px-4 mb-4 flex gap-3">
+      {/* Compact Action Buttons */}
+      <div className="px-3 mb-2 flex gap-2">
         <button
           onClick={() => setIsInsightsOpen(true)}
-          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-colors"
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-card border border-border text-muted-foreground hover:bg-muted transition-colors"
         >
-          <BarChart3 className="w-4 h-4" />
-          <span className="text-sm font-medium">Инсайты</span>
+          <BarChart3 className="w-3.5 h-3.5" />
+          <span className="text-xs font-medium">Инсайты</span>
         </button>
         <button
           onClick={() => setIsPrivacyOpen(true)}
-          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-colors"
+          className="flex items-center justify-center py-1.5 px-3 rounded-lg bg-card border border-border text-muted-foreground hover:bg-muted transition-colors"
         >
-          <Shield className="w-4 h-4" />
+          <Shield className="w-3.5 h-3.5" />
         </button>
       </div>
 

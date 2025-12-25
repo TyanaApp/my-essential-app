@@ -43,17 +43,17 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
     max: number;
     color: string;
   }) => (
-    <div className="flex items-center gap-3">
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}>
-        <Icon className="w-4 h-4 text-foreground" />
+    <div className="flex items-center gap-2">
+      <div className={`w-6 h-6 rounded flex items-center justify-center ${color}`}>
+        <Icon className="w-3 h-3 text-foreground" />
       </div>
-      <span className="text-sm text-muted-foreground w-16">{label}</span>
-      <div className="flex gap-1 flex-1">
+      <span className="text-xs text-muted-foreground w-14">{label}</span>
+      <div className="flex gap-0.5 flex-1">
         {Array.from({ length: max + 1 }, (_, i) => (
           <button
             key={i}
             onClick={() => onChange(i)}
-            className={`flex-1 h-8 rounded-md text-xs font-medium transition-all ${
+            className={`flex-1 h-6 rounded text-[10px] font-medium transition-all ${
               value === i
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -68,25 +68,22 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
 
   return (
     <motion.div
-      className="mx-4 mb-4 rounded-2xl overflow-hidden bg-card border border-border"
+      className="mx-3 mb-2 rounded-xl overflow-hidden bg-card border border-border"
       layout
     >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-4 flex items-center justify-between"
+        className="w-full py-2 px-3 flex items-center justify-between"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-            <Smile className="w-5 h-5 text-primary" />
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center">
+            <Smile className="w-4 h-4 text-primary" />
           </div>
-          <div className="text-left">
-            <h3 className="font-semibold text-card-foreground">Как ты сегодня?</h3>
-            <p className="text-xs text-muted-foreground">Быстрый чек-ин за 1 тап</p>
-          </div>
+          <span className="text-sm font-medium text-card-foreground">Как ты?</span>
         </div>
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
-          className="text-muted-foreground"
+          className="text-muted-foreground text-xs"
         >
           ▼
         </motion.div>
@@ -97,46 +94,18 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="px-4 pb-4 space-y-3"
+          className="px-3 pb-2 space-y-2"
         >
-          <ScaleSelector
-            label="Энергия"
-            icon={Zap}
-            value={energy}
-            onChange={setEnergy}
-            max={5}
-            color="bg-warning/20"
-          />
-          <ScaleSelector
-            label="Настроение"
-            icon={Smile}
-            value={mood}
-            onChange={setMood}
-            max={5}
-            color="bg-success/20"
-          />
-          <ScaleSelector
-            label="Боль"
-            icon={Activity}
-            value={pain}
-            onChange={setPain}
-            max={10}
-            color="bg-destructive/20"
-          />
-          <ScaleSelector
-            label="Стресс"
-            icon={Brain}
-            value={stress}
-            onChange={setStress}
-            max={5}
-            color="bg-bio-purple/20"
-          />
+          <ScaleSelector label="Энергия" icon={Zap} value={energy} onChange={setEnergy} max={5} color="bg-warning/20" />
+          <ScaleSelector label="Настрой" icon={Smile} value={mood} onChange={setMood} max={5} color="bg-success/20" />
+          <ScaleSelector label="Боль" icon={Activity} value={pain} onChange={setPain} max={10} color="bg-destructive/20" />
+          <ScaleSelector label="Стресс" icon={Brain} value={stress} onChange={setStress} max={5} color="bg-bio-purple/20" />
 
           <button
             onClick={handleSave}
-            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+            className="w-full py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-primary/90 transition-colors"
           >
-            <Check className="w-4 h-4" />
+            <Check className="w-3.5 h-3.5" />
             Сохранить
           </button>
         </motion.div>

@@ -60,38 +60,36 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
   if (totalInsights === 0) return null;
 
   return (
-    <div className="px-4 mb-4">
+    <div className="px-3 mb-2">
       <motion.div
         layout
-        className="bg-card border border-border rounded-2xl overflow-hidden"
+        className="bg-card border border-border rounded-xl overflow-hidden"
       >
-        {/* Header */}
+        {/* Compact Header */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between p-4"
+          className="w-full flex items-center justify-between py-2 px-3"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary" />
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-primary" />
             </div>
-            <div className="text-left">
-              <h3 className="text-card-foreground font-medium text-sm">ИИ-наблюдения</h3>
-              <p className="text-muted-foreground text-xs">
-                {pendingDetections.length} обнаружений • {activeHypotheses.length} гипотез
-              </p>
-            </div>
+            <span className="text-card-foreground font-medium text-sm">ИИ</span>
+            <span className="text-muted-foreground text-xs">
+              {pendingDetections.length}+{activeHypotheses.length}
+            </span>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {totalInsights > 0 && (
-              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-medium">
+              <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-medium">
                 {totalInsights}
               </span>
             )}
             {isExpanded ? (
-              <ChevronUp className="w-5 h-5 text-muted-foreground" />
+              <ChevronUp className="w-4 h-4 text-muted-foreground" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-muted-foreground" />
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
             )}
           </div>
         </button>
@@ -105,39 +103,36 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              {/* Tabs */}
-              <div className="flex gap-2 px-4 pb-3">
+              {/* Compact Tabs */}
+              <div className="flex gap-1 px-3 pb-2">
                 <button
                   onClick={() => setActiveTab('detections')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
                     activeTab === 'detections'
                       ? 'bg-primary/20 text-primary'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
-                  Обнаружения ({pendingDetections.length})
+                  Сигналы ({pendingDetections.length})
                 </button>
                 <button
                   onClick={() => setActiveTab('hypotheses')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
                     activeTab === 'hypotheses'
                       ? 'bg-accent/20 text-accent'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   Гипотезы ({activeHypotheses.length})
                 </button>
               </div>
 
-              {/* Content */}
-              <div className="px-4 pb-4 space-y-3 max-h-[400px] overflow-y-auto">
+              {/* Content - limited height */}
+              <div className="px-3 pb-2 space-y-2 max-h-[200px] overflow-y-auto">
                 {activeTab === 'detections' && (
                   <>
                     {pendingDetections.length === 0 ? (
-                      <div className="text-center py-6">
-                        <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-muted-foreground text-sm">Нет новых обнаружений</p>
-                      </div>
+                      <p className="text-muted-foreground text-xs text-center py-2">Нет сигналов</p>
                     ) : (
                       pendingDetections.map(detection => (
                         <AIDetectionCard
@@ -155,13 +150,7 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                 {activeTab === 'hypotheses' && (
                   <>
                     {activeHypotheses.length === 0 ? (
-                      <div className="text-center py-6">
-                        <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                        <p className="text-muted-foreground text-sm">Пока нет гипотез</p>
-                        <p className="text-muted-foreground/70 text-xs mt-1">
-                          Добавь больше данных, и ИИ найдёт связи
-                        </p>
-                      </div>
+                      <p className="text-muted-foreground text-xs text-center py-2">Нет гипотез</p>
                     ) : (
                       activeHypotheses.map(hypothesis => (
                         <HypothesisCard
@@ -174,13 +163,6 @@ const AIInsightsPanel: React.FC<AIInsightsPanelProps> = ({
                     )}
                   </>
                 )}
-              </div>
-
-              {/* Disclaimer */}
-              <div className="px-4 pb-4">
-                <p className="text-muted-foreground text-xs text-center">
-                  Это гипотезы ИИ, не медицинские диагнозы. Твоя обратная связь улучшает точность.
-                </p>
               </div>
             </motion.div>
           )}

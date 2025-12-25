@@ -28,59 +28,57 @@ const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   onDateRangeChange,
 }) => {
   return (
-    <div className="sticky top-0 z-30 pt-4 pb-3 px-4 bg-background/95 backdrop-blur-sm border-b border-border/50">
-      {/* Title row */}
-      <div className="flex items-center justify-between mb-3">
+    <div className="sticky top-0 z-30 pt-2 pb-2 px-3 bg-background/95 backdrop-blur-sm border-b border-border/50">
+      {/* Compact header row */}
+      <div className="flex items-center justify-between gap-2">
         <button
           onClick={onFilterClick}
-          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+          className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
           aria-label="Фильтры"
         >
-          <Filter className="w-5 h-5 text-foreground" />
+          <Filter className="w-4 h-4 text-foreground" />
         </button>
         
-        <h1 className="text-xl font-bold text-foreground">History</h1>
+        {/* Date range inline */}
+        <div className="flex gap-0.5 p-0.5 bg-muted rounded-lg flex-1 max-w-[200px]">
+          {dateRangeOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => onDateRangeChange(option.value)}
+              className={`flex-1 py-1 px-2 rounded text-xs font-medium transition-all ${
+                dateRange === option.value
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
           <motion.button
             onClick={onAddClick}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-primary"
+            className="w-8 h-8 rounded-full flex items-center justify-center bg-primary"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Добавить событие"
           >
-            <Plus className="w-5 h-5 text-primary-foreground" />
+            <Plus className="w-4 h-4 text-primary-foreground" />
           </motion.button>
         </div>
       </div>
 
-      {/* Date range switcher */}
-      <div className="flex gap-1 p-1 bg-muted rounded-xl mb-3">
-        {dateRangeOptions.map((option) => (
-          <button
-            key={option.value}
-            onClick={() => onDateRangeChange(option.value)}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
-              dateRange === option.value
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Search bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      {/* Compact search */}
+      <div className="relative mt-2">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Поиск: симптомы, события, лекарства…"
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
+          placeholder="Поиск..."
+          className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
           aria-label="Поиск по событиям"
         />
       </div>
