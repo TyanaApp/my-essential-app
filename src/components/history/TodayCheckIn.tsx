@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Smile, Activity, Brain, Moon, Check } from 'lucide-react';
+import { Zap, Smile, Activity, Brain, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface TodayCheckInProps {
@@ -23,7 +23,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSave = () => {
-    onSave({ energy, mood, pain, stress, sleep: 7.5 }); // sleep would come from wearable
+    onSave({ energy, mood, pain, stress, sleep: 7.5 });
     toast.success('Чек-ин сохранён!');
     setIsExpanded(false);
   };
@@ -45,9 +45,9 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
   }) => (
     <div className="flex items-center gap-3">
       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}>
-        <Icon className="w-4 h-4 text-white" />
+        <Icon className="w-4 h-4 text-foreground" />
       </div>
-      <span className="text-sm text-gray-300 w-16">{label}</span>
+      <span className="text-sm text-muted-foreground w-16">{label}</span>
       <div className="flex gap-1 flex-1">
         {Array.from({ length: max + 1 }, (_, i) => (
           <button
@@ -55,8 +55,8 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
             onClick={() => onChange(i)}
             className={`flex-1 h-8 rounded-md text-xs font-medium transition-all ${
               value === i
-                ? 'bg-bio-cyan text-white'
-                : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
           >
             {i}
@@ -68,11 +68,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
 
   return (
     <motion.div
-      className="mx-4 mb-4 rounded-2xl overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.1))',
-        border: '1px solid rgba(255,255,255,0.1)',
-      }}
+      className="mx-4 mb-4 rounded-2xl overflow-hidden bg-card border border-border"
       layout
     >
       <button
@@ -80,17 +76,17 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
         className="w-full p-4 flex items-center justify-between"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-bio-purple to-bio-cyan flex items-center justify-center">
-            <Smile className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+            <Smile className="w-5 h-5 text-primary" />
           </div>
           <div className="text-left">
-            <h3 className="font-semibold text-white">Как ты сегодня?</h3>
-            <p className="text-xs text-gray-400">Быстрый чек-ин за 1 тап</p>
+            <h3 className="font-semibold text-card-foreground">Как ты сегодня?</h3>
+            <p className="text-xs text-muted-foreground">Быстрый чек-ин за 1 тап</p>
           </div>
         </div>
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
-          className="text-gray-400"
+          className="text-muted-foreground"
         >
           ▼
         </motion.div>
@@ -109,7 +105,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
             value={energy}
             onChange={setEnergy}
             max={5}
-            color="bg-yellow-500/20"
+            color="bg-warning/20"
           />
           <ScaleSelector
             label="Настроение"
@@ -117,7 +113,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
             value={mood}
             onChange={setMood}
             max={5}
-            color="bg-green-500/20"
+            color="bg-success/20"
           />
           <ScaleSelector
             label="Боль"
@@ -125,7 +121,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
             value={pain}
             onChange={setPain}
             max={10}
-            color="bg-red-500/20"
+            color="bg-destructive/20"
           />
           <ScaleSelector
             label="Стресс"
@@ -133,12 +129,12 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
             value={stress}
             onChange={setStress}
             max={5}
-            color="bg-purple-500/20"
+            color="bg-bio-purple/20"
           />
 
           <button
             onClick={handleSave}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-bio-purple to-bio-cyan text-white font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+            className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
           >
             <Check className="w-4 h-4" />
             Сохранить

@@ -14,22 +14,22 @@ const EmptyTimeline: React.FC<EmptyTimelineProps> = ({ onAddEvent, onCheckIn }) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-bio-purple/20 to-bio-cyan/20 flex items-center justify-center mb-6">
-        <Sparkles className="w-10 h-10 text-bio-cyan" />
+      <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+        <Sparkles className="w-10 h-10 text-primary" />
       </div>
       
-      <h2 className="text-xl font-semibold text-white mb-3">
+      <h2 className="text-xl font-semibold text-foreground mb-3">
         Здесь будет память твоего тела
       </h2>
       
-      <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-xs">
+      <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-xs">
         Добавь 1–2 события или отметь самочувствие — и мы начнём находить связи.
       </p>
       
       <div className="flex gap-3">
         <motion.button
           onClick={onCheckIn}
-          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 text-white font-medium hover:bg-white/20 transition-colors"
+          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -39,10 +39,7 @@ const EmptyTimeline: React.FC<EmptyTimelineProps> = ({ onAddEvent, onCheckIn }) 
         
         <motion.button
           onClick={onAddEvent}
-          className="flex items-center gap-2 px-5 py-3 rounded-xl text-white font-medium transition-opacity hover:opacity-90"
-          style={{
-            background: 'linear-gradient(135deg, hsl(var(--bio-purple)), hsl(var(--bio-cyan)))',
-          }}
+          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

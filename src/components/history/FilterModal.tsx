@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Moon, Dumbbell, Apple, Pill, Flame, Stethoscope, Plane, Calendar, AlertTriangle, Battery, Zap, Lock, Check } from 'lucide-react';
+import { X, Heart, Moon, Dumbbell, Apple, Pill, Flame, Stethoscope, Plane, Calendar, AlertTriangle, Battery, Lock, Check } from 'lucide-react';
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -81,27 +81,22 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
             exit={{ opacity: 0, y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           >
-            <div
-              className="rounded-t-3xl p-5"
-              style={{
-                background: 'linear-gradient(180deg, #1e1e2f 0%, #151521 100%)',
-              }}
-            >
-              <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-4" />
+            <div className="rounded-t-3xl p-5 bg-card border-t border-border">
+              <div className="w-12 h-1 bg-muted rounded-full mx-auto mb-4" />
 
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-semibold text-white text-lg">Фильтры</h3>
+                <h3 className="font-semibold text-card-foreground text-lg">Фильтры</h3>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20"
+                  className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
                 >
-                  <X className="w-4 h-4 text-white" />
+                  <X className="w-4 h-4 text-muted-foreground" />
                 </button>
               </div>
 
               {/* Types */}
               <div className="mb-5">
-                <h4 className="text-sm font-medium text-gray-300 mb-3">По типу</h4>
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">По типу</h4>
                 <div className="flex flex-wrap gap-2">
                   {typeFilters.map((filter) => {
                     const Icon = filter.icon;
@@ -112,8 +107,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
                         onClick={() => toggleType(filter.id)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                           isActive
-                            ? 'bg-bio-purple/30 text-bio-purple border border-bio-purple/50'
-                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                            ? 'bg-primary/20 text-primary border border-primary/50'
+                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                         }`}
                       >
                         <Icon className="w-3 h-3" />
@@ -126,7 +121,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
 
               {/* Impacts */}
               <div className="mb-5">
-                <h4 className="text-sm font-medium text-gray-300 mb-3">По влиянию</h4>
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">По влиянию</h4>
                 <div className="flex flex-wrap gap-2">
                   {impactFilters.map((filter) => {
                     const Icon = filter.icon;
@@ -137,8 +132,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
                         onClick={() => toggleImpact(filter.id)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                           isActive
-                            ? 'bg-bio-cyan/30 text-bio-cyan border border-bio-cyan/50'
-                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                            ? 'bg-accent/30 text-accent border border-accent/50'
+                            : 'bg-muted text-muted-foreground hover:bg-muted/80'
                         }`}
                       >
                         <Icon className="w-3 h-3" />
@@ -151,7 +146,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
 
               {/* Confidence */}
               <div className="mb-5">
-                <h4 className="text-sm font-medium text-gray-300 mb-3">По уверенности</h4>
+                <h4 className="text-sm font-medium text-muted-foreground mb-3">По уверенности</h4>
                 <div className="flex gap-2">
                   {[
                     { value: 'all', label: 'Все' },
@@ -168,8 +163,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
                       }
                       className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
                         localFilters.confidence === option.value
-                          ? 'bg-bio-purple text-white'
-                          : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
                       }`}
                     >
                       {option.label}
@@ -187,18 +182,18 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
                       showPrivate: !prev.showPrivate,
                     }))
                   }
-                  className="flex items-center gap-3 w-full p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-3 w-full p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
                 >
-                  <Lock className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-300 flex-1 text-left">
+                  <Lock className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-foreground flex-1 text-left">
                     Показывать приватные события
                   </span>
                   <div
                     className={`w-5 h-5 rounded-md flex items-center justify-center ${
-                      localFilters.showPrivate ? 'bg-bio-cyan' : 'bg-white/10'
+                      localFilters.showPrivate ? 'bg-accent' : 'bg-secondary'
                     }`}
                   >
-                    {localFilters.showPrivate && <Check className="w-3 h-3 text-white" />}
+                    {localFilters.showPrivate && <Check className="w-3 h-3 text-accent-foreground" />}
                   </div>
                 </button>
               </div>
@@ -206,7 +201,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, filters, onA
               {/* Apply button */}
               <button
                 onClick={handleApply}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-bio-purple to-bio-cyan text-white font-medium hover:opacity-90 transition-opacity"
+                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
               >
                 Применить фильтры
               </button>
