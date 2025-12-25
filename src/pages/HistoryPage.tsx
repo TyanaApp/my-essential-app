@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const HistoryPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const { leftEvents, rightEvents, isLoading, addEvent } = useLifeEvents();
+  const { leftEvents, rightEvents, isLoading, addEvent, deleteEvent } = useLifeEvents();
 
   const [selectedEvent, setSelectedEvent] = useState<LifeEvent | null>(null);
   const [isInsightModalOpen, setIsInsightModalOpen] = useState(false);
@@ -99,10 +99,12 @@ const HistoryPage = () => {
                 {leftEvents.map((event, i) => (
                   <TimelineCard
                     key={`left-${event.id || event.title}-${i}`}
+                    id={event.id}
                     {...event}
                     side="left"
                     index={i}
                     onClick={() => handleCardClick(event)}
+                    onDelete={deleteEvent}
                   />
                 ))}
               </div>
@@ -112,10 +114,12 @@ const HistoryPage = () => {
                 {rightEvents.map((event, i) => (
                   <TimelineCard
                     key={`right-${event.id || event.title}-${i}`}
+                    id={event.id}
                     {...event}
                     side="right"
                     index={i}
                     onClick={() => handleCardClick(event)}
+                    onDelete={deleteEvent}
                   />
                 ))}
               </div>
@@ -147,6 +151,7 @@ const HistoryPage = () => {
         onClose={() => setIsInsightModalOpen(false)}
         event={selectedEvent}
         onAITwinSync={handleAITwinSync}
+        onDelete={deleteEvent}
       />
 
       {/* Add Event Modal */}

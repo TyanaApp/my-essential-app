@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, TrendingUp, Target, Calendar, MessageCircle } from 'lucide-react';
+import { X, TrendingUp, Target, Calendar, MessageCircle, Trash2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -13,17 +13,29 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface ContextInsightModalProps {
   isOpen: boolean;
   onClose: () => void;
   event: {
+    id?: string;
     title: string;
     date: string;
     type: 'trigger' | 'goal';
     status: string;
   } | null;
   onAITwinSync: (message: string) => void;
+  onDelete?: (eventId: string) => void;
 }
 
 // Mock data for stress vs sleep chart
@@ -39,11 +51,15 @@ const ContextInsightModal: React.FC<ContextInsightModalProps> = ({
   onClose,
   event,
   onAITwinSync,
+  onDelete,
 }) => {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
   if (!event) return null;
 
   const isTrigger = event.type === 'trigger';
-  const progressValue = Math.floor(Math.random() * 40) + 50; // 50-90% for demo
+  const progressValue = Math.floor(Math.random() * 40) + 50;
+  const canDelete = !!event.id && !!onDelete;
 
   const handleAITwinSync = () => {
     const message = isTrigger
@@ -51,6 +67,14 @@ const ContextInsightModal: React.FC<ContextInsightModalProps> = ({
       : `I see you're aiming for "${event.title}" in ${event.date}. Should we adjust your current energy plan to help you reach this goal?`;
     onAITwinSync(message);
     onClose();
+  };
+
+  const handleDelete = () => {
+    if (event.id && onDelete) {
+      onDelete(event.id);
+      setShowDeleteConfirm(false);
+      onClose();
+    }
   };
 
   return (
@@ -190,17 +214,55 @@ const ContextInsightModal: React.FC<ContextInsightModalProps> = ({
                   </span>
                 </div>
 
-                {/* AI Twin Sync Button */}
-                <Button
-                  onClick={handleAITwinSync}
-                  className="w-full bg-gradient-to-r from-bio-purple to-bio-cyan hover:opacity-90 text-white"
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Ask AI Twin for Insights
-                </Button>
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleAITwinSync}
+                    className="flex-1 bg-gradient-to-r from-bio-purple to-bio-cyan hover:opacity-90 text-white"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Ask AI Twin
+                  </Button>
+                  
+                  {canDelete && (
+                    <Button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      variant="outline"
+                      className="bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20 hover:text-red-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
+
+          {/* Delete Confirmation Dialog */}
+          <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+            <AlertDialogContent className="bg-[#1e1e2f] border-white/10">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-white flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-red-400" />
+                  Delete Event
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-400">
+                  Are you sure you want to delete "{event.title}"? This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-white/10 border-white/10 text-white hover:bg-white/20">
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  className="bg-red-500 text-white hover:bg-red-600"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </AnimatePresence>
