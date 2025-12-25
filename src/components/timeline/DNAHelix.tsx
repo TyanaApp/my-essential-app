@@ -12,9 +12,12 @@ const DNAHelix = () => {
       <motion.img
         src={dnaHelixImage}
         alt="DNA Helix"
-        className="absolute inset-0 w-full h-full object-cover opacity-90"
+        className="absolute inset-0 w-full h-full object-contain opacity-95"
+        style={{
+          mixBlendMode: 'screen',
+        }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.9 }}
+        animate={{ opacity: 0.95 }}
         transition={{ duration: 1 }}
       />
       
