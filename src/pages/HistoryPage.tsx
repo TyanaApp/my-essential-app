@@ -1,57 +1,79 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, LucideIcon } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { BarChart3 } from 'lucide-react';
+import { motion } from 'framer-motion';
+
 import StarParticles from '@/components/timeline/StarParticles';
 import DNAHelix from '@/components/timeline/DNAHelix';
-import TimelineCard from '@/components/timeline/TimelineCard';
-import ContextInsightModal from '@/components/timeline/ContextInsightModal';
-import AddEventModal from '@/components/timeline/AddEventModal';
-import { useLifeEvents, LifeEvent, getIconByName } from '@/hooks/useLifeEvents';
+import HistoryHeader from '@/components/history/HistoryHeader';
+import TodayCheckIn from '@/components/history/TodayCheckIn';
+import WearableWidget from '@/components/history/WearableWidget';
+import TimelineEvent, { TimelineEventData, EventType } from '@/components/history/TimelineEvent';
+import FilterModal, { FilterState } from '@/components/history/FilterModal';
+import SmartSuggestion from '@/components/history/SmartSuggestion';
+import EventDetailsModal from '@/components/history/EventDetailsModal';
+import AddEventScreen from '@/components/history/AddEventScreen';
+import PeriodInsightsModal from '@/components/history/PeriodInsightsModal';
+import QuickActionsSheet from '@/components/history/QuickActionsSheet';
+import { useLifeEvents, getIconByName } from '@/hooks/useLifeEvents';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const HistoryPage = () => {
-  const { t } = useLanguage();
   const navigate = useNavigate();
   const { leftEvents, rightEvents, isLoading, addEvent, deleteEvent } = useLifeEvents();
 
-  const [selectedEvent, setSelectedEvent] = useState<LifeEvent | null>(null);
-  const [isInsightModalOpen, setIsInsightModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  // UI States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<'day' | 'week' | 'month' | 'custom'>('week');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isInsightsOpen, setIsInsightsOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<TimelineEventData | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [quickActionsEvent, setQuickActionsEvent] = useState<TimelineEventData | null>(null);
+  const [showSuggestion, setShowSuggestion] = useState(true);
 
-  const handleCardClick = (event: LifeEvent) => {
+  const [filters, setFilters] = useState<FilterState>({
+    types: [],
+    impacts: [],
+    confidence: 'all',
+    showPrivate: false,
+  });
+
+  // Convert old events to new format
+  const convertEvent = (event: any, side: 'left' | 'right'): TimelineEventData => ({
+    id: event.id,
+    title: event.title,
+    date: event.date,
+    type: event.type as EventType,
+    status: event.status,
+    icon: event.icon,
+    iconName: event.iconName,
+    side,
+    confidence: 'high',
+  });
+
+  const leftTimelineEvents = leftEvents.map(e => convertEvent(e, 'left'));
+  const rightTimelineEvents = rightEvents.map(e => convertEvent(e, 'right'));
+
+  const handleCardClick = (event: TimelineEventData) => {
     setSelectedEvent(event);
-    setIsInsightModalOpen(true);
+    setIsDetailsOpen(true);
+  };
+
+  const handleLongPress = (event: TimelineEventData) => {
+    setQuickActionsEvent(event);
   };
 
   const handleAITwinSync = (message: string) => {
-    toast.success('Syncing with AI Twin...', { duration: 2000 });
+    toast.success('Синхронизация с AI Twin...', { duration: 2000 });
     sessionStorage.setItem('aiTwinMessage', message);
     navigate('/twin');
   };
 
-  const handleAddEvent = async (newEvent: {
-    title: string;
-    date: string;
-    type: 'trigger' | 'goal';
-    status: string;
-    icon: LucideIcon;
-  }) => {
-    // Find icon name from the icon component
-    const iconName = Object.entries({
-      Briefcase: 'Briefcase',
-      ShieldPlus: 'ShieldPlus',
-      Globe: 'Globe',
-      PersonStanding: 'PersonStanding',
-      Baby: 'Baby',
-      Target: 'Target',
-      Heart: 'Heart',
-      Plane: 'Plane',
-      Trophy: 'Trophy',
-    }).find(([, name]) => getIconByName(name) === newEvent.icon)?.[1] || 'Target';
-
+  const handleAddEvent = async (newEvent: any) => {
+    const iconName = newEvent.iconName || 'Target';
     await addEvent({
       title: newEvent.title,
       date: newEvent.date,
@@ -62,6 +84,10 @@ const HistoryPage = () => {
     });
   };
 
+  const handleCheckIn = (data: any) => {
+    console.log('Check-in data:', data);
+  };
+
   return (
     <div 
       className="min-h-screen relative overflow-hidden pb-24"
@@ -69,57 +95,75 @@ const HistoryPage = () => {
         background: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)',
       }}
     >
-      {/* Star particles */}
       <StarParticles />
 
-      {/* Timeline container */}
-      <div className="relative px-4 pt-8 min-h-[700px]">
-        {/* DNA Helix centerpiece */}
+      <HistoryHeader
+        onAddClick={() => setIsAddOpen(true)}
+        onFilterClick={() => setIsFilterOpen(true)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        dateRange={dateRange}
+        onDateRangeChange={setDateRange}
+      />
+
+      {/* Today Block */}
+      <TodayCheckIn onSave={handleCheckIn} />
+
+      {/* Wearable Widget */}
+      <WearableWidget />
+
+      {/* Insights Button */}
+      <div className="px-4 mb-4">
+        <button
+          onClick={() => setIsInsightsOpen(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-colors"
+        >
+          <BarChart3 className="w-4 h-4" />
+          <span className="text-sm font-medium">Инсайты за период</span>
+        </button>
+      </div>
+
+      {/* Timeline */}
+      <div className="relative px-4 min-h-[400px]">
         <DNAHelix />
 
-        {/* Events grid - two columns */}
-        <div className="relative z-10 grid grid-cols-2 gap-x-16 gap-y-8 pt-4">
+        <div className="relative z-10 grid grid-cols-2 gap-x-12 gap-y-6 pt-4">
           {isLoading ? (
             <>
-              <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-6">
                 {[1, 2, 3].map((i) => (
-                  <Skeleton key={`left-skeleton-${i}`} className="w-[130px] h-[160px] rounded-2xl bg-white/10" />
+                  <Skeleton key={`left-skeleton-${i}`} className="w-[140px] h-[150px] rounded-2xl bg-white/10" />
                 ))}
               </div>
-              <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-6">
                 {[1, 2, 3].map((i) => (
-                  <Skeleton key={`right-skeleton-${i}`} className="w-[130px] h-[160px] rounded-2xl bg-white/10 ml-auto" />
+                  <Skeleton key={`right-skeleton-${i}`} className="w-[140px] h-[150px] rounded-2xl bg-white/10 ml-auto" />
                 ))}
               </div>
             </>
           ) : (
             <>
-              {/* Left column */}
-              <div className="flex flex-col gap-8">
-                {leftEvents.map((event, i) => (
-                  <TimelineCard
+              <div className="flex flex-col gap-6">
+                {leftTimelineEvents.map((event, i) => (
+                  <TimelineEvent
                     key={`left-${event.id || event.title}-${i}`}
-                    id={event.id}
                     {...event}
-                    side="left"
                     index={i}
                     onClick={() => handleCardClick(event)}
                     onDelete={deleteEvent}
+                    onLongPress={() => handleLongPress(event)}
                   />
                 ))}
               </div>
-              
-              {/* Right column */}
-              <div className="flex flex-col gap-8">
-                {rightEvents.map((event, i) => (
-                  <TimelineCard
+              <div className="flex flex-col gap-6">
+                {rightTimelineEvents.map((event, i) => (
+                  <TimelineEvent
                     key={`right-${event.id || event.title}-${i}`}
-                    id={event.id}
                     {...event}
-                    side="right"
                     index={i}
                     onClick={() => handleCardClick(event)}
                     onDelete={deleteEvent}
+                    onLongPress={() => handleLongPress(event)}
                   />
                 ))}
               </div>
@@ -128,37 +172,58 @@ const HistoryPage = () => {
         </div>
       </div>
 
-      {/* Floating Add Button */}
-      <motion.button
-        onClick={() => setIsAddModalOpen(true)}
-        className="fixed bottom-24 right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-40"
-        style={{
-          background: 'linear-gradient(135deg, hsl(var(--bio-purple)), hsl(var(--bio-cyan)))',
-          boxShadow: '0 4px 20px rgba(139, 92, 246, 0.4)',
+      {/* Smart Suggestion */}
+      <SmartSuggestion
+        isVisible={showSuggestion}
+        message="Похоже, за 24–48ч до ПМС у тебя падает энергия. Хочешь включить режим поддержки на 3 дня?"
+        onDismiss={() => setShowSuggestion(false)}
+        onAccept={() => {
+          toast.success('Режим поддержки активирован!');
+          setShowSuggestion(false);
         }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
-        <Plus className="w-6 h-6 text-white" />
-      </motion.button>
+        onExplain={() => handleAITwinSync('Почему ты думаешь, что у меня падает энергия перед ПМС?')}
+      />
 
-      {/* Context Insight Modal */}
-      <ContextInsightModal
-        isOpen={isInsightModalOpen}
-        onClose={() => setIsInsightModalOpen(false)}
+      {/* Modals */}
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        filters={filters}
+        onApply={setFilters}
+      />
+
+      <AddEventScreen
+        isOpen={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onAdd={handleAddEvent}
+      />
+
+      <EventDetailsModal
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
         event={selectedEvent}
         onAITwinSync={handleAITwinSync}
         onDelete={deleteEvent}
       />
 
-      {/* Add Event Modal */}
-      <AddEventModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddEvent}
+      <PeriodInsightsModal
+        isOpen={isInsightsOpen}
+        onClose={() => setIsInsightsOpen(false)}
+        dateRange="16–22 декабря 2024"
+        onAskAI={handleAITwinSync}
+      />
+
+      <QuickActionsSheet
+        isOpen={!!quickActionsEvent}
+        onClose={() => setQuickActionsEvent(null)}
+        eventTitle={quickActionsEvent?.title || ''}
+        onEdit={() => toast.info('Редактирование...')}
+        onHide={() => toast.info('Скрыто')}
+        onConvertToPlan={() => toast.info('Преобразовано в план')}
+        onMarkImportant={() => toast.success('Отмечено как важное')}
+        onDelete={() => {
+          if (quickActionsEvent?.id) deleteEvent(quickActionsEvent.id);
+        }}
       />
     </div>
   );
