@@ -60,7 +60,7 @@ export const useAIChat = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: apiMessages, language }),
+        body: JSON.stringify({ messages: apiMessages }),
       });
 
       if (!response.ok) {
