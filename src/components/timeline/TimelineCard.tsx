@@ -10,19 +10,23 @@ interface TimelineCardProps {
   icon: LucideIcon;
   side: 'left' | 'right';
   index: number;
+  onClick?: () => void;
 }
 
-const TimelineCard = ({ title, date, type, status, icon: Icon, side, index }: TimelineCardProps) => {
+const TimelineCard = ({ title, date, type, status, icon: Icon, side, index, onClick }: TimelineCardProps) => {
   return (
     <motion.div
-      className={`${side === 'right' ? 'ml-auto' : 'mr-auto'}`}
+      className={`${side === 'right' ? 'ml-auto' : 'mr-auto'} cursor-pointer`}
       initial={{ opacity: 0, x: side === 'left' ? -30 : 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
     >
       {/* Card - Light/White style matching reference */}
       <div 
-        className="relative p-4 rounded-2xl shadow-lg w-[130px]"
+        className="relative p-4 rounded-2xl shadow-lg w-[130px] transition-shadow hover:shadow-xl"
         style={{
           background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F6F4 100%)',
           boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
