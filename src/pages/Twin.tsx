@@ -1,32 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, RotateCcw, Bot, User } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-}
+import { useAIChat } from '@/hooks/useAIChat';
 
 const Twin = () => {
-  const { language, t } = useLanguage();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: language === 'ru' 
-        ? 'Привет! Я ваш ИИ-близнец для здоровья. Как я могу помочь вам сегодня?'
-        : language === 'lv'
-        ? 'Sveiki! Es esmu jūsu veselības AI dvīnis. Kā es varu jums palīdzēt šodien?'
-        : 'Hello! I\'m your AI Health Twin. How can I help you today?'
-    }
-  ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLanguage();
+  const { messages, isLoading, sendMessage, clearChat, initializeChat } = useAIChat();
+  const [input, setInput] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    initializeChat();
+  }, [initializeChat]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -34,64 +22,9 @@ const Twin = () => {
 
   const handleSend = async () => {
     if (!input.trim()) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input
-    };
-
-    setMessages(prev => [...prev, userMessage]);
+    const message = input;
     setInput('');
-    setIsLoading(true);
-
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = {
-        en: [
-          "Based on your sleep data, I recommend going to bed 30 minutes earlier tonight.",
-          "Your stress levels have been elevated. Consider a 10-minute meditation session.",
-          "Great question! Your energy patterns suggest morning workouts would be optimal for you.",
-          "I've analyzed your health metrics. Your recovery is progressing well!"
-        ],
-        ru: [
-          "На основе ваших данных о сне, рекомендую лечь спать на 30 минут раньше сегодня.",
-          "Ваш уровень стресса повышен. Рассмотрите 10-минутную медитацию.",
-          "Отличный вопрос! Ваши паттерны энергии показывают, что утренние тренировки оптимальны.",
-          "Я проанализировал ваши метрики здоровья. Восстановление идёт хорошо!"
-        ],
-        lv: [
-          "Balstoties uz jūsu miega datiem, iesaku doties gulēt 30 minūtes agrāk šovakar.",
-          "Jūsu stresa līmenis ir paaugstināts. Apsveriet 10 minūšu meditāciju.",
-          "Lielisks jautājums! Jūsu enerģijas modeļi liecina, ka rīta treniņi būtu optimāli.",
-          "Esmu analizējis jūsu veselības rādītājus. Atjaunošanās norit labi!"
-        ]
-      };
-
-      const langResponses = responses[language] || responses.en;
-      const randomResponse = langResponses[Math.floor(Math.random() * langResponses.length)];
-
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: randomResponse
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-      setIsLoading(false);
-    }, 1500);
-  };
-
-  const clearChat = () => {
-    setMessages([{
-      id: '1',
-      role: 'assistant',
-      content: language === 'ru' 
-        ? 'Привет! Я ваш ИИ-близнец для здоровья. Как я могу помочь вам сегодня?'
-        : language === 'lv'
-        ? 'Sveiki! Es esmu jūsu veselības AI dvīnis. Kā es varu jums palīdzēt šodien?'
-        : 'Hello! I\'m your AI Health Twin. How can I help you today?'
-    }]);
+    await sendMessage(message);
   };
 
   return (
@@ -143,14 +76,14 @@ const Twin = () => {
                     ? 'bg-primary text-primary-foreground' 
                     : 'bg-secondary text-foreground'
                 }`}>
-                  <p className="text-sm font-exo">{message.content}</p>
+                  <p className="text-sm font-exo whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
 
-        {isLoading && (
+        {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
