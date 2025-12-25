@@ -90,10 +90,10 @@ const SectionNow: React.FC<SectionNowProps> = ({ data, energyLevel }) => {
                 <Icon className={`w-3.5 h-3.5 text-${metric.color}`} />
                 <span className="text-[10px] font-exo text-muted-foreground truncate">{metric.label}</span>
               </div>
-              <p className={`text-lg font-orbitron font-bold text-${metric.color}`}>
+              <p className={`text-lg font-numbers font-bold neon-number`}>
                 {metric.value}
               </p>
-              <div className={`flex items-center gap-1 mt-1 text-[10px] font-exo ${metric.trend === 'up' ? 'text-bio-cyan' : 'text-bio-magenta'}`}>
+              <div className={`flex items-center gap-1 mt-1 text-[10px] font-numbers ${metric.trend === 'up' ? 'text-bio-cyan neon-glow-cyan' : 'text-bio-magenta neon-glow-magenta'}`}>
                 <TrendIcon className="w-3 h-3" />
                 <span>{metric.trendValue}</span>
               </div>
@@ -111,7 +111,7 @@ const SectionNow: React.FC<SectionNowProps> = ({ data, energyLevel }) => {
       >
         <div className="flex items-center gap-2 mb-3">
           <Sparkles className="w-4 h-4 text-golden" />
-          <span className="text-sm font-orbitron font-semibold text-foreground">{t('todaysFocus')}</span>
+          <span className="text-sm font-nasa font-semibold text-foreground">{t('todaysFocus')}</span>
         </div>
         <p className="text-base font-exo font-medium text-foreground mb-3">
           {t('mainAdvice')}

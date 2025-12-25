@@ -58,7 +58,7 @@ const SectionSoon: React.FC<SectionSoonProps> = ({ onPreparePlan }) => {
       >
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-4 h-4 text-bio-cyan" />
-          <span className="text-sm font-orbitron font-semibold text-foreground">{t('cycleTimeline')}</span>
+          <span className="text-sm font-nasa font-semibold text-foreground">{t('cycleTimeline')}</span>
         </div>
 
         {/* Timeline bar */}
@@ -109,7 +109,7 @@ const SectionSoon: React.FC<SectionSoonProps> = ({ onPreparePlan }) => {
       >
         <div className="flex items-center gap-2 mb-3">
           <Sparkles className="w-4 h-4 text-golden" />
-          <span className="text-sm font-orbitron font-semibold text-foreground">{t('nextKeyMoments')}</span>
+          <span className="text-sm font-nasa font-semibold text-foreground">{t('nextKeyMoments')}</span>
         </div>
 
         <div className="space-y-2">
@@ -122,7 +122,7 @@ const SectionSoon: React.FC<SectionSoonProps> = ({ onPreparePlan }) => {
               transition={{ delay: 0.3 + index * 0.1 }}
             >
               <span className="text-sm font-exo">{moment.label}</span>
-              <span className="font-orbitron font-bold">
+              <span className="font-numbers font-bold neon-number">
                 {moment.daysUntil} {t('days')}
               </span>
             </motion.div>
@@ -138,7 +138,7 @@ const SectionSoon: React.FC<SectionSoonProps> = ({ onPreparePlan }) => {
       >
         <Button
           onClick={onPreparePlan}
-          className="w-full rounded-[20px] h-12 bg-gradient-to-r from-bio-cyan to-bio-magenta text-white font-orbitron font-semibold hover:opacity-90 transition-opacity"
+          className="w-full rounded-[20px] h-12 bg-gradient-to-r from-bio-cyan to-bio-magenta text-white font-nasa font-semibold hover:opacity-90 transition-opacity"
         >
           {t('preparePlan')}
         </Button>

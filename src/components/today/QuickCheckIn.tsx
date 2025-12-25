@@ -59,7 +59,7 @@ const QuickCheckIn: React.FC<QuickCheckInProps> = ({ onComplete, onClose }) => {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-bio-cyan/20 mb-3">
             <Zap className="w-6 h-6 text-bio-cyan" />
           </div>
-          <h3 className="text-lg font-orbitron font-bold text-foreground">
+          <h3 className="text-lg font-nasa font-bold text-foreground">
             {step === 0 ? t('howIsYourEnergy') : t('howIsYourMood')}
           </h3>
           <p className="text-xs text-muted-foreground font-exo mt-1">
@@ -79,12 +79,12 @@ const QuickCheckIn: React.FC<QuickCheckInProps> = ({ onComplete, onClose }) => {
               <motion.button
                 key={level}
                 onClick={() => step === 0 ? handleEnergySelect(level) : handleMoodSelect(level)}
-                className={`aspect-square rounded-[12px] font-orbitron font-bold text-sm transition-all ${
+                className={`aspect-square rounded-[12px] font-numbers font-bold text-sm transition-all ${
                   level <= 3 
-                    ? 'bg-bio-magenta/20 text-bio-magenta hover:bg-bio-magenta/40 border border-bio-magenta/30' 
+                    ? 'bg-bio-magenta/20 neon-number-magenta hover:bg-bio-magenta/40 border border-bio-magenta/30' 
                     : level <= 6 
-                      ? 'bg-golden/20 text-golden hover:bg-golden/40 border border-golden/30'
-                      : 'bg-bio-cyan/20 text-bio-cyan hover:bg-bio-cyan/40 border border-bio-cyan/30'
+                      ? 'bg-golden/20 neon-number-golden hover:bg-golden/40 border border-golden/30'
+                      : 'bg-bio-cyan/20 neon-number hover:bg-bio-cyan/40 border border-bio-cyan/30'
                 }`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}

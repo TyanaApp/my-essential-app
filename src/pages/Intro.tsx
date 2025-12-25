@@ -90,7 +90,7 @@ const Intro = () => {
             <Sparkles className="w-16 h-16 text-primary mx-auto" />
           </motion.div>
           
-          <h1 className="text-5xl font-orbitron font-bold text-gradient-golden mb-4">
+          <h1 className="text-4xl font-nasa font-bold text-gradient-golden mb-4">
             {t('appName')}
           </h1>
           <p className="text-sm font-exo text-muted-foreground tracking-[0.3em] mb-2">

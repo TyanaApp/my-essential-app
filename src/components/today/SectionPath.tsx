@@ -56,8 +56,8 @@ const SectionPath: React.FC<SectionPathProps> = ({ initialTasks }) => {
       <div>
         <div className="flex items-center gap-2 mb-3">
           <Target className="w-4 h-4 text-bio-cyan" />
-          <span className="text-sm font-orbitron font-semibold text-foreground">{t('essential')}</span>
-          <span className="text-xs font-exo text-muted-foreground">({visibleEssential.length})</span>
+          <span className="text-sm font-nasa font-semibold text-foreground">{t('essential')}</span>
+          <span className="text-xs font-numbers text-muted-foreground neon-number">({visibleEssential.length})</span>
         </div>
         
         <div className="space-y-2">
@@ -104,8 +104,8 @@ const SectionPath: React.FC<SectionPathProps> = ({ initialTasks }) => {
           >
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="w-4 h-4 text-golden" />
-              <span className="text-sm font-orbitron font-semibold text-foreground">{t('optional')}</span>
-              <span className="text-xs font-exo text-muted-foreground">({visibleOptional.length})</span>
+              <span className="text-sm font-nasa font-semibold text-foreground">{t('optional')}</span>
+              <span className="text-xs font-numbers text-muted-foreground neon-number-golden">({visibleOptional.length})</span>
             </div>
             
             <div className="space-y-2">
@@ -152,7 +152,7 @@ const SectionPath: React.FC<SectionPathProps> = ({ initialTasks }) => {
           <Button
             onClick={handleMakeLighter}
             variant="outline"
-            className="w-full rounded-[20px] h-12 border-bio-magenta/30 text-bio-magenta hover:bg-bio-magenta/10 font-orbitron font-semibold transition-all"
+            className="w-full rounded-[20px] h-12 border-bio-magenta/30 text-bio-magenta hover:bg-bio-magenta/10 font-nasa font-semibold transition-all"
           >
             {t('makeTodayLighter')}
           </Button>
