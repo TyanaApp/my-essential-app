@@ -29,7 +29,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
         <button
           key={segment}
           onClick={() => onChange(index)}
-          className={`relative z-10 flex-1 py-2 px-3 text-sm font-orbitron font-medium transition-colors duration-200 ${
+          className={`relative z-10 flex-1 py-2 px-3 text-xs font-nasa font-medium transition-colors duration-200 ${
             activeIndex === index
               ? 'text-bio-cyan'
               : 'text-muted-foreground hover:text-foreground'

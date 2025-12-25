@@ -142,12 +142,78 @@
 }
 
 @layer utilities {
+  .font-nasa {
+    font-family: 'Michroma', sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
   .font-orbitron {
     font-family: 'Orbitron', sans-serif;
   }
 
   .font-exo {
     font-family: 'Exo 2', sans-serif;
+  }
+
+  .font-numbers {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+  }
+
+  /* Neon number styles */
+  .neon-number {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    color: hsl(var(--bio-cyan));
+    text-shadow: 
+      0 0 5px hsl(var(--bio-cyan) / 0.5),
+      0 0 10px hsl(var(--bio-cyan) / 0.4),
+      0 0 20px hsl(var(--bio-cyan) / 0.3),
+      0 0 40px hsl(var(--bio-cyan) / 0.2);
+  }
+
+  .neon-number-magenta {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    color: hsl(var(--bio-magenta));
+    text-shadow: 
+      0 0 5px hsl(var(--bio-magenta) / 0.5),
+      0 0 10px hsl(var(--bio-magenta) / 0.4),
+      0 0 20px hsl(var(--bio-magenta) / 0.3),
+      0 0 40px hsl(var(--bio-magenta) / 0.2);
+  }
+
+  .neon-number-golden {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    color: hsl(var(--golden));
+    text-shadow: 
+      0 0 5px hsl(var(--golden) / 0.5),
+      0 0 10px hsl(var(--golden) / 0.4),
+      0 0 20px hsl(var(--golden) / 0.3),
+      0 0 40px hsl(var(--golden) / 0.2);
+  }
+
+  .neon-glow-cyan {
+    text-shadow: 
+      0 0 5px hsl(var(--bio-cyan) / 0.6),
+      0 0 15px hsl(var(--bio-cyan) / 0.4),
+      0 0 30px hsl(var(--bio-cyan) / 0.3);
+  }
+
+  .neon-glow-magenta {
+    text-shadow: 
+      0 0 5px hsl(var(--bio-magenta) / 0.6),
+      0 0 15px hsl(var(--bio-magenta) / 0.4),
+      0 0 30px hsl(var(--bio-magenta) / 0.3);
+  }
+
+  .neon-glow-golden {
+    text-shadow: 
+      0 0 5px hsl(var(--golden) / 0.6),
+      0 0 15px hsl(var(--golden) / 0.4),
+      0 0 30px hsl(var(--golden) / 0.3);
   }
 }
 

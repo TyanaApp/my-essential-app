@@ -59,7 +59,7 @@ const SectionWhatIf: React.FC = () => {
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <FlaskConical className="w-4 h-4 text-bio-magenta" />
-        <span className="text-sm font-orbitron font-semibold text-foreground">{t('habitSimulator')}</span>
+        <span className="text-sm font-nasa font-semibold text-foreground">{t('habitSimulator')}</span>
       </div>
 
       {/* Preset cards - horizontal scroll */}
@@ -86,7 +86,7 @@ const SectionWhatIf: React.FC = () => {
                 ) : (
                   <TrendingDown className="w-3.5 h-3.5 text-bio-magenta" />
                 )}
-                <span className={`text-sm font-orbitron font-bold ${preset.positive ? 'text-bio-cyan' : 'text-bio-magenta'}`}>
+                <span className={`text-sm font-numbers font-bold ${preset.positive ? 'neon-number' : 'neon-number-magenta'}`}>
                   {preset.positive ? '+' : '-'}{preset.impact}%
                 </span>
                 <span className="text-[10px] text-muted-foreground font-exo">
@@ -136,7 +136,7 @@ const SectionWhatIf: React.FC = () => {
           >
             {/* Before vs After visualization */}
             <div>
-              <p className="text-xs font-orbitron text-muted-foreground mb-3">{t('beforeAfter')}</p>
+              <p className="text-xs font-nasa text-muted-foreground mb-3">{t('beforeAfter')}</p>
               <div className="flex items-end gap-4 h-24">
                 {/* Before bar */}
                 <div className="flex-1 flex flex-col items-center">
@@ -167,7 +167,7 @@ const SectionWhatIf: React.FC = () => {
               <span className="text-sm font-exo text-foreground">
                 {selectedPreset.action}
               </span>
-              <span className={`font-orbitron font-bold ${selectedPreset.positive ? 'text-bio-cyan' : 'text-bio-magenta'}`}>
+              <span className={`font-numbers font-bold ${selectedPreset.positive ? 'neon-number' : 'neon-number-magenta'}`}>
                 {selectedPreset.positive ? '+' : ''}{selectedPreset.impact}%
               </span>
             </div>
@@ -175,7 +175,7 @@ const SectionWhatIf: React.FC = () => {
             {/* Turn into experiment button */}
             <Button
               onClick={handleTurnIntoExperiment}
-              className="w-full rounded-[20px] h-11 bg-gradient-to-r from-bio-magenta to-bio-cyan text-white font-orbitron font-semibold hover:opacity-90 transition-opacity"
+              className="w-full rounded-[20px] h-11 bg-gradient-to-r from-bio-magenta to-bio-cyan text-white font-nasa font-semibold hover:opacity-90 transition-opacity"
             >
               {t('turnIntoExperiment')}
             </Button>

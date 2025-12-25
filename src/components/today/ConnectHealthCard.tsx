@@ -21,7 +21,7 @@ const ConnectHealthCard: React.FC<ConnectHealthCardProps> = ({ onConnect }) => {
         <Watch className="w-6 h-6 text-bio-magenta" />
       </div>
       <div className="flex-1 text-left">
-        <p className="font-orbitron font-semibold text-foreground text-sm">
+        <p className="font-nasa font-semibold text-foreground text-sm">
           {t('connectHealth')}
         </p>
         <p className="text-xs text-muted-foreground font-exo">

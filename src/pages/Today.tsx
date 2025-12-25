@@ -81,7 +81,7 @@ const Today = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-xl font-orbitron font-bold text-foreground mb-0.5">
+        <h1 className="text-xl font-nasa font-bold text-foreground mb-0.5">
           {t('today')}
         </h1>
         <p className="text-xs text-muted-foreground font-exo">

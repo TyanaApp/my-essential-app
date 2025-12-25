@@ -14,8 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
+        nasa: ['Michroma', 'sans-serif'],
         orbitron: ['Orbitron', 'sans-serif'],
         exo: ['Exo 2', 'sans-serif'],
+        numbers: ['Quicksand', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

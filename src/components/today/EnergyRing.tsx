@@ -93,12 +93,10 @@ const EnergyRing: React.FC<EnergyRingProps> = ({
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span 
-          className="text-5xl font-orbitron font-bold"
+          className="text-5xl font-numbers font-bold neon-number"
           style={{ 
-            background: `linear-gradient(135deg, ${colors.start}, ${colors.end})`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: `0 0 30px ${colors.start}60`,
+            color: colors.start,
+            textShadow: `0 0 10px ${colors.start}80, 0 0 20px ${colors.start}60, 0 0 40px ${colors.start}40`,
           }}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
