@@ -1,16 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, RotateCcw, Bot, User } from 'lucide-react';
+import { Sparkles, Send, RotateCcw, Bot, User, Mic, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAIChat } from '@/hooks/useAIChat';
+import { useVoiceInput } from '@/hooks/useVoiceInput';
 
 const Twin = () => {
   const { t } = useLanguage();
   const { messages, isLoading, sendMessage, clearChat, initializeChat } = useAIChat();
   const [input, setInput] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const handleTranscription = (text: string) => {
+    setInput(text);
+  };
+
+  const { isRecording, isProcessing, toggleRecording } = useVoiceInput(handleTranscription);
 
   useEffect(() => {
     initializeChat();
@@ -113,12 +120,26 @@ const Twin = () => {
           onSubmit={(e) => { e.preventDefault(); handleSend(); }}
           className="flex gap-2"
         >
+          <Button
+            type="button"
+            size="icon"
+            variant={isRecording ? "default" : "secondary"}
+            onClick={toggleRecording}
+            disabled={isProcessing || isLoading}
+            className={`flex-shrink-0 ${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse' : ''}`}
+          >
+            {isProcessing ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Mic className="w-5 h-5" />
+            )}
+          </Button>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t('askAI')}
+            placeholder={isRecording ? '🎙️ Говорите...' : t('askAI')}
             className="flex-1 bg-secondary border-border text-foreground font-exo"
-            disabled={isLoading}
+            disabled={isLoading || isRecording}
           />
           <Button 
             type="submit" 
