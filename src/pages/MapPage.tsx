@@ -173,52 +173,40 @@ const MapPage = () => {
         )}
       </div>
 
-      {/* Places list */}
-      <div className="px-6 pb-24 space-y-3">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-3"
-        >
+      {/* Places list - Compact */}
+      <div className="px-4 pb-24">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {safePlaces
             .filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
             .map((place, index) => (
               <motion.div
                 key={place.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                onClick={() => handlePlaceClick(place)}
+                className={`flex-shrink-0 cursor-pointer px-3 py-2 rounded-xl border transition-all ${
+                  selectedPlace === place.id 
+                    ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(168,85,247,0.4)]' 
+                    : 'bg-card/50 border-primary/20 hover:border-primary/50 hover:shadow-[0_0_10px_rgba(168,85,247,0.2)]'
+                }`}
               >
-                <Card 
-                  className={`bg-card border-border hover:border-primary/50 transition-colors cursor-pointer ${
-                    selectedPlace === place.id ? 'border-primary' : ''
-                  }`}
-                  onClick={() => handlePlaceClick(place)}
-                >
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-2xl">
-                      {getTypeIcon(place.type)}
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{getTypeIcon(place.type)}</span>
+                  <div className="flex flex-col">
+                    <span className="font-orbitron text-xs text-foreground whitespace-nowrap">{place.name}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-yellow-500 text-[10px]">★</span>
+                      <span className="text-[10px] text-muted-foreground">{place.rating}</span>
+                      {place.verified && (
+                        <span className="text-[8px] bg-primary/30 text-primary px-1 rounded-full">✓</span>
+                      )}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-orbitron font-medium text-foreground">{place.name}</h3>
-                        {place.verified && (
-                          <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">✓</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-yellow-500">★</span>
-                        <span className="text-sm text-muted-foreground font-exo">{place.rating}</span>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      <Navigation className="w-5 h-5 text-primary" />
-                    </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             ))}
-        </motion.div>
+        </div>
       </div>
     </div>
   );
