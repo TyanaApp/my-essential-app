@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { BarChart3 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 import StarParticles from '@/components/timeline/StarParticles';
 import DNAHelix from '@/components/timeline/DNAHelix';
 import HistoryHeader from '@/components/history/HistoryHeader';
 import TodayCheckIn from '@/components/history/TodayCheckIn';
 import WearableWidget from '@/components/history/WearableWidget';
+import EmptyWearable from '@/components/history/EmptyWearable';
+import EmptyTimeline from '@/components/history/EmptyTimeline';
 import TimelineEvent, { TimelineEventData, EventType } from '@/components/history/TimelineEvent';
 import FilterModal, { FilterState } from '@/components/history/FilterModal';
 import SmartSuggestion from '@/components/history/SmartSuggestion';
 import EventDetailsModal from '@/components/history/EventDetailsModal';
+import QuickAddScreen from '@/components/history/QuickAddScreen';
 import AddEventScreen from '@/components/history/AddEventScreen';
 import PeriodInsightsModal from '@/components/history/PeriodInsightsModal';
 import QuickActionsSheet from '@/components/history/QuickActionsSheet';
@@ -27,12 +29,15 @@ const HistoryPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState<'day' | 'week' | 'month' | 'custom'>('week');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [isDetailedAddOpen, setIsDetailedAddOpen] = useState(false);
   const [isInsightsOpen, setIsInsightsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<TimelineEventData | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [quickActionsEvent, setQuickActionsEvent] = useState<TimelineEventData | null>(null);
   const [showSuggestion, setShowSuggestion] = useState(true);
+  const [hasWearable, setHasWearable] = useState(false);
+  const [checkInExpanded, setCheckInExpanded] = useState(false);
 
   const [filters, setFilters] = useState<FilterState>({
     types: [],
@@ -40,6 +45,9 @@ const HistoryPage = () => {
     confidence: 'all',
     showPrivate: false,
   });
+
+  // Check if timeline is empty
+  const isTimelineEmpty = !isLoading && leftEvents.length === 0 && rightEvents.length === 0;
 
   // Convert old events to new format
   const convertEvent = (event: any, side: 'left' | 'right'): TimelineEventData => ({
@@ -79,13 +87,17 @@ const HistoryPage = () => {
       date: newEvent.date,
       type: newEvent.type,
       status: newEvent.status,
-      icon: newEvent.icon,
+      icon: getIconByName(iconName),
       iconName,
     });
   };
 
   const handleCheckIn = (data: any) => {
     console.log('Check-in data:', data);
+  };
+
+  const handleConnectWearable = () => {
+    toast.info('Интеграция с Apple Health / Google Fit скоро будет доступна');
   };
 
   return (
@@ -98,7 +110,7 @@ const HistoryPage = () => {
       <StarParticles />
 
       <HistoryHeader
-        onAddClick={() => setIsAddOpen(true)}
+        onAddClick={() => setIsQuickAddOpen(true)}
         onFilterClick={() => setIsFilterOpen(true)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -109,8 +121,12 @@ const HistoryPage = () => {
       {/* Today Block */}
       <TodayCheckIn onSave={handleCheckIn} />
 
-      {/* Wearable Widget */}
-      <WearableWidget />
+      {/* Wearable Widget or Empty State */}
+      {hasWearable ? (
+        <WearableWidget />
+      ) : (
+        <EmptyWearable onConnect={handleConnectWearable} />
+      )}
 
       {/* Insights Button */}
       <div className="px-4 mb-4">
@@ -127,54 +143,57 @@ const HistoryPage = () => {
       <div className="relative px-4 min-h-[400px]">
         <DNAHelix />
 
-        <div className="relative z-10 grid grid-cols-2 gap-x-12 gap-y-6 pt-4">
-          {isLoading ? (
-            <>
-              <div className="flex flex-col gap-6">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={`left-skeleton-${i}`} className="w-[140px] h-[150px] rounded-2xl bg-white/10" />
-                ))}
-              </div>
-              <div className="flex flex-col gap-6">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={`right-skeleton-${i}`} className="w-[140px] h-[150px] rounded-2xl bg-white/10 ml-auto" />
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex flex-col gap-6">
-                {leftTimelineEvents.map((event, i) => (
-                  <TimelineEvent
-                    key={`left-${event.id || event.title}-${i}`}
-                    {...event}
-                    index={i}
-                    onClick={() => handleCardClick(event)}
-                    onDelete={deleteEvent}
-                    onLongPress={() => handleLongPress(event)}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-6">
-                {rightTimelineEvents.map((event, i) => (
-                  <TimelineEvent
-                    key={`right-${event.id || event.title}-${i}`}
-                    {...event}
-                    index={i}
-                    onClick={() => handleCardClick(event)}
-                    onDelete={deleteEvent}
-                    onLongPress={() => handleLongPress(event)}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        {isLoading ? (
+          <div className="relative z-10 grid grid-cols-2 gap-x-12 gap-y-6 pt-4">
+            <div className="flex flex-col gap-6">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={`left-skeleton-${i}`} className="w-[140px] h-[150px] rounded-2xl bg-white/10" />
+              ))}
+            </div>
+            <div className="flex flex-col gap-6">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={`right-skeleton-${i}`} className="w-[140px] h-[150px] rounded-2xl bg-white/10 ml-auto" />
+              ))}
+            </div>
+          </div>
+        ) : isTimelineEmpty ? (
+          <EmptyTimeline
+            onAddEvent={() => setIsQuickAddOpen(true)}
+            onCheckIn={() => setCheckInExpanded(true)}
+          />
+        ) : (
+          <div className="relative z-10 grid grid-cols-2 gap-x-12 gap-y-6 pt-4">
+            <div className="flex flex-col gap-6">
+              {leftTimelineEvents.map((event, i) => (
+                <TimelineEvent
+                  key={`left-${event.id || event.title}-${i}`}
+                  {...event}
+                  index={i}
+                  onClick={() => handleCardClick(event)}
+                  onDelete={deleteEvent}
+                  onLongPress={() => handleLongPress(event)}
+                />
+              ))}
+            </div>
+            <div className="flex flex-col gap-6">
+              {rightTimelineEvents.map((event, i) => (
+                <TimelineEvent
+                  key={`right-${event.id || event.title}-${i}`}
+                  {...event}
+                  index={i}
+                  onClick={() => handleCardClick(event)}
+                  onDelete={deleteEvent}
+                  onLongPress={() => handleLongPress(event)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Smart Suggestion */}
       <SmartSuggestion
-        isVisible={showSuggestion}
+        isVisible={showSuggestion && !isTimelineEmpty}
         message="Похоже, за 24–48ч до ПМС у тебя падает энергия. Хочешь включить режим поддержки на 3 дня?"
         onDismiss={() => setShowSuggestion(false)}
         onAccept={() => {
@@ -192,9 +211,15 @@ const HistoryPage = () => {
         onApply={setFilters}
       />
 
+      <QuickAddScreen
+        isOpen={isQuickAddOpen}
+        onClose={() => setIsQuickAddOpen(false)}
+        onAdd={handleAddEvent}
+      />
+
       <AddEventScreen
-        isOpen={isAddOpen}
-        onClose={() => setIsAddOpen(false)}
+        isOpen={isDetailedAddOpen}
+        onClose={() => setIsDetailedAddOpen(false)}
         onAdd={handleAddEvent}
       />
 
