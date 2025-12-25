@@ -32,12 +32,17 @@ const mapOptions: google.maps.MapOptions = {
   disableDefaultUI: true,
   zoomControl: true,
   styles: [
-    { elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
-    { elementType: 'labels.text.stroke', stylers: [{ color: '#1a1a2e' }] },
-    { elementType: 'labels.text.fill', stylers: [{ color: '#8b8b8b' }] },
-    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2d2d44' }] },
-    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e0e1a' }] },
-    { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#252540' }] },
+    { elementType: 'geometry', stylers: [{ color: '#0a0a15' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#0a0a15' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#a855f7' }] },
+    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
+    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#7c3aed' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0f0520' }] },
+    { featureType: 'water', elementType: 'geometry.stroke', stylers: [{ color: '#8b5cf6' }] },
+    { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#1a0a2e' }] },
+    { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#c084fc' }] },
+    { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#0a0a15' }] },
+    { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#2a1a4e' }] },
   ],
 };
 
@@ -105,34 +110,43 @@ const MapPage = () => {
           />
         </div>
 
-        {/* Tabs */}
+        {/* Tab Icons */}
         <div className="flex gap-2">
-          <Button
-            variant={selectedTab === 'places' ? 'default' : 'secondary'}
-            size="sm"
+          <button
             onClick={() => setSelectedTab('places')}
-            className="font-exo"
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+              selectedTab === 'places' 
+                ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(168,85,247,0.5)]' 
+                : 'bg-secondary/50 text-muted-foreground hover:bg-secondary'
+            }`}
           >
-            <MapPin className="w-4 h-4 mr-2" />
-            {t('safePlaces')}
-          </Button>
-          <Button
-            variant={selectedTab === 'users' ? 'default' : 'secondary'}
-            size="sm"
+            <MapPin className="w-5 h-5" />
+          </button>
+          <button
             onClick={() => setSelectedTab('users')}
-            className="font-exo"
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+              selectedTab === 'users' 
+                ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(168,85,247,0.5)]' 
+                : 'bg-secondary/50 text-muted-foreground hover:bg-secondary'
+            }`}
           >
-            <Users className="w-4 h-4 mr-2" />
-            {t('nearbyUsers')}
-          </Button>
+            <Users className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
       {/* Map */}
-      <div className="mx-6 mb-4 rounded-xl overflow-hidden h-48 relative">
+      <div className="mx-4 mb-4 rounded-2xl overflow-hidden h-[55vh] relative border border-primary/30 shadow-[0_0_30px_rgba(168,85,247,0.3)]">
+        {/* Neon glow overlay */}
+        <div className="absolute inset-0 pointer-events-none z-10 rounded-2xl" 
+          style={{
+            boxShadow: 'inset 0 0 60px rgba(139, 92, 246, 0.2)',
+          }}
+        />
+        
         {loadError ? (
           <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 text-muted-foreground bg-secondary">
-            <Navigation className="w-12 h-12" />
+            <Navigation className="w-12 h-12 text-primary" />
             <p className="font-exo text-sm">Map unavailable</p>
           </div>
         ) : !isLoaded ? (
