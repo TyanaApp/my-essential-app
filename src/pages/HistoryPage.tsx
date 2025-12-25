@@ -18,8 +18,11 @@ import QuickAddScreen from '@/components/history/QuickAddScreen';
 import AddEventScreen from '@/components/history/AddEventScreen';
 import PeriodInsightsModal from '@/components/history/PeriodInsightsModal';
 import QuickActionsSheet from '@/components/history/QuickActionsSheet';
+import AIInsightsPanel from '@/components/history/AIInsightsPanel';
+import CreatePlanSheet from '@/components/history/CreatePlanSheet';
 import { useLifeEvents, getIconByName } from '@/hooks/useLifeEvents';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DetectionType } from '@/components/history/AIDetectionCard';
 
 const HistoryPage = () => {
   const navigate = useNavigate();
@@ -38,6 +41,8 @@ const HistoryPage = () => {
   const [showSuggestion, setShowSuggestion] = useState(true);
   const [hasWearable, setHasWearable] = useState(false);
   const [checkInExpanded, setCheckInExpanded] = useState(false);
+  const [isPlanSheetOpen, setIsPlanSheetOpen] = useState(false);
+  const [planEventTitle, setPlanEventTitle] = useState('');
 
   const [filters, setFilters] = useState<FilterState>({
     types: [],
@@ -45,6 +50,88 @@ const HistoryPage = () => {
     confidence: 'all',
     showPrivate: false,
   });
+
+  // AI Detection States
+  const [detections, setDetections] = useState<{
+    id: string;
+    type: DetectionType;
+    title: string;
+    description: string;
+    confidence: 'high' | 'medium' | 'low';
+    detectedAt: string;
+  }[]>([
+    {
+      id: 'det-1',
+      type: 'stress_peak',
+      title: 'Стресс-пик обнаружен',
+      description: 'За последние 48ч HRV снизился на 15%, а пульс покоя вырос. Это может указывать на повышенный стресс.',
+      confidence: 'high',
+      detectedAt: 'Сегодня, 10:30',
+    },
+    {
+      id: 'det-2',
+      type: 'poor_sleep',
+      title: 'Плохой сон 3 ночи подряд',
+      description: 'Среднее время сна за 3 ночи — 5.5ч вместо твоих обычных 7ч. Это может повлиять на энергию и настроение.',
+      confidence: 'high',
+      detectedAt: 'Вчера',
+    },
+    {
+      id: 'det-3',
+      type: 'pms_window',
+      title: 'ПМС-окно через 2 дня',
+      description: 'На основе твоего цикла, через 2 дня начнётся период, когда ты обычно чувствуешь усталость.',
+      confidence: 'medium',
+      detectedAt: 'Сегодня',
+    },
+  ]);
+
+  // AI Hypotheses States  
+  const [hypotheses, setHypotheses] = useState<{
+    id: string;
+    cause: string;
+    effect: string;
+    lag: string;
+    occurrences: number;
+    totalCases: number;
+    confidence: 'high' | 'medium' | 'low';
+    explanation: string;
+    userFeedback?: 'confirmed' | 'denied' | null;
+  }[]>([
+    {
+      id: 'hyp-1',
+      cause: 'Недосып (<6ч)',
+      effect: 'Тревожность',
+      lag: '12-24ч',
+      occurrences: 7,
+      totalCases: 9,
+      confidence: 'high',
+      explanation: 'В 7 из 9 случаев, когда ты спала менее 6 часов, на следующий день ты отмечала повышенную тревожность. Лаг обычно составляет 12-24 часа.',
+      userFeedback: null,
+    },
+    {
+      id: 'hyp-2',
+      cause: 'Вечерний кофеин',
+      effect: 'Плохой сон',
+      lag: '4-8ч',
+      occurrences: 5,
+      totalCases: 8,
+      confidence: 'medium',
+      explanation: 'Когда ты пила кофе после 16:00, в 5 из 8 случаев качество сна было ниже обычного. Время засыпания увеличивалось на 20-40 минут.',
+      userFeedback: null,
+    },
+    {
+      id: 'hyp-3',
+      cause: 'ПМС-окно',
+      effect: 'Падение энергии',
+      lag: '48ч до начала',
+      occurrences: 4,
+      totalCases: 4,
+      confidence: 'high',
+      explanation: 'Во всех 4 отслеженных циклах за 2 дня до начала месячных твоя энергия падала на 20-30%. Это типичный паттерн, связанный с гормональными изменениями.',
+      userFeedback: null,
+    },
+  ]);
 
   // Check if timeline is empty
   const isTimelineEmpty = !isLoading && leftEvents.length === 0 && rightEvents.length === 0;
@@ -100,6 +187,50 @@ const HistoryPage = () => {
     toast.info('Интеграция с Apple Health / Google Fit скоро будет доступна');
   };
 
+  // AI Detection Handlers
+  const handleConfirmDetection = (id: string) => {
+    setDetections(prev => prev.filter(d => d.id !== id));
+    toast.success('Событие подтверждено и добавлено в таймлайн');
+  };
+
+  const handleDenyDetection = (id: string) => {
+    setDetections(prev => prev.filter(d => d.id !== id));
+    toast('Хорошо, я буду точнее в следующий раз', { icon: '👌' });
+  };
+
+  const handleDetectionDetails = (id: string) => {
+    const detection = detections.find(d => d.id === id);
+    if (detection) {
+      handleAITwinSync(`Расскажи подробнее про обнаруженный ${detection.title}`);
+    }
+  };
+
+  // AI Hypothesis Handlers
+  const handleConfirmHypothesis = (id: string) => {
+    setHypotheses(prev => prev.map(h => 
+      h.id === id ? { ...h, userFeedback: 'confirmed' as const } : h
+    ));
+    toast.success('Связь подтверждена! Я буду учитывать это.');
+  };
+
+  const handleDenyHypothesis = (id: string) => {
+    setHypotheses(prev => prev.map(h => 
+      h.id === id ? { ...h, userFeedback: 'denied' as const } : h
+    ));
+    toast('Связь ослаблена. Спасибо за обратную связь!', { icon: '📝' });
+  };
+
+  // Plan Handlers
+  const handleOpenPlanSheet = (eventTitle?: string) => {
+    setPlanEventTitle(eventTitle || '');
+    setIsPlanSheetOpen(true);
+  };
+
+  const handleCreatePlan = (items: string[], reminders: { id: string; time: string }[]) => {
+    console.log('Creating plan with items:', items, 'reminders:', reminders);
+    toast.success(`План создан! Добавлено ${reminders.length} напоминаний.`);
+  };
+
   return (
     <div 
       className="min-h-screen relative overflow-hidden pb-24"
@@ -127,6 +258,17 @@ const HistoryPage = () => {
       ) : (
         <EmptyWearable onConnect={handleConnectWearable} />
       )}
+
+      {/* AI Insights Panel */}
+      <AIInsightsPanel
+        detections={detections}
+        hypotheses={hypotheses}
+        onConfirmDetection={handleConfirmDetection}
+        onDenyDetection={handleDenyDetection}
+        onDetectionDetails={handleDetectionDetails}
+        onConfirmHypothesis={handleConfirmHypothesis}
+        onDenyHypothesis={handleDenyHypothesis}
+      />
 
       {/* Insights Button */}
       <div className="px-4 mb-4">
@@ -244,11 +386,21 @@ const HistoryPage = () => {
         eventTitle={quickActionsEvent?.title || ''}
         onEdit={() => toast.info('Редактирование...')}
         onHide={() => toast.info('Скрыто')}
-        onConvertToPlan={() => toast.info('Преобразовано в план')}
+        onConvertToPlan={() => {
+          handleOpenPlanSheet(quickActionsEvent?.title);
+          setQuickActionsEvent(null);
+        }}
         onMarkImportant={() => toast.success('Отмечено как важное')}
         onDelete={() => {
           if (quickActionsEvent?.id) deleteEvent(quickActionsEvent.id);
         }}
+      />
+
+      <CreatePlanSheet
+        isOpen={isPlanSheetOpen}
+        onClose={() => setIsPlanSheetOpen(false)}
+        eventTitle={planEventTitle}
+        onCreatePlan={handleCreatePlan}
       />
     </div>
   );
