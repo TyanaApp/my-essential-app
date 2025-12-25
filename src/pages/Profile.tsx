@@ -1,14 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { User, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { User, Settings, LogOut, ChevronRight, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import LanguageSelector from '@/components/LanguageSelector';
 
 const Profile = () => {
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -45,20 +46,11 @@ const Profile = () => {
       {/* Language */}
       <Card className="bg-card border-border mb-4">
         <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground font-exo mb-2">Language</p>
-          <div className="flex gap-2">
-            {(['en', 'ru', 'lv'] as const).map((lang) => (
-              <Button
-                key={lang}
-                variant={language === lang ? 'default' : 'secondary'}
-                size="sm"
-                onClick={() => setLanguage(lang)}
-                className="font-exo"
-              >
-                {lang.toUpperCase()}
-              </Button>
-            ))}
+          <div className="flex items-center gap-2 mb-3">
+            <Globe className="w-4 h-4 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground font-exo">Language / Язык / Valoda</p>
           </div>
+          <LanguageSelector variant="pills" />
         </CardContent>
       </Card>
 
