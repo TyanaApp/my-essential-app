@@ -74,7 +74,7 @@ const Today = () => {
   const dateLocale = language === 'ru' ? 'ru-RU' : language === 'lv' ? 'lv-LV' : 'en-US';
 
   return (
-    <div className="min-h-screen bg-background p-6 pb-24">
+    <div className="min-h-screen p-6 pb-24">
       {/* Header */}
       <motion.div 
         className="mb-4"
