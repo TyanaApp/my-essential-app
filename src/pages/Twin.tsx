@@ -1,17 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, RotateCcw, Bot, User, Mic, Loader2 } from 'lucide-react';
+import { Sparkles, Send, RotateCcw, Bot, User, Mic, Loader2, Volume2, VolumeX } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAIChat } from '@/hooks/useAIChat';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
+import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 
 const Twin = () => {
   const { t } = useLanguage();
   const { messages, isLoading, sendMessage, clearChat, initializeChat } = useAIChat();
   const [input, setInput] = React.useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { isSpeaking, speakingMessageId, speak, stop } = useTextToSpeech();
 
   const handleTranscription = (text: string) => {
     setInput(text);
@@ -34,6 +36,10 @@ const Twin = () => {
     await sendMessage(message);
   };
 
+  const handleSpeak = (messageId: string, content: string) => {
+    speak(content, messageId);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
@@ -47,14 +53,26 @@ const Twin = () => {
             <p className="text-xs text-muted-foreground font-exo">Health Assistant</p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={clearChat}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <RotateCcw className="w-5 h-5" />
-        </Button>
+        <div className="flex items-center gap-2">
+          {isSpeaking && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={stop}
+              className="text-primary"
+            >
+              <VolumeX className="w-5 h-5" />
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={clearChat}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -84,6 +102,17 @@ const Twin = () => {
                     : 'bg-secondary text-foreground'
                 }`}>
                   <p className="text-sm font-exo whitespace-pre-wrap">{message.content}</p>
+                  
+                  {/* Speaker button for assistant messages */}
+                  {message.role === 'assistant' && message.content && message.id !== 'initial' && (
+                    <button
+                      onClick={() => handleSpeak(message.id, message.content)}
+                      className="mt-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Volume2 className={`w-3.5 h-3.5 ${speakingMessageId === message.id ? 'text-primary animate-pulse' : ''}`} />
+                      <span>{speakingMessageId === message.id ? 'Стоп' : 'Озвучить'}</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
