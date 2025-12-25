@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, Shield } from 'lucide-react';
 
 import StarParticles from '@/components/timeline/StarParticles';
 import DNAHelix from '@/components/timeline/DNAHelix';
@@ -20,6 +20,9 @@ import PeriodInsightsModal from '@/components/history/PeriodInsightsModal';
 import QuickActionsSheet from '@/components/history/QuickActionsSheet';
 import AIInsightsPanel from '@/components/history/AIInsightsPanel';
 import CreatePlanSheet from '@/components/history/CreatePlanSheet';
+import PrivacySettings, { PrivacySettingsState } from '@/components/history/PrivacySettings';
+import GentleReturnPrompt from '@/components/history/GentleReturnPrompt';
+import InsightRecalculating from '@/components/history/InsightRecalculating';
 import { useLifeEvents, getIconByName } from '@/hooks/useLifeEvents';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DetectionType } from '@/components/history/AIDetectionCard';
@@ -43,6 +46,19 @@ const HistoryPage = () => {
   const [checkInExpanded, setCheckInExpanded] = useState(false);
   const [isPlanSheetOpen, setIsPlanSheetOpen] = useState(false);
   const [planEventTitle, setPlanEventTitle] = useState('');
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isRecalculating, setIsRecalculating] = useState(false);
+  const [showReturnPrompt, setShowReturnPrompt] = useState(true);
+  const [daysMissed] = useState(3); // Example: would come from last check-in date
+
+  const [privacySettings, setPrivacySettings] = useState<PrivacySettingsState>({
+    cycleTracking: true,
+    intimateTopics: false,
+    pregnancyMode: false,
+    privateEventsEnabled: true,
+    biometricLock: false,
+    hideFromShared: false,
+  });
 
   const [filters, setFilters] = useState<FilterState>({
     types: [],
@@ -231,6 +247,24 @@ const HistoryPage = () => {
     toast.success(`План создан! Добавлено ${reminders.length} напоминаний.`);
   };
 
+  // Privacy Handlers
+  const handleSavePrivacy = (settings: PrivacySettingsState) => {
+    setPrivacySettings(settings);
+    toast.success('Настройки приватности сохранены');
+  };
+
+  // Enhanced delete with recalculation
+  const handleDeleteWithRecalc = useCallback(async (id: string) => {
+    setIsRecalculating(true);
+    await deleteEvent(id);
+    
+    // Simulate insight recalculation
+    setTimeout(() => {
+      setIsRecalculating(false);
+      toast.success('Инсайты обновлены');
+    }, 1500);
+  }, [deleteEvent]);
+
   return (
     <div 
       className="min-h-screen relative overflow-hidden pb-24"
@@ -247,6 +281,17 @@ const HistoryPage = () => {
         onSearchChange={setSearchQuery}
         dateRange={dateRange}
         onDateRangeChange={setDateRange}
+      />
+
+      {/* Gentle Return Prompt */}
+      <GentleReturnPrompt
+        isVisible={showReturnPrompt && daysMissed > 0 && !isTimelineEmpty}
+        daysMissed={daysMissed}
+        onDismiss={() => setShowReturnPrompt(false)}
+        onCheckIn={() => {
+          setShowReturnPrompt(false);
+          setCheckInExpanded(true);
+        }}
       />
 
       {/* Today Block */}
@@ -270,14 +315,20 @@ const HistoryPage = () => {
         onDenyHypothesis={handleDenyHypothesis}
       />
 
-      {/* Insights Button */}
-      <div className="px-4 mb-4">
+      {/* Action Buttons */}
+      <div className="px-4 mb-4 flex gap-3">
         <button
           onClick={() => setIsInsightsOpen(true)}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-colors"
         >
           <BarChart3 className="w-4 h-4" />
-          <span className="text-sm font-medium">Инсайты за период</span>
+          <span className="text-sm font-medium">Инсайты</span>
+        </button>
+        <button
+          onClick={() => setIsPrivacyOpen(true)}
+          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-colors"
+        >
+          <Shield className="w-4 h-4" />
         </button>
       </div>
 
@@ -312,7 +363,7 @@ const HistoryPage = () => {
                   {...event}
                   index={i}
                   onClick={() => handleCardClick(event)}
-                  onDelete={deleteEvent}
+                  onDelete={handleDeleteWithRecalc}
                   onLongPress={() => handleLongPress(event)}
                 />
               ))}
@@ -324,7 +375,7 @@ const HistoryPage = () => {
                   {...event}
                   index={i}
                   onClick={() => handleCardClick(event)}
-                  onDelete={deleteEvent}
+                  onDelete={handleDeleteWithRecalc}
                   onLongPress={() => handleLongPress(event)}
                 />
               ))}
@@ -392,7 +443,8 @@ const HistoryPage = () => {
         }}
         onMarkImportant={() => toast.success('Отмечено как важное')}
         onDelete={() => {
-          if (quickActionsEvent?.id) deleteEvent(quickActionsEvent.id);
+          if (quickActionsEvent?.id) handleDeleteWithRecalc(quickActionsEvent.id);
+          setQuickActionsEvent(null);
         }}
       />
 
@@ -402,6 +454,16 @@ const HistoryPage = () => {
         eventTitle={planEventTitle}
         onCreatePlan={handleCreatePlan}
       />
+
+      <PrivacySettings
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
+        settings={privacySettings}
+        onSave={handleSavePrivacy}
+      />
+
+      {/* Recalculating Indicator */}
+      <InsightRecalculating isVisible={isRecalculating} />
     </div>
   );
 };
