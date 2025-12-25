@@ -248,13 +248,20 @@ const HistoryPage = () => {
       {/* Main Layout: DNA in center, content around it */}
       <div className="relative px-2">
         {/* 3D DNA Helix - Center */}
-        <div className="relative h-[600px] flex items-center justify-center">
+        <div className="relative flex items-center justify-center" style={{ minHeight: `${Math.max(600, 500 + allEvents.length * 20)}px` }}>
           <Suspense fallback={
             <div className="w-full h-full flex items-center justify-center">
               <div className="w-16 h-16 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           }>
-            <DNA3DHelix />
+            <DNA3DHelix 
+              events={allEvents.map(e => ({ id: e.id, title: e.title, date: e.date, type: e.type }))}
+              onNodeClick={(node) => {
+                const event = allEvents.find(e => e.id === node.id);
+                if (event) handleCardClick(event);
+              }}
+              selectedEventId={selectedEvent?.id || null}
+            />
           </Suspense>
           
           {/* Left Side Cards */}
