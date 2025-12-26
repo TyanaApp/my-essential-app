@@ -1,454 +1,298 @@
-import React, { useState, useCallback, Suspense } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BarChart3, Shield } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-import HistoryHeader from '@/components/history/HistoryHeader';
-import TodayCheckIn from '@/components/history/TodayCheckIn';
-import WearableWidget from '@/components/history/WearableWidget';
-import EmptyWearable from '@/components/history/EmptyWearable';
-import EmptyTimeline from '@/components/history/EmptyTimeline';
-import TimelineEvent, { TimelineEventData, EventType } from '@/components/history/TimelineEvent';
-import FilterModal, { FilterState } from '@/components/history/FilterModal';
-import SmartSuggestion from '@/components/history/SmartSuggestion';
-import EventDetailsScreen from '@/components/history/EventDetailsScreen';
-import QuickAddScreen from '@/components/history/QuickAddScreen';
-import AddEventScreen from '@/components/history/AddEventScreen';
-import PeriodInsightsModal from '@/components/history/PeriodInsightsModal';
-import QuickActionsSheet from '@/components/history/QuickActionsSheet';
-import AIInsightsPanel from '@/components/history/AIInsightsPanel';
-import CreatePlanSheet from '@/components/history/CreatePlanSheet';
-import PrivacySettings, { PrivacySettingsState } from '@/components/history/PrivacySettings';
-import GentleReturnPrompt from '@/components/history/GentleReturnPrompt';
-import InsightRecalculating from '@/components/history/InsightRecalculating';
+import StarfieldBackground from '@/components/history/StarfieldBackground';
+import VerticalDNAHelix from '@/components/history/VerticalDNAHelix';
+import GlassEventCard, { EventType } from '@/components/history/GlassEventCard';
+import EventInsightsModal from '@/components/history/EventInsightsModal';
+import AddEventFAB from '@/components/history/AddEventFAB';
 import { useLifeEvents, getIconByName } from '@/hooks/useLifeEvents';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DetectionType } from '@/components/history/AIDetectionCard';
+import { ArrowLeft, Dna } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const DNA3DHelix = React.lazy(() => import('@/components/timeline/DNA3DHelix'));
+interface DNANode {
+  id: string;
+  title: string;
+  date: string;
+  type: EventType;
+  yPosition: number;
+}
+
+interface TimelineEvent {
+  id: string;
+  title: string;
+  date: string;
+  type: EventType;
+  status?: string;
+  side: 'left' | 'right';
+}
 
 const HistoryPage = () => {
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const isRussian = language === 'ru';
   const { leftEvents, rightEvents, isLoading, addEvent, deleteEvent } = useLifeEvents();
 
-  // UI States
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateRange, setDateRange] = useState<'day' | 'week' | 'month' | 'custom'>('week');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
-  const [isDetailedAddOpen, setIsDetailedAddOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<TimelineEvent | null>(null);
   const [isInsightsOpen, setIsInsightsOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<TimelineEventData | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [quickActionsEvent, setQuickActionsEvent] = useState<TimelineEventData | null>(null);
-  const [showSuggestion, setShowSuggestion] = useState(true);
-  const [hasWearable, setHasWearable] = useState(false);
-  const [checkInExpanded, setCheckInExpanded] = useState(false);
-  const [isPlanSheetOpen, setIsPlanSheetOpen] = useState(false);
-  const [planEventTitle, setPlanEventTitle] = useState('');
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
-  const [isRecalculating, setIsRecalculating] = useState(false);
-  const [showReturnPrompt, setShowReturnPrompt] = useState(true);
-  const [daysMissed] = useState(3);
 
-  const [privacySettings, setPrivacySettings] = useState<PrivacySettingsState>({
-    cycleTracking: true,
-    intimateTopics: false,
-    pregnancyMode: false,
-    privateEventsEnabled: true,
-    biometricLock: false,
-    hideFromShared: false,
-  });
+  // Convert events to timeline format
+  const allEvents: TimelineEvent[] = useMemo(() => {
+    const left = leftEvents.map((e) => ({
+      id: e.id || `left-${e.title}`,
+      title: e.title,
+      date: e.date,
+      type: (e.status === 'stress peak' ? 'stress_peak' : e.type) as EventType,
+      status: e.status,
+      side: 'left' as const,
+    }));
+    
+    const right = rightEvents.map((e) => ({
+      id: e.id || `right-${e.title}`,
+      title: e.title,
+      date: e.date,
+      type: (e.status === 'stress peak' ? 'stress_peak' : e.type) as EventType,
+      status: e.status,
+      side: 'right' as const,
+    }));
+    
+    return [...left, ...right];
+  }, [leftEvents, rightEvents]);
 
-  const [filters, setFilters] = useState<FilterState>({
-    types: [],
-    impacts: [],
-    confidence: 'all',
-    showPrivate: false,
-  });
+  // Separate into Past (left) and Future (right)
+  const pastEvents = allEvents.filter(e => e.side === 'left');
+  const futureEvents = allEvents.filter(e => e.side === 'right');
 
-  const [detections, setDetections] = useState<{
-    id: string;
-    type: DetectionType;
-    title: string;
-    description: string;
-    confidence: 'high' | 'medium' | 'low';
-    detectedAt: string;
-  }[]>([
-    {
-      id: 'det-1',
-      type: 'stress_peak',
-      title: 'Стресс-пик обнаружен',
-      description: 'За последние 48ч HRV снизился на 15%, а пульс покоя вырос.',
-      confidence: 'high',
-      detectedAt: 'Сегодня, 10:30',
-    },
-    {
-      id: 'det-2',
-      type: 'poor_sleep',
-      title: 'Плохой сон 3 ночи подряд',
-      description: 'Среднее время сна за 3 ночи — 5.5ч вместо обычных 7ч.',
-      confidence: 'high',
-      detectedAt: 'Вчера',
-    },
-  ]);
+  // Convert to DNA nodes
+  const dnaNodes: DNANode[] = useMemo(() => {
+    return allEvents.map((e, idx) => ({
+      id: e.id,
+      title: e.title,
+      date: e.date,
+      type: e.type,
+      yPosition: 100 + idx * 120,
+    }));
+  }, [allEvents]);
 
-  const [hypotheses, setHypotheses] = useState<{
-    id: string;
-    cause: string;
-    effect: string;
-    lag: string;
-    occurrences: number;
-    totalCases: number;
-    confidence: 'high' | 'medium' | 'low';
-    explanation: string;
-    userFeedback?: 'confirmed' | 'denied' | null;
-  }[]>([
-    {
-      id: 'hyp-1',
-      cause: 'Недосып (<6ч)',
-      effect: 'Тревожность',
-      lag: '12-24ч',
-      occurrences: 7,
-      totalCases: 9,
-      confidence: 'high',
-      explanation: 'В 7 из 9 случаев после сна <6ч была тревожность.',
-      userFeedback: null,
-    },
-  ]);
-
-  const isTimelineEmpty = !isLoading && leftEvents.length === 0 && rightEvents.length === 0;
-
-  const convertEvent = (event: any, side: 'left' | 'right'): TimelineEventData => ({
-    id: event.id,
-    title: event.title,
-    date: event.date,
-    type: event.type as EventType,
-    status: event.status,
-    icon: event.icon,
-    iconName: event.iconName,
-    side,
-    confidence: 'high',
-  });
-
-  const leftTimelineEvents = leftEvents.map(e => convertEvent(e, 'left'));
-  const rightTimelineEvents = rightEvents.map(e => convertEvent(e, 'right'));
-  const allEvents = [...leftTimelineEvents, ...rightTimelineEvents];
-
-  const handleCardClick = (event: TimelineEventData) => {
+  const handleCardClick = (event: TimelineEvent) => {
     setSelectedEvent(event);
-    setIsDetailsOpen(true);
+    setIsInsightsOpen(true);
   };
 
-  const handleLongPress = (event: TimelineEventData) => {
-    setQuickActionsEvent(event);
+  const handleNodeClick = (node: DNANode) => {
+    const event = allEvents.find(e => e.id === node.id);
+    if (event) {
+      setSelectedEvent(event);
+      setIsInsightsOpen(true);
+    }
   };
 
-  const handleAITwinSync = (message: string) => {
-    toast.success('Синхронизация с AI Twin...', { duration: 2000 });
+  const handleAskAI = (message: string) => {
+    toast.success(isRussian ? 'Синхронизация с AI Twin...' : 'Syncing with AI Twin...', { duration: 2000 });
     sessionStorage.setItem('aiTwinMessage', message);
     navigate('/twin');
   };
 
-  const handleAddEvent = async (newEvent: any) => {
-    const iconName = newEvent.iconName || 'Target';
+  const handleViewDetails = () => {
+    setIsInsightsOpen(false);
+    toast.info(isRussian ? 'Детальный отчет скоро будет доступен' : 'Detailed report coming soon');
+  };
+
+  const handleAddEvent = async (newEvent: {
+    title: string;
+    date: string;
+    type: EventType;
+    status: string;
+    iconName: string;
+  }) => {
     await addEvent({
       title: newEvent.title,
       date: newEvent.date,
-      type: newEvent.type,
+      type: newEvent.type === 'stress_peak' ? 'trigger' : newEvent.type,
       status: newEvent.status,
-      icon: getIconByName(iconName),
-      iconName,
+      icon: getIconByName(newEvent.iconName),
+      iconName: newEvent.iconName,
     });
+    toast.success(isRussian ? `"${newEvent.title}" добавлено!` : `"${newEvent.title}" added!`);
   };
 
-  const handleCheckIn = (data: any) => {
-    console.log('Check-in data:', data);
-  };
-
-  const handleConnectWearable = () => {
-    toast.info('Интеграция с Apple Health / Google Fit скоро будет доступна');
-  };
-
-  const handleConfirmDetection = (id: string) => {
-    setDetections(prev => prev.filter(d => d.id !== id));
-    toast.success('Событие подтверждено');
-  };
-
-  const handleDenyDetection = (id: string) => {
-    setDetections(prev => prev.filter(d => d.id !== id));
-    toast('Хорошо, буду точнее', { icon: '👌' });
-  };
-
-  const handleDetectionDetails = (id: string) => {
-    const detection = detections.find(d => d.id === id);
-    if (detection) {
-      handleAITwinSync(`Расскажи про ${detection.title}`);
-    }
-  };
-
-  const handleConfirmHypothesis = (id: string) => {
-    setHypotheses(prev => prev.map(h => 
-      h.id === id ? { ...h, userFeedback: 'confirmed' as const } : h
-    ));
-    toast.success('Связь подтверждена!');
-  };
-
-  const handleDenyHypothesis = (id: string) => {
-    setHypotheses(prev => prev.map(h => 
-      h.id === id ? { ...h, userFeedback: 'denied' as const } : h
-    ));
-    toast('Связь ослаблена', { icon: '📝' });
-  };
-
-  const handleOpenPlanSheet = (eventTitle?: string) => {
-    setPlanEventTitle(eventTitle || '');
-    setIsPlanSheetOpen(true);
-  };
-
-  const handleCreatePlan = (items: string[], reminders: { id: string; time: string }[]) => {
-    toast.success(`План создан! ${reminders.length} напоминаний.`);
-  };
-
-  const handleSavePrivacy = (settings: PrivacySettingsState) => {
-    setPrivacySettings(settings);
-    toast.success('Настройки сохранены');
-  };
-
-  const handleDeleteWithRecalc = useCallback(async (id: string) => {
-    setIsRecalculating(true);
-    await deleteEvent(id);
-    setTimeout(() => {
-      setIsRecalculating(false);
-      toast.success('Инсайты обновлены');
-    }, 1500);
-  }, [deleteEvent]);
+  const contentHeight = Math.max(800, dnaNodes.length * 150 + 200);
 
   return (
-    <div className="min-h-screen relative overflow-hidden pb-24">
-      <HistoryHeader
-        onAddClick={() => setIsQuickAddOpen(true)}
-        onFilterClick={() => setIsFilterOpen(true)}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        dateRange={dateRange}
-        onDateRangeChange={setDateRange}
-      />
+    <div className="min-h-screen relative overflow-x-hidden">
+      {/* Cosmic starfield background */}
+      <StarfieldBackground />
 
-      <GentleReturnPrompt
-        isVisible={showReturnPrompt && daysMissed > 0 && !isTimelineEmpty}
-        daysMissed={daysMissed}
-        onDismiss={() => setShowReturnPrompt(false)}
-        onCheckIn={() => {
-          setShowReturnPrompt(false);
-          setCheckInExpanded(true);
-        }}
-      />
+      {/* Header */}
+      <motion.header 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="fixed top-0 left-0 right-0 z-30 px-4 py-4"
+      >
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <button 
+            onClick={() => navigate(-1)}
+            className="p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 text-white" />
+          </button>
+          
+          <div className="flex items-center gap-2">
+            <Dna className="w-5 h-5 text-cyan-400" />
+            <h1 className="text-white font-medium">
+              {isRussian ? 'История жизни' : 'Life History'}
+            </h1>
+          </div>
 
-      {/* Main Layout: DNA in center, content around it */}
-      <div className="relative px-2">
-        {/* 3D DNA Helix - Center */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: `${Math.max(600, 500 + allEvents.length * 20)}px` }}>
-          <Suspense fallback={
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="w-16 h-16 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          }>
-            <DNA3DHelix 
-              events={allEvents.map(e => ({ id: e.id, title: e.title, date: e.date, type: e.type }))}
-              onNodeClick={(node) => {
-                const event = allEvents.find(e => e.id === node.id);
-                if (event) handleCardClick(event);
-              }}
-              selectedEventId={selectedEvent?.id || null}
+          <div className="w-9" /> {/* Spacer for centering */}
+        </div>
+      </motion.header>
+
+      {/* Main content */}
+      <div className="relative pt-20 px-4 pb-32" style={{ minHeight: contentHeight }}>
+        {/* Section labels */}
+        <div className="flex justify-between mb-8 max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-center"
+          >
+            <h2 className="text-lg font-semibold text-white/80 mb-1">
+              {isRussian ? 'Прошлое' : 'Past'}
+            </h2>
+            <p className="text-xs text-white/40">
+              {isRussian ? 'Триггеры и события' : 'Triggers & Events'}
+            </p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-center"
+          >
+            <h2 className="text-lg font-semibold text-white/80 mb-1">
+              {isRussian ? 'Будущее' : 'Future'}
+            </h2>
+            <p className="text-xs text-white/40">
+              {isRussian ? 'Цели и планы' : 'Goals & Plans'}
+            </p>
+          </motion.div>
+        </div>
+
+        {/* DNA Helix and Cards Layout */}
+        <div className="relative max-w-7xl mx-auto">
+          {/* Center DNA Helix */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 z-10">
+            <VerticalDNAHelix
+              nodes={dnaNodes}
+              onNodeClick={handleNodeClick}
+              selectedNodeId={selectedEvent?.id || null}
             />
-          </Suspense>
-          
-          {/* Left Side Cards */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[42%] space-y-3 pl-2 max-h-[500px] overflow-y-auto scrollbar-hide">
-            {/* Today Check-in Compact */}
-            <div className="transform scale-90 origin-left">
-              <TodayCheckIn onSave={handleCheckIn} />
-            </div>
-            
-            {/* Wearable */}
-            <div className="transform scale-90 origin-left">
-              {hasWearable ? (
-                <WearableWidget />
-              ) : (
-                <EmptyWearable onConnect={handleConnectWearable} />
-              )}
-            </div>
-            
-            {/* Left Events */}
+          </div>
+
+          {/* Left Side - Past Events */}
+          <div className="absolute left-0 top-0 w-[35%] space-y-4 pr-4">
             {isLoading ? (
-              <div className="space-y-2">
-                {[1, 2].map((i) => (
-                  <Skeleton key={`left-sk-${i}`} className="w-full h-[100px] rounded-xl bg-primary/10" />
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton 
+                    key={`left-sk-${i}`} 
+                    className="w-full h-24 rounded-2xl bg-white/5" 
+                  />
                 ))}
               </div>
             ) : (
-              leftTimelineEvents.slice(0, 3).map((event, i) => (
-                <div key={`left-${event.id}-${i}`} className="transform scale-90 origin-left">
-                  <TimelineEvent
+              pastEvents.map((event, index) => (
+                <div 
+                  key={event.id} 
+                  style={{ 
+                    marginTop: index === 0 ? 0 : 100 + index * 20,
+                    position: 'relative',
+                  }}
+                >
+                  <GlassEventCard
                     {...event}
-                    index={i}
+                    index={index}
+                    isSelected={selectedEvent?.id === event.id}
                     onClick={() => handleCardClick(event)}
-                    onDelete={handleDeleteWithRecalc}
-                    onLongPress={() => handleLongPress(event)}
                   />
                 </div>
               ))
             )}
           </div>
-          
-          {/* Right Side Cards */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[42%] space-y-3 pr-2 max-h-[500px] overflow-y-auto scrollbar-hide">
-            {/* AI Insights Compact */}
-            <div className="transform scale-90 origin-right">
-              <AIInsightsPanel
-                detections={detections}
-                hypotheses={hypotheses}
-                onConfirmDetection={handleConfirmDetection}
-                onDenyDetection={handleDenyDetection}
-                onDetectionDetails={handleDetectionDetails}
-                onConfirmHypothesis={handleConfirmHypothesis}
-                onDenyHypothesis={handleDenyHypothesis}
-              />
-            </div>
-            
-            {/* Right Events */}
+
+          {/* Right Side - Future Events */}
+          <div className="absolute right-0 top-0 w-[35%] space-y-4 pl-4">
             {isLoading ? (
-              <div className="space-y-2">
-                {[1, 2].map((i) => (
-                  <Skeleton key={`right-sk-${i}`} className="w-full h-[100px] rounded-xl bg-primary/10" />
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton 
+                    key={`right-sk-${i}`} 
+                    className="w-full h-24 rounded-2xl bg-white/5" 
+                  />
                 ))}
               </div>
             ) : (
-              rightTimelineEvents.slice(0, 3).map((event, i) => (
-                <div key={`right-${event.id}-${i}`} className="transform scale-90 origin-right">
-                  <TimelineEvent
+              futureEvents.map((event, index) => (
+                <div 
+                  key={event.id} 
+                  style={{ 
+                    marginTop: index === 0 ? 60 : 100 + index * 20,
+                    position: 'relative',
+                  }}
+                >
+                  <GlassEventCard
                     {...event}
-                    index={i}
+                    index={index}
+                    isSelected={selectedEvent?.id === event.id}
                     onClick={() => handleCardClick(event)}
-                    onDelete={handleDeleteWithRecalc}
-                    onLongPress={() => handleLongPress(event)}
                   />
                 </div>
               ))
             )}
           </div>
         </div>
-        
-        {/* Action Buttons - Below DNA */}
-        <div className="flex justify-center gap-3 mt-2">
-          <button
-            onClick={() => setIsInsightsOpen(true)}
-            className="flex items-center gap-1.5 py-2 px-4 rounded-full bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+
+        {/* Empty state */}
+        {!isLoading && allEvents.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-8"
           >
-            <BarChart3 className="w-4 h-4" />
-            <span className="text-xs font-medium">Инсайты</span>
-          </button>
-          <button
-            onClick={() => setIsPrivacyOpen(true)}
-            className="flex items-center gap-1.5 py-2 px-4 rounded-full bg-secondary/50 border border-border text-muted-foreground hover:bg-secondary transition-all"
-          >
-            <Shield className="w-4 h-4" />
-            <span className="text-xs font-medium">Приватность</span>
-          </button>
-        </div>
-        
-        {/* Empty State */}
-        {isTimelineEmpty && !isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="pointer-events-auto">
-              <EmptyTimeline
-                onAddEvent={() => setIsQuickAddOpen(true)}
-                onCheckIn={() => setCheckInExpanded(true)}
-              />
+            <div className="p-6 rounded-full bg-cyan-500/10 mb-6">
+              <Dna className="w-12 h-12 text-cyan-400" />
             </div>
-          </div>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              {isRussian ? 'Начни свою историю' : 'Start Your Story'}
+            </h3>
+            <p className="text-white/50 max-w-sm">
+              {isRussian 
+                ? 'Добавь первое событие, нажав на кнопку + внизу экрана'
+                : 'Add your first event by tapping the + button below'
+              }
+            </p>
+          </motion.div>
         )}
       </div>
 
-      <SmartSuggestion
-        isVisible={showSuggestion && !isTimelineEmpty}
-        message="За 24–48ч до ПМС у тебя падает энергия. Включить режим поддержки?"
-        onDismiss={() => setShowSuggestion(false)}
-        onAccept={() => {
-          toast.success('Режим поддержки активирован!');
-          setShowSuggestion(false);
-        }}
-        onExplain={() => handleAITwinSync('Почему падает энергия перед ПМС?')}
-      />
-
-      {/* Modals */}
-      <FilterModal
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-        filters={filters}
-        onApply={setFilters}
-      />
-
-      <QuickAddScreen
-        isOpen={isQuickAddOpen}
-        onClose={() => setIsQuickAddOpen(false)}
-        onAdd={handleAddEvent}
-      />
-
-      <AddEventScreen
-        isOpen={isDetailedAddOpen}
-        onClose={() => setIsDetailedAddOpen(false)}
-        onAdd={handleAddEvent}
-      />
-
-      <EventDetailsScreen
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
-        event={selectedEvent}
-        onAITwinSync={handleAITwinSync}
-        onDelete={deleteEvent}
-      />
-
-      <PeriodInsightsModal
+      {/* Insights Modal */}
+      <EventInsightsModal
         isOpen={isInsightsOpen}
         onClose={() => setIsInsightsOpen(false)}
-        dateRange="16–22 декабря 2024"
-        onAskAI={handleAITwinSync}
+        event={selectedEvent}
+        onAskAI={handleAskAI}
+        onViewDetails={handleViewDetails}
       />
 
-      <QuickActionsSheet
-        isOpen={!!quickActionsEvent}
-        onClose={() => setQuickActionsEvent(null)}
-        eventTitle={quickActionsEvent?.title || ''}
-        onEdit={() => toast.info('Редактирование...')}
-        onHide={() => toast.info('Скрыто')}
-        onConvertToPlan={() => {
-          handleOpenPlanSheet(quickActionsEvent?.title);
-          setQuickActionsEvent(null);
-        }}
-        onMarkImportant={() => toast.success('Отмечено как важное')}
-        onDelete={() => {
-          if (quickActionsEvent?.id) handleDeleteWithRecalc(quickActionsEvent.id);
-          setQuickActionsEvent(null);
-        }}
-      />
-
-      <CreatePlanSheet
-        isOpen={isPlanSheetOpen}
-        onClose={() => setIsPlanSheetOpen(false)}
-        eventTitle={planEventTitle}
-        onCreatePlan={handleCreatePlan}
-      />
-
-      <PrivacySettings
-        isOpen={isPrivacyOpen}
-        onClose={() => setIsPrivacyOpen(false)}
-        settings={privacySettings}
-        onSave={handleSavePrivacy}
-      />
-
-      <InsightRecalculating isVisible={isRecalculating} />
+      {/* Floating Add Button */}
+      <AddEventFAB onAdd={handleAddEvent} />
     </div>
   );
 };
