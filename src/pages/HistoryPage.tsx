@@ -33,8 +33,7 @@ interface TimelineEvent {
 
 const HistoryPage = () => {
   const navigate = useNavigate();
-  const { language } = useLanguage();
-  const isRussian = language === 'ru';
+  const { language, t } = useLanguage();
   const { leftEvents, rightEvents, isLoading, addEvent, deleteEvent } = useLifeEvents();
 
   const [selectedEvent, setSelectedEvent] = useState<TimelineEvent | null>(null);
@@ -92,14 +91,14 @@ const HistoryPage = () => {
   };
 
   const handleAskAI = (message: string) => {
-    toast.success(isRussian ? 'Синхронизация с AI Twin...' : 'Syncing with AI Twin...', { duration: 2000 });
+    toast.success(t('syncingWithAI'), { duration: 2000 });
     sessionStorage.setItem('aiTwinMessage', message);
     navigate('/twin');
   };
 
   const handleViewDetails = () => {
     setIsInsightsOpen(false);
-    toast.info(isRussian ? 'Детальный отчет скоро будет доступен' : 'Detailed report coming soon');
+    toast.info(t('detailedReportSoon'));
   };
 
   const handleAddEvent = async (newEvent: {
@@ -117,7 +116,7 @@ const HistoryPage = () => {
       icon: getIconByName(newEvent.iconName),
       iconName: newEvent.iconName,
     });
-    toast.success(isRussian ? `"${newEvent.title}" добавлено!` : `"${newEvent.title}" added!`);
+    toast.success(`"${newEvent.title}" ${t('eventAdded')}`);
   };
 
   const contentHeight = Math.max(800, dnaNodes.length * 150 + 200);
@@ -144,7 +143,7 @@ const HistoryPage = () => {
           <div className="flex items-center gap-2">
             <Dna className="w-5 h-5 text-cyan-400" />
             <h1 className="text-white font-medium">
-              {isRussian ? 'История жизни' : 'Life History'}
+              {t('lifeHistory')}
             </h1>
           </div>
 
@@ -163,10 +162,10 @@ const HistoryPage = () => {
             className="text-center"
           >
             <h2 className="text-lg font-semibold text-white/80 mb-1">
-              {isRussian ? 'Прошлое' : 'Past'}
+              {t('past')}
             </h2>
             <p className="text-xs text-white/40">
-              {isRussian ? 'Триггеры и события' : 'Triggers & Events'}
+              {t('triggersAndEvents')}
             </p>
           </motion.div>
           
@@ -177,10 +176,10 @@ const HistoryPage = () => {
             className="text-center"
           >
             <h2 className="text-lg font-semibold text-white/80 mb-1">
-              {isRussian ? 'Будущее' : 'Future'}
+              {t('future')}
             </h2>
             <p className="text-xs text-white/40">
-              {isRussian ? 'Цели и планы' : 'Goals & Plans'}
+              {t('goalsAndPlans')}
             </p>
           </motion.div>
         </div>
@@ -270,13 +269,10 @@ const HistoryPage = () => {
               <Dna className="w-12 h-12 text-cyan-400" />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              {isRussian ? 'Начни свою историю' : 'Start Your Story'}
+              {t('startYourStory')}
             </h3>
             <p className="text-white/50 max-w-sm">
-              {isRussian 
-                ? 'Добавь первое событие, нажав на кнопку + внизу экрана'
-                : 'Add your first event by tapping the + button below'
-              }
+              {t('addFirstEvent')}
             </p>
           </motion.div>
         )}

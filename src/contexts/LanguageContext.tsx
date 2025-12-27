@@ -19,15 +19,30 @@ const translations: Translations = {
   signUp: { en: 'Sign Up', ru: 'Регистрация', lv: 'Reģistrēties' },
   continueWithGoogle: { en: 'Continue with Google', ru: 'Продолжить с Google', lv: 'Turpināt ar Google' },
   continueWithApple: { en: 'Continue with Apple', ru: 'Продолжить с Apple', lv: 'Turpināt ar Apple' },
+  appleSoon: { en: 'Apple (soon)', ru: 'Apple (скоро)', lv: 'Apple (drīz)' },
   or: { en: 'or', ru: 'или', lv: 'vai' },
+  loading: { en: 'Loading...', ru: 'Загрузка...', lv: 'Ielādē...' },
+  back: { en: 'Back', ru: 'Назад', lv: 'Atpakaļ' },
   
   // Auth Form
   email: { en: 'Email', ru: 'Электронная почта', lv: 'E-pasts' },
   password: { en: 'Password', ru: 'Пароль', lv: 'Parole' },
   displayName: { en: 'Display Name', ru: 'Отображаемое имя', lv: 'Vārds' },
+  yourName: { en: 'Your name', ru: 'Ваше имя', lv: 'Jūsu vārds' },
   createAccount: { en: 'Create Account', ru: 'Создать аккаунт', lv: 'Izveidot kontu' },
   alreadyHaveAccount: { en: 'Already have an account?', ru: 'Уже есть аккаунт?', lv: 'Jau ir konts?' },
   noAccount: { en: "Don't have an account?", ru: 'Нет аккаунта?', lv: 'Nav konta?' },
+  invalidEmail: { en: 'Invalid email address', ru: 'Некорректный email адрес', lv: 'Nederīga e-pasta adrese' },
+  passwordMinLength: { en: 'Password must be at least 6 characters', ru: 'Пароль должен содержать минимум 6 символов', lv: 'Parolei jābūt vismaz 6 simbolus garai' },
+  invalidCredentials: { en: 'Invalid email or password', ru: 'Неверный email или пароль', lv: 'Nepareizs e-pasts vai parole' },
+  userAlreadyRegistered: { en: 'User already registered', ru: 'Пользователь уже зарегистрирован', lv: 'Lietotājs jau reģistrēts' },
+  emailNotConfirmed: { en: 'Email not confirmed', ru: 'Email не подтверждён', lv: 'E-pasts nav apstiprināts' },
+  tooManyAttempts: { en: 'Too many attempts. Please try again later', ru: 'Слишком много попыток. Попробуйте позже', lv: 'Pārāk daudz mēģinājumu. Mēģiniet vēlāk' },
+  errorOccurred: { en: 'An error occurred. Please try again', ru: 'Произошла ошибка. Попробуйте снова', lv: 'Radās kļūda. Mēģiniet vēlreiz' },
+  googleSignInFailed: { en: 'Google sign in failed', ru: 'Ошибка входа через Google', lv: 'Google pierakstīšanās neizdevās' },
+  accountCreated: { en: 'Account created! Welcome!', ru: 'Аккаунт создан! Добро пожаловать!', lv: 'Konts izveidots! Laipni lūgti!' },
+  welcomeBack: { en: 'Welcome back!', ru: 'С возвращением!', lv: 'Laipni lūgti atpakaļ!' },
+  unexpectedError: { en: 'An unexpected error occurred', ru: 'Неожиданная ошибка', lv: 'Radās neparedzēta kļūda' },
   
   // Legal
   legalTitle: { en: 'Legal & Compliance', ru: 'Правовая информация', lv: 'Juridiskā informācija' },
@@ -48,6 +63,7 @@ const translations: Translations = {
   now: { en: 'Now', ru: 'Сейчас', lv: 'Tagad' },
   soon: { en: 'Soon', ru: 'Скоро', lv: 'Drīz' },
   path: { en: 'Path', ru: 'Путь', lv: 'Ceļš' },
+  whatIf: { en: 'What If', ru: 'Что если', lv: 'Kas ja' },
   currentStatus: { en: 'Current Status', ru: 'Текущий статус', lv: 'Pašreizējais statuss' },
   
   // Health Metrics
@@ -148,6 +164,10 @@ const translations: Translations = {
   dailyAdvice: { en: 'Daily Advice', ru: 'Совет дня', lv: 'Dienas padoms' },
   aiTwinSays: { en: 'AI Twin says', ru: 'AI Twin говорит', lv: 'AI Twin saka' },
   askAI: { en: 'Ask AI', ru: 'Спросить ИИ', lv: 'Jautāt AI' },
+  healthAssistant: { en: 'Health Assistant', ru: 'Ассистент здоровья', lv: 'Veselības asistents' },
+  speaking: { en: 'Speaking...', ru: 'Говорю...', lv: 'Runāju...' },
+  listen: { en: 'Listen', ru: 'Озвучить', lv: 'Klausīties' },
+  stop: { en: 'Stop', ru: 'Стоп', lv: 'Apturēt' },
   
   // Map
   map: { en: 'Map', ru: 'Карта', lv: 'Karte' },
@@ -158,6 +178,7 @@ const translations: Translations = {
   profile: { en: 'Profile', ru: 'Профиль', lv: 'Profils' },
   settings: { en: 'Settings', ru: 'Настройки', lv: 'Iestatījumi' },
   logout: { en: 'Log Out', ru: 'Выйти', lv: 'Iziet' },
+  language: { en: 'Language', ru: 'Язык', lv: 'Valoda' },
   
   // Navigation
   today: { en: 'Today', ru: 'Сегодня', lv: 'Šodien' },
@@ -171,6 +192,59 @@ const translations: Translations = {
   sleepHours: { en: 'Sleep (hours)', ru: 'Сон (часы)', lv: 'Miegs (stundas)' },
   moodLevel: { en: 'Mood Level', ru: 'Уровень настроения', lv: 'Garastāvokļa līmenis' },
   dataSaved: { en: 'Data saved successfully', ru: 'Данные сохранены', lv: 'Dati saglabāti' },
+  
+  // History Page
+  lifeHistory: { en: 'Life History', ru: 'История жизни', lv: 'Dzīves vēsture' },
+  past: { en: 'Past', ru: 'Прошлое', lv: 'Pagātne' },
+  future: { en: 'Future', ru: 'Будущее', lv: 'Nākotne' },
+  triggersAndEvents: { en: 'Triggers & Events', ru: 'Триггеры и события', lv: 'Izraisītāji un notikumi' },
+  goalsAndPlans: { en: 'Goals & Plans', ru: 'Цели и планы', lv: 'Mērķi un plāni' },
+  startYourStory: { en: 'Start Your Story', ru: 'Начни свою историю', lv: 'Sāciet savu stāstu' },
+  addFirstEvent: { en: 'Add your first event by tapping the + button below', ru: 'Добавь первое событие, нажав на кнопку + внизу экрана', lv: 'Pievienojiet pirmo notikumu, nospiežot pogu + zemāk' },
+  syncingWithAI: { en: 'Syncing with AI Twin...', ru: 'Синхронизация с AI Twin...', lv: 'Sinhronizēja ar AI Twin...' },
+  detailedReportSoon: { en: 'Detailed report coming soon', ru: 'Детальный отчет скоро будет доступен', lv: 'Detalizēts pārskats drīzumā' },
+  eventAdded: { en: 'added!', ru: 'добавлено!', lv: 'pievienots!' },
+  
+  // Event Types
+  trigger: { en: 'Trigger', ru: 'Триггер', lv: 'Izraisītājs' },
+  goal: { en: 'Goal', ru: 'Цель', lv: 'Mērķis' },
+  stressPeak: { en: 'Stress Peak', ru: 'Пик стресса', lv: 'Stresa pīķis' },
+  triggerDescription: { en: 'Job change, illness, stress', ru: 'Смена работы, болезнь, стресс', lv: 'Darba maiņa, slimība, stress' },
+  goalDescription: { en: 'Marathon, pregnancy, project', ru: 'Марафон, беременность, проект', lv: 'Maratons, grūtniecība, projekts' },
+  stressPeakDescription: { en: 'AI detected stress peak', ru: 'ИИ обнаружил пик стресса', lv: 'AI atklāja stresa pīķi' },
+  
+  // Add Event Form
+  selectType: { en: 'Select Type', ru: 'Выберите тип', lv: 'Izvēlieties veidu' },
+  addEvent: { en: 'Add Event', ru: 'Добавить событие', lv: 'Pievienot notikumu' },
+  title: { en: 'Title', ru: 'Название', lv: 'Nosaukums' },
+  titlePlaceholder: { en: 'e.g. Job Change', ru: 'Например: Смена работы', lv: 'Piemēram: Darba maiņa' },
+  date: { en: 'Date', ru: 'Дата', lv: 'Datums' },
+  add: { en: 'Add', ru: 'Добавить', lv: 'Pievienot' },
+  
+  // Event Insights Modal
+  stressVsSleep: { en: 'Stress vs Sleep Quality', ru: 'Стресс vs Качество сна', lv: 'Stress pret miega kvalitāti' },
+  progressAndEnergy: { en: 'Progress & Energy', ru: 'Прогресс и энергия', lv: 'Progress un enerģija' },
+  stressPercent: { en: 'Stress %', ru: 'Стресс %', lv: 'Stress %' },
+  sleepHoursChart: { en: 'Sleep (h)', ru: 'Сон (ч)', lv: 'Miegs (st)' },
+  progressPercent: { en: 'Progress %', ru: 'Прогресс %', lv: 'Progress %' },
+  energyPercent: { en: 'Energy %', ru: 'Энергия %', lv: 'Enerģija %' },
+  aiTwinAnalysis: { en: 'AI Twin Analysis', ru: 'AI Twin анализ', lv: 'AI Twin analīze' },
+  askAITwin: { en: 'Ask AI Twin', ru: 'Спросить AI Twin', lv: 'Jautāt AI Twin' },
+  viewDetailedReport: { en: 'View Detailed Report', ru: 'Просмотреть детальный отчет', lv: 'Skatīt detalizētu pārskatu' },
+  tellMeMoreAbout: { en: 'Tell me more about', ru: 'Расскажи подробнее про', lv: 'Pastāsti vairāk par' },
+  
+  // AI Insights
+  triggerInsightRu: { en: 'Analysis shows that during this period, your stress level increased by 30% and deep sleep quality dropped by 25%. We\'ll consider this for future projects.', ru: 'Анализ показал, что в этот период твой уровень стресса вырос на 30%, а качество глубокого сна упало на 25%. Учтем это для будущих проектов и подготовим план восстановления.', lv: 'Analīze parāda, ka šajā periodā jūsu stresa līmenis pieauga par 30% un dziļā miega kvalitāte samazinājās par 25%. Ņemsim to vērā nākotnes projektos.' },
+  goalInsightRu: { en: 'Your preparation is going well! Energy levels are stable, but I recommend increasing recovery time for optimal results.', ru: 'Твоя подготовка идет хорошо! Уровень энергии стабилен, но рекомендую увеличить время восстановления между тренировками для оптимального результата.', lv: 'Jūsu sagatavošanās norit labi! Enerģijas līmenis ir stabils, bet es iesaku palielināt atjaunošanās laiku optimālam rezultātam.' },
+  stressPeakInsightRu: { en: 'Stress peak detected. HRV decreased by 15%, resting heart rate increased. I recommend 4-7-8 breathing technique and early sleep for the next 3 days.', ru: 'Обнаружен пик стресса. HRV снизился на 15%, пульс покоя вырос. Рекомендую технику дыхания 4-7-8 и ранний отход ко сну следующие 3 дня.', lv: 'Stresa pīķis atklāts. HRV samazinājās par 15%, miera pulss pieauga. Es iesaku 4-7-8 elpošanas tehniku un agrīnu miegu nākamās 3 dienas.' },
+  
+  // Chart period labels
+  before: { en: 'Before', ru: 'До', lv: 'Pirms' },
+  start: { en: 'Start', ru: 'Начало', lv: 'Sākums' },
+  peak: { en: 'Peak', ru: 'Пик', lv: 'Pīķis' },
+  after: { en: 'After', ru: 'После', lv: 'Pēc' },
+  nowPeriod: { en: 'Now', ru: 'Сейчас', lv: 'Tagad' },
+  week: { en: 'Week', ru: 'Неделя', lv: 'Nedēļa' },
 };
 
 interface LanguageContextType {
@@ -216,7 +290,7 @@ export const useLanguage = () => {
   if (!context) {
     console.warn('useLanguage was called outside of LanguageProvider, using defaults');
     return {
-      language: 'ru' as Language,
+      language: 'en' as Language,
       setLanguage: () => {},
       t: (key: string) => key,
     };

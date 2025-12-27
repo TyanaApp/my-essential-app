@@ -1,19 +1,21 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Calendar, Map, Users, History, User } from "lucide-react";
+import { useLanguage } from '@/contexts/LanguageContext';
 import tyanaLogo from '@/assets/tyana-logo.png';
 import VideoBackground from './VideoBackground';
 
-const navItems = [
-  { path: "/today", label: "Today", icon: Calendar },
-  { path: "/map", label: "Map", icon: Map },
-  { path: "/twin", label: "Twin", icon: Users },
-  { path: "/history", label: "History", icon: History },
-  { path: "/profile", label: "Profile", icon: User },
-];
-
 const Layout = () => {
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { path: "/today", labelKey: "today", icon: Calendar },
+    { path: "/map", labelKey: "map", icon: Map },
+    { path: "/twin", labelKey: "twin", icon: Users },
+    { path: "/history", labelKey: "history", icon: History },
+    { path: "/profile", labelKey: "profile", icon: User },
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -48,7 +50,7 @@ const Layout = () => {
                 }`}
               >
                 <Icon className="w-5 h-5" />
-                <span className="text-xs mt-1 font-exo">{item.label}</span>
+                <span className="text-xs mt-1 font-exo">{t(item.labelKey)}</span>
               </NavLink>
             );
           })}

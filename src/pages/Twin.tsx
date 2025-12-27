@@ -50,7 +50,7 @@ const Twin = () => {
           </div>
           <div>
             <h1 className="text-xl font-orbitron font-bold text-foreground">AI {t('twin')}</h1>
-            <p className="text-xs text-muted-foreground font-exo">Health Assistant</p>
+            <p className="text-xs text-muted-foreground font-exo">{t('healthAssistant')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ const Twin = () => {
                       className="mt-2 flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <Volume2 className={`w-3.5 h-3.5 ${speakingMessageId === message.id ? 'text-primary animate-pulse' : ''}`} />
-                      <span>{speakingMessageId === message.id ? 'Стоп' : 'Озвучить'}</span>
+                      <span>{speakingMessageId === message.id ? t('stop') : t('listen')}</span>
                     </button>
                   )}
                 </div>
@@ -166,7 +166,7 @@ const Twin = () => {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isRecording ? '🎙️ Говорите...' : t('askAI')}
+            placeholder={isRecording ? `🎙️ ${t('speaking')}` : t('askAI')}
             className="flex-1 bg-secondary border-border text-foreground font-exo"
             disabled={isLoading || isRecording}
           />
