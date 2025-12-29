@@ -40,7 +40,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             >
               {language === lang.code && (
                 <motion.div
-                  className="absolute inset-0 bg-primary rounded-full"
+                  className="absolute inset-0 bg-primary rounded-full pointer-events-none"
                   layoutId="language-indicator"
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
