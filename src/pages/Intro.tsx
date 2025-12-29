@@ -81,7 +81,7 @@ const Intro = () => {
       </div>
 
       {/* Language switcher */}
-      <div className="absolute top-6 right-6 z-10">
+      <div className="absolute top-6 right-6 z-50 pointer-events-auto">
         <LanguageSelector variant="compact" />
       </div>
 
