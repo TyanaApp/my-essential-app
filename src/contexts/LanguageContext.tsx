@@ -245,6 +245,103 @@ const translations: Translations = {
   after: { en: 'After', ru: 'После', lv: 'Pēc' },
   nowPeriod: { en: 'Now', ru: 'Сейчас', lv: 'Tagad' },
   week: { en: 'Week', ru: 'Неделя', lv: 'Nedēļa' },
+
+  // Profile Page
+  editProfile: { en: 'Edit Profile', ru: 'Редактировать профиль', lv: 'Rediģēt profilu' },
+  accountSettings: { en: 'Account', ru: 'Аккаунт', lv: 'Konts' },
+  systemSettings: { en: 'System', ru: 'Система', lv: 'Sistēma' },
+  payments: { en: 'Payments', ru: 'Оплата', lv: 'Maksājumi' },
+  deviceSync: { en: 'Device Sync', ru: 'Синхронизация устройств', lv: 'Ierīces sinhronizācija' },
+  deleteAccount: { en: 'Delete Account', ru: 'Удалить аккаунт', lv: 'Dzēst kontu' },
+  
+  // Edit Profile Modal
+  bio: { en: 'Bio', ru: 'О себе', lv: 'Par sevi' },
+  gender: { en: 'Gender', ru: 'Пол', lv: 'Dzimums' },
+  birthDate: { en: 'Date of Birth', ru: 'Дата рождения', lv: 'Dzimšanas datums' },
+  enterName: { en: 'Enter your name', ru: 'Введите имя', lv: 'Ievadiet vārdu' },
+  tellAboutYourself: { en: 'Tell about yourself...', ru: 'Расскажите о себе...', lv: 'Pastāstiet par sevi...' },
+  selectGender: { en: 'Select gender', ru: 'Выберите пол', lv: 'Izvēlieties dzimumu' },
+  male: { en: 'Male', ru: 'Мужской', lv: 'Vīrietis' },
+  female: { en: 'Female', ru: 'Женский', lv: 'Sieviete' },
+  other: { en: 'Other', ru: 'Другой', lv: 'Cits' },
+  preferNotToSay: { en: 'Prefer not to say', ru: 'Предпочитаю не указывать', lv: 'Nevēlos norādīt' },
+  saving: { en: 'Saving...', ru: 'Сохранение...', lv: 'Saglabā...' },
+  profileUpdated: { en: 'Profile updated', ru: 'Профиль обновлён', lv: 'Profils atjaunināts' },
+  errorSavingProfile: { en: 'Error saving profile', ru: 'Ошибка сохранения профиля', lv: 'Kļūda saglabājot profilu' },
+
+  // Account Settings Modal
+  currentEmail: { en: 'Current Email', ru: 'Текущий email', lv: 'Pašreizējais e-pasts' },
+  changePassword: { en: 'Change Password', ru: 'Сменить пароль', lv: 'Mainīt paroli' },
+  changeEmail: { en: 'Change Email', ru: 'Сменить email', lv: 'Mainīt e-pastu' },
+  newPassword: { en: 'New Password', ru: 'Новый пароль', lv: 'Jauna parole' },
+  confirmPassword: { en: 'Confirm Password', ru: 'Подтвердите пароль', lv: 'Apstipriniet paroli' },
+  newEmail: { en: 'New Email', ru: 'Новый email', lv: 'Jauns e-pasts' },
+  passwordsDoNotMatch: { en: 'Passwords do not match', ru: 'Пароли не совпадают', lv: 'Paroles nesakrīt' },
+  passwordTooShort: { en: 'Password must be at least 6 characters', ru: 'Пароль должен быть минимум 6 символов', lv: 'Parolei jābūt vismaz 6 simboliem' },
+  passwordChanged: { en: 'Password changed successfully', ru: 'Пароль успешно изменён', lv: 'Parole veiksmīgi nomainīta' },
+  emailChangeRequested: { en: 'Confirmation email sent', ru: 'Письмо подтверждения отправлено', lv: 'Apstiprinājuma e-pasts nosūtīts' },
+  updatePassword: { en: 'Update Password', ru: 'Обновить пароль', lv: 'Atjaunināt paroli' },
+  updateEmail: { en: 'Update Email', ru: 'Обновить email', lv: 'Atjaunināt e-pastu' },
+
+  // System Settings Modal
+  theme: { en: 'Theme', ru: 'Тема', lv: 'Tēma' },
+  lightTheme: { en: 'Light', ru: 'Светлая', lv: 'Gaišs' },
+  darkTheme: { en: 'Dark', ru: 'Тёмная', lv: 'Tumšs' },
+  help: { en: 'Help', ru: 'Помощь', lv: 'Palīdzība' },
+  faq: { en: 'FAQ', ru: 'Вопросы и ответы', lv: 'Bieži uzdotie jautājumi' },
+  contactSupport: { en: 'Contact Support', ru: 'Связаться с поддержкой', lv: 'Sazināties ar atbalstu' },
+  faqQuestion1: { en: 'How does AI Twin work?', ru: 'Как работает AI Twin?', lv: 'Kā darbojas AI Twin?' },
+  faqAnswer1: { en: 'AI Twin analyzes your health data to provide personalized insights and recommendations.', ru: 'AI Twin анализирует данные о здоровье и даёт персональные рекомендации.', lv: 'AI Twin analizē jūsu veselības datus, lai sniegtu personalizētus ieteikumus.' },
+  faqQuestion2: { en: 'How to sync my wearable?', ru: 'Как синхронизировать устройство?', lv: 'Kā sinhronizēt ierīci?' },
+  faqAnswer2: { en: 'Go to Device Sync in Profile and select your device to connect.', ru: 'Перейдите в Синхронизацию устройств в Профиле и выберите устройство.', lv: 'Dodieties uz Ierīces sinhronizāciju Profilā un izvēlieties ierīci.' },
+  faqQuestion3: { en: 'Is my data secure?', ru: 'Мои данные в безопасности?', lv: 'Vai mani dati ir droši?' },
+  faqAnswer3: { en: 'Yes, all data is encrypted and stored securely. We never share your personal information.', ru: 'Да, все данные зашифрованы и хранятся безопасно. Мы не передаём личную информацию.', lv: 'Jā, visi dati tiek šifrēti un droši uzglabāti. Mēs nekad neizpaužam jūsu personīgo informāciju.' },
+
+  // Payments Modal
+  upgradeToPro: { en: 'Upgrade to Pro', ru: 'Перейти на Pro', lv: 'Uzlabot uz Pro' },
+  monthly: { en: 'Monthly', ru: 'Ежемесячно', lv: 'Mēnesī' },
+  yearly: { en: 'Yearly', ru: 'Ежегодно', lv: 'Gadā' },
+  perMonth: { en: '/month', ru: '/месяц', lv: '/mēnesī' },
+  perYear: { en: '/year', ru: '/год', lv: '/gadā' },
+  save33: { en: 'Save 33%', ru: 'Экономия 33%', lv: 'Ietaupiet 33%' },
+  proFeatures: { en: 'Pro Features', ru: 'Pro функции', lv: 'Pro funkcijas' },
+  unlimitedAIChats: { en: 'Unlimited AI chats', ru: 'Безлимитный AI чат', lv: 'Neierobežotas AI sarunas' },
+  advancedHealthInsights: { en: 'Advanced health insights', ru: 'Продвинутый анализ здоровья', lv: 'Uzlabota veselības analīze' },
+  wearableSync: { en: 'Wearable device sync', ru: 'Синхронизация с устройствами', lv: 'Valkājamo ierīču sinhronizācija' },
+  prioritySupport: { en: 'Priority support', ru: 'Приоритетная поддержка', lv: 'Prioritāra atbalsts' },
+  customReports: { en: 'Custom health reports', ru: 'Персональные отчёты', lv: 'Pielāgoti veselības pārskati' },
+  familySharing: { en: 'Family sharing (up to 5)', ru: 'Семейный доступ (до 5)', lv: 'Ģimenes koplietošana (līdz 5)' },
+  subscribeTo: { en: 'Subscribe', ru: 'Подписаться', lv: 'Abonēt' },
+  cancelAnytime: { en: 'Cancel anytime. No questions asked.', ru: 'Отмена в любое время без вопросов.', lv: 'Atceliet jebkurā laikā. Bez jautājumiem.' },
+  paymentComingSoon: { en: 'Payment integration coming soon!', ru: 'Оплата скоро будет доступна!', lv: 'Maksājumu integrācija drīzumā!' },
+
+  // Device Sync Modal
+  deviceSyncDescription: { en: 'Connect your smart devices to sync health data automatically.', ru: 'Подключите умные устройства для автоматической синхронизации данных.', lv: 'Savienojiet savas viedierīces, lai automātiski sinhronizētu veselības datus.' },
+  tapToConnect: { en: 'Tap to connect', ru: 'Нажмите для подключения', lv: 'Pieskarieties, lai savienotu' },
+  deviceConnected: { en: 'Device connected!', ru: 'Устройство подключено!', lv: 'Ierīce savienota!' },
+  deviceDisconnected: { en: 'Device disconnected', ru: 'Устройство отключено', lv: 'Ierīce atvienota' },
+  allDevicesDisconnected: { en: 'All devices disconnected', ru: 'Все устройства отключены', lv: 'Visas ierīces atvienotas' },
+  disconnectAll: { en: 'Disconnect All', ru: 'Отключить все', lv: 'Atvienot visas' },
+
+  // Delete Account Modal
+  deleteAccountWarning: { en: 'This action cannot be undone.', ru: 'Это действие нельзя отменить.', lv: 'Šo darbību nevar atsaukt.' },
+  deleteAccountConsequences: { en: 'Deleting your account will permanently remove:', ru: 'Удаление аккаунта навсегда удалит:', lv: 'Konta dzēšana neatgriezeniski noņems:' },
+  allDataWillBeDeleted: { en: 'All your health data and history', ru: 'Все ваши данные о здоровье и историю', lv: 'Visus jūsu veselības datus un vēsturi' },
+  cannotBeUndone: { en: 'This action cannot be reversed', ru: 'Это действие невозможно отменить', lv: 'Šo darbību nevar atcelt' },
+  subscriptionWillBeCanceled: { en: 'Your subscription will be canceled', ru: 'Ваша подписка будет отменена', lv: 'Jūsu abonements tiks atcelts' },
+  typeDeleteToConfirm: { en: 'Type DELETE to confirm:', ru: 'Введите DELETE для подтверждения:', lv: 'Ierakstiet DELETE, lai apstiprinātu:' },
+  pleaseTypeDelete: { en: 'Please type DELETE to confirm', ru: 'Введите DELETE для подтверждения', lv: 'Lūdzu, ierakstiet DELETE, lai apstiprinātu' },
+  deleting: { en: 'Deleting...', ru: 'Удаление...', lv: 'Dzēš...' },
+  deleteForever: { en: 'Delete Forever', ru: 'Удалить навсегда', lv: 'Dzēst uz visiem laikiem' },
+  accountDeleted: { en: 'Account deleted', ru: 'Аккаунт удалён', lv: 'Konts dzēsts' },
+  errorDeletingAccount: { en: 'Error deleting account', ru: 'Ошибка удаления аккаунта', lv: 'Kļūda dzēšot kontu' },
+
+  // Avatar Upload
+  pleaseSelectImage: { en: 'Please select an image file', ru: 'Выберите файл изображения', lv: 'Lūdzu, izvēlieties attēla failu' },
+  imageTooLarge: { en: 'Image must be less than 5MB', ru: 'Изображение должно быть меньше 5МБ', lv: 'Attēlam jābūt mazākam par 5MB' },
+  uploadingAvatar: { en: 'Uploading avatar...', ru: 'Загрузка аватара...', lv: 'Augšupielādē avatāru...' },
+  avatarUpdated: { en: 'Avatar updated!', ru: 'Аватар обновлён!', lv: 'Avatārs atjaunināts!' },
+  errorUploadingAvatar: { en: 'Error uploading avatar', ru: 'Ошибка загрузки аватара', lv: 'Kļūda augšupielādējot avatāru' },
 };
 
 interface LanguageContextType {
