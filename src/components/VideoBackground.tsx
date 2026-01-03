@@ -11,34 +11,35 @@ const VideoBackground: React.FC = () => {
         playsInline
         className="absolute w-full h-full object-cover"
         style={{
-          filter: 'hue-rotate(280deg) saturate(0.4) brightness(1.4) contrast(0.9)',
+          filter: 'hue-rotate(320deg) saturate(2.5) brightness(1.1) contrast(1.3)',
         }}
       >
         <source src="/videos/dna-background.mp4" type="video/mp4" />
       </video>
       
-      {/* Soft lavender-powder overlay */}
+      {/* Lavender-pink background overlay */}
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(135deg, rgba(230, 210, 240, 0.7) 0%, rgba(245, 230, 245, 0.6) 50%, rgba(255, 230, 240, 0.5) 100%)',
-          mixBlendMode: 'normal',
+          background: 'linear-gradient(135deg, rgba(230, 200, 230, 0.85) 0%, rgba(245, 210, 235, 0.8) 50%, rgba(255, 200, 220, 0.75) 100%)',
+          mixBlendMode: 'multiply',
         }}
       />
       
-      {/* Soft pink-lavender glow */}
+      {/* Raspberry tint for DNA */}
       <div 
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(220, 190, 230, 0.4) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, rgba(220, 20, 100, 0.15) 0%, transparent 60%)',
+          mixBlendMode: 'color-dodge',
         }}
       />
       
-      {/* Light vignette for depth */}
+      {/* Soft vignette */}
       <div 
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 40%, rgba(200, 180, 210, 0.3) 100%)',
+          background: 'radial-gradient(ellipse at center, transparent 30%, rgba(180, 140, 180, 0.4) 100%)',
         }}
       />
     </div>
