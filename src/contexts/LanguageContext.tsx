@@ -342,6 +342,16 @@ const translations: Translations = {
   uploadingAvatar: { en: 'Uploading avatar...', ru: 'Загрузка аватара...', lv: 'Augšupielādē avatāru...' },
   avatarUpdated: { en: 'Avatar updated!', ru: 'Аватар обновлён!', lv: 'Avatārs atjaunināts!' },
   errorUploadingAvatar: { en: 'Error uploading avatar', ru: 'Ошибка загрузки аватара', lv: 'Kļūda augšupielādējot avatāru' },
+
+  // Stripe Payments
+  yourSubscription: { en: 'Your Subscription', ru: 'Ваша подписка', lv: 'Jūsu abonements' },
+  activeSubscription: { en: 'Active Subscription', ru: 'Активная подписка', lv: 'Aktīvs abonements' },
+  plan: { en: 'Plan', ru: 'План', lv: 'Plāns' },
+  renewsOn: { en: 'Renews on', ru: 'Продлевается', lv: 'Atjaunojas' },
+  manageSubscription: { en: 'Manage Subscription', ru: 'Управление подпиской', lv: 'Pārvaldīt abonementu' },
+  redirectingToCheckout: { en: 'Redirecting to checkout...', ru: 'Переход к оплате...', lv: 'Pārvirzīšana uz norēķinu...' },
+  checkoutError: { en: 'Error creating checkout session', ru: 'Ошибка создания сессии оплаты', lv: 'Kļūda veidojot norēķinu sesiju' },
+  portalError: { en: 'Error opening subscription portal', ru: 'Ошибка открытия портала подписки', lv: 'Kļūda atverot abonementa portālu' },
 };
 
 interface LanguageContextType {
