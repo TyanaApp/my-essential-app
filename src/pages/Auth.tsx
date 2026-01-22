@@ -39,7 +39,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { t, language } = useLanguage();
-  const { signIn, signUp, signInWithGoogle, user, loading } = useAuth();
+  const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
   
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup');
   const [email, setEmail] = useState('');
@@ -48,6 +48,7 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   // Redirect if already logged in
@@ -76,6 +77,18 @@ const Auth = () => {
 
   const getErrorMessage = (error: Error): string => {
     const message = error.message.toLowerCase();
+
+    // OAuth / provider setup issues
+    if (message.includes('provider') && message.includes('not enabled')) {
+      return language === 'ru'
+        ? 'Вход через Google не включён в настройках проекта'
+        : 'Google sign-in is not enabled for this project';
+    }
+    if (message.includes('redirect_uri_mismatch') || message.includes('redirect uri mismatch')) {
+      return language === 'ru'
+        ? 'Неверный redirect URL для Google OAuth (нужно добавить текущий домен в разрешённые)'
+        : 'Invalid Google OAuth redirect URL (add this domain to allowed redirects)';
+    }
     
     if (message.includes('invalid login credentials')) {
       return language === 'ru' ? 'Неверный email или пароль' : 'Invalid email or password';
@@ -98,12 +111,46 @@ const Auth = () => {
     try {
       const { error } = await signInWithGoogle();
       if (error) {
+        console.error('Google sign-in error:', error);
         toast.error(getErrorMessage(error));
       }
     } catch (err) {
+      console.error('Google sign-in failed:', err);
       toast.error(language === 'ru' ? 'Ошибка входа через Google' : 'Google sign in failed');
     } finally {
       setIsGoogleLoading(false);
+    }
+  };
+
+  const handleMagicLinkSignIn = async () => {
+    const emailResult = emailSchema.safeParse(email);
+    if (!emailResult.success) {
+      setErrors((prev) => ({
+        ...prev,
+        email: language === 'ru' ? 'Некорректный email адрес' : 'Invalid email address',
+      }));
+      return;
+    }
+
+    setIsMagicLinkLoading(true);
+    try {
+      const { error } = await signInWithMagicLink(email);
+      if (error) {
+        console.error('Magic link sign-in error:', error);
+        toast.error(getErrorMessage(error));
+        return;
+      }
+
+      toast.success(
+        language === 'ru'
+          ? 'Отправили ссылку для входа на почту — откройте письмо'
+          : 'We sent you a sign-in link — check your email'
+      );
+    } catch (err) {
+      console.error('Magic link sign-in failed:', err);
+      toast.error(language === 'ru' ? 'Не удалось отправить ссылку' : 'Failed to send sign-in link');
+    } finally {
+      setIsMagicLinkLoading(false);
     }
   };
 
@@ -227,6 +274,23 @@ const Auth = () => {
               {language === 'ru' ? 'Apple (скоро)' : 'Apple (soon)'}
             </span>
           </button>
+
+          {/* Email magic link (signin only) */}
+          {!isSignUp && (
+            <button
+              type="button"
+              onClick={handleMagicLinkSignIn}
+              disabled={isMagicLinkLoading}
+              className="w-full flex items-center justify-center gap-3 h-12 mt-3 rounded-xl bg-secondary/80 border border-border hover:bg-secondary hover:border-primary/30 transition-all duration-200"
+            >
+              <Mail className="w-5 h-5 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">
+                {isMagicLinkLoading
+                  ? (language === 'ru' ? 'Отправляем…' : 'Sending…')
+                  : (language === 'ru' ? 'Войти по почте (ссылка)' : 'Sign in via email link')}
+              </span>
+            </button>
+          )}
         </div>
 
         {/* Divider */}
