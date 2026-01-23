@@ -27,27 +27,19 @@ export const useLunaraVoice = () => {
     try {
       setIsProcessing(true);
       
-      const { data, error } = await supabase.functions.invoke('lunara-voice-chat', {
-        body: { action: 'get-session' }
-      });
-
-      if (error) throw error;
+      // Generate a local session ID since we're using fallback mode
+      const localSessionId = `session-${Date.now()}`;
+      setSessionId(localSessionId);
+      setIsConnected(true);
       
-      if (data?.session_id) {
-        setSessionId(data.session_id);
-        setIsConnected(true);
-        
-        // Add welcome message
-        setMessages([{
-          id: 'welcome',
-          role: 'assistant',
-          content: 'Привет! Я твой AI Health Twin. Нажми на микрофон и расскажи, как ты себя чувствуешь сегодня.'
-        }]);
-        
-        toast.success('Голосовой ассистент подключен');
-      } else {
-        throw new Error('No session ID received');
-      }
+      // Add welcome message
+      setMessages([{
+        id: 'welcome',
+        role: 'assistant',
+        content: 'Привет! Я твой AI Health Twin. Нажми на микрофон и расскажи, как ты себя чувствуешь сегодня. 🎙️'
+      }]);
+      
+      toast.success('Голосовой ассистент подключен');
     } catch (error) {
       console.error('Connection error:', error);
       toast.error('Не удалось подключиться к голосовому ассистенту');
@@ -132,45 +124,55 @@ export const useLunaraVoice = () => {
     }
   }, [isListening]);
 
-  // Process voice input
+  // Process voice input - first transcribe, then get AI response
   const processVoiceInput = async (base64Audio: string) => {
     setIsProcessing(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('lunara-voice-chat', {
+      // Step 1: Transcribe audio using existing voice-to-text service
+      const { data: transcriptData, error: transcriptError } = await supabase.functions.invoke('voice-to-text', {
+        body: { audio: base64Audio }
+      });
+
+      if (transcriptError) throw transcriptError;
+
+      const transcript = transcriptData?.text;
+      
+      if (!transcript) {
+        toast.error('Не удалось распознать речь. Попробуйте ещё раз.');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Add user message
+      const userMessage: VoiceMessage = {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        content: transcript
+      };
+      setMessages(prev => [...prev, userMessage]);
+
+      // Step 2: Get AI response
+      const { data: aiData, error: aiError } = await supabase.functions.invoke('lunara-voice-chat', {
         body: { 
-          action: 'voice-chat',
-          audio: base64Audio,
+          action: 'text-chat',
+          message: transcript,
           sessionId 
         }
       });
 
-      if (error) throw error;
+      if (aiError) throw aiError;
 
-      if (data?.transcript) {
-        // Add user message
-        const userMessage: VoiceMessage = {
-          id: `user-${Date.now()}`,
-          role: 'user',
-          content: data.transcript
-        };
-        setMessages(prev => [...prev, userMessage]);
-      }
-
-      if (data?.response) {
-        // Add assistant response
+      if (aiData?.response) {
         const assistantMessage: VoiceMessage = {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
-          content: data.response.text || data.response,
-          audioUrl: data.response.audio_url
+          content: aiData.response.text || aiData.response
         };
         setMessages(prev => [...prev, assistantMessage]);
 
-        // Play audio response if available
-        if (data.response.audio_url || data.response.audio_data) {
-          await playAudioResponse(data.response.audio_url || `data:audio/mpeg;base64,${data.response.audio_data}`);
-        }
+        // Play audio response using TTS
+        await speakResponse(aiData.response.text || aiData.response);
       }
     } catch (error) {
       console.error('Voice processing error:', error);
@@ -180,7 +182,29 @@ export const useLunaraVoice = () => {
     }
   };
 
-  // Send text message (fallback)
+  // Speak response using text-to-speech
+  const speakResponse = async (text: string) => {
+    try {
+      setIsSpeaking(true);
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: { text, voice: 'nova' }
+      });
+
+      if (error || !data?.audioContent) {
+        console.error('TTS error:', error);
+        setIsSpeaking(false);
+        return;
+      }
+
+      const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
+      await playAudioResponse(audioUrl);
+    } catch (error) {
+      console.error('TTS error:', error);
+      setIsSpeaking(false);
+    }
+  };
+
+  // Send text message
   const sendTextMessage = useCallback(async (message: string) => {
     if (!sessionId || !message.trim()) return;
 
@@ -206,17 +230,16 @@ export const useLunaraVoice = () => {
       if (error) throw error;
 
       if (data?.response) {
+        const responseText = data.response.text || data.response;
         const assistantMessage: VoiceMessage = {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
-          content: data.response.text || data.response,
-          audioUrl: data.response.audio_url
+          content: responseText
         };
         setMessages(prev => [...prev, assistantMessage]);
 
-        if (data.response.audio_url || data.response.audio_data) {
-          await playAudioResponse(data.response.audio_url || `data:audio/mpeg;base64,${data.response.audio_data}`);
-        }
+        // Speak the response
+        await speakResponse(responseText);
       }
     } catch (error) {
       console.error('Text chat error:', error);

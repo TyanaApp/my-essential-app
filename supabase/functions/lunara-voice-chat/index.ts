@@ -19,23 +19,25 @@ serve(async (req) => {
 
     const { action, audio, message, sessionId } = await req.json();
 
+    // Pipecat Cloud API base URL
+    const PIPECAT_API_BASE = "https://api.pipecat.daily.co";
+
     // Get session token for voice conversations
     if (action === "get-session") {
-      const response = await fetch("https://api.lunara.ai/v1/sessions", {
+      // Start a new agent session with Pipecat Cloud
+      const response = await fetch(`${PIPECAT_API_BASE}/v1/public/health-twin/start`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${LUNARA_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          agent_config: {
-            name: "TYANA Health Twin",
-            language: "auto",
-            voice: {
-              provider: "elevenlabs",
-              voice_id: "21m00Tcm4TlvDq8ikWAM", // Rachel voice
-            },
-            system_prompt: `You are TYANA AI Health Twin - a personalized health assistant.
+          config: {
+            llm: {
+              model: "gpt-4o-mini",
+              messages: [{
+                role: "system",
+                content: `You are TYANA AI Health Twin - a personalized health assistant.
 
 CRITICAL LANGUAGE RULE: 
 - ALWAYS detect the language of the user's message and respond in the SAME language
@@ -57,15 +59,32 @@ Focus areas:
 - Nutrition tips
 - Mental wellness and mindfulness
 
-Keep responses concise (2-3 sentences) and actionable. Be empathetic and understanding.`,
-          },
+Keep responses concise (2-3 sentences) and actionable. Be empathetic and understanding.`
+              }]
+            },
+            tts: {
+              voice: "alloy"
+            }
+          }
         }),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Lunara session error:", response.status, errorText);
-        throw new Error(`Failed to create Lunara session: ${response.status}`);
+        console.error("Pipecat session error:", response.status, errorText);
+        
+        // If agent doesn't exist, return a simulated session for fallback
+        if (response.status === 404) {
+          // Return a local session ID for fallback mode
+          return new Response(JSON.stringify({ 
+            session_id: `local-${Date.now()}`,
+            fallback_mode: true 
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        
+        throw new Error(`Failed to create Pipecat session: ${response.status} - ${errorText}`);
       }
 
       const sessionData = await response.json();
@@ -74,62 +93,70 @@ Keep responses concise (2-3 sentences) and actionable. Be empathetic and underst
       });
     }
 
-    // Process voice input
-    if (action === "voice-chat") {
-      const response = await fetch("https://api.lunara.ai/v1/chat/voice", {
+    // For voice-chat and text-chat, use Lovable AI as fallback since Pipecat needs WebRTC
+    if (action === "voice-chat" || action === "text-chat") {
+      const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+      
+      if (!LOVABLE_API_KEY) {
+        throw new Error("LOVABLE_API_KEY is not configured");
+      }
+
+      const userMessage = action === "text-chat" ? message : "User sent voice message";
+
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${LUNARA_API_KEY}`,
+          "Authorization": `Bearer ${LOVABLE_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          session_id: sessionId,
-          audio_data: audio,
-          audio_format: "webm",
+          model: "google/gemini-2.5-flash",
+          messages: [
+            {
+              role: "system",
+              content: `You are TYANA AI Health Twin - a personalized health assistant.
+
+CRITICAL LANGUAGE RULE: 
+- ALWAYS detect the language of the user's message and respond in the SAME language
+- If user speaks in Ukrainian, respond in Ukrainian
+- If user speaks in Russian, respond in Russian  
+- If user speaks in English, respond in English
+
+Your personality:
+- Warm, supportive, and encouraging
+- Evidence-based but accessible
+- Proactive with health suggestions
+
+Focus areas: Sleep, stress, energy, exercise, nutrition, mental wellness.
+Keep responses concise (2-3 sentences) and actionable.`
+            },
+            { role: "user", content: userMessage }
+          ],
         }),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Lunara voice chat error:", response.status, errorText);
-        throw new Error(`Voice chat failed: ${response.status}`);
+        console.error("Lovable AI error:", response.status, errorText);
+        throw new Error(`AI chat failed: ${response.status}`);
       }
 
-      const chatResponse = await response.json();
-      return new Response(JSON.stringify(chatResponse), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+      const aiResponse = await response.json();
+      const responseText = aiResponse.choices?.[0]?.message?.content || "Извините, не могу ответить сейчас.";
 
-    // Text chat fallback
-    if (action === "text-chat") {
-      const response = await fetch("https://api.lunara.ai/v1/chat/text", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${LUNARA_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          session_id: sessionId,
-          message: message,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Lunara text chat error:", response.status, errorText);
-        throw new Error(`Text chat failed: ${response.status}`);
-      }
-
-      const chatResponse = await response.json();
-      return new Response(JSON.stringify(chatResponse), {
+      return new Response(JSON.stringify({
+        transcript: userMessage,
+        response: {
+          text: responseText
+        }
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     throw new Error("Invalid action");
   } catch (error) {
-    console.error("Lunara function error:", error);
+    console.error("Voice chat function error:", error);
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
       {
