@@ -11,9 +11,7 @@ const Layout = () => {
 
   const navItems = [
     { path: "/today", labelKey: "today", icon: Calendar },
-    { path: "/map", labelKey: "map", icon: Map },
     { path: "/twin", labelKey: "twin", icon: Users },
-    { path: "/history", labelKey: "history", icon: History },
     { path: "/profile", labelKey: "profile", icon: User },
   ];
 
