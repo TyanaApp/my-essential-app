@@ -72,7 +72,7 @@ const Twin = () => {
               }`}
             >
               <Phone className="w-3.5 h-3.5" />
-              Голос
+              {t('voiceMode')}
             </button>
             <button
               onClick={() => setMode('text')}
@@ -83,7 +83,7 @@ const Twin = () => {
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
-              Текст
+              {t('textMode')}
             </button>
           </div>
 

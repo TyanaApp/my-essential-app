@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { LucideIcon, Briefcase, ShieldPlus, Globe, PersonStanding, Baby, Target, Heart, Plane, Trophy } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface LifeEvent {
   id?: string;
@@ -34,6 +35,7 @@ export const getIconByName = (name: string): LucideIcon => {
 
 export const useLifeEvents = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [leftEvents, setLeftEvents] = useState<LifeEvent[]>([]);
   const [rightEvents, setRightEvents] = useState<LifeEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -104,7 +106,7 @@ export const useLifeEvents = () => {
       }
     } catch (error) {
       console.error('Error fetching life events:', error);
-      toast.error('Failed to load events');
+      toast.error(t('failedToLoadEvents'));
       setLeftEvents(defaultLeftEvents);
       setRightEvents(defaultRightEvents);
     } finally {
@@ -114,7 +116,7 @@ export const useLifeEvents = () => {
 
   const addEvent = async (event: Omit<LifeEvent, 'id' | 'side'>) => {
     if (!user) {
-      toast.error('Please login to save events');
+      toast.error(t('pleaseLoginToSave'));
       return false;
     }
 
@@ -155,11 +157,11 @@ export const useLifeEvents = () => {
         setRightEvents([...rightEvents, newEvent]);
       }
 
-      toast.success(`"${event.title}" added to timeline!`);
+      toast.success(`"${event.title}" ${t('addedToTimeline')}`);
       return true;
     } catch (error) {
       console.error('Error adding life event:', error);
-      toast.error('Failed to save event');
+      toast.error(t('failedToSaveEvent'));
       return false;
     }
   };
@@ -178,11 +180,11 @@ export const useLifeEvents = () => {
       setLeftEvents(leftEvents.filter((e) => e.id !== eventId));
       setRightEvents(rightEvents.filter((e) => e.id !== eventId));
 
-      toast.success('Event removed from timeline');
+      toast.success(t('eventRemoved'));
       return true;
     } catch (error) {
       console.error('Error deleting life event:', error);
-      toast.error('Failed to delete event');
+      toast.error(t('failedToDeleteEvent'));
       return false;
     }
   };

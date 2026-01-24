@@ -63,12 +63,12 @@ const Auth = () => {
 
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
-      newErrors.email = language === 'ru' ? 'Некорректный email адрес' : 'Invalid email address';
+      newErrors.email = t('invalidEmail');
     }
 
     const passwordResult = passwordSchema.safeParse(password);
     if (!passwordResult.success) {
-      newErrors.password = language === 'ru' ? 'Пароль должен содержать минимум 6 символов' : 'Password must be at least 6 characters';
+      newErrors.password = t('passwordMinLength');
     }
 
     setErrors(newErrors);
@@ -80,30 +80,26 @@ const Auth = () => {
 
     // OAuth / provider setup issues
     if (message.includes('provider') && message.includes('not enabled')) {
-      return language === 'ru'
-        ? 'Вход через Google не включён в настройках проекта'
-        : 'Google sign-in is not enabled for this project';
+      return t('googleNotEnabled');
     }
     if (message.includes('redirect_uri_mismatch') || message.includes('redirect uri mismatch')) {
-      return language === 'ru'
-        ? 'Неверный redirect URL для Google OAuth (нужно добавить текущий домен в разрешённые)'
-        : 'Invalid Google OAuth redirect URL (add this domain to allowed redirects)';
+      return t('invalidRedirectUrl');
     }
     
     if (message.includes('invalid login credentials')) {
-      return language === 'ru' ? 'Неверный email или пароль' : 'Invalid email or password';
+      return t('invalidCredentials');
     }
     if (message.includes('user already registered')) {
-      return language === 'ru' ? 'Пользователь уже зарегистрирован' : 'User already registered';
+      return t('userAlreadyRegistered');
     }
     if (message.includes('email not confirmed')) {
-      return language === 'ru' ? 'Email не подтверждён' : 'Email not confirmed';
+      return t('emailNotConfirmed');
     }
     if (message.includes('rate limit')) {
-      return language === 'ru' ? 'Слишком много попыток. Попробуйте позже' : 'Too many attempts. Please try again later';
+      return t('tooManyAttempts');
     }
     
-    return language === 'ru' ? 'Произошла ошибка. Попробуйте снова' : 'An error occurred. Please try again';
+    return t('errorOccurred');
   };
 
   const handleGoogleSignIn = async () => {
@@ -116,7 +112,7 @@ const Auth = () => {
       }
     } catch (err) {
       console.error('Google sign-in failed:', err);
-      toast.error(language === 'ru' ? 'Ошибка входа через Google' : 'Google sign in failed');
+      toast.error(t('googleSignInFailed'));
     } finally {
       setIsGoogleLoading(false);
     }
@@ -127,7 +123,7 @@ const Auth = () => {
     if (!emailResult.success) {
       setErrors((prev) => ({
         ...prev,
-        email: language === 'ru' ? 'Некорректный email адрес' : 'Invalid email address',
+        email: t('invalidEmail'),
       }));
       return;
     }
@@ -141,14 +137,10 @@ const Auth = () => {
         return;
       }
 
-      toast.success(
-        language === 'ru'
-          ? 'Отправили ссылку для входа на почту — откройте письмо'
-          : 'We sent you a sign-in link — check your email'
-      );
+      toast.success(t('magicLinkSent'));
     } catch (err) {
       console.error('Magic link sign-in failed:', err);
-      toast.error(language === 'ru' ? 'Не удалось отправить ссылку' : 'Failed to send sign-in link');
+      toast.error(t('errorOccurred'));
     } finally {
       setIsMagicLinkLoading(false);
     }
@@ -167,7 +159,7 @@ const Auth = () => {
         if (error) {
           toast.error(getErrorMessage(error));
         } else {
-          toast.success(language === 'ru' ? 'Аккаунт создан! Добро пожаловать!' : 'Account created! Welcome!');
+          toast.success(t('accountCreated'));
           navigate('/today');
         }
       } else {
@@ -175,12 +167,12 @@ const Auth = () => {
         if (error) {
           toast.error(getErrorMessage(error));
         } else {
-          toast.success(language === 'ru' ? 'С возвращением!' : 'Welcome back!');
+          toast.success(t('welcomeBack'));
           navigate('/today');
         }
       }
     } catch (err) {
-      toast.error(language === 'ru' ? 'Неожиданная ошибка' : 'An unexpected error occurred');
+      toast.error(t('unexpectedError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -227,7 +219,7 @@ const Auth = () => {
           className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
-          {language === 'ru' ? 'Назад' : 'Back'}
+          {t('back')}
         </button>
       </div>
 
@@ -256,8 +248,8 @@ const Auth = () => {
             <GoogleIcon />
             <span className="text-sm font-medium text-foreground">
               {isGoogleLoading 
-                ? (language === 'ru' ? 'Загрузка...' : 'Loading...') 
-                : (language === 'ru' ? 'Продолжить с Google' : 'Continue with Google')
+                ? t('loading')
+                : t('continueWithGoogle')
               }
             </span>
           </button>
@@ -271,7 +263,7 @@ const Auth = () => {
               <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
             </svg>
             <span className="text-sm text-muted-foreground">
-              {language === 'ru' ? 'Apple (скоро)' : 'Apple (soon)'}
+              {t('appleSoon')}
             </span>
           </button>
 
@@ -286,8 +278,8 @@ const Auth = () => {
               <Mail className="w-5 h-5 text-muted-foreground" />
               <span className="text-sm font-medium text-foreground">
                 {isMagicLinkLoading
-                  ? (language === 'ru' ? 'Отправляем…' : 'Sending…')
-                  : (language === 'ru' ? 'Войти по почте (ссылка)' : 'Sign in via email link')}
+                  ? t('loading')
+                  : t('signInWithEmail')}
               </span>
             </button>
           )}
@@ -297,7 +289,7 @@ const Auth = () => {
         <div className="w-full max-w-sm flex items-center gap-4 mb-6">
           <div className="flex-1 h-px bg-border" />
           <span className="text-xs text-muted-foreground font-exo">
-            {language === 'ru' ? 'или' : 'or'}
+            {t('or')}
           </span>
           <div className="flex-1 h-px bg-border" />
         </div>
@@ -317,7 +309,7 @@ const Auth = () => {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   className="pl-10 h-11 bg-secondary border-border text-foreground"
-                  placeholder={language === 'ru' ? 'Ваше имя' : 'Your name'}
+                  placeholder={t('yourName')}
                 />
               </div>
             </div>
@@ -380,7 +372,7 @@ const Auth = () => {
             className="w-full h-12 bg-primary text-primary-foreground font-orbitron hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)]"
           >
             {isSubmitting 
-              ? (language === 'ru' ? 'Загрузка...' : 'Loading...') 
+              ? t('loading')
               : isSignUp ? t('createAccount') : t('signIn')
             }
           </Button>

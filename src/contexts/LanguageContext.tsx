@@ -352,6 +352,50 @@ const translations: Translations = {
   redirectingToCheckout: { en: 'Redirecting to checkout...', ru: 'Переход к оплате...', lv: 'Pārvirzīšana uz norēķinu...' },
   checkoutError: { en: 'Error creating checkout session', ru: 'Ошибка создания сессии оплаты', lv: 'Kļūda veidojot norēķinu sesiju' },
   portalError: { en: 'Error opening subscription portal', ru: 'Ошибка открытия портала подписки', lv: 'Kļūda atverot abonementa portālu' },
+
+  // Check-in
+  howAreYou: { en: 'How are you?', ru: 'Как ты?', lv: 'Kā tev klājas?' },
+  pain: { en: 'Pain', ru: 'Боль', lv: 'Sāpes' },
+  checkInSaved: { en: 'Check-in saved!', ru: 'Чек-ин сохранён!', lv: 'Pārbaude saglabāta!' },
+  
+  // Life Events
+  pleaseLoginToSave: { en: 'Please login to save events', ru: 'Войдите, чтобы сохранить события', lv: 'Lūdzu, pierakstieties, lai saglabātu notikumus' },
+  addedToTimeline: { en: 'added to timeline!', ru: 'добавлено в таймлайн!', lv: 'pievienots laika skalai!' },
+  failedToLoadEvents: { en: 'Failed to load events', ru: 'Не удалось загрузить события', lv: 'Neizdevās ielādēt notikumus' },
+  failedToSaveEvent: { en: 'Failed to save event', ru: 'Не удалось сохранить событие', lv: 'Neizdevās saglabāt notikumu' },
+  failedToDeleteEvent: { en: 'Failed to delete event', ru: 'Не удалось удалить событие', lv: 'Neizdevās dzēst notikumu' },
+  eventRemoved: { en: 'Event removed from timeline', ru: 'Событие удалено из таймлайна', lv: 'Notikums noņemts no laika skalas' },
+  
+  // Twin/Voice
+  voiceMode: { en: 'Voice', ru: 'Голос', lv: 'Balss' },
+  textMode: { en: 'Text', ru: 'Текст', lv: 'Teksts' },
+  connecting: { en: 'Connecting...', ru: 'Подключение...', lv: 'Savienojas...' },
+  connected: { en: 'Connected', ru: 'Подключено', lv: 'Savienots' },
+  disconnect: { en: 'Disconnect', ru: 'Отключить', lv: 'Atvienot' },
+  connect: { en: 'Connect', ru: 'Подключить', lv: 'Savienot' },
+  listening: { en: 'Listening...', ru: 'Слушаю...', lv: 'Klausos...' },
+  tapToSpeak: { en: 'Tap to speak', ru: 'Нажми, чтобы говорить', lv: 'Pieskarieties, lai runātu' },
+  processing: { en: 'Processing...', ru: 'Обработка...', lv: 'Apstrādā...' },
+  typeMessage: { en: 'Type a message...', ru: 'Введите сообщение...', lv: 'Rakstiet ziņojumu...' },
+  send: { en: 'Send', ru: 'Отправить', lv: 'Sūtīt' },
+  clearChat: { en: 'Clear chat', ru: 'Очистить чат', lv: 'Notīrīt čatu' },
+  stopSpeaking: { en: 'Stop speaking', ru: 'Остановить', lv: 'Apturēt runāšanu' },
+  connectToStart: { en: 'Connect to start voice conversation', ru: 'Подключитесь для голосового разговора', lv: 'Savienojieties, lai sāktu balss sarunu' },
+  
+  // Pagination
+  previous: { en: 'Previous', ru: 'Назад', lv: 'Iepriekšējais' },
+  next: { en: 'Next', ru: 'Далее', lv: 'Nākamais' },
+  
+  // Sidebar
+  toggleSidebar: { en: 'Toggle Sidebar', ru: 'Переключить боковую панель', lv: 'Pārslēgt sānjoslu' },
+  
+  // Google OAuth errors
+  googleNotEnabled: { en: 'Google sign-in is not enabled for this project', ru: 'Вход через Google не включён для этого проекта', lv: 'Google pierakstīšanās nav iespējota šim projektam' },
+  invalidRedirectUrl: { en: 'Invalid Google OAuth redirect URL', ru: 'Неверный redirect URL для Google OAuth', lv: 'Nederīgs Google OAuth novirzīšanas URL' },
+  
+  // Magic Link
+  magicLinkSent: { en: 'Magic link sent to your email', ru: 'Ссылка для входа отправлена на email', lv: 'Burvju saite nosūtīta uz jūsu e-pastu' },
+  signInWithEmail: { en: 'Sign in with Email link', ru: 'Войти по ссылке на email', lv: 'Pierakstīties ar e-pasta saiti' },
 };
 
 interface LanguageContextType {
