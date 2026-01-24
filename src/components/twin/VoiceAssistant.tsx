@@ -53,7 +53,7 @@ const VoiceAssistant: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-muted'}`} />
           <span className="text-sm text-muted-foreground font-exo">
-            {isConnected ? 'Голосовой режим активен' : 'Нажмите для подключения'}
+            {isConnected ? t('connected') : t('tapToSpeak')}
           </span>
         </div>
         
@@ -69,12 +69,12 @@ const VoiceAssistant: React.FC = () => {
           ) : isConnected ? (
             <>
               <PhoneOff className="w-4 h-4" />
-              Отключить
+              {t('disconnect')}
             </>
           ) : (
             <>
               <Phone className="w-4 h-4" />
-              Подключить
+              {t('connect')}
             </>
           )}
         </Button>
@@ -164,7 +164,7 @@ const VoiceAssistant: React.FC = () => {
 
           {/* Status text */}
           <p className="text-center text-sm text-muted-foreground mb-4 font-exo">
-            {isListening ? '🎙️ Слушаю...' : isProcessing ? '⏳ Обрабатываю...' : isSpeaking ? '🔊 Говорю...' : 'Нажмите для записи'}
+            {isListening ? `🎙️ ${t('listening')}` : isProcessing ? `⏳ ${t('processing')}` : isSpeaking ? `🔊 ${t('speaking')}` : t('tapToSpeak')}
           </p>
 
           {/* Speaking control */}
@@ -177,7 +177,7 @@ const VoiceAssistant: React.FC = () => {
                 className="text-muted-foreground"
               >
                 <VolumeX className="w-4 h-4 mr-2" />
-                Остановить
+                {t('stop')}
               </Button>
             </div>
           )}
@@ -188,7 +188,7 @@ const VoiceAssistant: React.FC = () => {
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSendText()}
-              placeholder="Или напишите сообщение..."
+              placeholder={t('typeMessage')}
               className="flex-1 bg-secondary border-border text-foreground font-exo"
               disabled={isProcessing}
             />
@@ -225,10 +225,10 @@ const VoiceAssistant: React.FC = () => {
           </motion.div>
           
           <h2 className="text-xl font-orbitron font-bold text-foreground mb-2">
-            Голосовой AI Twin
+            {t('healthAssistant')}
           </h2>
           <p className="text-muted-foreground text-center font-exo max-w-xs mb-6">
-            Поговорите с вашим персональным health-ассистентом голосом
+            {t('connectToStart')}
           </p>
           
           <Button
@@ -241,7 +241,7 @@ const VoiceAssistant: React.FC = () => {
             ) : (
               <Phone className="w-5 h-5" />
             )}
-            Начать разговор
+            {t('connect')}
           </Button>
         </div>
       )}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Smile, Activity, Brain, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface TodayCheckInProps {
   onSave: (data: CheckInData) => void;
@@ -16,6 +17,7 @@ export interface CheckInData {
 }
 
 const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
+  const { t } = useLanguage();
   const [energy, setEnergy] = useState(3);
   const [mood, setMood] = useState(3);
   const [pain, setPain] = useState(0);
@@ -24,7 +26,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
 
   const handleSave = () => {
     onSave({ energy, mood, pain, stress, sleep: 7.5 });
-    toast.success('Чек-ин сохранён!');
+    toast.success(t('checkInSaved'));
     setIsExpanded(false);
   };
 
@@ -79,7 +81,7 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
           <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center">
             <Smile className="w-4 h-4 text-primary" />
           </div>
-          <span className="text-sm font-medium text-card-foreground">Как ты?</span>
+          <span className="text-sm font-medium text-card-foreground">{t('howAreYou')}</span>
         </div>
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -96,17 +98,17 @@ const TodayCheckIn: React.FC<TodayCheckInProps> = ({ onSave }) => {
           exit={{ opacity: 0, height: 0 }}
           className="px-3 pb-2 space-y-2"
         >
-          <ScaleSelector label="Энергия" icon={Zap} value={energy} onChange={setEnergy} max={5} color="bg-warning/20" />
-          <ScaleSelector label="Настрой" icon={Smile} value={mood} onChange={setMood} max={5} color="bg-success/20" />
-          <ScaleSelector label="Боль" icon={Activity} value={pain} onChange={setPain} max={10} color="bg-destructive/20" />
-          <ScaleSelector label="Стресс" icon={Brain} value={stress} onChange={setStress} max={5} color="bg-bio-purple/20" />
+          <ScaleSelector label={t('energy')} icon={Zap} value={energy} onChange={setEnergy} max={5} color="bg-warning/20" />
+          <ScaleSelector label={t('mood')} icon={Smile} value={mood} onChange={setMood} max={5} color="bg-success/20" />
+          <ScaleSelector label={t('pain')} icon={Activity} value={pain} onChange={setPain} max={10} color="bg-destructive/20" />
+          <ScaleSelector label={t('stress')} icon={Brain} value={stress} onChange={setStress} max={5} color="bg-bio-purple/20" />
 
           <button
             onClick={handleSave}
             className="w-full py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-primary/90 transition-colors"
           >
             <Check className="w-3.5 h-3.5" />
-            Сохранить
+            {t('save')}
           </button>
         </motion.div>
       )}
