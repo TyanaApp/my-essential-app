@@ -157,8 +157,9 @@ Keep responses concise (2-3 sentences) and actionable.`
     throw new Error("Invalid action");
   } catch (error) {
     console.error("Voice chat function error:", error);
+    // Return generic error message to prevent information leakage
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ error: "Voice service temporarily unavailable" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

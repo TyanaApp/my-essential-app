@@ -64,7 +64,8 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    // Return generic error message to prevent information leakage
+    return new Response(JSON.stringify({ error: "Billing portal temporarily unavailable" }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

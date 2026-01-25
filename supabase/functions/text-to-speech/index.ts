@@ -54,9 +54,9 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error('TTS error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    // Return generic error message to prevent information leakage
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'Speech service temporarily unavailable' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

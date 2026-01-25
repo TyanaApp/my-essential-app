@@ -85,7 +85,8 @@ Keep responses concise (2-3 sentences) and actionable. Use emojis sparingly for 
     });
   } catch (error) {
     console.error("Chat function error:", error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }), {
+    // Return generic error message to prevent information leakage
+    return new Response(JSON.stringify({ error: "Service temporarily unavailable" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
