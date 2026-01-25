@@ -24,8 +24,9 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error:", error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
+    console.error("Maps config error:", error);
+    // Return generic error message to prevent information leakage
+    return new Response(JSON.stringify({ error: "Maps service temporarily unavailable" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

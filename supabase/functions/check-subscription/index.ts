@@ -87,7 +87,8 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    // Return generic error message to prevent information leakage
+    return new Response(JSON.stringify({ error: "Subscription check temporarily unavailable" }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
