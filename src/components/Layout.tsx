@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Calendar, Map, Users, History, User } from "lucide-react";
+import { Calendar, Map, Users, User } from "lucide-react";
 import { useLanguage } from '@/contexts/LanguageContext';
 import tyanaLogo from '@/assets/tyana-logo.png';
 import VideoBackground from './VideoBackground';
@@ -11,6 +11,7 @@ const Layout = () => {
 
   const navItems = [
     { path: "/today", labelKey: "today", icon: Calendar },
+    { path: "/map", labelKey: "map", icon: Map },
     { path: "/twin", labelKey: "twin", icon: Users },
     { path: "/profile", labelKey: "profile", icon: User },
   ];
