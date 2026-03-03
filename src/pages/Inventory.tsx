@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
+import ScanModal from '@/components/inventory/ScanModal';
 
 export interface InventoryItem {
   id: string;
@@ -36,6 +37,7 @@ const Inventory = () => {
   const [tab, setTab] = useState<Tab>('fridge');
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
 
   const fetchItems = async () => {
@@ -149,7 +151,7 @@ const Inventory = () => {
         <button
           className="flex items-center gap-1.5 px-4 h-10 rounded-xl border-[1.5px] text-sm font-medium"
           style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
-          onClick={() => toast.info('Photo scanning coming soon!')}
+          onClick={() => setScanOpen(true)}
         >
           <Camera className="w-4 h-4" /> Scan
         </button>
@@ -250,11 +252,16 @@ const Inventory = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modals */}
       <InventoryModal
         open={modalOpen}
         onClose={() => { setModalOpen(false); setEditItem(null); }}
         editItem={editItem}
+        onSaved={fetchItems}
+      />
+      <ScanModal
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
         onSaved={fetchItems}
       />
     </div>
