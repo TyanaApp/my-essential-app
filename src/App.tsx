@@ -35,7 +35,7 @@ const App = () => {
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/onboarding" element={
-                    <ProtectedRoute><Onboarding /></ProtectedRoute>
+                    <ProtectedRoute skipOnboardingCheck><Onboarding /></ProtectedRoute>
                   } />
                   <Route element={
                     <ProtectedRoute><Layout /></ProtectedRoute>
