@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
+import ScanModal from '@/components/inventory/ScanModal';
 
 export interface InventoryItem {
   id: string;
