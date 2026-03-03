@@ -14,78 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
-      chat_messages: {
+      inventory_items: {
         Row: {
-          content: string
-          created_at: string
+          added_at: string | null
+          category: string | null
+          expires_at: string | null
           id: string
-          role: string
+          name: string
+          price_per_unit: number | null
+          quantity: number | null
+          storage_location: string | null
+          unit: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
-          content: string
-          created_at?: string
+          added_at?: string | null
+          category?: string | null
+          expires_at?: string | null
           id?: string
-          role: string
+          name: string
+          price_per_unit?: number | null
+          quantity?: number | null
+          storage_location?: string | null
+          unit?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
-          content?: string
-          created_at?: string
+          added_at?: string | null
+          category?: string | null
+          expires_at?: string | null
           id?: string
-          role?: string
+          name?: string
+          price_per_unit?: number | null
+          quantity?: number | null
+          storage_location?: string | null
+          unit?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
       }
-      life_events: {
+      meal_entries: {
         Row: {
-          created_at: string
+          created_at: string | null
+          custom_name: string | null
           date: string
-          icon_name: string
           id: string
-          side: string
-          status: string
-          title: string
-          type: string
-          updated_at: string
+          meal_type: string | null
+          recipe_id: string | null
+          total_calories: number | null
+          total_carbs: number | null
+          total_fat: number | null
+          total_protein: number | null
           user_id: string
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
+          custom_name?: string | null
           date: string
-          icon_name?: string
           id?: string
-          side?: string
-          status?: string
-          title: string
-          type: string
-          updated_at?: string
+          meal_type?: string | null
+          recipe_id?: string | null
+          total_calories?: number | null
+          total_carbs?: number | null
+          total_fat?: number | null
+          total_protein?: number | null
           user_id: string
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
+          custom_name?: string | null
           date?: string
-          icon_name?: string
           id?: string
-          side?: string
-          status?: string
-          title?: string
-          type?: string
-          updated_at?: string
+          meal_type?: string | null
+          recipe_id?: string | null
+          total_calories?: number | null
+          total_carbs?: number | null
+          total_fat?: number | null
+          total_protein?: number | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "meal_entries_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           avatar_url: string | null
           bio: string | null
           birth_date: string | null
+          city: string | null
           created_at: string
+          currency: string | null
           display_name: string | null
           gender: string | null
           id: string
+          onboarding_completed: boolean | null
+          stripe_customer_id: string | null
+          subscription_plan: string | null
+          subscription_status: string | null
+          trial_end: string | null
           updated_at: string
           user_id: string
         }
@@ -93,10 +129,17 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
+          city?: string | null
           created_at?: string
+          currency?: string | null
           display_name?: string | null
           gender?: string | null
           id?: string
+          onboarding_completed?: boolean | null
+          stripe_customer_id?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string | null
+          trial_end?: string | null
           updated_at?: string
           user_id: string
         }
@@ -104,12 +147,175 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
+          city?: string | null
           created_at?: string
+          currency?: string | null
           display_name?: string | null
           gender?: string | null
           id?: string
+          onboarding_completed?: boolean | null
+          stripe_customer_id?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string | null
+          trial_end?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      recipes: {
+        Row: {
+          created_at: string | null
+          estimated_cost: number | null
+          id: string
+          ingredients: Json | null
+          instructions: string[] | null
+          is_favorite: boolean | null
+          nutrition: Json | null
+          prep_time: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          estimated_cost?: number | null
+          id?: string
+          ingredients?: Json | null
+          instructions?: string[] | null
+          is_favorite?: boolean | null
+          nutrition?: Json | null
+          prep_time?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          estimated_cost?: number | null
+          id?: string
+          ingredients?: Json | null
+          instructions?: string[] | null
+          is_favorite?: boolean | null
+          nutrition?: Json | null
+          prep_time?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      savings_log: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shopping_items: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          estimated_price: number | null
+          id: string
+          is_purchased: boolean | null
+          name: string
+          quantity: number | null
+          unit: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          estimated_price?: number | null
+          id?: string
+          is_purchased?: boolean | null
+          name: string
+          quantity?: number | null
+          unit?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          estimated_price?: number | null
+          id?: string
+          is_purchased?: boolean | null
+          name?: string
+          quantity?: number | null
+          unit?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_goals: {
+        Row: {
+          activity_level: string | null
+          age: number | null
+          allergies: string[] | null
+          daily_calories_target: number | null
+          diet_type: string | null
+          disliked_foods: string[] | null
+          goals: string[] | null
+          height_cm: number | null
+          household_size: number | null
+          id: string
+          monthly_budget: number | null
+          stores: string[] | null
+          updated_at: string | null
+          user_id: string
+          weight_kg: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          daily_calories_target?: number | null
+          diet_type?: string | null
+          disliked_foods?: string[] | null
+          goals?: string[] | null
+          height_cm?: number | null
+          household_size?: number | null
+          id?: string
+          monthly_budget?: number | null
+          stores?: string[] | null
+          updated_at?: string | null
+          user_id: string
+          weight_kg?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          daily_calories_target?: number | null
+          diet_type?: string | null
+          disliked_foods?: string[] | null
+          goals?: string[] | null
+          height_cm?: number | null
+          household_size?: number | null
+          id?: string
+          monthly_budget?: number | null
+          stores?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+          weight_kg?: number | null
         }
         Relationships: []
       }
