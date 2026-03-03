@@ -254,20 +254,254 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="py-10 px-6 border-t" style={{ borderColor: '#EDE9FE' }}>
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm" style={{ color: '#6B7280' }}>
-            © 2025 TYANA. All rights reserved.
-          </span>
-          <div className="flex gap-6">
-            <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Terms</a>
-            <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Privacy</a>
-            <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Contact</a>
+      {/* PRICING */}
+      <section id="pricing" className="py-24 px-6" style={{ backgroundColor: '#F5F3FF' }}>
+        <div className="max-w-5xl mx-auto">
+          <motion.h2
+            className="text-3xl lg:text-4xl font-bold text-center mb-4"
+            style={{ color: '#1E1B4B' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Simple, transparent pricing
+          </motion.h2>
+          <p className="text-center mb-14 text-base" style={{ color: '#6B7280' }}>
+            Start free, upgrade when you're ready.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-6 items-start">
+            {/* FREE */}
+            <motion.div
+              className="bg-white rounded-2xl p-7"
+              style={{ boxShadow: '0 2px 20px rgba(124,58,237,0.06)' }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>Free</h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-4xl font-bold" style={{ color: '#1E1B4B' }}>€0</span>
+                <span className="text-sm" style={{ color: '#6B7280' }}>/month</span>
+              </div>
+              <p className="text-[13px] mb-6" style={{ color: '#7C3AED' }}>7-day Pro trial included</p>
+              <ul className="space-y-3 mb-8">
+                {['1 scan/month', '3 recipes/month', '1 family member', 'Basic calorie counter'].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
+                    <span style={{ color: '#7C3AED' }}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/auth?mode=signup"
+                className="block w-full text-center py-3 rounded-xl text-sm font-semibold border-[1.5px] transition-colors hover:bg-gray-50"
+                style={{ color: '#7C3AED', borderColor: '#DDD6FE' }}
+              >
+                Start Free
+              </Link>
+            </motion.div>
+
+            {/* LITE */}
+            <motion.div
+              className="bg-white rounded-2xl p-7 border"
+              style={{ borderColor: '#C4B5FD', boxShadow: '0 2px 20px rgba(124,58,237,0.08)' }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              <p className="text-[12px] font-semibold tracking-wider uppercase mb-2" style={{ color: '#7C3AED' }}>
+                For Families
+              </p>
+              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>Lite</h3>
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-4xl font-bold" style={{ color: '#1E1B4B' }}>€5.99</span>
+                <span className="text-sm" style={{ color: '#6B7280' }}>/month</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                {[
+                  '15 scans/month',
+                  'Unlimited recipes',
+                  '5 receipts/month',
+                  '4 family members',
+                  'Allergy profiles',
+                  'Live discounts',
+                  'Weekly savings report',
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
+                    <span style={{ color: '#7C3AED' }}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/auth?mode=signup"
+                className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#7C3AED' }}
+              >
+                Get Lite <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            {/* PRO */}
+            <motion.div
+              className="bg-white rounded-2xl p-7 border-2 relative overflow-hidden"
+              style={{ borderColor: '#7C3AED', boxShadow: '0 4px 30px rgba(124,58,237,0.15)' }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              {/* Most Popular badge */}
+              <div
+                className="absolute top-4 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
+                style={{ backgroundColor: '#7C3AED' }}
+              >
+                Most Popular
+              </div>
+
+              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>Pro</h3>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-lg line-through" style={{ color: '#9CA3AF' }}>€12.99</span>
+                <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>€6.49</span>
+                <span className="text-sm" style={{ color: '#6B7280' }}>/mo</span>
+              </div>
+
+              {/* Founder badge */}
+              <div
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-semibold mt-2 mb-1"
+                style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}
+              >
+                ✦ Founder's Price — 50% off for life
+              </div>
+              <p className="text-[13px] font-medium mb-5" style={{ color: '#EA580C' }}>
+                First 1,000 users only
+              </p>
+
+              <ul className="space-y-3 mb-8">
+                {[
+                  'Unlimited scans & recipes',
+                  'Unlimited receipts',
+                  '6 family members',
+                  'Full AI meal planning',
+                  'Wearable integration',
+                  'Priority support',
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
+                    <span style={{ color: '#7C3AED' }}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                to="/auth?mode=signup"
+                className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#7C3AED' }}
+              >
+                Get Pro — €6.49/month <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-24 px-6">
+        <div className="max-w-3xl mx-auto">
+          <motion.h2
+            className="text-3xl lg:text-4xl font-bold text-center mb-14"
+            style={{ color: '#1E1B4B' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Frequently asked questions
+          </motion.h2>
+
+          <div className="space-y-3">
+            {[
+              { q: 'How does fridge scanning work?', a: 'Simply open the app, tap "Scan", and take a photo of your fridge. TYANA\'s AI identifies every item, estimates quantities and expiry dates, and adds them to your inventory automatically.' },
+              { q: 'How does TYANA calculate savings?', a: 'We track the retail value of food you would have thrown away, discounts found for your shopping list, and cost optimizations from meal planning. Your savings dashboard shows a breakdown each week.' },
+              { q: 'How are calories calculated?', a: 'Calories and macronutrients are calculated using verified food databases. When you log meals or scan ingredients, TYANA matches them to nutritional data and adjusts portions based on your entries.' },
+              { q: 'Is my data safe?', a: 'Yes. All data is encrypted in transit and at rest. We never sell your data. You can export or delete your account and all associated data at any time from Settings.' },
+              { q: 'Can I use it without scanning?', a: 'Absolutely. You can manually add items to your inventory, type in recipes, and use the meal planner without ever scanning. Scanning just makes it faster.' },
+              { q: 'Which countries have store discounts?', a: 'We currently support major grocery chains in Latvia, Germany, and the Netherlands. We\'re expanding to more EU countries every month. Request your country in Settings!' },
+            ].map((item, i) => (
+              <FaqItem key={i} question={item.q} answer={item.a} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="py-12 px-6 border-t" style={{ borderColor: '#EDE9FE' }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
+            <div>
+              <span
+                className="text-2xl font-bold"
+                style={{
+                  background: 'linear-gradient(135deg, #7C3AED, #C026D3)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                TYANA
+              </span>
+              <p className="text-sm mt-1" style={{ color: '#6B7280' }}>Your Kitchen CFO</p>
+            </div>
+            <div className="flex gap-6">
+              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Terms</a>
+              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Privacy</a>
+              <a href="mailto:support@tyana.app" className="text-sm hover:underline" style={{ color: '#6B7280' }}>support@tyana.app</a>
+            </div>
+          </div>
+          <p className="text-[12px] leading-relaxed" style={{ color: '#9CA3AF' }}>
+            TYANA is an AI-powered kitchen assistant. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.
+          </p>
+          <p className="text-[12px] mt-2" style={{ color: '#9CA3AF' }}>
+            © 2025 TYANA. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>
+  );
+};
+
+/* FAQ Accordion Item */
+const FaqItem = ({ question, answer, index }: { question: string; answer: string; index: number }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.div
+      className="bg-white rounded-xl overflow-hidden"
+      style={{ boxShadow: '0 1px 8px rgba(124,58,237,0.04)' }}
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.05 }}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-6 py-4 text-left"
+      >
+        <span className="text-sm font-semibold pr-4" style={{ color: '#1E1B4B' }}>{question}</span>
+        <span
+          className="text-lg shrink-0 transition-transform duration-200"
+          style={{ color: '#7C3AED', transform: open ? 'rotate(45deg)' : 'rotate(0deg)' }}
+        >
+          +
+        </span>
+      </button>
+      <motion.div
+        initial={false}
+        animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+        className="overflow-hidden"
+      >
+        <p className="px-6 pb-4 text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+          {answer}
+        </p>
+      </motion.div>
+    </motion.div>
   );
 };
 
