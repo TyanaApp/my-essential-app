@@ -1,40 +1,33 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ChefHat, BookOpen, ShoppingCart, User } from "lucide-react";
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings } from "lucide-react";
 import tyanaLogo from '@/assets/tyana-logo.png';
+import LanguageSelector from './LanguageSelector';
+import ThemeToggle from './ThemeToggle';
 
 const Layout = () => {
   const location = useLocation();
-  const { t } = useLanguage();
 
   const navItems = [
-    { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { path: "/dashboard", label: "Home", icon: Home },
     { path: "/inventory", label: "Inventory", icon: Package },
     { path: "/recipes", label: "Recipes", icon: ChefHat },
-    { path: "/diary", label: "Diary", icon: BookOpen },
     { path: "/shopping", label: "Shopping", icon: ShoppingCart },
-    { path: "/profile", label: "Profile", icon: User },
+    { path: "/diary", label: "Diary", icon: BookOpen },
+    { path: "/profile", label: "Settings", icon: Settings },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-        <div className="flex items-center justify-center h-12 px-4">
-          <img 
-            src={tyanaLogo} 
-            alt="TYANA Kitchen CFO" 
-            className="h-5"
-          />
+    <div className="flex min-h-screen bg-background">
+      {/* Sidebar */}
+      <aside className="fixed left-0 top-0 bottom-0 w-60 bg-card border-r border-primary-100 flex flex-col z-50">
+        {/* Logo */}
+        <div className="flex items-center gap-2 h-14 px-5 border-b border-primary-100">
+          <img src={tyanaLogo} alt="TYANA Kitchen CFO" className="h-5" />
         </div>
-      </header>
 
-      <main className="flex-1 pt-12 pb-20">
-        <Outlet />
-      </main>
-
-      <nav className="fixed bottom-0 left-0 right-0 bg-card/80 backdrop-blur-xl border-t border-border/50">
-        <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
+        {/* Nav */}
+        <nav className="flex-1 py-4 px-3 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -42,17 +35,33 @@ const Layout = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex flex-col items-center justify-center px-2 py-2 transition-colors ${
-                  isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 }`}
               >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] mt-1">{item.label}</span>
+                <Icon className="w-4 h-4" />
+                <span>{item.label}</span>
               </NavLink>
             );
           })}
+        </nav>
+
+        {/* Bottom controls */}
+        <div className="p-4 border-t border-primary-100 space-y-3">
+          <LanguageSelector variant="compact" />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">Theme</span>
+            <ThemeToggle />
+          </div>
         </div>
-      </nav>
+      </aside>
+
+      {/* Main content */}
+      <main className="flex-1 ml-60">
+        <Outlet />
+      </main>
     </div>
   );
 };
