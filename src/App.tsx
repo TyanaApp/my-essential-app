@@ -17,6 +17,7 @@ import Recipes from "./pages/Recipes";
 import Diary from "./pages/Diary";
 import Shopping from "./pages/Shopping";
 import Profile from "./pages/Profile";
+import Savings from "./pages/Savings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
