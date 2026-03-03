@@ -13,12 +13,6 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        nasa: ['Michroma', 'sans-serif'],
-        orbitron: ['Orbitron', 'sans-serif'],
-        exo: ['Exo 2', 'sans-serif'],
-        numbers: ['Quicksand', 'sans-serif'],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -28,6 +22,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          50: "#F5F3FF",
+          100: "#EDE9FE",
+          200: "#C4B5FD",
+          400: "#A78BFA",
+          600: "#7C3AED",
+          700: "#6D28D9",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -53,12 +53,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        golden: "hsl(var(--golden))",
-        "golden-glow": "hsl(var(--golden-glow))",
-        "deep-purple": "hsl(var(--deep-purple))",
-        "bio-cyan": "hsl(var(--bio-cyan))",
-        "bio-purple": "hsl(var(--bio-purple))",
-        "bio-magenta": "hsl(var(--bio-magenta))",
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
