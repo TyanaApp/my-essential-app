@@ -37,6 +37,7 @@ const Inventory = () => {
   const [tab, setTab] = useState<Tab>('fridge');
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
 
   const fetchItems = async () => {
