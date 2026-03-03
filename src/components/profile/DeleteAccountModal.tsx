@@ -30,16 +30,18 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ open, onOpenCha
     setDeleting(true);
 
     try {
-      // Delete profile first (will cascade to other user data)
       if (user) {
+        // Delete user data from kitchen tables
+        await supabase.from('user_goals').delete().eq('user_id', user.id);
+        await supabase.from('meal_entries').delete().eq('user_id', user.id);
+        await supabase.from('inventory_items').delete().eq('user_id', user.id);
+        await supabase.from('recipes').delete().eq('user_id', user.id);
+        await supabase.from('shopping_items').delete().eq('user_id', user.id);
+        await supabase.from('savings_log').delete().eq('user_id', user.id);
         await supabase.from('profiles').delete().eq('user_id', user.id);
-        await supabase.from('life_events').delete().eq('user_id', user.id);
-        await supabase.from('chat_messages').delete().eq('user_id', user.id);
       }
 
-      // Sign out
       await signOut();
-      
       toast.success(t('accountDeleted'));
       navigate('/');
     } catch (error) {
@@ -55,7 +57,7 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ open, onOpenCha
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-nasa text-destructive flex items-center gap-2">
+          <DialogTitle className="text-destructive flex items-center gap-2 font-bold">
             <AlertTriangle className="w-6 h-6" />
             {t('deleteAccount')}
           </DialogTitle>
@@ -66,10 +68,8 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ open, onOpenCha
 
         <div className="space-y-4 py-4">
           <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-xl">
-            <p className="text-sm text-foreground font-exo">
-              {t('deleteAccountConsequences')}
-            </p>
-            <ul className="mt-2 text-sm text-muted-foreground space-y-1 font-exo">
+            <p className="text-sm text-foreground">{t('deleteAccountConsequences')}</p>
+            <ul className="mt-2 text-sm text-muted-foreground space-y-1">
               <li>• {t('allDataWillBeDeleted')}</li>
               <li>• {t('cannotBeUndone')}</li>
               <li>• {t('subscriptionWillBeCanceled')}</li>
@@ -77,9 +77,7 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ open, onOpenCha
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground font-exo">
-              {t('typeDeleteToConfirm')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('typeDeleteToConfirm')}</p>
             <Input
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value.toUpperCase())}
@@ -90,19 +88,8 @@ const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({ open, onOpenCha
         </div>
 
         <div className="flex gap-3">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            className="flex-1 font-exo"
-          >
-            {t('cancel')}
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={deleting || confirmText !== 'DELETE'}
-            className="flex-1 font-nasa"
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">{t('cancel')}</Button>
+          <Button variant="destructive" onClick={handleDelete} disabled={deleting || confirmText !== 'DELETE'} className="flex-1">
             {deleting ? t('deleting') : t('deleteForever')}
           </Button>
         </div>
