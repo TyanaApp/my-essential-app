@@ -6,15 +6,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import { GoogleMapsProvider } from "./contexts/GoogleMapsContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Intro from "./pages/Intro";
+import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Today from "./pages/Today";
-import MapPage from "./pages/MapPage";
-import Twin from "./pages/Twin";
-import HistoryPage from "./pages/HistoryPage";
+import Onboarding from "./pages/Onboarding";
+import Dashboard from "./pages/Dashboard";
+import Inventory from "./pages/Inventory";
+import Recipes from "./pages/Recipes";
+import Diary from "./pages/Diary";
+import Shopping from "./pages/Shopping";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
@@ -23,31 +24,31 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
               <AuthProvider>
-                <GoogleMapsProvider>
-                  <Routes>
-                    <Route path="/" element={<Intro />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route element={
-                      <ProtectedRoute>
-                        <Layout />
-                      </ProtectedRoute>
-                    }>
-                      <Route path="/today" element={<Today />} />
-                      <Route path="/map" element={<MapPage />} />
-                      <Route path="/twin" element={<Twin />} />
-                      <Route path="/history" element={<HistoryPage />} />
-                      <Route path="/profile" element={<Profile />} />
-                    </Route>
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </GoogleMapsProvider>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/onboarding" element={
+                    <ProtectedRoute><Onboarding /></ProtectedRoute>
+                  } />
+                  <Route element={
+                    <ProtectedRoute><Layout /></ProtectedRoute>
+                  }>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/recipes" element={<Recipes />} />
+                    <Route path="/diary" element={<Diary />} />
+                    <Route path="/shopping" element={<Shopping />} />
+                    <Route path="/profile" element={<Profile />} />
+                  </Route>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
               </AuthProvider>
             </BrowserRouter>
           </TooltipProvider>
