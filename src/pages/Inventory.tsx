@@ -252,11 +252,16 @@ const Inventory = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modals */}
       <InventoryModal
         open={modalOpen}
         onClose={() => { setModalOpen(false); setEditItem(null); }}
         editItem={editItem}
+        onSaved={fetchItems}
+      />
+      <ScanModal
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
         onSaved={fetchItems}
       />
     </div>
