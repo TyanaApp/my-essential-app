@@ -31,7 +31,6 @@ const Profile = () => {
   const [accountSettingsOpen, setAccountSettingsOpen] = useState(false);
   const [systemSettingsOpen, setSystemSettingsOpen] = useState(false);
   const [paymentsOpen, setPaymentsOpen] = useState(false);
-  const [deviceSyncOpen, setDeviceSyncOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -91,11 +90,6 @@ const Profile = () => {
       icon: CreditCard,
       label: t('payments'),
       onClick: () => setPaymentsOpen(true),
-    },
-    {
-      icon: Watch,
-      label: t('deviceSync'),
-      onClick: () => setDeviceSyncOpen(true),
     },
   ];
 
