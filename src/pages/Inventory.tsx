@@ -290,6 +290,13 @@ const Inventory = () => {
         onClose={() => setScanOpen(false)}
         onSaved={fetchItems}
       />
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        title="Scan limit reached"
+        description="Free users get 1 fridge scan per month. Upgrade to Lite for 15 scans/month!"
+        suggestedPlan="lite"
+      />
     </div>
   );
 };
