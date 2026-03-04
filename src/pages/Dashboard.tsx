@@ -39,6 +39,7 @@ const formatDate = () => {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  usePageTitle('Dashboard');
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { checkSubscription } = useSubscription();
