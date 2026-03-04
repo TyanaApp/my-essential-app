@@ -135,7 +135,7 @@ const Inventory = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 pb-mobile-safe max-w-full box-border overflow-hidden">
+    <div className="min-h-screen p-4 sm:p-6 pb-mobile-safe">
       <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Inventory</h1>
 
       {/* Tabs - scrollable row */}
