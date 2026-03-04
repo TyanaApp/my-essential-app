@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -47,6 +48,7 @@ const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 
 const Recipes = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   usePageTitle('Recipes');
   const { plan } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
@@ -93,6 +95,10 @@ const Recipes = () => {
 
   const handleGenerate = async () => {
     if (!user) return;
+    // Check if inventory is empty
+    if (inventory.length === 0) {
+      return; // UI will show empty state via showEmptyInventory
+    }
     setGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-recipes', {
@@ -407,21 +413,40 @@ const Recipes = () => {
                 </div>
 
                 {/* Generate button */}
-                <button
-                  onClick={handleGenerate}
-                  disabled={generating || selectedMeals.length === 0}
-                  className="w-full h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
-                  style={{ backgroundColor: '#7C3AED' }}
-                >
-                  {generating ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Generating...
-                    </span>
-                  ) : (
-                    'Generate Recipes ✨'
-                  )}
-                </button>
+                {!loading && inventory.length === 0 ? (
+                  <div className="text-center py-4 rounded-xl" style={{ backgroundColor: 'white' }}>
+                    <div className="text-4xl mb-2">🧊</div>
+                    <p className="text-sm font-bold mb-1" style={{ color: '#1E1B4B' }}>
+                      Add some food first
+                    </p>
+                    <p className="text-xs mb-3" style={{ color: '#6B7280' }}>
+                      Go to Inventory and add what you have at home — then TYANA will generate recipes just for you
+                    </p>
+                    <button
+                      onClick={() => navigate('/inventory')}
+                      className="px-4 py-2 rounded-xl text-sm font-semibold text-white"
+                      style={{ backgroundColor: '#7C3AED' }}
+                    >
+                      Go to Inventory →
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleGenerate}
+                    disabled={generating || selectedMeals.length === 0}
+                    className="w-full h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
+                    style={{ backgroundColor: '#7C3AED' }}
+                  >
+                    {generating ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Generating...
+                      </span>
+                    ) : (
+                      'Generate Recipes ✨'
+                    )}
+                  </button>
+                )}
               </div>
             </motion.div>
           )}

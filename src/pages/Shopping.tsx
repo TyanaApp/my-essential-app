@@ -58,6 +58,42 @@ const Shopping = () => {
   const [confirmItem, setConfirmItem] = useState<ShoppingItem | null>(null);
   const [suggestions, setSuggestions] = useState<LowStockItem[]>([]);
   const [suggestDismissed, setSuggestDismissed] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  const handleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      toast.error('Voice input not supported in this browser');
+      return;
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => { setIsListening(false); toast.error('Could not hear you. Try again.'); };
+    
+    recognition.onresult = async (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      const items = transcript.split(/,|and/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+      if (!user || items.length === 0) return;
+      
+      const inserts = items.map((name: string) => ({
+        user_id: user.id,
+        name,
+        quantity: 1,
+        unit: 'pcs',
+        category: 'other',
+      }));
+      await supabase.from('shopping_items').insert(inserts as any);
+      await fetchItems();
+      toast.success(`Added: ${items.join(', ')} ✓`);
+    };
+    
+    recognition.start();
+  };
 
   // Form state
   const [formName, setFormName] = useState('');
@@ -264,6 +300,17 @@ const Shopping = () => {
           style={{ backgroundColor: '#7C3AED' }}
         >
           <Plus className="w-4 h-4" /> Add Item
+        </button>
+        <button
+          onClick={handleVoiceInput}
+          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] transition-all"
+          style={{
+            borderColor: isListening ? '#7C3AED' : '#DDD6FE',
+            backgroundColor: isListening ? '#EDE9FE' : 'white',
+            color: isListening ? '#7C3AED' : '#6B7280',
+          }}
+        >
+          🎤 {isListening ? 'Listening...' : ''}
         </button>
         <div className="flex-1 flex items-center gap-1.5">
           <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>
