@@ -24,9 +24,20 @@ serve(async (req) => {
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
 
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("No authorization header provided");
+    if (!authHeader?.startsWith("Bearer ")) {
+      logStep("No valid auth header, returning free plan");
+      return new Response(JSON.stringify({
+        subscribed: false,
+        product_id: null,
+        price_id: null,
+        subscription_end: null,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
 
-    const token = authHeader.replace("Bearer ", "");
+    const token = authHeader.replace("Bearer ", "").trim();
 
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -35,10 +46,20 @@ serve(async (req) => {
     );
 
     const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    
+    if (userError || !userData?.user?.email) {
+      logStep("Invalid or expired session, returning free plan", { message: userError?.message });
+      return new Response(JSON.stringify({
+        subscribed: false,
+        product_id: null,
+        price_id: null,
+        subscription_end: null,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+
     const user = userData.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { email: user.email });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
