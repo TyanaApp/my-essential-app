@@ -105,8 +105,12 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 flex items-center justify-center">
-        <div className="w-8 h-8 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
+      <div className="min-h-screen p-6 pb-24 space-y-4">
+        <SkeletonCard lines={2} />
+        <SkeletonCard lines={5} />
+        <SkeletonCard lines={3} />
+        <SkeletonCard lines={3} />
+        <SkeletonCard lines={2} />
       </div>
     );
   }
