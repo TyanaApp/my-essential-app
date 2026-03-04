@@ -34,6 +34,7 @@ const TABS: { id: Tab; emoji: string; label: string }[] = [
 
 const Inventory = () => {
   const { user } = useAuth();
+  const { plan } = useSubscription();
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>('fridge');
@@ -41,6 +42,29 @@ const Inventory = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [scanCount, setScanCount] = useState(0);
+
+  // Count scans this month
+  useEffect(() => {
+    // We track scans via a simple localStorage counter per month
+    const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
+    setScanCount(Number(localStorage.getItem(key) || '0'));
+  }, []);
+
+  const handleScanClick = () => {
+    const limit = PLAN_LIMITS[plan].scansPerMonth;
+    if (scanCount >= limit) {
+      setUpgradeOpen(true);
+      return;
+    }
+    // Increment scan count
+    const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
+    const newCount = scanCount + 1;
+    localStorage.setItem(key, String(newCount));
+    setScanCount(newCount);
+    setScanOpen(true);
+  };
 
   const fetchItems = async () => {
     if (!user) return;
