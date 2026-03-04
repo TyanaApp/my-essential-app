@@ -46,6 +46,8 @@ const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 
 const Recipes = () => {
   const { user } = useAuth();
+  const { plan } = useSubscription();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   // Generation settings
   const [cookingFor, setCookingFor] = useState(2);
