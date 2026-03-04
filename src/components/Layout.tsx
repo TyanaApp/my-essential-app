@@ -6,17 +6,19 @@ import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
 import BottomNav from './BottomNav';
 import InstallBanner from './InstallBanner';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Layout = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   const navItems = [
-    { path: "/dashboard", label: "Home", icon: Home },
-    { path: "/inventory", label: "Inventory", icon: Package },
-    { path: "/recipes", label: "Recipes", icon: ChefHat },
-    { path: "/shopping", label: "Shopping", icon: ShoppingCart },
-    { path: "/diary", label: "Diary", icon: BookOpen },
-    { path: "/profile", label: "Settings", icon: Settings },
+    { path: "/dashboard", label: t.nav.home, icon: Home },
+    { path: "/inventory", label: t.nav.inventory, icon: Package },
+    { path: "/recipes", label: t.nav.recipes, icon: ChefHat },
+    { path: "/shopping", label: t.nav.shopping, icon: ShoppingCart },
+    { path: "/diary", label: t.nav.diary, icon: BookOpen },
+    { path: "/profile", label: t.nav.settings, icon: Settings },
   ];
 
   return (
@@ -54,7 +56,7 @@ const Layout = () => {
         <div className="p-4 border-t border-border space-y-3">
           <LanguageSelector variant="compact" />
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Theme</span>
+            <span className="text-xs text-muted-foreground">{t.common.theme}</span>
             <ThemeToggle />
           </div>
         </div>

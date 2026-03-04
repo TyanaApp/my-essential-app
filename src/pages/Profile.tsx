@@ -5,7 +5,7 @@ import {
   Edit, CreditCard, Trash2, Shield, Download
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -21,8 +21,8 @@ import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 import { triggerInstallPrompt, canInstall } from '@/components/InstallBanner';
 
 const Profile = () => {
-  const { t } = useLanguage();
-  usePageTitle('Profile');
+  const { t } = useTranslation();
+  usePageTitle(t.profile.title);
   const { user, signOut } = useAuth();
   const { profile, loading, uploadAvatar } = useProfile();
   const navigate = useNavigate();
@@ -48,23 +48,23 @@ const Profile = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error(t('pleaseSelectImage'));
+      toast.error(t.common.error);
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error(t('imageTooLarge'));
+      toast.error(t.common.error);
       return;
     }
 
-    toast.loading(t('uploadingAvatar'));
+    toast.loading(t.common.loading);
     const { error } = await uploadAvatar(file);
     toast.dismiss();
 
     if (error) {
-      toast.error(t('errorUploadingAvatar'));
+      toast.error(t.common.error);
     } else {
-      toast.success(t('avatarUpdated'));
+      toast.success('✓');
     }
   };
 
@@ -74,27 +74,27 @@ const Profile = () => {
   const menuItems = [
     {
       icon: Edit,
-      label: t('editProfile'),
+      label: t.profile.editProfile,
       onClick: () => setEditProfileOpen(true),
     },
     {
       icon: Shield,
-      label: t('accountSettings'),
+      label: t.profile.accountSettings,
       onClick: () => setAccountSettingsOpen(true),
     },
     {
       icon: Settings,
-      label: t('systemSettings'),
+      label: t.profile.systemSettings,
       onClick: () => setSystemSettingsOpen(true),
     },
     {
       icon: CreditCard,
-      label: t('payments'),
+      label: t.profile.payments,
       onClick: () => setPaymentsOpen(true),
     },
     ...(canInstall() ? [{
       icon: Download,
-      label: '📲 Install App',
+      label: t.profile.installApp,
       onClick: async () => {
         const accepted = await triggerInstallPrompt();
         if (accepted) toast.success('TYANA installed! 🎉');
@@ -109,7 +109,7 @@ const Profile = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        {t('profile')}
+        {t.profile.title}
       </motion.h1>
 
       {/* Avatar & Name */}
@@ -188,7 +188,7 @@ const Profile = () => {
           onClick={handleLogout}
         >
           <LogOut className="w-5 h-5 mr-2" />
-          {t('logout')}
+          {t.profile.logout}
         </Button>
 
         <Button
@@ -197,7 +197,7 @@ const Profile = () => {
           onClick={() => setDeleteAccountOpen(true)}
         >
           <Trash2 className="w-5 h-5 mr-2" />
-          {t('deleteAccount')}
+          {t.profile.deleteAccount}
         </Button>
       </motion.div>
 

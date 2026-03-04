@@ -17,13 +17,8 @@ import {
 interface ShoppingItem { id: string; user_id: string; name: string; quantity: number | null; unit: string | null; category: string | null; estimated_price: number | null; is_purchased: boolean | null; created_at: string | null; }
 interface LowStockItem { name: string; quantity: number | null; unit: string | null; category: string | null; reason: 'expiring' | 'low'; }
 
-const CATEGORIES: { id: string; emoji: string; label: string }[] = [
-  { id: 'meat', emoji: '🥩', label: 'Meat' },
-  { id: 'dairy', emoji: '🥛', label: 'Dairy' },
-  { id: 'produce', emoji: '🥬', label: 'Produce' },
-  { id: 'dry_goods', emoji: '🌾', label: 'Dry Goods' },
-  { id: 'other', emoji: '🧴', label: 'Other' },
-];
+const CATEGORY_IDS = ['meat', 'dairy', 'produce', 'dry_goods', 'other'] as const;
+const CATEGORY_EMOJIS: Record<string, string> = { meat: '🥩', dairy: '🥛', produce: '🥬', dry_goods: '🌾', other: '🧴' };
 
 const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 

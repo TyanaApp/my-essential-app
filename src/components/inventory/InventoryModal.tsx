@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { InventoryItem } from '@/pages/Inventory';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const AUTOCOMPLETE = [
   'Milk', 'Eggs', 'Bread', 'Chicken', 'Rice', 'Pasta', 'Tomatoes', 'Onion',
@@ -12,22 +13,6 @@ const AUTOCOMPLETE = [
 ];
 
 const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'packs'];
-const LOCATIONS: { id: string; emoji: string; label: string }[] = [
-  { id: 'fridge', emoji: '🧊', label: 'Fridge' },
-  { id: 'pantry', emoji: '🏠', label: 'Pantry' },
-  { id: 'freezer', emoji: '❄️', label: 'Freezer' },
-];
-
-const CONSUMPTION_RATES = [
-  { id: 'slow', emoji: '🐌', label: 'Slowly', desc: 'weeks' },
-  { id: 'normal', emoji: '🚶', label: 'Normally', desc: 'days' },
-  { id: 'fast', emoji: '⚡️', label: 'Quickly', desc: 'daily' },
-];
-
-const TRACKING_MODES = [
-  { id: 'tracked', emoji: '📊', label: 'Tracked' },
-  { id: 'date_only', emoji: '📅', label: 'Date only' },
-];
 
 interface Props {
   open: boolean;
@@ -38,6 +23,7 @@ interface Props {
 
 const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [unit, setUnit] = useState('pcs');
@@ -50,6 +36,23 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const LOCATIONS = [
+    { id: 'fridge', emoji: '🧊', label: t.inventory.fridge },
+    { id: 'pantry', emoji: '🏠', label: t.inventory.pantry },
+    { id: 'freezer', emoji: '❄️', label: t.inventory.freezer },
+  ];
+
+  const CONSUMPTION_RATES = [
+    { id: 'slow', emoji: '🐌', label: t.inventory.slowly, desc: t.inventory.weeks },
+    { id: 'normal', emoji: '🚶', label: t.inventory.normally, desc: t.inventory.days },
+    { id: 'fast', emoji: '⚡️', label: t.inventory.quickly, desc: t.inventory.daily },
+  ];
+
+  const TRACKING_MODES = [
+    { id: 'tracked', emoji: '📊', label: t.inventory.tracked },
+    { id: 'date_only', emoji: '📅', label: t.inventory.dateOnly },
+  ];
 
   useEffect(() => {
     if (editItem) {
@@ -79,7 +82,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
   }, [name, editItem]);
 
   const handleSave = async () => {
-    if (!user || !name.trim()) { toast.error('Name is required'); return; }
+    if (!user || !name.trim()) { toast.error(t.inventory.nameRequired); return; }
     setSaving(true);
 
     const payload: any = {
@@ -97,15 +100,15 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
     try {
       if (editItem) {
         await supabase.from('inventory_items').update(payload).eq('id', editItem.id);
-        toast.success('Updated ✓');
+        toast.success(t.inventory.updated);
       } else {
         await supabase.from('inventory_items').insert(payload);
-        toast.success('Added ✓');
+        toast.success(t.inventory.added);
       }
       onSaved();
       onClose();
     } catch (e) {
-      toast.error('Error saving item');
+      toast.error(t.inventory.errorSaving);
     } finally {
       setSaving(false);
     }
@@ -133,7 +136,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-lg font-bold" style={{ color: '#1E1B4B' }}>
-              {editItem ? 'Edit Item' : 'Add Item'}
+              {editItem ? t.inventory.editItem : t.inventory.addItem}
             </h3>
             <button onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100">
               <X className="w-5 h-5" style={{ color: '#6B7280' }} />
@@ -143,13 +146,13 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
           <div className="space-y-4">
             {/* Name with autocomplete */}
             <div className="space-y-1.5 relative">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Product name</label>
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.productName}</label>
               <input
                 ref={inputRef}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onFocus={() => name && setSuggestions((s) => s)}
-                placeholder="e.g. Milk"
+                placeholder={t.inventory.productPlaceholder}
                 className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
                 style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
               />
@@ -172,7 +175,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
             {/* Quantity + Unit */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Quantity</label>
+                <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.quantity}</label>
                 <input
                   type="number"
                   value={quantity}
@@ -182,7 +185,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Unit</label>
+                <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.unit}</label>
                 <select
                   value={unit}
                   onChange={(e) => setUnit(e.target.value)}
@@ -196,7 +199,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
 
             {/* Storage location */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Storage location</label>
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.storageLocation}</label>
               <div className="flex gap-2">
                 {LOCATIONS.map((l) => (
                   <button
@@ -217,7 +220,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
 
             {/* Consumption rate */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>How fast do you use this?</label>
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.consumptionRate}</label>
               <div className="flex gap-2">
                 {CONSUMPTION_RATES.map((r) => (
                   <button
@@ -240,7 +243,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
 
             {/* Tracking mode */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Tracking mode</label>
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.trackingMode}</label>
               <div className="flex gap-2">
                 {TRACKING_MODES.map((m) => (
                   <button
@@ -261,7 +264,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
 
             {/* Expiry date */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Expiry date (optional)</label>
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.expiryDate}</label>
               <input
                 type="date"
                 value={expiresAt}
@@ -273,7 +276,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
 
             {/* Price */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Price per unit (optional)</label>
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.pricePerUnit}</label>
               <input
                 type="number"
                 step="0.01"
@@ -292,7 +295,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
               className="w-full py-3.5 rounded-xl text-white text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: '#7C3AED' }}
             >
-              {saving ? 'Saving...' : editItem ? 'Update Item' : 'Add Item'}
+              {saving ? t.inventory.saving : editItem ? t.inventory.updateItem : t.inventory.addItem}
             </button>
           </div>
         </motion.div>

@@ -25,7 +25,7 @@ interface DashboardData {
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   usePageTitle(t.nav.home);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,7 +41,8 @@ const Dashboard = () => {
   };
 
   const formatDate = () => {
-    return new Date().toLocaleDateString('en-US', {
+    const locale = language === 'ru' ? 'ru-RU' : language === 'lv' ? 'lv-LV' : 'en-US';
+    return new Date().toLocaleDateString(locale, {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -52,7 +53,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (searchParams.get('upgrade') === 'success') {
       const planName = searchParams.get('plan') || 'Pro';
-      toast.success(`🎉 Welcome to ${planName}! Enjoy your upgrade.`);
+      toast.success(t.dashboard.upgradeSuccess.replace('{plan}', planName));
       checkSubscription();
       setSearchParams({}, { replace: true });
     }
@@ -249,7 +250,7 @@ const Dashboard = () => {
                       color: item.days <= 1 ? '#DC2626' : '#EA580C',
                     }}
                   >
-                    {item.days <= 0 ? 'Today!' : `${item.days}d left`}
+                    {item.days <= 0 ? t.dashboard.today : t.dashboard.daysLeft.replace('{days}', String(item.days))}
                   </span>
                 </div>
               ))}
