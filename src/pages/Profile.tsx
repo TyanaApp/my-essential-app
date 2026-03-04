@@ -21,6 +21,7 @@ import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 
 const Profile = () => {
   const { t } = useLanguage();
+  usePageTitle('Profile');
   const { user, signOut } = useAuth();
   const { profile, loading, uploadAvatar } = useProfile();
   const navigate = useNavigate();
