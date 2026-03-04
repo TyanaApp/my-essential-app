@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useSubscription } from '@/hooks/useSubscription';
 import { Loader2, Sparkles, Lock } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface UpgradeModalProps {
   open: boolean;
@@ -17,15 +18,16 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({
   open, onOpenChange, title, description, suggestedPlan = 'lite',
 }) => {
   const { createCheckout } = useSubscription();
+  const { t } = useTranslation();
   const [processing, setProcessing] = useState(false);
 
   const handleUpgrade = async () => {
     setProcessing(true);
     try {
       await createCheckout(suggestedPlan);
-      toast.success('Redirecting to checkout...');
+      toast.success(t.payments.redirecting);
     } catch {
-      toast.error('Failed to start checkout');
+      toast.error(t.payments.failedCheckout);
     } finally {
       setProcessing(false);
     }
@@ -53,10 +55,10 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({
           disabled={processing}
         >
           {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-          Upgrade to {planLabels[suggestedPlan]}
+          {t.upgrade.upgradeTo} {planLabels[suggestedPlan]}
         </Button>
         <Button variant="ghost" className="w-full" onClick={() => onOpenChange(false)}>
-          Maybe later
+          {t.upgrade.maybeLater}
         </Button>
       </DialogContent>
     </Dialog>

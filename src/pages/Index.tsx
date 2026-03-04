@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -13,10 +15,22 @@ const Index = () => {
   }, []);
 
   const features = [
-    { icon: <Camera className="w-6 h-6" />, emoji: '📸', title: 'Scan in 10 seconds', desc: 'Snap a photo of your fridge and TYANA instantly catalogs everything with expiry dates and quantities.' },
-    { icon: <Target className="w-6 h-6" />, emoji: '🎯', title: 'Goal-driven meals', desc: 'Get personalized meal plans that match your calorie goals, dietary preferences and what you already have.' },
-    { icon: <Tag className="w-6 h-6" />, emoji: '🏷', title: 'Real-time discounts', desc: 'TYANA monitors local store deals and suggests recipes based on what\'s cheapest this week.' },
-    { icon: <PiggyBank className="w-6 h-6" />, emoji: '💰', title: 'See your savings', desc: 'Track every euro saved from reduced waste, smart shopping and meal planning — watch it add up.' },
+    { icon: <Camera className="w-6 h-6" />, emoji: '📸', title: t.landing.feat1Title, desc: t.landing.feat1Desc },
+    { icon: <Target className="w-6 h-6" />, emoji: '🎯', title: t.landing.feat2Title, desc: t.landing.feat2Desc },
+    { icon: <Tag className="w-6 h-6" />, emoji: '🏷', title: t.landing.feat3Title, desc: t.landing.feat3Desc },
+    { icon: <PiggyBank className="w-6 h-6" />, emoji: '💰', title: t.landing.feat4Title, desc: t.landing.feat4Desc },
+  ];
+
+  const navItems = [t.landing.navFeatures, t.landing.navPricing, t.landing.navFaq];
+  const navAnchors = ['features', 'pricing', 'faq'];
+
+  const faqItems = [
+    { q: t.landing.faq1Q, a: t.landing.faq1A },
+    { q: t.landing.faq2Q, a: t.landing.faq2A },
+    { q: t.landing.faq3Q, a: t.landing.faq3A },
+    { q: t.landing.faq4Q, a: t.landing.faq4A },
+    { q: t.landing.faq5Q, a: t.landing.faq5A },
+    { q: t.landing.faq6Q, a: t.landing.faq6A },
   ];
 
   return (
@@ -32,7 +46,6 @@ const Index = () => {
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
-          {/* Logo */}
           <span
             className="text-[28px] font-bold"
             style={{
@@ -44,12 +57,11 @@ const Index = () => {
             TYANA
           </span>
 
-          {/* Center nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {['Features', 'Pricing', 'FAQ'].map((item) => (
+            {navItems.map((item, i) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase()}`}
+                href={`#${navAnchors[i]}`}
                 className="text-sm font-medium transition-colors hover:opacity-70"
                 style={{ color: '#1E1B4B' }}
               >
@@ -58,21 +70,20 @@ const Index = () => {
             ))}
           </nav>
 
-          {/* Right buttons */}
           <div className="flex items-center gap-3">
             <Link
               to="/auth?mode=signin"
               className="hidden sm:inline-flex text-sm font-medium px-4 py-2 rounded-lg transition-colors hover:opacity-70"
               style={{ color: '#7C3AED' }}
             >
-              Sign In
+              {t.landing.signIn}
             </Link>
             <Link
               to="/auth?mode=signup"
               className="text-sm font-semibold px-5 py-2.5 rounded-xl text-white transition-opacity hover:opacity-90"
               style={{ backgroundColor: '#7C3AED' }}
             >
-              Start Free
+              {t.landing.startFree}
             </Link>
           </div>
         </div>
@@ -81,21 +92,18 @@ const Index = () => {
       {/* HERO */}
       <section className="min-h-screen flex items-center pt-16">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-          {/* Left column */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Badge */}
             <span
               className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[13px] font-medium mb-6"
               style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}
             >
-              ✦ AI-Powered Kitchen Assistant
+              {t.landing.badge}
             </span>
 
-            {/* H1 */}
             <h1
               className="text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-5"
               style={{
@@ -104,16 +112,14 @@ const Index = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Stop throwing money away with your food
+              {t.landing.heroTitle}
             </h1>
 
-            {/* Subtitle */}
             <p className="text-lg lg:text-[22px] leading-relaxed mb-8" style={{ color: '#6B7280' }}>
-              TYANA knows what's in your fridge, counts your calories, finds discounts and saves you{' '}
-              <strong style={{ color: '#7C3AED' }}>€80+ per month</strong>
+              {t.landing.heroSubtitle}{' '}
+              <strong style={{ color: '#7C3AED' }}>{t.landing.heroSavings}</strong>
             </p>
 
-            {/* CTA */}
             <Link
               to="/auth?mode=signup"
               className="inline-flex items-center justify-center gap-2 text-white text-lg font-semibold rounded-2xl transition-opacity hover:opacity-90"
@@ -123,20 +129,19 @@ const Index = () => {
                 width: '260px',
               }}
             >
-              Start Free — €0
+              {t.landing.ctaButton}
               <ArrowRight className="w-5 h-5" />
             </Link>
 
             <p className="mt-3 text-[13px]" style={{ color: '#6B7280' }}>
-              7 days all features free. No card required.
+              {t.landing.ctaHint}
             </p>
 
-            {/* Stats row */}
             <div className="flex flex-wrap gap-6 mt-8">
               {[
-                { value: '€80', label: 'avg. saved/month' },
-                { value: '5 days', label: 'to pay itself off' },
-                { value: '10 sec', label: 'fridge scan' },
+                { value: '€80', label: t.landing.statSaved },
+                { value: '5 days', label: t.landing.statPayoff },
+                { value: '10 sec', label: t.landing.statScan },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <div className="text-xl font-bold" style={{ color: '#7C3AED' }}>
@@ -150,7 +155,6 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Right column — Mockup card */}
           <motion.div
             className="hidden md:flex justify-center"
             initial={{ opacity: 0, y: 30 }}
@@ -165,27 +169,27 @@ const Index = () => {
             >
               <div className="text-center space-y-6">
                 <p className="text-sm font-medium" style={{ color: '#6B7280' }}>
-                  How TYANA works
+                  {t.landing.mockupTitle}
                 </p>
                 <div className="flex items-center justify-center gap-4 text-4xl">
                   <div className="flex flex-col items-center gap-1">
                     <span>🧊</span>
                     <span className="text-[11px] font-medium" style={{ color: '#7C3AED' }}>
-                      Scan
+                      {t.landing.mockupScan}
                     </span>
                   </div>
                   <span className="text-xl" style={{ color: '#C4B5FD' }}>→</span>
                   <div className="flex flex-col items-center gap-1">
                     <span>🍽</span>
                     <span className="text-[11px] font-medium" style={{ color: '#7C3AED' }}>
-                      Cook
+                      {t.landing.mockupCook}
                     </span>
                   </div>
                   <span className="text-xl" style={{ color: '#C4B5FD' }}>→</span>
                   <div className="flex flex-col items-center gap-1">
                     <span>💰</span>
                     <span className="text-[11px] font-medium" style={{ color: '#7C3AED' }}>
-                      Save
+                      {t.landing.mockupSave}
                     </span>
                   </div>
                 </div>
@@ -194,15 +198,15 @@ const Index = () => {
                   style={{ backgroundColor: '#F5F3FF' }}
                 >
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: '#6B7280' }}>This week saved</span>
+                    <span style={{ color: '#6B7280' }}>{t.landing.weekSaved}</span>
                     <span className="font-bold" style={{ color: '#059669' }}>€18.40</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: '#6B7280' }}>Food waste reduced</span>
+                    <span style={{ color: '#6B7280' }}>{t.landing.foodWaste}</span>
                     <span className="font-bold" style={{ color: '#7C3AED' }}>-62%</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: '#6B7280' }}>Meals planned</span>
+                    <span style={{ color: '#6B7280' }}>{t.landing.mealsPlanned}</span>
                     <span className="font-bold" style={{ color: '#1E1B4B' }}>14 / 14</span>
                   </div>
                 </div>
@@ -222,7 +226,7 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            Everything your kitchen needs
+            {t.landing.featuresTitle}
           </motion.h2>
 
           <div className="grid sm:grid-cols-2 gap-6">
@@ -264,10 +268,10 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            Simple, transparent pricing
+            {t.landing.pricingTitle}
           </motion.h2>
           <p className="text-center mb-14 text-base" style={{ color: '#6B7280' }}>
-            Start free, upgrade when you're ready.
+            {t.landing.pricingSubtitle}
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 items-start">
@@ -279,14 +283,14 @@ const Index = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>Free</h3>
+              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.landing.free}</h3>
               <div className="flex items-baseline gap-1 mb-1">
                 <span className="text-4xl font-bold" style={{ color: '#1E1B4B' }}>€0</span>
-                <span className="text-sm" style={{ color: '#6B7280' }}>/month</span>
+                <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.month}</span>
               </div>
-              <p className="text-[13px] mb-6" style={{ color: '#7C3AED' }}>7-day Pro trial included</p>
+              <p className="text-[13px] mb-6" style={{ color: '#7C3AED' }}>{t.landing.freeTrial}</p>
               <ul className="space-y-3 mb-8">
-                {['1 scan/month', '3 recipes/month', '1 family member', 'Basic calorie counter'].map((f) => (
+                {t.landing.freeFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
                     <span style={{ color: '#7C3AED' }}>✓</span> {f}
                   </li>
@@ -297,7 +301,7 @@ const Index = () => {
                 className="block w-full text-center py-3 rounded-xl text-sm font-semibold border-[1.5px] transition-colors hover:bg-gray-50"
                 style={{ color: '#7C3AED', borderColor: '#DDD6FE' }}
               >
-                Start Free
+                {t.landing.startFree}
               </Link>
             </motion.div>
 
@@ -311,23 +315,15 @@ const Index = () => {
               transition={{ delay: 0.1 }}
             >
               <p className="text-[12px] font-semibold tracking-wider uppercase mb-2" style={{ color: '#7C3AED' }}>
-                For Families
+                {t.landing.forFamilies}
               </p>
-              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>Lite</h3>
+              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.landing.lite}</h3>
               <div className="flex items-baseline gap-1 mb-6">
                 <span className="text-4xl font-bold" style={{ color: '#1E1B4B' }}>€5.99</span>
-                <span className="text-sm" style={{ color: '#6B7280' }}>/month</span>
+                <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.month}</span>
               </div>
               <ul className="space-y-3 mb-8">
-                {[
-                  '15 scans/month',
-                  'Unlimited recipes',
-                  '5 receipts/month',
-                  '4 family members',
-                  'Allergy profiles',
-                  'Live discounts',
-                  'Weekly savings report',
-                ].map((f) => (
+                {t.landing.liteFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
                     <span style={{ color: '#7C3AED' }}>✓</span> {f}
                   </li>
@@ -338,7 +334,7 @@ const Index = () => {
                 className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#7C3AED' }}
               >
-                Get Lite <ArrowRight className="w-4 h-4" />
+                {t.landing.getLite} <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>
 
@@ -351,41 +347,32 @@ const Index = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              {/* Most Popular badge */}
               <div
                 className="absolute top-4 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
                 style={{ backgroundColor: '#7C3AED' }}
               >
-                Most Popular
+                {t.landing.mostPopular}
               </div>
 
-              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>Pro</h3>
+              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.landing.pro}</h3>
               <div className="flex items-baseline gap-2 mb-1">
                 <span className="text-lg line-through" style={{ color: '#9CA3AF' }}>€12.99</span>
                 <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>€6.49</span>
-                <span className="text-sm" style={{ color: '#6B7280' }}>/mo</span>
+                <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.mo}</span>
               </div>
 
-              {/* Founder badge */}
               <div
                 className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-semibold mt-2 mb-1"
                 style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}
               >
-                ✦ Founder's Price — 50% off for life
+                {t.landing.founderPrice}
               </div>
               <p className="text-[13px] font-medium mb-5" style={{ color: '#EA580C' }}>
-                First 1,000 users only
+                {t.landing.firstUsers}
               </p>
 
               <ul className="space-y-3 mb-8">
-                {[
-                  'Unlimited scans & recipes',
-                  'Unlimited receipts',
-                  '6 family members',
-                  'Full AI meal planning',
-                  'Wearable integration',
-                  'Priority support',
-                ].map((f) => (
+                {t.landing.proFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
                     <span style={{ color: '#7C3AED' }}>✓</span> {f}
                   </li>
@@ -396,7 +383,7 @@ const Index = () => {
                 className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#7C3AED' }}
               >
-                Get Pro — €6.49/month <ArrowRight className="w-4 h-4" />
+                {t.landing.getPro} <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>
           </div>
@@ -413,18 +400,11 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            Frequently asked questions
+            {t.landing.faqTitle}
           </motion.h2>
 
           <div className="space-y-3">
-            {[
-              { q: 'How does fridge scanning work?', a: 'Simply open the app, tap "Scan", and take a photo of your fridge. TYANA\'s AI identifies every item, estimates quantities and expiry dates, and adds them to your inventory automatically.' },
-              { q: 'How does TYANA calculate savings?', a: 'We track the retail value of food you would have thrown away, discounts found for your shopping list, and cost optimizations from meal planning. Your savings dashboard shows a breakdown each week.' },
-              { q: 'How are calories calculated?', a: 'Calories and macronutrients are calculated using verified food databases. When you log meals or scan ingredients, TYANA matches them to nutritional data and adjusts portions based on your entries.' },
-              { q: 'Is my data safe?', a: 'Yes. All data is encrypted in transit and at rest. We never sell your data. You can export or delete your account and all associated data at any time from Settings.' },
-              { q: 'Can I use it without scanning?', a: 'Absolutely. You can manually add items to your inventory, type in recipes, and use the meal planner without ever scanning. Scanning just makes it faster.' },
-              { q: 'Which countries have store discounts?', a: 'We currently support major grocery chains in Latvia, Germany, and the Netherlands. We\'re expanding to more EU countries every month. Request your country in Settings!' },
-            ].map((item, i) => (
+            {faqItems.map((item, i) => (
               <FaqItem key={i} question={item.q} answer={item.a} index={i} />
             ))}
           </div>
@@ -446,19 +426,19 @@ const Index = () => {
               >
                 TYANA
               </span>
-              <p className="text-sm mt-1" style={{ color: '#6B7280' }}>Your Kitchen CFO</p>
+              <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <div className="flex gap-6">
-              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Terms</a>
-              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Privacy</a>
+              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerTerms}</a>
+              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerPrivacy}</a>
               <a href="mailto:support@tyana.app" className="text-sm hover:underline" style={{ color: '#6B7280' }}>support@tyana.app</a>
             </div>
           </div>
           <p className="text-[12px] leading-relaxed" style={{ color: '#9CA3AF' }}>
-            TYANA is an AI-powered kitchen assistant. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.
+            {t.landing.footerDisclaimer}
           </p>
           <p className="text-[12px] mt-2" style={{ color: '#9CA3AF' }}>
-            © 2025 TYANA. All rights reserved.
+            {t.landing.footerCopyright}
           </p>
         </div>
       </footer>

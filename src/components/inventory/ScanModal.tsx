@@ -4,6 +4,7 @@ import { X, Camera, Plus, Upload } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface ScannedItem {
   name: string;
@@ -21,6 +22,7 @@ interface ScanModalProps {
 
 const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [preview, setPreview] = useState<string | null>(null);
   const [base64, setBase64] = useState<string | null>(null);
@@ -42,7 +44,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
 
   const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
+      toast.error(t.scan.selectImage);
       return;
     }
     const reader = new FileReader();
@@ -52,7 +54,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
       setBase64(dataUrl.split(',')[1]);
     };
     reader.readAsDataURL(file);
-  }, []);
+  }, [t]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -81,7 +83,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
       setStep(3);
     } catch (err) {
       console.error('Scan error:', err);
-      toast.error('Scan failed. Please try again.');
+      toast.error(t.scan.scanFailed);
       setStep(1);
     }
   };
@@ -104,13 +106,12 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
     if (!user) return;
     const valid = scannedItems.filter((i) => i.name.trim());
     if (valid.length === 0) {
-      toast.error('No items to save');
+      toast.error(t.scan.noItems);
       return;
     }
 
     setSaving(true);
     try {
-      // Fetch existing inventory to merge quantities
       const { data: existing } = await supabase
         .from('inventory_items')
         .select('id, name, quantity')
@@ -140,23 +141,21 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
         }
       }
 
-      // Batch insert new items
       if (toInsert.length > 0) {
         const { error } = await supabase.from('inventory_items').insert(toInsert);
         if (error) throw error;
       }
 
-      // Update existing items
       for (const u of toUpdate) {
         await supabase.from('inventory_items').update({ quantity: u.quantity }).eq('id', u.id);
       }
 
-      toast.success(`${valid.length} items saved ✓`);
+      toast.success(t.scan.itemsSaved.replace('{count}', String(valid.length)));
       onSaved();
       handleClose();
     } catch (err) {
       console.error('Save error:', err);
-      toast.error('Failed to save items');
+      toast.error(t.scan.failedSave);
     } finally {
       setSaving(false);
     }
@@ -176,7 +175,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: '#EDE9FE' }}>
           <h2 className="text-lg font-bold" style={{ color: '#1E1B4B' }}>
-            {step === 1 ? '📸 Scan Photo' : step === 2 ? '🤖 Analyzing...' : '✅ Results'}
+            {step === 1 ? t.scan.title : step === 2 ? t.scan.analyzing : t.scan.results}
           </h2>
           <button onClick={handleClose} className="p-1 rounded-lg hover:bg-gray-100">
             <X className="w-5 h-5" style={{ color: '#6B7280' }} />
@@ -211,10 +210,10 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                   <>
                     <div className="text-4xl mb-3">📸</div>
                     <p className="text-sm font-medium" style={{ color: '#1E1B4B' }}>
-                      Click to take photo or drag & drop
+                      {t.scan.clickToPhoto}
                     </p>
                     <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>
-                      JPG, PNG up to 10MB
+                      {t.scan.fileHint}
                     </p>
                   </>
                 )}
@@ -236,7 +235,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                 className="w-full mt-4 h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
                 style={{ backgroundColor: '#7C3AED' }}
               >
-                Scan Now →
+                {t.scan.scanNow}
               </button>
             </div>
           )}
@@ -265,7 +264,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                 ))}
               </div>
               <p className="text-center text-sm" style={{ color: '#6B7280' }}>
-                🤖 AI is analyzing your fridge... ~10 seconds
+                {t.scan.aiAnalyzing}
               </p>
             </div>
           )}
@@ -274,12 +273,12 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
           {step === 3 && (
             <div>
               <p className="text-sm font-medium mb-3" style={{ color: '#1E1B4B' }}>
-                AI found these items:
+                {t.scan.aiFound}
               </p>
 
               {scannedItems.length === 0 ? (
                 <p className="text-sm text-center py-6" style={{ color: '#9CA3AF' }}>
-                  No items detected. Try a clearer photo.
+                  {t.inventory.noItemsDetected}
                 </p>
               ) : (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -292,7 +291,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                       <input
                         value={item.name}
                         onChange={(e) => updateItem(idx, 'name', e.target.value)}
-                        placeholder="Item name"
+                        placeholder={t.inventory.itemName}
                         className="flex-1 text-sm font-medium bg-white rounded-lg px-2 py-1.5 border outline-none focus:border-[#7C3AED]"
                         style={{ borderColor: '#DDD6FE', color: '#1E1B4B' }}
                       />
@@ -331,7 +330,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                 className="flex items-center gap-1.5 mt-3 text-sm font-medium"
                 style={{ color: '#7C3AED' }}
               >
-                <Plus className="w-4 h-4" /> Add unrecognized item
+                <Plus className="w-4 h-4" /> {t.scan.addUnrecognized}
               </button>
 
               <button
@@ -340,7 +339,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                 className="w-full mt-4 h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
                 style={{ backgroundColor: '#7C3AED' }}
               >
-                {saving ? 'Saving...' : 'Save to Inventory'}
+                {saving ? t.common.loading : t.scan.saveToInventory}
               </button>
             </div>
           )}

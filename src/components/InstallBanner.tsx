@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Download } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -8,7 +9,6 @@ interface BeforeInstallPromptEvent extends Event {
 
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
-// Export for use in Profile page
 export const triggerInstallPrompt = async () => {
   if (!deferredPrompt) return false;
   deferredPrompt.prompt();
@@ -20,6 +20,7 @@ export const triggerInstallPrompt = async () => {
 export const canInstall = () => !!deferredPrompt;
 
 const InstallBanner = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -56,13 +57,13 @@ const InstallBanner = () => {
       className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-4 py-3 md:hidden"
       style={{ backgroundColor: 'hsl(263, 84%, 58%)', color: 'white' }}
     >
-      <span className="text-sm font-medium">📲 Add TYANA to your home screen</span>
+      <span className="text-sm font-medium">{t.install.addToHome}</span>
       <div className="flex items-center gap-2">
         <button
           onClick={handleInstall}
           className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/20 hover:bg-white/30 transition-colors min-h-[36px]"
         >
-          Install
+          {t.install.installBtn}
         </button>
         <button
           onClick={handleDismiss}
