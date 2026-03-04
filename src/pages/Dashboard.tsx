@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useSubscription } from '@/hooks/useSubscription';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
+import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface DashboardData {
@@ -21,6 +22,7 @@ interface DashboardData {
   recentRecipes: { id: string; title: string; prepTime: number | null; estimatedCost: number | null }[];
   savingsThisMonth: number;
   monthlyBudget: number;
+  useItUpRecipe: { id: string; title: string; matchCount: number } | null;
 }
 
 const Dashboard = () => {
@@ -70,8 +72,8 @@ const Dashboard = () => {
         supabase.from('profiles').select('display_name').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
-        supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).gte('expires_at', today).order('expires_at', { ascending: true }).limit(3),
-        supabase.from('recipes').select('id, title, prep_time, estimated_cost').eq('user_id', user.id).order('created_at', { ascending: false }).limit(3),
+        supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).gte('expires_at', today).order('expires_at', { ascending: true }).limit(5),
+        supabase.from('recipes').select('id, title, prep_time, estimated_cost, ingredients').eq('user_id', user.id).eq('is_favorite', true).order('created_at', { ascending: false }).limit(20),
         supabase.from('savings_log').select('amount').eq('user_id', user.id).gte('created_at', monthStart),
       ]);
 
@@ -89,6 +91,36 @@ const Dashboard = () => {
 
       const savingsThisMonth = (savingsRes.data || []).reduce((s: number, r: any) => s + Number(r.amount || 0), 0);
 
+      // Find "use it up" recipe — the saved recipe that uses the most expiring ingredients
+      let useItUpRecipe: DashboardData['useItUpRecipe'] = null;
+      if (expiringItems.length > 0 && recipesRes.data && recipesRes.data.length > 0) {
+        const expiringNames = expiringItems.map(i => i.name.toLowerCase());
+        let bestMatch = { id: '', title: '', matchCount: 0 };
+        
+        for (const recipe of recipesRes.data) {
+          if (!recipe.ingredients) continue;
+          const ingredients = Array.isArray(recipe.ingredients)
+            ? recipe.ingredients
+            : typeof recipe.ingredients === 'object'
+              ? Object.values(recipe.ingredients)
+              : [];
+          
+          let matchCount = 0;
+          for (const ing of ingredients) {
+            const ingName = typeof ing === 'string' ? ing.toLowerCase() : (ing as any)?.name?.toLowerCase() || '';
+            if (expiringNames.some(en => ingName.includes(en) || en.includes(ingName))) {
+              matchCount++;
+            }
+          }
+          if (matchCount > bestMatch.matchCount) {
+            bestMatch = { id: recipe.id, title: recipe.title, matchCount };
+          }
+        }
+        if (bestMatch.matchCount > 0) {
+          useItUpRecipe = bestMatch;
+        }
+      }
+
       setData({
         displayName: profileRes.data?.display_name || 'there',
         caloriesConsumed,
@@ -97,9 +129,10 @@ const Dashboard = () => {
         fat: Math.round(fat),
         carbs: Math.round(carbs),
         expiringItems,
-        recentRecipes: (recipesRes.data || []) as any,
+        recentRecipes: (recipesRes.data || []).slice(0, 3) as any,
         savingsThisMonth,
         monthlyBudget: Number(goalsRes.data?.monthly_budget) || 200,
+        useItUpRecipe,
       });
       setLoading(false);
     };
@@ -139,6 +172,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
+      {/* Notification opt-in banner */}
+      <NotificationBanner />
+
       {/* Greeting */}
       <motion.div {...fadeUp(0)} className="mb-6">
         <h2 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>
@@ -257,6 +293,36 @@ const Dashboard = () => {
             </div>
           ) : null}
         </motion.div>
+
+        {/* Card 2.5 — Use It Up suggestion */}
+        {data.useItUpRecipe && (
+          <motion.div {...fadeUp(2.5)} style={cardStyle} className="p-5">
+            <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
+              {t.notifications.useBeforeGone}
+            </h3>
+            <div
+              className="flex items-center justify-between p-3 rounded-xl"
+              style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0' }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🍳</span>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>{data.useItUpRecipe.title}</p>
+                  <p className="text-[11px]" style={{ color: '#059669' }}>
+                    {data.useItUpRecipe.matchCount} {language === 'ru' ? 'совпадающих продуктов' : language === 'lv' ? 'atbilstoši produkti' : 'matching ingredients'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate('/recipes')}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg text-white shrink-0"
+                style={{ backgroundColor: '#059669' }}
+              >
+                {t.notifications.cookNow}
+              </button>
+            </div>
+          </motion.div>
+        )}
 
         {/* Card 3 — Recipe Ideas */}
         <motion.div {...fadeUp(3)} style={cardStyle} className="p-5">
