@@ -19,15 +19,16 @@ serve(async (req) => {
 
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    { auth: { persistSession: false } }
   );
 
   try {
     logStep("Function started");
 
-    const { priceId } = await req.json();
+    const { priceId, planType } = await req.json();
     if (!priceId) throw new Error("Price ID is required");
-    logStep("Received priceId", { priceId });
+    logStep("Received", { priceId, planType });
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("No authorization header provided");
@@ -42,30 +43,26 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Check if customer exists
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
       logStep("Existing customer found", { customerId });
-    } else {
-      logStep("No existing customer, will create new");
     }
 
     const origin = req.headers.get("origin") || "https://lovable.dev";
-    
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
       mode: "subscription",
-      success_url: `${origin}/profile?success=true`,
+      success_url: `${origin}/dashboard?upgrade=success&plan=${planType || 'pro'}`,
       cancel_url: `${origin}/profile?canceled=true`,
+      metadata: {
+        user_id: user.id,
+        plan_type: planType || '',
+      },
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
@@ -77,7 +74,6 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: errorMessage });
-    // Return generic error message to prevent information leakage
     return new Response(JSON.stringify({ error: "Checkout service temporarily unavailable" }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

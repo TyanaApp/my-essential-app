@@ -2,30 +2,57 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
-// Stripe price IDs
+// New Stripe plans
 export const SUBSCRIPTION_PLANS = {
-  monthly: {
-    priceId: 'price_1SlYPf2N2asjxki4jv9oIyzb',
-    productId: 'prod_Tj0Q4ajHpjp1SV',
-    name: 'Core Monthly',
-    price: 9.99,
+  lite: {
+    priceId: 'price_1T79tP2N2asjxki49FFBKFeL',
+    productId: 'prod_U5KY1HNe6IirjK',
+    name: 'TYANA Lite',
+    price: 5.99,
+    currency: '€',
     interval: 'month',
+    scansPerMonth: 15,
+    maxRecipes: 50,
   },
-  yearly: {
-    priceId: 'price_1SlYS32N2asjxki4VOyrcOAw',
-    productId: 'prod_Tj0SCqxIWNr9XU',
-    name: 'Pro Yearly',
-    price: 79.99,
-    interval: 'year',
+  pro_founding: {
+    priceId: 'price_1T79ut2N2asjxki45jclLOlc',
+    productId: 'prod_U5Ka0VFomXsCwg',
+    name: 'TYANA Pro (Founder)',
+    price: 6.49,
+    currency: '€',
+    interval: 'month',
+    scansPerMonth: Infinity,
+    maxRecipes: Infinity,
+    badge: '🏆 Founding Member',
+  },
+  pro_regular: {
+    priceId: 'price_1T79vc2N2asjxki4EpkvxSDD',
+    productId: 'prod_U5Ka0ihj35s3M0',
+    name: 'TYANA Pro',
+    price: 12.99,
+    currency: '€',
+    interval: 'month',
+    scansPerMonth: Infinity,
+    maxRecipes: Infinity,
   },
 } as const;
+
+export type PlanType = 'free' | 'lite' | 'pro_founding' | 'pro_regular';
+
+// Plan limits
+export const PLAN_LIMITS: Record<PlanType, { scansPerMonth: number; maxRecipes: number }> = {
+  free: { scansPerMonth: 1, maxRecipes: 3 },
+  lite: { scansPerMonth: 15, maxRecipes: 50 },
+  pro_founding: { scansPerMonth: Infinity, maxRecipes: Infinity },
+  pro_regular: { scansPerMonth: Infinity, maxRecipes: Infinity },
+};
 
 interface SubscriptionStatus {
   subscribed: boolean;
   productId: string | null;
   priceId: string | null;
   subscriptionEnd: string | null;
-  plan: 'monthly' | 'yearly' | null;
+  plan: PlanType;
 }
 
 export const useSubscription = () => {
@@ -35,39 +62,32 @@ export const useSubscription = () => {
     productId: null,
     priceId: null,
     subscriptionEnd: null,
-    plan: null,
+    plan: 'free',
   });
   const [loading, setLoading] = useState(true);
 
+  const determinePlan = (productId: string | null): PlanType => {
+    if (!productId) return 'free';
+    if (productId === SUBSCRIPTION_PLANS.lite.productId) return 'lite';
+    if (productId === SUBSCRIPTION_PLANS.pro_founding.productId) return 'pro_founding';
+    if (productId === SUBSCRIPTION_PLANS.pro_regular.productId) return 'pro_regular';
+    return 'free';
+  };
+
   const checkSubscription = useCallback(async () => {
     if (!session?.access_token) {
-      setStatus({
-        subscribed: false,
-        productId: null,
-        priceId: null,
-        subscriptionEnd: null,
-        plan: null,
-      });
+      setStatus({ subscribed: false, productId: null, priceId: null, subscriptionEnd: null, plan: 'free' });
       setLoading(false);
       return;
     }
 
     try {
       const { data, error } = await supabase.functions.invoke('check-subscription', {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
-
       if (error) throw error;
 
-      let plan: 'monthly' | 'yearly' | null = null;
-      if (data.product_id === SUBSCRIPTION_PLANS.monthly.productId) {
-        plan = 'monthly';
-      } else if (data.product_id === SUBSCRIPTION_PLANS.yearly.productId) {
-        plan = 'yearly';
-      }
-
+      const plan = determinePlan(data.product_id);
       setStatus({
         subscribed: data.subscribed,
         productId: data.product_id,
@@ -82,64 +102,34 @@ export const useSubscription = () => {
     }
   }, [session]);
 
-  const createCheckout = async (planType: 'monthly' | 'yearly') => {
-    if (!session?.access_token) {
-      throw new Error('Not authenticated');
-    }
-
+  const createCheckout = async (planType: 'lite' | 'pro_founding' | 'pro_regular') => {
+    if (!session?.access_token) throw new Error('Not authenticated');
     const priceId = SUBSCRIPTION_PLANS[planType].priceId;
 
     const { data, error } = await supabase.functions.invoke('create-checkout', {
-      body: { priceId },
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
+      body: { priceId, planType },
+      headers: { Authorization: `Bearer ${session.access_token}` },
     });
-
     if (error) throw error;
-
-    if (data?.url) {
-      window.open(data.url, '_blank');
-    }
-
+    if (data?.url) window.open(data.url, '_blank');
     return data;
   };
 
   const openCustomerPortal = async () => {
-    if (!session?.access_token) {
-      throw new Error('Not authenticated');
-    }
-
+    if (!session?.access_token) throw new Error('Not authenticated');
     const { data, error } = await supabase.functions.invoke('customer-portal', {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
+      headers: { Authorization: `Bearer ${session.access_token}` },
     });
-
     if (error) throw error;
-
-    if (data?.url) {
-      window.open(data.url, '_blank');
-    }
-
+    if (data?.url) window.open(data.url, '_blank');
     return data;
   };
 
-  useEffect(() => {
-    checkSubscription();
-  }, [checkSubscription]);
-
-  // Refresh every minute
+  useEffect(() => { checkSubscription(); }, [checkSubscription]);
   useEffect(() => {
     const interval = setInterval(checkSubscription, 60000);
     return () => clearInterval(interval);
   }, [checkSubscription]);
 
-  return {
-    ...status,
-    loading,
-    checkSubscription,
-    createCheckout,
-    openCustomerPortal,
-  };
+  return { ...status, loading, checkSubscription, createCheckout, openCustomerPortal };
 };
