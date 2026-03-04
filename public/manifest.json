@@ -1,7 +1,7 @@
 {
-  "name": "TYANA — Kitchen CFO",
+  "name": "TYANA — Cook smart. Waste nothing.",
   "short_name": "TYANA",
-  "description": "Your AI-powered kitchen assistant",
+  "description": "Cook smart. Waste nothing. AI-powered kitchen assistant to track inventory, generate recipes, and save money.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F5F3FF",
