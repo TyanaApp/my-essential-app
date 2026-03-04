@@ -112,6 +112,10 @@ const Auth = () => {
     );
   }
 
+  if (isMobile) {
+    return <MobileSplashAuth />;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F5F3FF' }}>
       <button
