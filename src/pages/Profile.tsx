@@ -18,7 +18,7 @@ import AccountSettingsModal from '@/components/profile/AccountSettingsModal';
 import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
-import { triggerInstallPrompt, canInstall } from '@/components/InstallBanner';
+import { useNotifications } from '@/hooks/useNotifications';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 
@@ -95,14 +95,6 @@ const Profile = () => {
       label: t.profile.payments,
       onClick: () => setPaymentsOpen(true),
     },
-    ...(canInstall() ? [{
-      icon: Download,
-      label: t.profile.installApp,
-      onClick: async () => {
-        const accepted = await triggerInstallPrompt();
-        if (accepted) toast.success('TYANA installed! 🎉');
-      },
-    }] : []),
   ];
 
   return (

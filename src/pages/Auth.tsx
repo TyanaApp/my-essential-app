@@ -12,6 +12,8 @@ import tyanaLogoText from '@/assets/tyana-logo-text.png';
 import { z } from 'zod';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileSplashAuth from '@/components/MobileSplashAuth';
+import QRInstallModal from '@/components/install/QRInstallModal';
+import { useIsStandalone } from '@/hooks/useStandalone';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -28,6 +30,8 @@ const Auth = () => {
   const { t } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
   const isMobile = useIsMobile();
+  const isStandalone = useIsStandalone();
+  const [showQRModal, setShowQRModal] = useState(false);
 
   const emailSchema = z.string().email();
   const passwordSchema = z.string().min(6);
@@ -252,10 +256,30 @@ const Auth = () => {
           </p>
         </div>
 
+        {/* Get the App button - desktop only, not standalone */}
+        {!isStandalone && (
+          <>
+            <div className="flex items-center gap-4 mt-4">
+              <div className="flex-1 h-px" style={{ backgroundColor: '#DDD6FE' }} />
+              <span className="text-xs text-muted-foreground">{t.common.or}</span>
+              <div className="flex-1 h-px" style={{ backgroundColor: '#DDD6FE' }} />
+            </div>
+            <button
+              onClick={() => setShowQRModal(true)}
+              className="w-full flex items-center justify-center gap-2 h-[52px] mt-4 rounded-xl border-[1.5px] transition-colors hover:bg-gray-50"
+              style={{ color: '#7C3AED', borderColor: '#DDD6FE' }}
+            >
+              <span className="text-sm font-semibold">{t.install.getTheApp}</span>
+            </button>
+          </>
+        )}
+
         <p className="mt-6 text-center text-[13px]" style={{ color: '#6B7280' }}>
           {t.auth.terms}
         </p>
       </motion.div>
+
+      <QRInstallModal open={showQRModal} onClose={() => setShowQRModal(false)} />
     </div>
   );
 };

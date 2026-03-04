@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import MobileInstallBanner from '@/components/install/MobileInstallBanner';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -101,6 +102,8 @@ const MobileSplashAuth: React.FC = () => {
         background: 'linear-gradient(160deg, #C084FC 0%, #A855F7 40%, #7C3AED 70%, #EC4899 100%)',
       }}
     >
+      {/* Install banner at top */}
+      <MobileInstallBanner />
       {/* Top branding */}
       <div className="text-center" style={{ marginTop: 60 }}>
         <h1 className="text-white font-bold" style={{ fontSize: 32 }}>
