@@ -92,9 +92,15 @@ const Shopping = () => {
   const activeItems = useMemo(() => items.filter((i) => !i.is_purchased), [items]);
   const purchasedItems = useMemo(() => items.filter((i) => i.is_purchased), [items]);
 
+  const CATEGORIES = CATEGORY_IDS.map((id) => ({
+    id,
+    emoji: CATEGORY_EMOJIS[id],
+    label: t.shopping[id === 'dry_goods' ? 'dryGoods' : id as keyof typeof t.shopping] as string,
+  }));
+
   const groupedActive = useMemo(() => {
     const groups: Record<string, ShoppingItem[]> = {};
-    for (const cat of CATEGORIES) groups[cat.id] = [];
+    for (const cat of CATEGORY_IDS) groups[cat] = [];
     for (const item of activeItems) {
       const cat = item.category || 'other';
       if (!groups[cat]) groups[cat] = [];
@@ -292,7 +298,7 @@ const Shopping = () => {
           <div className="space-y-3 mt-2">
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.name}</label>
-              <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="e.g. Chicken breast"
+              <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t.shopping.namePlaceholder}
                 className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
             </div>
             <div className="flex gap-2">
