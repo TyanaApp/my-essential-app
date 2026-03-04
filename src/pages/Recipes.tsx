@@ -4,6 +4,8 @@ import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown } from 'l
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import UpgradeModal from '@/components/UpgradeModal';
 
 interface Ingredient {
   name: string;
