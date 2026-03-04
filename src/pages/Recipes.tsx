@@ -122,6 +122,12 @@ const Recipes = () => {
 
   const handleSaveRecipe = async (recipe: Recipe) => {
     if (!user) return;
+    // Check plan limit
+    const limit = PLAN_LIMITS[plan].maxRecipes;
+    if (savedRecipes.length >= limit) {
+      setUpgradeOpen(true);
+      return;
+    }
     try {
       const { error } = await supabase.from('recipes').insert({
         user_id: user.id,
