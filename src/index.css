@@ -129,3 +129,21 @@
 .btn-press:active {
   transform: scale(0.95);
 }
+
+/* Mobile bottom nav safe spacing */
+.pb-mobile-safe {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+  .pb-mobile-safe {
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* Ensure minimum touch targets on mobile */
+@media (max-width: 767px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+}
