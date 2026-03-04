@@ -625,6 +625,14 @@ const Recipes = () => {
           </div>
         )}
       </AnimatePresence>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        title="Recipe limit reached"
+        description="Free users can save up to 3 recipes. Upgrade to unlock unlimited recipes!"
+        suggestedPlan="lite"
+      />
     </div>
   );
 };
