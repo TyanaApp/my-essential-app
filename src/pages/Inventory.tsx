@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
+import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import UpgradeModal from '@/components/UpgradeModal';
 
 export interface InventoryItem {
   id: string;
