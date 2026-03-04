@@ -27,6 +27,7 @@ const Profile = () => {
   usePageTitle(t.profile.title);
   const { user, signOut } = useAuth();
   const { profile, loading, uploadAvatar } = useProfile();
+  const { settings: notifSettings, updateSettings: updateNotifSettings } = useNotifications();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
