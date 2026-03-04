@@ -177,7 +177,7 @@ const Inventory = () => {
         <button
           className="flex items-center gap-1.5 px-4 h-10 rounded-xl border-[1.5px] text-sm font-medium"
           style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
-          onClick={() => setScanOpen(true)}
+          onClick={handleScanClick}
         >
           <Camera className="w-4 h-4" /> Scan
         </button>
