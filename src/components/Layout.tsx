@@ -5,6 +5,7 @@ import tyanaLogo from '@/assets/tyana-logo.png';
 import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
 import BottomNav from './BottomNav';
+import InstallBanner from './InstallBanner';
 
 const Layout = () => {
   const location = useLocation();
@@ -66,6 +67,9 @@ const Layout = () => {
 
       {/* Bottom nav - mobile only */}
       <BottomNav />
+
+      {/* Install banner - mobile only */}
+      <InstallBanner />
     </div>
   );
 };
