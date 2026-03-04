@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { triggerInstallPrompt, canInstall } from '@/components/InstallBanner';
 import { useIsStandalone } from '@/hooks/useStandalone';
-import IOSInstallSheet from './IOSInstallSheet';
-import AndroidInstallSheet from './AndroidInstallSheet';
 
 const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
@@ -12,18 +10,21 @@ const MobileInstallBanner = () => {
   const { t } = useTranslation();
   const isStandalone = useIsStandalone();
   const [dismissed, setDismissed] = useState(false);
-  const [showIOSSheet, setShowIOSSheet] = useState(false);
-  const [showAndroidSheet, setShowAndroidSheet] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [promptReady, setPromptReady] = useState(canInstall());
+  const tooltipTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     const d = localStorage.getItem('tyana_install_dismissed');
     if (d) setDismissed(true);
 
-    // Listen for the prompt to become available
     const handler = () => setPromptReady(true);
     window.addEventListener('beforeinstallprompt', handler);
     return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  useEffect(() => {
+    return () => { if (tooltipTimeout.current) clearTimeout(tooltipTimeout.current); };
   }, []);
 
   if (isStandalone || dismissed) return null;
@@ -33,10 +34,9 @@ const MobileInstallBanner = () => {
       const accepted = await triggerInstallPrompt();
       if (accepted) setDismissed(true);
     } else if (isIOS()) {
-      setShowIOSSheet(true);
-    } else {
-      // Android without prompt available — show manual instructions
-      setShowAndroidSheet(true);
+      setShowTooltip(true);
+      if (tooltipTimeout.current) clearTimeout(tooltipTimeout.current);
+      tooltipTimeout.current = setTimeout(() => setShowTooltip(false), 6000);
     }
   };
 
@@ -46,7 +46,7 @@ const MobileInstallBanner = () => {
   };
 
   return (
-    <>
+    <div className="relative">
       <div
         className="w-full flex items-center justify-between px-4 py-3"
         style={{ backgroundColor: 'rgba(124,58,237,0.15)' }}
@@ -72,9 +72,28 @@ const MobileInstallBanner = () => {
         </div>
       </div>
 
-      <IOSInstallSheet open={showIOSSheet} onClose={() => setShowIOSSheet(false)} />
-      <AndroidInstallSheet open={showAndroidSheet} onClose={() => setShowAndroidSheet(false)} />
-    </>
+      {/* Simple iOS tooltip */}
+      {showTooltip && (
+        <div
+          className="absolute left-4 right-4 top-full mt-2 z-50 rounded-xl px-4 py-3 shadow-lg"
+          style={{ backgroundColor: '#1E1B4B' }}
+        >
+          <p className="text-sm text-white font-medium">
+            {t.install.iosTooltipLine1}
+          </p>
+          <p className="text-xs mt-1" style={{ color: '#C4B5FD' }}>
+            {t.install.iosTooltipLine2}
+          </p>
+          <button
+            onClick={() => setShowTooltip(false)}
+            className="absolute top-2 right-2"
+            style={{ color: '#C4B5FD' }}
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

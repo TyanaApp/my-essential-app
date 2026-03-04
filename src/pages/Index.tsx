@@ -132,8 +132,8 @@ const Index = () => {
             <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-6 mt-8">
               {[
                 { value: '€80', label: t.landing.statSaved },
-                { value: '5 days', label: t.landing.statPayoff },
-                { value: '10 sec', label: t.landing.statScan },
+                { value: t.landing.statPayoffValue, label: t.landing.statPayoff },
+                { value: t.landing.statScanValue, label: t.landing.statScan },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <div className="text-base md:text-xl font-bold" style={{ color: '#7C3AED' }}>
