@@ -297,7 +297,7 @@ const Recipes = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 pb-24">
+    <div className="min-h-screen p-6 pb-mobile-safe">
       <h1 className="text-2xl font-bold mb-5" style={{ color: '#1E1B4B' }}>Recipes</h1>
 
       {/* Generation settings panel */}
@@ -459,7 +459,7 @@ const Recipes = () => {
           <h2 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
             ✨ Just Generated
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {generatedRecipes.map((r, idx) => (
               <RecipeCard key={`gen-${idx}`} recipe={r} />
             ))}
@@ -477,7 +477,7 @@ const Recipes = () => {
           <h2 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
             ❤️ Saved Recipes
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {savedRecipes.map((r) => (
               <RecipeCard key={r.id} recipe={r} isSaved savedId={r.id} isFav={r.is_favorite} />
             ))}
@@ -499,18 +499,22 @@ const Recipes = () => {
       <AnimatePresence>
         {detailRecipe && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4"
             style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
             onClick={() => setDetailRecipe(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              className="bg-card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-y-auto"
               style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Mobile drag handle */}
+              <div className="flex justify-center pt-2 sm:hidden">
+                <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
+              </div>
               {(() => {
                 const r = normalizeRecipe(detailRecipe);
                 const cc = calorieColor(r.nutrition.calories);

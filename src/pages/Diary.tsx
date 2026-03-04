@@ -191,7 +191,7 @@ const Diary = () => {
   );
 
   return (
-    <div className="min-h-screen p-6 pb-32">
+    <div className="min-h-screen p-6 pb-mobile-safe">
       <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Diary</h1>
 
       {/* Week strip */}
@@ -299,9 +299,9 @@ const Diary = () => {
         </>
       )}
 
-      {/* Daily totals bar - fixed at bottom */}
+      {/* Daily totals bar - fixed above bottom nav on mobile, above nothing on desktop */}
       <div
-        className="fixed bottom-16 left-0 right-0 px-6 py-3 z-40"
+        className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40"
         style={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', borderTop: '1px solid #EDE9FE' }}
       >
         <div className="flex items-center justify-between max-w-lg mx-auto">

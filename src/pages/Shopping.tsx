@@ -286,7 +286,7 @@ const Shopping = () => {
   });
 
   return (
-    <div className="min-h-screen p-6 pb-24">
+    <div className="min-h-screen p-6 pb-mobile-safe">
       {/* Header */}
       <motion.div {...fadeUp(0)} className="mb-5">
         <h1 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>My Shopping List</h1>

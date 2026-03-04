@@ -4,6 +4,7 @@ import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings } from "lucide
 import tyanaLogo from '@/assets/tyana-logo.png';
 import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
+import BottomNav from './BottomNav';
 
 const Layout = () => {
   const location = useLocation();
@@ -19,10 +20,10 @@ const Layout = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-60 bg-card border-r border-primary-100 flex flex-col z-50">
+      {/* Sidebar - hidden on mobile */}
+      <aside className="fixed left-0 top-0 bottom-0 w-60 bg-card border-r border-border flex-col z-50 hidden md:flex">
         {/* Logo */}
-        <div className="flex items-center gap-2 h-14 px-5 border-b border-primary-100">
+        <div className="flex items-center gap-2 h-14 px-5 border-b border-border">
           <img src={tyanaLogo} alt="TYANA Kitchen CFO" className="h-5" />
         </div>
 
@@ -49,7 +50,7 @@ const Layout = () => {
         </nav>
 
         {/* Bottom controls */}
-        <div className="p-4 border-t border-primary-100 space-y-3">
+        <div className="p-4 border-t border-border space-y-3">
           <LanguageSelector variant="compact" />
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Theme</span>
@@ -59,9 +60,12 @@ const Layout = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 ml-60">
+      <main className="flex-1 md:ml-60">
         <Outlet />
       </main>
+
+      {/* Bottom nav - mobile only */}
+      <BottomNav />
     </div>
   );
 };
