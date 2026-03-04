@@ -297,7 +297,7 @@ const Recipes = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 pb-24">
+    <div className="min-h-screen p-6 pb-mobile-safe">
       <h1 className="text-2xl font-bold mb-5" style={{ color: '#1E1B4B' }}>Recipes</h1>
 
       {/* Generation settings panel */}

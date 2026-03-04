@@ -191,7 +191,7 @@ const Diary = () => {
   );
 
   return (
-    <div className="min-h-screen p-6 pb-32">
+    <div className="min-h-screen p-6 pb-mobile-safe">
       <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Diary</h1>
 
       {/* Week strip */}

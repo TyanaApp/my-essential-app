@@ -105,7 +105,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 pb-24 space-y-4">
+      <div className="min-h-screen p-6 pb-mobile-safe space-y-4">
         <SkeletonCard lines={2} />
         <SkeletonCard lines={5} />
         <SkeletonCard lines={3} />
@@ -135,7 +135,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen p-6 pb-24">
+    <div className="min-h-screen p-6 pb-mobile-safe">
       {/* Greeting */}
       <motion.div {...fadeUp(0)} className="mb-6">
         <h2 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>
