@@ -126,7 +126,7 @@ const Auth = () => {
         transition={{ duration: 0.4 }}
       >
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold" style={{ color: '#7C3AED' }}>TYANA</h1>
+          <img src={tyanaLogoText} alt="TYANA" className="h-10 mx-auto" />
           <p className="text-base mt-1" style={{ color: '#A78BFA' }}>{t.auth.title}</p>
         </div>
 
