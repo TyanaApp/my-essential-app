@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 interface Ingredient {
   name: string;
@@ -46,6 +47,7 @@ const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 
 const Recipes = () => {
   const { user } = useAuth();
+  usePageTitle('Recipes');
   const { plan } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
 

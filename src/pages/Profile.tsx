@@ -2,12 +2,13 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
-  Edit, CreditCard, Watch, Trash2, Shield
+  Edit, CreditCard, Trash2, Shield
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -16,11 +17,11 @@ import EditProfileModal from '@/components/profile/EditProfileModal';
 import AccountSettingsModal from '@/components/profile/AccountSettingsModal';
 import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
-import DeviceSyncModal from '@/components/profile/DeviceSyncModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 
 const Profile = () => {
   const { t } = useLanguage();
+  usePageTitle('Profile');
   const { user, signOut } = useAuth();
   const { profile, loading, uploadAvatar } = useProfile();
   const navigate = useNavigate();
@@ -30,7 +31,6 @@ const Profile = () => {
   const [accountSettingsOpen, setAccountSettingsOpen] = useState(false);
   const [systemSettingsOpen, setSystemSettingsOpen] = useState(false);
   const [paymentsOpen, setPaymentsOpen] = useState(false);
-  const [deviceSyncOpen, setDeviceSyncOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -90,11 +90,6 @@ const Profile = () => {
       icon: CreditCard,
       label: t('payments'),
       onClick: () => setPaymentsOpen(true),
-    },
-    {
-      icon: Watch,
-      label: t('deviceSync'),
-      onClick: () => setDeviceSyncOpen(true),
     },
   ];
 
@@ -202,7 +197,6 @@ const Profile = () => {
       <AccountSettingsModal open={accountSettingsOpen} onOpenChange={setAccountSettingsOpen} />
       <SystemSettingsModal open={systemSettingsOpen} onOpenChange={setSystemSettingsOpen} />
       <PaymentsModal open={paymentsOpen} onOpenChange={setPaymentsOpen} />
-      <DeviceSyncModal open={deviceSyncOpen} onOpenChange={setDeviceSyncOpen} />
       <DeleteAccountModal open={deleteAccountOpen} onOpenChange={setDeleteAccountOpen} />
     </div>
   );

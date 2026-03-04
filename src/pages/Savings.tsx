@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const Savings = () => {
   const navigate = useNavigate();
+  usePageTitle('Savings');
 
   return (
     <div className="min-h-screen p-6 pb-24">
