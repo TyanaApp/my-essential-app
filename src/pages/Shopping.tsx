@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, PackagePlus, AlertTriangle, X, Check } from 'luci
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import {
   Dialog,
   DialogContent,

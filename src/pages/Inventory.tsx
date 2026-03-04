@@ -8,6 +8,7 @@ import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export interface InventoryItem {
   id: string;
@@ -34,6 +35,7 @@ const TABS: { id: Tab; emoji: string; label: string }[] = [
 
 const Inventory = () => {
   const { user } = useAuth();
+  usePageTitle('Inventory');
   const { plan } = useSubscription();
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
