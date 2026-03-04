@@ -6,11 +6,14 @@ import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
 import BottomNav from './BottomNav';
 import InstallBanner from './InstallBanner';
+import NotificationBell from './NotificationBell';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useNotifications } from '@/hooks/useNotifications';
 
 const Layout = () => {
   const location = useLocation();
   const { t } = useTranslation();
+  const { alerts, unreadCount, markAllRead } = useNotifications();
 
   const navItems = [
     { path: "/dashboard", label: t.nav.home, icon: Home },
@@ -26,8 +29,9 @@ const Layout = () => {
       {/* Sidebar - hidden on mobile */}
       <aside className="fixed left-0 top-0 bottom-0 w-60 bg-card border-r border-border flex-col z-50 hidden md:flex">
         {/* Logo */}
-        <div className="flex items-center gap-2 h-14 px-5 border-b border-border">
+        <div className="flex items-center justify-between h-14 px-5 border-b border-border">
           <img src={tyanaLogo} alt="TYANA Kitchen CFO" className="h-5" />
+          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} />
         </div>
 
         {/* Nav */}
@@ -64,6 +68,10 @@ const Layout = () => {
 
       {/* Main content */}
       <main className="flex-1 md:ml-60 overflow-x-hidden">
+        {/* Mobile top bar with bell */}
+        <div className="md:hidden flex items-center justify-end px-4 pt-3">
+          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} />
+        </div>
         <Outlet />
       </main>
 

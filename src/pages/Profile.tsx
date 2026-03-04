@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
-  Edit, CreditCard, Trash2, Shield, Download
+  Edit, CreditCard, Trash2, Shield, Download, Bell
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -19,12 +19,15 @@ import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 import { triggerInstallPrompt, canInstall } from '@/components/InstallBanner';
+import { useNotifications } from '@/hooks/useNotifications';
+import { Switch } from '@/components/ui/switch';
 
 const Profile = () => {
   const { t } = useTranslation();
   usePageTitle(t.profile.title);
   const { user, signOut } = useAuth();
   const { profile, loading, uploadAvatar } = useProfile();
+  const { settings: notifSettings, updateSettings: updateNotifSettings } = useNotifications();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -175,7 +178,40 @@ const Profile = () => {
         </Card>
       </motion.div>
 
-      {/* Logout */}
+      {/* Notification Settings */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        <Card className="bg-card border-border mb-4">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Bell className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-foreground">{t.notifications.title}</h3>
+            </div>
+            <div className="space-y-4">
+              {[
+                { key: 'expiryAlerts' as const, label: t.notifications.expiryAlerts, desc: t.notifications.expiryAlertsDesc },
+                { key: 'weeklySummary' as const, label: t.notifications.weeklySummary, desc: t.notifications.weeklySummaryDesc },
+                { key: 'recipeSuggestions' as const, label: t.notifications.recipeSuggestions, desc: t.notifications.recipeSuggestionsDesc },
+              ].map(item => (
+                <div key={item.key} className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{item.label}</p>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  </div>
+                  <Switch
+                    checked={notifSettings[item.key]}
+                    onCheckedChange={(checked) => updateNotifSettings({ ...notifSettings, [item.key]: checked })}
+                  />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
