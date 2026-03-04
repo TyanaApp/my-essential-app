@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useProfile, Profile } from '@/hooks/useProfile';
 import { toast } from 'sonner';
 
@@ -15,7 +15,7 @@ interface EditProfileModalProps {
 }
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { profile, updateProfile } = useProfile();
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
@@ -43,9 +43,9 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
     setSaving(false);
 
     if (error) {
-      toast.error(t('errorSavingProfile'));
+      toast.error(t.common.error);
     } else {
-      toast.success(t('profileUpdated'));
+      toast.success('✓');
       onOpenChange(false);
     }
   };
@@ -54,57 +54,55 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-nasa text-foreground">{t('editProfile')}</DialogTitle>
+          <DialogTitle className="font-nasa text-foreground">{t.profile.editProfile}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="displayName" className="font-exo text-muted-foreground">
-              {t('displayName')}
+              {t.profile.displayName}
             </Label>
             <Input
               id="displayName"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               className="bg-secondary/50 border-border"
-              placeholder={t('enterName')}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="bio" className="font-exo text-muted-foreground">
-              {t('bio')}
+              {t.profile.bio}
             </Label>
             <Textarea
               id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               className="bg-secondary/50 border-border resize-none"
-              placeholder={t('tellAboutYourself')}
               rows={3}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="gender" className="font-exo text-muted-foreground">
-              {t('gender')}
+              {t.profile.gender}
             </Label>
             <Select value={gender} onValueChange={setGender}>
               <SelectTrigger className="bg-secondary/50 border-border">
-                <SelectValue placeholder={t('selectGender')} />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">{t('male')}</SelectItem>
-                <SelectItem value="female">{t('female')}</SelectItem>
-                <SelectItem value="other">{t('other')}</SelectItem>
-                <SelectItem value="prefer_not_to_say">{t('preferNotToSay')}</SelectItem>
+                <SelectItem value="male">{t.profile.male}</SelectItem>
+                <SelectItem value="female">{t.profile.female}</SelectItem>
+                <SelectItem value="other">{t.profile.other}</SelectItem>
+                <SelectItem value="prefer_not_to_say">{t.profile.preferNotToSay}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="birthDate" className="font-exo text-muted-foreground">
-              {t('birthDate')}
+              {t.profile.dateOfBirth}
             </Label>
             <Input
               id="birthDate"
@@ -122,14 +120,14 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
             onClick={() => onOpenChange(false)}
             className="flex-1 font-exo"
           >
-            {t('cancel')}
+            {t.common.cancel}
           </Button>
           <Button
             onClick={handleSave}
             disabled={saving}
             className="flex-1 font-nasa"
           >
-            {saving ? t('saving') : t('save')}
+            {saving ? t.common.loading : t.common.save}
           </Button>
         </div>
       </DialogContent>
