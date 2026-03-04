@@ -135,20 +135,19 @@ const Inventory = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 pb-mobile-safe">
-      <h1 className="text-2xl font-bold mb-5" style={{ color: '#1E1B4B' }}>Inventory</h1>
+    <div className="min-h-screen p-4 sm:p-6 pb-mobile-safe overflow-x-hidden">
+      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Inventory</h1>
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+      {/* Tabs - scrollable row */}
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-1 -mx-4 px-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all border-[1.5px]"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-all"
             style={{
-              borderColor: tab === t.id ? '#7C3AED' : '#DDD6FE',
-              backgroundColor: tab === t.id ? '#EDE9FE' : 'white',
-              color: tab === t.id ? '#7C3AED' : '#6B7280',
+              backgroundColor: tab === t.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
+              color: tab === t.id ? 'white' : '#6B7280',
             }}
           >
             <span>{t.emoji}</span> {t.label}
@@ -164,28 +163,30 @@ const Inventory = () => {
         ))}
       </div>
 
-      {/* Action bar */}
-      <div className="flex gap-2 mb-5">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search items..."
-            className="w-full h-10 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-            style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-          />
-        </div>
+      {/* Search */}
+      <div className="relative mb-3">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search items..."
+          className="w-full h-12 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
+          style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
+        />
+      </div>
+
+      {/* Action buttons - side by side, equal width */}
+      <div className="grid grid-cols-2 gap-2 mb-5">
         <button
-          className="flex items-center gap-1.5 px-4 h-10 rounded-xl border-[1.5px] text-sm font-medium"
-          style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
+          className="flex items-center justify-center gap-1.5 h-12 rounded-xl border-[1.5px] text-sm font-medium"
+          style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
           onClick={handleScanClick}
         >
           <Camera className="w-4 h-4" /> Scan
         </button>
         <button
-          className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white"
-          style={{ backgroundColor: '#7C3AED' }}
+          className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium text-white"
+          style={{ backgroundColor: 'hsl(263, 84%, 58%)' }}
           onClick={openAdd}
         >
           <Plus className="w-4 h-4" /> Add
