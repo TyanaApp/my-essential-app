@@ -176,10 +176,10 @@ const Inventory = () => {
 
       {/* Tabs */}
       <div
-        className="flex gap-2 mb-4 overflow-x-auto -mx-4 px-4"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+        className="flex flex-nowrap gap-2 mb-4 -mx-4 px-4 pb-1" data-tabs-scroll
+        style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch', paddingRight: 16 }}
       >
-        <style>{`.flex::-webkit-scrollbar { display: none; }`}</style>
+        <style>{`[data-tabs-scroll]::-webkit-scrollbar { display: none; }`}</style>
         {TABS.map((t) => (
           <button
             key={t.id}
