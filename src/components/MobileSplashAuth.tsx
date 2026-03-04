@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -30,6 +28,8 @@ const langs = [
   { code: 'lv' as const, label: 'LV' },
 ];
 
+type AuthView = 'main' | 'email';
+
 const MobileSplashAuth: React.FC = () => {
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();
@@ -39,6 +39,7 @@ const MobileSplashAuth: React.FC = () => {
   const passwordSchema = z.string().min(6);
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [view, setView] = useState<AuthView>('main');
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,7 +49,6 @@ const MobileSplashAuth: React.FC = () => {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  // Auto-scroll slides
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -95,14 +95,28 @@ const MobileSplashAuth: React.FC = () => {
   }, [email, password, displayName, isSignUp, signIn, signUp, t]);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Splash area with gradient */}
+    <div
+      className="min-h-screen flex flex-col relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(160deg, #C084FC 0%, #A855F7 40%, #7C3AED 70%, #EC4899 100%)',
+      }}
+    >
+      {/* Top branding */}
+      <div className="text-center" style={{ marginTop: 60 }}>
+        <h1 className="text-white font-bold" style={{ fontSize: 32 }}>
+          TYANA
+        </h1>
+        <p className="text-white mt-1" style={{ fontSize: 16, opacity: 0.85 }}>
+          {t.auth.title}
+        </p>
+      </div>
+
+      {/* Slides area - 45% of screen */}
       <div
-        className="flex-1 flex flex-col items-center justify-center px-6 pt-12 pb-4 relative"
-        style={{ background: 'linear-gradient(180deg, #7C3AED 0%, #A78BFA 100%)' }}
+        className="flex-1 flex flex-col items-center justify-center"
+        style={{ minHeight: '45vh' }}
       >
-        {/* Slides */}
-        <div className="w-full overflow-hidden relative" style={{ height: 220 }}>
+        <div className="w-full overflow-hidden relative" style={{ height: 200 }}>
           <div
             className="flex transition-transform duration-[400ms] ease-out"
             style={{
@@ -113,14 +127,20 @@ const MobileSplashAuth: React.FC = () => {
             {slides.map((slide, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center justify-center text-center px-6"
+                className="flex flex-col items-center justify-center text-center px-8"
                 style={{ width: `${100 / slides.length}%` }}
               >
-                <span className="text-6xl mb-4">{slide.emoji}</span>
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <span style={{ fontSize: 64, lineHeight: 1.2 }}>{slide.emoji}</span>
+                <h2
+                  className="text-white font-bold mt-4"
+                  style={{ fontSize: 26 }}
+                >
                   {t.auth[slide.titleKey]}
                 </h2>
-                <p className="text-white/80 text-base leading-relaxed max-w-[300px]">
+                <p
+                  className="text-white mt-2"
+                  style={{ fontSize: 16, opacity: 0.8, lineHeight: 1.5, maxWidth: 280 }}
+                >
                   {t.auth[slide.subKey]}
                 </p>
               </div>
@@ -129,161 +149,187 @@ const MobileSplashAuth: React.FC = () => {
         </div>
 
         {/* Dot indicators */}
-        <div className="flex gap-2 mt-4">
+        <div className="flex items-center gap-2 mt-6">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className="w-2.5 h-2.5 rounded-full transition-all duration-300"
+              className="rounded-full transition-all duration-300"
               style={{
-                backgroundColor: i === currentSlide ? '#fff' : 'rgba(255,255,255,0.4)',
-                transform: i === currentSlide ? 'scale(1.2)' : 'scale(1)',
+                backgroundColor: 'white',
+                opacity: i === currentSlide ? 1 : 0.4,
+                width: i === currentSlide ? 24 : 8,
+                height: 8,
               }}
             />
           ))}
         </div>
       </div>
 
-      {/* Bottom Sheet */}
+      {/* Language switcher */}
+      <div className="flex justify-center gap-3 mb-4">
+        {langs.map((l, i) => (
+          <React.Fragment key={l.code}>
+            {i > 0 && (
+              <span className="text-white" style={{ opacity: 0.4, fontSize: 14 }}>|</span>
+            )}
+            <button
+              onClick={() => setLanguage(l.code)}
+              className="text-white transition-opacity"
+              style={{
+                fontSize: 14,
+                opacity: language === l.code ? 1 : 0.5,
+                fontWeight: language === l.code ? 600 : 400,
+              }}
+            >
+              {l.label}
+            </button>
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* Bottom buttons */}
       <div
-        className="bg-white px-6 pt-5 pb-6 flex-shrink-0"
-        style={{ borderRadius: '24px 24px 0 0', marginTop: -24, position: 'relative', zIndex: 10 }}
+        className="flex flex-col items-center px-6"
+        style={{ paddingBottom: 40 }}
       >
-        {/* Language switcher */}
-        <div className="flex justify-end mb-3">
-          <div className="flex gap-1.5">
-            {langs.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => setLanguage(l.code)}
-                className="text-xs font-medium transition-colors"
-                style={{ color: language === l.code ? '#7C3AED' : '#9CA3AF' }}
-              >
-                {l.label}
-              </button>
-            ))}
+        {view === 'main' ? (
+          <div className="w-full flex flex-col items-center" style={{ maxWidth: 340 }}>
+            {/* Google button */}
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={isGoogleLoading}
+              className="w-full flex items-center justify-center gap-3 bg-white transition-opacity hover:opacity-90"
+              style={{
+                height: 56,
+                borderRadius: 16,
+                fontWeight: 600,
+                color: '#7C3AED',
+                fontSize: 15,
+              }}
+            >
+              <GoogleIcon />
+              {isGoogleLoading ? t.common.loading : t.auth.google}
+            </button>
+
+            {/* Email button */}
+            <button
+              onClick={() => setView('email')}
+              className="w-full flex items-center justify-center gap-3 text-white transition-opacity hover:opacity-90"
+              style={{
+                height: 56,
+                borderRadius: 16,
+                border: '1.5px solid rgba(255,255,255,0.6)',
+                background: 'transparent',
+                marginTop: 12,
+                fontSize: 15,
+                fontWeight: 600,
+              }}
+            >
+              <Mail className="w-5 h-5" />
+              {t.auth.email}
+            </button>
+
+            {/* Sign up link */}
+            <button
+              onClick={() => { setIsSignUp(true); setView('email'); }}
+              className="text-white mt-4 transition-opacity hover:opacity-90"
+              style={{ fontSize: 14, textDecoration: 'underline', background: 'none', border: 'none' }}
+            >
+              {t.auth.signUp} →
+            </button>
           </div>
-        </div>
+        ) : (
+          <div className="w-full" style={{ maxWidth: 340 }}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              {isSignUp && (
+                <Input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder={t.auth.yourName}
+                  className="h-14 rounded-2xl border-0 text-white placeholder:text-white/50 px-4"
+                  style={{ background: 'rgba(255,255,255,0.15)', fontSize: 15 }}
+                />
+              )}
+              <div>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors(p => ({ ...p, email: undefined })); }}
+                  placeholder="your@email.com"
+                  className={`h-14 rounded-2xl border-0 text-white placeholder:text-white/50 px-4 ${errors.email ? 'ring-2 ring-red-400' : ''}`}
+                  style={{ background: 'rgba(255,255,255,0.15)', fontSize: 15 }}
+                  required
+                />
+                {errors.email && <p className="text-red-300 text-xs mt-1 ml-1">{errors.email}</p>}
+              </div>
+              <div>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors(p => ({ ...p, password: undefined })); }}
+                    placeholder="••••••••"
+                    className={`h-14 rounded-2xl border-0 text-white placeholder:text-white/50 px-4 pr-12 ${errors.password ? 'ring-2 ring-red-400' : ''}`}
+                    style={{ background: 'rgba(255,255,255,0.15)', fontSize: 15 }}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60"
+                  >
+                    {showPassword ? '🙈' : '👁'}
+                  </button>
+                </div>
+                {errors.password && <p className="text-red-300 text-xs mt-1 ml-1">{errors.password}</p>}
+              </div>
 
-        {/* Brand */}
-        <h1
-          className="text-center text-xl font-bold mb-4"
-          style={{ color: '#7C3AED' }}
-        >
-          TYANA
-        </h1>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-white transition-opacity hover:opacity-90"
+                style={{
+                  height: 56,
+                  borderRadius: 16,
+                  fontWeight: 600,
+                  color: '#7C3AED',
+                  fontSize: 15,
+                }}
+              >
+                {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
+              </button>
+            </form>
 
-        {/* Google button */}
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading}
-          className="w-full flex items-center justify-center gap-3 h-[52px] rounded-xl bg-white border-[1.5px] hover:bg-gray-50 transition-colors mb-2"
-          style={{ borderColor: '#DDD6FE' }}
-        >
-          <GoogleIcon />
-          <span className="text-sm font-medium text-foreground">
-            {isGoogleLoading ? t.common.loading : t.auth.google}
-          </span>
-        </button>
+            <div className="flex justify-center gap-1 mt-4">
+              <span className="text-white/70" style={{ fontSize: 14 }}>
+                {isSignUp ? t.auth.alreadyHaveAccount : t.auth.noAccount}
+              </span>
+              <button
+                onClick={() => { setIsSignUp(!isSignUp); setErrors({}); }}
+                className="text-white font-semibold"
+                style={{ fontSize: 14, textDecoration: 'underline', background: 'none', border: 'none' }}
+              >
+                {isSignUp ? t.auth.signIn : t.auth.signUp}
+              </button>
+            </div>
 
-        {/* Email sign in button */}
-        {!isSignUp && (
-          <button
-            onClick={() => {
-              const el = document.getElementById('mobile-email-input');
-              el?.focus();
-            }}
-            className="w-full flex items-center justify-center gap-3 h-[52px] rounded-xl bg-white border-[1.5px] hover:bg-gray-50 transition-colors mb-3"
-            style={{ borderColor: '#DDD6FE' }}
-          >
-            <Mail className="w-5 h-5" style={{ color: '#9CA3AF' }} />
-            <span className="text-sm font-medium text-foreground">{t.auth.email}</span>
-          </button>
+            <button
+              onClick={() => { setView('main'); setIsSignUp(false); setErrors({}); }}
+              className="text-white/60 mt-3 w-full text-center"
+              style={{ fontSize: 13, background: 'none', border: 'none' }}
+            >
+              ← {t.common.back}
+            </button>
+          </div>
         )}
 
-        {/* Divider */}
-        <div className="flex items-center gap-4 my-3">
-          <div className="flex-1 h-px" style={{ backgroundColor: '#DDD6FE' }} />
-          <span className="text-xs" style={{ color: '#9CA3AF' }}>{t.common.or}</span>
-          <div className="flex-1 h-px" style={{ backgroundColor: '#DDD6FE' }} />
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {isSignUp && (
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-              <Input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="pl-10 h-[48px] rounded-xl border-[1px]"
-                style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-                placeholder={t.auth.yourName}
-              />
-            </div>
-          )}
-
-          <div>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-              <Input
-                id="mobile-email-input"
-                type="email"
-                value={email}
-                onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors(p => ({ ...p, email: undefined })); }}
-                className={`pl-10 h-[48px] rounded-xl border-[1px] ${errors.email ? 'border-red-500' : ''}`}
-                style={{ backgroundColor: '#F5F3FF', borderColor: errors.email ? undefined : '#DDD6FE' }}
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-          </div>
-
-          <div>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-              <Input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors(p => ({ ...p, password: undefined })); }}
-                className={`pl-10 pr-10 h-[48px] rounded-xl border-[1px] ${errors.password ? 'border-red-500' : ''}`}
-                style={{ backgroundColor: '#F5F3FF', borderColor: errors.password ? undefined : '#DDD6FE' }}
-                placeholder="••••••••"
-                required
-              />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#9CA3AF' }}>
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full h-[52px] rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#7C3AED' }}
-          >
-            {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
-          </Button>
-        </form>
-
-        {/* Toggle sign up / sign in */}
-        <p className="text-center text-sm mt-3" style={{ color: '#6B7280' }}>
-          {isSignUp ? t.auth.alreadyHaveAccount : t.auth.noAccount}{' '}
-          <button
-            onClick={() => { setIsSignUp(!isSignUp); setErrors({}); }}
-            className="font-medium"
-            style={{ color: '#7C3AED' }}
-          >
-            {isSignUp ? t.auth.signIn : t.auth.signUp}
-          </button>
-        </p>
-
         {/* Terms */}
-        <p className="text-center mt-3" style={{ fontSize: 11, color: '#9CA3AF' }}>
+        <p
+          className="text-white text-center mt-5"
+          style={{ fontSize: 11, opacity: 0.5, maxWidth: 280 }}
+        >
           {t.auth.terms}
         </p>
       </div>
