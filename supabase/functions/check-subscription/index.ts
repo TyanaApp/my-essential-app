@@ -67,7 +67,12 @@ serve(async (req) => {
 
     if (customers.data.length === 0) {
       logStep("No customer found");
-      return new Response(JSON.stringify({ subscribed: false }), {
+      return new Response(JSON.stringify({
+        subscribed: false,
+        product_id: null,
+        price_id: null,
+        subscription_end: null,
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       });
@@ -108,10 +113,15 @@ serve(async (req) => {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logStep("ERROR", { message: errorMessage });
-    return new Response(JSON.stringify({ error: "Subscription check temporarily unavailable" }), {
+    logStep("ERROR - returning safe free plan", { message: errorMessage });
+    return new Response(JSON.stringify({
+      subscribed: false,
+      product_id: null,
+      price_id: null,
+      subscription_end: null,
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
+      status: 200,
     });
   }
 });
