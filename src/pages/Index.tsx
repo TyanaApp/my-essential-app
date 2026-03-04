@@ -47,16 +47,7 @@ const Index = () => {
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
-          <span
-            className="text-[28px] font-bold"
-            style={{
-              background: 'linear-gradient(135deg, #7C3AED, #C026D3)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            TYANA
-          </span>
+          <img src={tyanaLogoText} alt="TYANA" className="h-7" />
 
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item, i) => (
@@ -417,16 +408,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
             <div>
-              <span
-                className="text-2xl font-bold"
-                style={{
-                  background: 'linear-gradient(135deg, #7C3AED, #C026D3)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                TYANA
-              </span>
+              <img src={tyanaLogoText} alt="TYANA" className="h-6" />
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <div className="flex gap-6">
