@@ -9,6 +9,7 @@ import ScanModal from '@/components/inventory/ScanModal';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useAutoReduce } from '@/hooks/useAutoReduce';
 
 export interface InventoryItem {
   id: string;
@@ -22,6 +23,10 @@ export interface InventoryItem {
   price_per_unit: number | null;
   added_at: string;
   updated_at: string;
+  consumption_rate: string | null;
+  is_opened: boolean;
+  opened_at: string | null;
+  tracking_mode: string | null;
 }
 
 type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
@@ -36,6 +41,7 @@ const TABS: { id: Tab; emoji: string; label: string }[] = [
 const Inventory = () => {
   const { user } = useAuth();
   usePageTitle('Inventory');
+  useAutoReduce();
   const { plan } = useSubscription();
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,9 +53,7 @@ const Inventory = () => {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
 
-  // Count scans this month
   useEffect(() => {
-    // We track scans via a simple localStorage counter per month
     const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
     setScanCount(Number(localStorage.getItem(key) || '0'));
   }, []);
@@ -60,7 +64,6 @@ const Inventory = () => {
       setUpgradeOpen(true);
       return;
     }
-    // Increment scan count
     const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
     const newCount = scanCount + 1;
     localStorage.setItem(key, String(newCount));
@@ -122,6 +125,34 @@ const Inventory = () => {
     toast.success(`${item.name} added to shopping list`);
   };
 
+  const handleToggleOpened = async (item: InventoryItem) => {
+    const newOpened = !item.is_opened;
+    await supabase
+      .from('inventory_items')
+      .update({
+        is_opened: newOpened,
+        opened_at: newOpened ? new Date().toISOString() : null,
+      } as any)
+      .eq('id', item.id);
+    setItems((prev) =>
+      prev.map((i) =>
+        i.id === item.id ? { ...i, is_opened: newOpened, opened_at: newOpened ? new Date().toISOString() : null } : i
+      )
+    );
+    toast.success(newOpened ? 'Marked as opened' : 'Marked as sealed');
+  };
+
+  const handleToggleTrackingMode = async (item: InventoryItem) => {
+    const newMode = item.tracking_mode === 'date_only' ? 'tracked' : 'date_only';
+    await supabase
+      .from('inventory_items')
+      .update({ tracking_mode: newMode } as any)
+      .eq('id', item.id);
+    setItems((prev) =>
+      prev.map((i) => (i.id === item.id ? { ...i, tracking_mode: newMode } : i))
+    );
+  };
+
   const openAdd = () => { setEditItem(null); setModalOpen(true); };
   const openEdit = (item: InventoryItem) => { setEditItem(item); setModalOpen(true); };
 
@@ -134,12 +165,21 @@ const Inventory = () => {
     return { bg: '#D1FAE5', text: '#059669', label: `${d}d left` };
   };
 
+  const isLowQuantity = (item: InventoryItem) => {
+    if (item.tracking_mode === 'date_only') return false;
+    return item.quantity <= 0.2 * (item.quantity + 1); // rough heuristic
+  };
+
   return (
-    <div className="min-h-screen p-4 sm:p-6 pb-mobile-safe">
+    <div className="min-h-screen p-4 sm:p-6" style={{ paddingBottom: 90 }}>
       <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Inventory</h1>
 
-      {/* Tabs - scrollable row */}
-      <div className="flex gap-2 mb-4 overflow-x-auto pb-1 -mx-4 px-4" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+      {/* Tabs */}
+      <div
+        className="flex gap-2 mb-4 overflow-x-auto -mx-4 px-4"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+      >
+        <style>{`.flex::-webkit-scrollbar { display: none; }`}</style>
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -175,7 +215,7 @@ const Inventory = () => {
         />
       </div>
 
-      {/* Action buttons - side by side, equal width */}
+      {/* Action buttons */}
       <div className="grid grid-cols-2 gap-2 mb-5">
         <button
           className="flex items-center justify-center gap-1.5 h-12 rounded-xl border-[1.5px] text-sm font-medium"
@@ -200,19 +240,22 @@ const Inventory = () => {
         </div>
       ) : filteredItems.length === 0 ? (
         <div className="text-center py-16">
-          <div className="text-5xl mb-4">{tab === 'expiring' ? '✅' : '📦'}</div>
-          <p className="text-base font-medium mb-1" style={{ color: '#1E1B4B' }}>
-            {tab === 'expiring' ? 'Nothing expiring soon!' : 'Add your first item'}
+          <div className="text-5xl mb-4">{tab === 'expiring' ? '🎉' : '📦'}</div>
+          <p className="text-base font-medium" style={{ color: '#1E1B4B' }}>
+            {tab === 'expiring' ? 'Nothing expiring soon' : 'Add your first item'}
           </p>
-          <p className="text-sm" style={{ color: '#6B7280' }}>
-            {tab === 'expiring' ? 'Your food is fresh.' : 'Tap "+ Add" or scan a photo.'}
-          </p>
+          {tab !== 'expiring' && (
+            <p className="text-sm mt-1" style={{ color: '#6B7280' }}>
+              Tap "+ Add" or scan a photo.
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-2">
           <AnimatePresence>
             {filteredItems.map((item) => {
               const exp = expiryColor(item.expires_at);
+              const lowQty = item.tracking_mode !== 'date_only' && item.quantity <= 0.2;
               return (
                 <motion.div
                   key={item.id}
@@ -220,59 +263,93 @@ const Inventory = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -80 }}
-                  className="bg-white rounded-xl p-4 flex items-center gap-3"
+                  className="bg-white rounded-xl p-3 sm:p-4"
                   style={{ boxShadow: '0 1px 6px rgba(124,58,237,0.04)' }}
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate" style={{ color: '#1E1B4B' }}>{item.name}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs font-medium" style={{ color: '#6B7280' }}>
-                        {item.quantity} {item.unit}
-                      </span>
-                      <span
-                        className="text-[11px] font-medium px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: exp.bg, color: exp.text }}
-                      >
-                        {exp.label}
-                      </span>
-                      {item.price_per_unit && (
-                        <span className="text-[11px]" style={{ color: '#9CA3AF' }}>
-                          €{item.price_per_unit}
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <p className="text-sm font-semibold truncate" style={{ color: '#1E1B4B' }}>{item.name}</p>
+                        {item.is_opened && (
+                          <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED', color: '#EA580C' }}>
+                            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#EA580C' }} />
+                            Opened
+                          </span>
+                        )}
+                        {lowQty && (
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
+                            Low
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        {item.tracking_mode !== 'date_only' && (
+                          <span className="text-xs font-medium" style={{ color: '#6B7280' }}>
+                            {item.quantity} {item.unit}
+                          </span>
+                        )}
+                        <span
+                          className="text-[11px] font-medium px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: exp.bg, color: exp.text }}
+                        >
+                          {exp.label}
                         </span>
-                      )}
+                        {item.price_per_unit && (
+                          <span className="text-[11px]" style={{ color: '#9CA3AF' }}>€{item.price_per_unit}</span>
+                        )}
+                        {/* Tracking mode tag */}
+                        <button
+                          onClick={() => handleToggleTrackingMode(item)}
+                          className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
+                          style={{ backgroundColor: item.tracking_mode === 'date_only' ? '#EFF6FF' : '#F0FDF4', color: item.tracking_mode === 'date_only' ? '#3B82F6' : '#059669' }}
+                        >
+                          {item.tracking_mode === 'date_only' ? '📅 Date only' : '📊 Tracked'}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {tab === 'expiring' && (
+                    <div className="flex items-center gap-0.5 shrink-0">
+                      {/* Opened toggle */}
                       <button
-                        onClick={() => toast.info('Recipe finder coming soon!')}
-                        className="p-2 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                        title="Find recipe"
+                        onClick={() => handleToggleOpened(item)}
+                        className="p-1.5 rounded-lg transition-colors text-[11px]"
+                        style={{
+                          backgroundColor: item.is_opened ? '#FFF7ED' : 'transparent',
+                        }}
+                        title={item.is_opened ? 'Mark sealed' : 'Mark opened'}
                       >
-                        <UtensilsCrossed className="w-4 h-4" style={{ color: '#7C3AED' }} />
+                        📦
                       </button>
-                    )}
-                    <button
-                      onClick={() => handleAddToShopping(item)}
-                      className="p-2 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                      title="Add to shopping"
-                    >
-                      <ShoppingCart className="w-4 h-4" style={{ color: '#059669' }} />
-                    </button>
-                    <button
-                      onClick={() => openEdit(item)}
-                      className="p-2 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                      title="Edit"
-                    >
-                      <Pencil className="w-4 h-4" style={{ color: '#7C3AED' }} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="p-2 rounded-lg hover:bg-red-50 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-4 h-4" style={{ color: '#DC2626' }} />
-                    </button>
+                      {tab === 'expiring' && (
+                        <button
+                          onClick={() => toast.info('Recipe finder coming soon!')}
+                          className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
+                          title="Find recipe"
+                        >
+                          <UtensilsCrossed className="w-4 h-4" style={{ color: '#7C3AED' }} />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleAddToShopping(item)}
+                        className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
+                        title="Add to shopping"
+                      >
+                        <ShoppingCart className="w-4 h-4" style={{ color: '#059669' }} />
+                      </button>
+                      <button
+                        onClick={() => openEdit(item)}
+                        className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
+                        title="Edit"
+                      >
+                        <Pencil className="w-4 h-4" style={{ color: '#7C3AED' }} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        className="p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" style={{ color: '#DC2626' }} />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               );
