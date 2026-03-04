@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import tyanaLogoText from '@/assets/tyana-logo-text.png';
 import { z } from 'zod';
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileSplashAuth from '@/components/MobileSplashAuth';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
