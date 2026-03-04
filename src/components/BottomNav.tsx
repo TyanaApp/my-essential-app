@@ -1,16 +1,18 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, Package, ChefHat, ShoppingCart, User } from "lucide-react";
-
-const navItems = [
-  { path: "/dashboard", label: "Home", icon: Home },
-  { path: "/inventory", label: "Inventory", icon: Package },
-  { path: "/recipes", label: "Recipes", icon: ChefHat },
-  { path: "/shopping", label: "Shopping", icon: ShoppingCart },
-  { path: "/profile", label: "Profile", icon: User },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 const BottomNav = () => {
   const location = useLocation();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { path: "/dashboard", label: t.nav.home, icon: Home },
+    { path: "/inventory", label: t.nav.inventory, icon: Package },
+    { path: "/recipes", label: t.nav.recipes, icon: ChefHat },
+    { path: "/shopping", label: t.nav.shopping, icon: ShoppingCart },
+    { path: "/profile", label: t.nav.profile, icon: User },
+  ];
 
   return (
     <nav

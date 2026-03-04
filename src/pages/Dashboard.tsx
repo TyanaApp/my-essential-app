@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useSubscription } from '@/hooks/useSubscription';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface DashboardData {
   displayName: string;
@@ -22,29 +23,30 @@ interface DashboardData {
   monthlyBudget: number;
 }
 
-const getGreeting = () => {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
-};
-
-const formatDate = () => {
-  return new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  });
-};
-
 const Dashboard = () => {
   const { user } = useAuth();
-  usePageTitle('Dashboard');
+  const { t } = useTranslation();
+  usePageTitle(t.nav.home);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { checkSubscription } = useSubscription();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const getGreeting = () => {
+    const h = new Date().getHours();
+    if (h < 12) return t.dashboard.morning;
+    if (h < 18) return t.dashboard.afternoon;
+    return t.dashboard.evening;
+  };
+
+  const formatDate = () => {
+    return new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
   // Handle upgrade success
   useEffect(() => {
@@ -148,7 +150,6 @@ const Dashboard = () => {
         {/* Card 1 — Calories */}
         <motion.div {...fadeUp(1)} style={cardStyle} className="p-5">
           <div className="flex flex-col sm:flex-row items-center gap-5">
-            {/* SVG Gauge */}
             <div className="relative shrink-0" style={{ width: 180, height: 180 }}>
               <svg width="180" height="180" viewBox="0 0 180 180">
                 <circle cx="90" cy="90" r="72" fill="none" stroke="#EDE9FE" strokeWidth="12" />
@@ -175,12 +176,11 @@ const Dashboard = () => {
             </div>
 
             <div className="flex-1 min-w-0">
-              {/* Macro bars */}
               <div className="space-y-2 mb-3">
                 {[
-                  { label: 'Protein', value: data.protein, color: '#059669', max: 150 },
-                  { label: 'Fat', value: data.fat, color: '#EA580C', max: 80 },
-                  { label: 'Carbs', value: data.carbs, color: '#2563EB', max: 250 },
+                  { label: t.dashboard.protein, value: data.protein, color: '#059669', max: 150 },
+                  { label: t.dashboard.fat, value: data.fat, color: '#EA580C', max: 80 },
+                  { label: t.dashboard.carbs, value: data.carbs, color: '#2563EB', max: 250 },
                 ].map((m) => (
                   <div key={m.label}>
                     <div className="flex justify-between text-xs mb-0.5">
@@ -200,9 +200,8 @@ const Dashboard = () => {
                 ))}
               </div>
 
-              {/* Remaining */}
               <p className="text-sm font-semibold" style={{ color: remaining >= 0 ? '#059669' : '#DC2626' }}>
-                {remaining >= 0 ? `${remaining} kcal remaining today` : `${Math.abs(remaining)} kcal over target`}
+                {remaining >= 0 ? `${remaining} ${t.dashboard.remaining}` : `${Math.abs(remaining)} ${t.dashboard.overTarget}`}
               </p>
 
               <button
@@ -210,7 +209,7 @@ const Dashboard = () => {
                 className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px]"
                 style={{ borderColor: '#7C3AED', color: '#7C3AED' }}
               >
-                <Plus className="w-3.5 h-3.5" /> Log a meal
+                <Plus className="w-3.5 h-3.5" /> {t.dashboard.logMeal}
               </button>
             </div>
           </div>
@@ -222,15 +221,15 @@ const Dashboard = () => {
             <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#1E1B4B' }}>
               <AlertTriangle className="w-4 h-4" style={{ color: '#EA580C' }} />
               {data.expiringItems.length > 0
-                ? `${data.expiringItems.length} items expiring soon`
-                : 'Nothing expiring soon ✅'}
+                ? t.dashboard.expiringTitle.replace('{count}', String(data.expiringItems.length))
+                : t.dashboard.nothingExpiring}
             </h3>
             <button
               onClick={() => navigate('/inventory?tab=expiring')}
               className="text-xs font-medium flex items-center gap-0.5"
               style={{ color: '#7C3AED' }}
             >
-              View all <ChevronRight className="w-3.5 h-3.5" />
+              {t.dashboard.viewAll} <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -255,21 +254,19 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-xs" style={{ color: '#9CA3AF' }}>Your food is fresh. Keep it up!</p>
-          )}
+          ) : null}
         </motion.div>
 
         {/* Card 3 — Recipe Ideas */}
         <motion.div {...fadeUp(3)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>🍳 Ideas for today</h3>
+            <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>{t.dashboard.ideasToday}</h3>
             <button
               onClick={() => navigate('/recipes')}
               className="text-xs font-medium flex items-center gap-0.5"
               style={{ color: '#7C3AED' }}
             >
-              All recipes <ChevronRight className="w-3.5 h-3.5" />
+              {t.recipes.allRecipes} <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -303,7 +300,7 @@ const Dashboard = () => {
               className="w-full py-6 rounded-xl text-sm font-medium"
               style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', border: '1px dashed #DDD6FE' }}
             >
-              Generate your first recipes →
+              {t.dashboard.generateRecipes}
             </button>
           )}
         </motion.div>
@@ -312,14 +309,14 @@ const Dashboard = () => {
         <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-              💚 €{data.savingsThisMonth.toFixed(2)} saved this month
+              💚 €{data.savingsThisMonth.toFixed(2)} {t.dashboard.savedMonth}
             </h3>
             <button
               onClick={() => navigate('/savings')}
               className="text-xs font-medium flex items-center gap-0.5"
               style={{ color: '#7C3AED' }}
             >
-              See details <ChevronRight className="w-3.5 h-3.5" />
+              {t.dashboard.seeDetails} <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
           <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
@@ -332,7 +329,7 @@ const Dashboard = () => {
             />
           </div>
           <p className="text-xs mt-1.5" style={{ color: '#9CA3AF' }}>
-            of €{data.monthlyBudget} monthly goal
+            {t.dashboard.ofGoal.replace('{amount}', String(data.monthlyBudget))}
           </p>
         </motion.div>
       </div>

@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   Dialog,
   DialogContent,
@@ -32,16 +33,9 @@ interface SavedRecipe {
   nutrition: { calories: number; protein: number; fat: number; carbs: number } | null;
 }
 
-const MEAL_SECTIONS = [
-  { type: 'breakfast', label: 'Breakfast', emoji: '🌅' },
-  { type: 'lunch', label: 'Lunch', emoji: '☀️' },
-  { type: 'dinner', label: 'Dinner', emoji: '🌙' },
-  { type: 'snack', label: 'Snack', emoji: '🍎' },
-];
-
 const getWeekDays = (selectedDate: Date) => {
   const day = selectedDate.getDay();
-  const diff = day === 0 ? -6 : 1 - day; // Monday start
+  const diff = day === 0 ? -6 : 1 - day;
   const monday = new Date(selectedDate);
   monday.setDate(selectedDate.getDate() + diff);
   const days = [];
@@ -57,14 +51,21 @@ const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const Diary = () => {
   const { user } = useAuth();
-  usePageTitle('Diary');
+  const { t } = useTranslation();
+  usePageTitle(t.diary.title);
+
+  const MEAL_SECTIONS = [
+    { type: 'breakfast', label: t.diary.breakfast, emoji: '🌅' },
+    { type: 'lunch', label: t.diary.lunch, emoji: '☀️' },
+    { type: 'dinner', label: t.diary.dinner, emoji: '🌙' },
+    { type: 'snack', label: t.diary.snack, emoji: '🍎' },
+  ];
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [entries, setEntries] = useState<MealEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [dailyTarget, setDailyTarget] = useState(2000);
 
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMealType, setModalMealType] = useState('breakfast');
   const [addMode, setAddMode] = useState<'recipe' | 'manual'>('manual');
@@ -92,7 +93,7 @@ const Diary = () => {
         if (entriesRes.data) setEntries(entriesRes.data as unknown as MealEntry[]);
         if (goalsRes.data?.daily_calories_target) setDailyTarget(goalsRes.data.daily_calories_target);
       } catch {
-        toast.error('Something went wrong. Please try again.');
+        toast.error(t.common.error);
       }
       setLoading(false);
     };
@@ -108,11 +109,7 @@ const Diary = () => {
   const openAddModal = (mealType: string) => {
     setModalMealType(mealType);
     setAddMode('manual');
-    setManualName('');
-    setManualCalories('');
-    setManualProtein('');
-    setManualFat('');
-    setManualCarbs('');
+    setManualName(''); setManualCalories(''); setManualProtein(''); setManualFat(''); setManualCarbs('');
     setRecipeSearch('');
     setModalOpen(true);
     loadRecipes();
@@ -122,11 +119,8 @@ const Diary = () => {
     if (!user) return;
     try {
       const { data, error } = await supabase.from('meal_entries').insert({
-        user_id: user.id,
-        date: dateStr,
-        meal_type: modalMealType,
-        recipe_id: recipe.id,
-        custom_name: recipe.title,
+        user_id: user.id, date: dateStr, meal_type: modalMealType,
+        recipe_id: recipe.id, custom_name: recipe.title,
         total_calories: recipe.nutrition?.calories || 0,
         total_protein: recipe.nutrition?.protein || 0,
         total_fat: recipe.nutrition?.fat || 0,
@@ -134,20 +128,16 @@ const Diary = () => {
       } as any).select().single();
       if (error) throw error;
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
-      toast.success(`${recipe.title} logged ✓`);
+      toast.success(`${recipe.title} ${t.diary.logged}`);
       setModalOpen(false);
-    } catch {
-      toast.error('Something went wrong. Please try again.');
-    }
+    } catch { toast.error(t.common.error); }
   };
 
   const handleAddManual = async () => {
     if (!user || !manualName.trim()) return;
     try {
       const { data, error } = await supabase.from('meal_entries').insert({
-        user_id: user.id,
-        date: dateStr,
-        meal_type: modalMealType,
+        user_id: user.id, date: dateStr, meal_type: modalMealType,
         custom_name: manualName.trim(),
         total_calories: Number(manualCalories) || 0,
         total_protein: Number(manualProtein) || 0,
@@ -156,11 +146,9 @@ const Diary = () => {
       } as any).select().single();
       if (error) throw error;
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
-      toast.success(`${manualName} logged ✓`);
+      toast.success(`${manualName} ${t.diary.logged}`);
       setModalOpen(false);
-    } catch {
-      toast.error('Something went wrong. Please try again.');
-    }
+    } catch { toast.error(t.common.error); }
   };
 
   const handleDelete = async (id: string) => {
@@ -168,7 +156,6 @@ const Diary = () => {
     setEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
-  // Totals
   const totals = useMemo(() => {
     return entries.reduce(
       (acc, e) => ({
@@ -190,9 +177,11 @@ const Diary = () => {
     r.title.toLowerCase().includes(recipeSearch.toLowerCase())
   );
 
+  const getMealLabel = (type: string) => MEAL_SECTIONS.find((s) => s.type === type)?.label || type;
+
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
-      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Diary</h1>
+      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>{t.diary.title}</h1>
 
       {/* Week strip */}
       <div className="flex gap-1.5 mb-6 overflow-x-auto pb-1">
@@ -210,16 +199,10 @@ const Diary = () => {
                 border: `1.5px solid ${isSelected ? '#7C3AED' : '#DDD6FE'}`,
               }}
             >
-              <span
-                className="text-[10px] font-semibold mb-0.5"
-                style={{ color: isSelected ? 'white' : '#6B7280' }}
-              >
+              <span className="text-[10px] font-semibold mb-0.5" style={{ color: isSelected ? 'white' : '#6B7280' }}>
                 {DAY_LABELS[i]}
               </span>
-              <span
-                className="text-sm font-bold"
-                style={{ color: isSelected ? 'white' : '#1E1B4B' }}
-              >
+              <span className="text-sm font-bold" style={{ color: isSelected ? 'white' : '#1E1B4B' }}>
                 {d.getDate()}
               </span>
             </button>
@@ -227,86 +210,68 @@ const Diary = () => {
         })}
       </div>
 
-      {/* Loading */}
       {loading ? (
         <div className="flex justify-center py-16">
-          <div
-            className="w-7 h-7 border-[3px] rounded-full animate-spin"
-            style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }}
-          />
+          <div className="w-7 h-7 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
         </div>
       ) : (
-        <>
-          {/* Meal sections */}
-          <div className="space-y-4">
-            {MEAL_SECTIONS.map((section) => {
-              const sectionEntries = entries.filter((e) => e.meal_type === section.type);
-              return (
-                <motion.div
-                  key={section.type}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-2xl p-4"
-                  style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
-                      {section.emoji} {section.label}
-                    </h3>
-                    <button
-                      onClick={() => openAddModal(section.type)}
-                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg"
-                      style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
-                    >
-                      <Plus className="w-3.5 h-3.5" /> Add
-                    </button>
-                  </div>
+        <div className="space-y-4">
+          {MEAL_SECTIONS.map((section) => {
+            const sectionEntries = entries.filter((e) => e.meal_type === section.type);
+            return (
+              <motion.div
+                key={section.type}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-2xl p-4"
+                style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+                    {section.emoji} {section.label}
+                  </h3>
+                  <button
+                    onClick={() => openAddModal(section.type)}
+                    className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg"
+                    style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
+                  >
+                    <Plus className="w-3.5 h-3.5" /> {t.diary.addMeal}
+                  </button>
+                </div>
 
-                  {sectionEntries.length === 0 ? (
-                    <p className="text-xs py-2" style={{ color: '#9CA3AF' }}>
-                      No meals logged
-                    </p>
-                  ) : (
-                    <div className="space-y-1.5">
-                      {sectionEntries.map((entry) => (
-                        <div
-                          key={entry.id}
-                          className="flex items-center justify-between py-1.5 px-2 rounded-lg"
-                          style={{ backgroundColor: '#FAFAFE' }}
-                        >
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>
-                              {entry.custom_name || 'Meal'}
-                            </p>
-                            <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
-                              {entry.total_calories || 0} kcal · P:{entry.total_protein || 0}g · F:{entry.total_fat || 0}g · C:{entry.total_carbs || 0}g
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => handleDelete(entry.id)}
-                            className="p-1 rounded-lg hover:bg-red-50 shrink-0"
-                          >
-                            <X className="w-3.5 h-3.5" style={{ color: '#DC2626' }} />
-                          </button>
+                {sectionEntries.length === 0 ? (
+                  <p className="text-xs py-2" style={{ color: '#9CA3AF' }}>{t.diary.noMeals}</p>
+                ) : (
+                  <div className="space-y-1.5">
+                    {sectionEntries.map((entry) => (
+                      <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg" style={{ backgroundColor: '#FAFAFE' }}>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{entry.custom_name || 'Meal'}</p>
+                          <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
+                            {entry.total_calories || 0} kcal · P:{entry.total_protein || 0}g · F:{entry.total_fat || 0}g · C:{entry.total_carbs || 0}g
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </>
+                        <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-red-50 shrink-0">
+                          <X className="w-3.5 h-3.5" style={{ color: '#DC2626' }} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
       )}
 
-      {/* Daily totals bar - fixed above bottom nav on mobile, above nothing on desktop */}
+      {/* Daily totals bar */}
       <div
         className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40"
         style={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', borderTop: '1px solid #EDE9FE' }}
       >
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <span className="text-sm font-bold" style={{ color: totalsColor }}>
-            Today: {totals.calories} kcal
+            {t.diary.todayTotal} {totals.calories} kcal
           </span>
           <div className="flex gap-3 text-xs font-medium" style={{ color: '#6B7280' }}>
             <span>P: {Math.round(totals.protein)}g</span>
@@ -314,14 +279,10 @@ const Diary = () => {
             <span>C: {Math.round(totals.carbs)}g</span>
           </div>
         </div>
-        {/* Progress bar */}
         <div className="mt-1.5 h-1.5 rounded-full max-w-lg mx-auto" style={{ backgroundColor: '#F3F4F6' }}>
           <div
             className="h-full rounded-full transition-all duration-500"
-            style={{
-              backgroundColor: totalsColor,
-              width: `${Math.min(caloriePct * 100, 100)}%`,
-            }}
+            style={{ backgroundColor: totalsColor, width: `${Math.min(caloriePct * 100, 100)}%` }}
           />
         </div>
       </div>
@@ -331,12 +292,11 @@ const Diary = () => {
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
             <DialogTitle style={{ color: '#1E1B4B' }}>
-              Add {MEAL_SECTIONS.find((s) => s.type === modalMealType)?.label}
+              {t.diary.addMealTitle.replace('{meal}', getMealLabel(modalMealType))}
             </DialogTitle>
-            <DialogDescription>Log what you ate</DialogDescription>
+            <DialogDescription>{t.diary.logWhatYouAte}</DialogDescription>
           </DialogHeader>
 
-          {/* Mode toggle */}
           <div className="flex gap-1 p-1 rounded-xl mb-3" style={{ backgroundColor: '#F5F3FF' }}>
             <button
               onClick={() => setAddMode('recipe')}
@@ -346,7 +306,7 @@ const Diary = () => {
                 color: addMode === 'recipe' ? 'white' : '#6B7280',
               }}
             >
-              From Recipes
+              {t.diary.fromRecipes}
             </button>
             <button
               onClick={() => setAddMode('manual')}
@@ -356,7 +316,7 @@ const Diary = () => {
                 color: addMode === 'manual' ? 'white' : '#6B7280',
               }}
             >
-              Manual Entry
+              {t.diary.manualEntry}
             </button>
           </div>
 
@@ -367,7 +327,7 @@ const Diary = () => {
                 <input
                   value={recipeSearch}
                   onChange={(e) => setRecipeSearch(e.target.value)}
-                  placeholder="Search saved recipes..."
+                  placeholder={t.diary.searchRecipes}
                   className="w-full h-10 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
                   style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
                 />
@@ -375,7 +335,7 @@ const Diary = () => {
               <div className="max-h-48 overflow-y-auto space-y-1">
                 {filteredRecipes.length === 0 ? (
                   <p className="text-xs text-center py-4" style={{ color: '#9CA3AF' }}>
-                    {recipes.length === 0 ? 'No saved recipes yet' : 'No matching recipes'}
+                    {recipes.length === 0 ? t.diary.noSavedRecipes : t.diary.noMatchingRecipes}
                   </p>
                 ) : (
                   filteredRecipes.map((r) => (
@@ -396,7 +356,7 @@ const Diary = () => {
           ) : (
             <div className="space-y-3">
               <div>
-                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>Name</label>
+                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.name}</label>
                 <input
                   value={manualName}
                   onChange={(e) => setManualName(e.target.value)}
@@ -407,48 +367,28 @@ const Diary = () => {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>Calories</label>
-                  <input
-                    type="number"
-                    value={manualCalories}
-                    onChange={(e) => setManualCalories(e.target.value)}
-                    placeholder="0"
+                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.calories}</label>
+                  <input type="number" value={manualCalories} onChange={(e) => setManualCalories(e.target.value)} placeholder="0"
                     className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                  />
+                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>Protein (g)</label>
-                  <input
-                    type="number"
-                    value={manualProtein}
-                    onChange={(e) => setManualProtein(e.target.value)}
-                    placeholder="0"
+                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.protein}</label>
+                  <input type="number" value={manualProtein} onChange={(e) => setManualProtein(e.target.value)} placeholder="0"
                     className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                  />
+                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>Fat (g)</label>
-                  <input
-                    type="number"
-                    value={manualFat}
-                    onChange={(e) => setManualFat(e.target.value)}
-                    placeholder="0"
+                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.fat}</label>
+                  <input type="number" value={manualFat} onChange={(e) => setManualFat(e.target.value)} placeholder="0"
                     className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                  />
+                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>Carbs (g)</label>
-                  <input
-                    type="number"
-                    value={manualCarbs}
-                    onChange={(e) => setManualCarbs(e.target.value)}
-                    placeholder="0"
+                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.carbs}</label>
+                  <input type="number" value={manualCarbs} onChange={(e) => setManualCarbs(e.target.value)} placeholder="0"
                     className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                  />
+                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
                 </div>
               </div>
               <button
@@ -457,7 +397,7 @@ const Diary = () => {
                 className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
                 style={{ backgroundColor: '#7C3AED' }}
               >
-                Log Meal
+                {t.diary.logMeal}
               </button>
             </div>
           )}

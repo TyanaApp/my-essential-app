@@ -10,6 +10,7 @@ import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAutoReduce } from '@/hooks/useAutoReduce';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export interface InventoryItem {
   id: string;
@@ -31,16 +32,10 @@ export interface InventoryItem {
 
 type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
 
-const TABS: { id: Tab; emoji: string; label: string }[] = [
-  { id: 'fridge', emoji: '🧊', label: 'Fridge' },
-  { id: 'pantry', emoji: '🏠', label: 'Pantry' },
-  { id: 'freezer', emoji: '❄️', label: 'Freezer' },
-  { id: 'expiring', emoji: '⏰', label: 'Expiring' },
-];
-
 const Inventory = () => {
   const { user } = useAuth();
-  usePageTitle('Inventory');
+  const { t } = useTranslation();
+  usePageTitle(t.inventory.title);
   useAutoReduce();
   const { plan } = useSubscription();
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -52,6 +47,13 @@ const Inventory = () => {
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
+
+  const TABS: { id: Tab; label: string }[] = [
+    { id: 'fridge', label: t.inventory.fridge },
+    { id: 'pantry', label: t.inventory.pantry },
+    { id: 'freezer', label: t.inventory.freezer },
+    { id: 'expiring', label: t.inventory.expiring },
+  ];
 
   useEffect(() => {
     const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
@@ -110,7 +112,7 @@ const Inventory = () => {
   const handleDelete = async (id: string) => {
     await supabase.from('inventory_items').delete().eq('id', id);
     setItems((prev) => prev.filter((i) => i.id !== id));
-    toast.success('Deleted ✓');
+    toast.success(t.inventory.deleted);
   };
 
   const handleAddToShopping = async (item: InventoryItem) => {
@@ -122,7 +124,7 @@ const Inventory = () => {
       unit: item.unit,
       category: item.category,
     } as any);
-    toast.success(`${item.name} added to shopping list`);
+    toast.success(`${item.name} ${t.inventory.addedToShopping}`);
   };
 
   const handleToggleOpened = async (item: InventoryItem) => {
@@ -139,7 +141,7 @@ const Inventory = () => {
         i.id === item.id ? { ...i, is_opened: newOpened, opened_at: newOpened ? new Date().toISOString() : null } : i
       )
     );
-    toast.success(newOpened ? 'Marked as opened' : 'Marked as sealed');
+    toast.success(newOpened ? t.inventory.markedOpened : t.inventory.markedSealed);
   };
 
   const handleToggleTrackingMode = async (item: InventoryItem) => {
@@ -158,36 +160,31 @@ const Inventory = () => {
 
   const expiryColor = (date: string | null) => {
     const d = daysUntilExpiry(date);
-    if (d === null) return { bg: '#F3F4F6', text: '#9CA3AF', label: 'No date' };
-    if (d < 0) return { bg: '#FEE2E2', text: '#DC2626', label: 'Expired' };
-    if (d <= 3) return { bg: '#FEE2E2', text: '#DC2626', label: `${d}d left` };
-    if (d <= 7) return { bg: '#FEF3C7', text: '#EA580C', label: `${d}d left` };
-    return { bg: '#D1FAE5', text: '#059669', label: `${d}d left` };
-  };
-
-  const isLowQuantity = (item: InventoryItem) => {
-    if (item.tracking_mode === 'date_only') return false;
-    return item.quantity <= 0.2 * (item.quantity + 1); // rough heuristic
+    if (d === null) return { bg: '#F3F4F6', text: '#9CA3AF', label: t.inventory.noDate };
+    if (d < 0) return { bg: '#FEE2E2', text: '#DC2626', label: t.inventory.expired };
+    if (d <= 3) return { bg: '#FEE2E2', text: '#DC2626', label: `${d}${t.inventory.daysLeft}` };
+    if (d <= 7) return { bg: '#FEF3C7', text: '#EA580C', label: `${d}${t.inventory.daysLeft}` };
+    return { bg: '#D1FAE5', text: '#059669', label: `${d}${t.inventory.daysLeft}` };
   };
 
   return (
     <div className="min-h-screen p-4 sm:p-6" style={{ paddingBottom: 90 }}>
-      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Inventory</h1>
+      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>{t.inventory.title}</h1>
 
       {/* Tabs */}
       <div className="grid grid-cols-4 gap-1.5 mb-4">
-        {TABS.map((t) => (
+        {TABS.map((tabItem) => (
           <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
+            key={tabItem.id}
+            onClick={() => setTab(tabItem.id)}
             className="px-1 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition-all text-center"
             style={{
-              backgroundColor: tab === t.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
-              color: tab === t.id ? 'white' : '#6B7280',
+              backgroundColor: tab === tabItem.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
+              color: tab === tabItem.id ? 'white' : '#6B7280',
             }}
           >
-            {t.label}
-            {t.id === 'expiring' && (
+            {tabItem.label}
+            {tabItem.id === 'expiring' && (
               <span
                 className="ml-0.5 text-[10px] font-bold px-1 py-0.5 rounded-full text-white"
                 style={{ backgroundColor: '#DC2626' }}
@@ -205,7 +202,7 @@ const Inventory = () => {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search items..."
+          placeholder={t.inventory.search}
           className="w-full h-12 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
           style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
         />
@@ -218,14 +215,14 @@ const Inventory = () => {
           style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
           onClick={handleScanClick}
         >
-          <Camera className="w-4 h-4" /> Scan
+          <Camera className="w-4 h-4" /> {t.inventory.scan}
         </button>
         <button
           className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium text-white"
           style={{ backgroundColor: 'hsl(263, 84%, 58%)' }}
           onClick={openAdd}
         >
-          <Plus className="w-4 h-4" /> Add
+          <Plus className="w-4 h-4" /> {t.inventory.add}
         </button>
       </div>
 
@@ -238,11 +235,11 @@ const Inventory = () => {
         <div className="text-center py-16">
           <div className="text-5xl mb-4">{tab === 'expiring' ? '🎉' : '📦'}</div>
           <p className="text-base font-medium" style={{ color: '#1E1B4B' }}>
-            {tab === 'expiring' ? 'Nothing expiring soon' : 'Add your first item'}
+            {tab === 'expiring' ? t.inventory.nothingExpiring : t.inventory.empty}
           </p>
           {tab !== 'expiring' && (
             <p className="text-sm mt-1" style={{ color: '#6B7280' }}>
-              Tap "+ Add" or scan a photo.
+              {t.inventory.emptyHint}
             </p>
           )}
         </div>
@@ -269,12 +266,12 @@ const Inventory = () => {
                         {item.is_opened && (
                           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED', color: '#EA580C' }}>
                             <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#EA580C' }} />
-                            Opened
+                            {t.inventory.opened}
                           </span>
                         )}
                         {lowQty && (
                           <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
-                            Low
+                            {t.inventory.low}
                           </span>
                         )}
                       </div>
@@ -293,25 +290,21 @@ const Inventory = () => {
                         {item.price_per_unit && (
                           <span className="text-[11px]" style={{ color: '#9CA3AF' }}>€{item.price_per_unit}</span>
                         )}
-                        {/* Tracking mode tag */}
                         <button
                           onClick={() => handleToggleTrackingMode(item)}
                           className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
                           style={{ backgroundColor: item.tracking_mode === 'date_only' ? '#EFF6FF' : '#F0FDF4', color: item.tracking_mode === 'date_only' ? '#3B82F6' : '#059669' }}
                         >
-                          {item.tracking_mode === 'date_only' ? '📅 Date only' : '📊 Tracked'}
+                          {item.tracking_mode === 'date_only' ? t.inventory.dateOnly : t.inventory.tracked}
                         </button>
                       </div>
                     </div>
                     <div className="flex items-center gap-0.5 shrink-0">
-                      {/* Opened toggle */}
                       <button
                         onClick={() => handleToggleOpened(item)}
                         className="p-1.5 rounded-lg transition-colors text-[11px]"
-                        style={{
-                          backgroundColor: item.is_opened ? '#FFF7ED' : 'transparent',
-                        }}
-                        title={item.is_opened ? 'Mark sealed' : 'Mark opened'}
+                        style={{ backgroundColor: item.is_opened ? '#FFF7ED' : 'transparent' }}
+                        title={item.is_opened ? t.inventory.markedSealed : t.inventory.markedOpened}
                       >
                         📦
                       </button>
@@ -319,7 +312,6 @@ const Inventory = () => {
                         <button
                           onClick={() => toast.info('Recipe finder coming soon!')}
                           className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                          title="Find recipe"
                         >
                           <UtensilsCrossed className="w-4 h-4" style={{ color: '#7C3AED' }} />
                         </button>
@@ -327,21 +319,18 @@ const Inventory = () => {
                       <button
                         onClick={() => handleAddToShopping(item)}
                         className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                        title="Add to shopping"
                       >
                         <ShoppingCart className="w-4 h-4" style={{ color: '#059669' }} />
                       </button>
                       <button
                         onClick={() => openEdit(item)}
                         className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                        title="Edit"
                       >
                         <Pencil className="w-4 h-4" style={{ color: '#7C3AED' }} />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
                         className="p-1.5 rounded-lg hover:bg-red-50 transition-colors"
-                        title="Delete"
                       >
                         <Trash2 className="w-4 h-4" style={{ color: '#DC2626' }} />
                       </button>
@@ -369,8 +358,8 @@ const Inventory = () => {
       <UpgradeModal
         open={upgradeOpen}
         onOpenChange={setUpgradeOpen}
-        title="Scan limit reached"
-        description="Free users get 1 fridge scan per month. Upgrade to Lite for 15 scans/month!"
+        title={t.inventory.scanLimit}
+        description={t.inventory.scanLimitDesc}
         suggestedPlan="lite"
       />
     </div>
