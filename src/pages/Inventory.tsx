@@ -176,7 +176,7 @@ const Inventory = () => {
 
       {/* Tabs */}
       <div
-        className="flex flex-nowrap gap-2 mb-4 -mx-4 px-4 pb-1"
+        className="flex flex-nowrap gap-2 mb-4 -mx-4 px-4 pb-1" data-tabs-scroll
         style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch', paddingRight: 16 }}
       >
         <style>{`[data-tabs-scroll]::-webkit-scrollbar { display: none; }`}</style>
