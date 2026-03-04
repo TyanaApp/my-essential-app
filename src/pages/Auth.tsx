@@ -57,14 +57,19 @@ const Auth = () => {
   };
 
   const getErrorMessage = (error: Error): string => {
-    const message = error.message.toLowerCase();
-    if (message.includes('provider') && message.includes('not enabled')) return t.common.error;
-    if (message.includes('redirect_uri_mismatch')) return t.common.error;
-    if (message.includes('invalid login credentials')) return t.common.error;
-    if (message.includes('user already registered')) return t.common.error;
-    if (message.includes('email not confirmed')) return t.common.error;
-    if (message.includes('rate limit')) return t.common.error;
-    return t.common.error;
+    const msg = error.message.toLowerCase();
+    console.log('Auth error:', error.message);
+    if (msg.includes('user already registered') || msg.includes('user_already_exists'))
+      return t.auth.userAlreadyRegistered || 'This email is already registered. Try signing in.';
+    if (msg.includes('invalid login credentials'))
+      return t.auth.invalidCredentials || 'Invalid email or password.';
+    if (msg.includes('email not confirmed'))
+      return t.auth.emailNotConfirmed || 'Please confirm your email before signing in.';
+    if (msg.includes('rate limit'))
+      return t.auth.rateLimited || 'Too many attempts. Please wait a moment.';
+    if (msg.includes('provider') && msg.includes('not enabled'))
+      return 'This sign-in method is not enabled.';
+    return error.message;
   };
 
   const handleGoogleSignIn = async () => {
@@ -95,7 +100,9 @@ const Auth = () => {
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
-        if (error) { toast.error(getErrorMessage(error)); } else { toast.success('✓'); navigate('/dashboard'); }
+        if (error) { toast.error(getErrorMessage(error)); } else {
+          toast.success(t.auth.checkEmail || 'Check your email to confirm your account');
+        }
       } else {
         const { error } = await signIn(email, password);
         if (error) { toast.error(getErrorMessage(error)); } else { toast.success('✓'); navigate('/dashboard'); }
