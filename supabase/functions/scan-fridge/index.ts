@@ -11,15 +11,14 @@ serve(async (req) => {
   }
 
   try {
-    const { imageBase64 } = await req.json();
-    if (!imageBase64) {
-      return new Response(JSON.stringify({ error: "No image provided" }), {
+    const { images } = await req.json();
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      return new Response(JSON.stringify({ error: "No images provided" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Validate auth
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -36,6 +35,28 @@ serve(async (req) => {
       });
     }
 
+    // Build content array with all images + one prompt
+    const content: any[] = images.map((img: string) => ({
+      type: "image_url",
+      image_url: { url: `data:image/jpeg;base64,${img}` },
+    }));
+
+    content.push({
+      type: "text",
+      text: `These are photos of different parts of a fridge/pantry.
+Identify ALL visible food items and drinks only.
+IGNORE: pots, pans, dishes, bowls, containers, utensils, plastic wrap, foil.
+If something is covered or in an opaque container - skip it.
+Combine all visible items into one list.
+Remove duplicates.
+For each item, assign a category from: dairy, meat, produce, drinks, eggs, other.
+Return ONLY a valid JSON array, no markdown or code fences:
+[{"name":"Eggs","quantity":6,"unit":"pcs","category":"eggs"}]
+Be specific with names: not 'sauce' but 'Ketchup'.
+Estimate quantities realistically.
+Use units: g, kg, ml, L, pcs, packs.`,
+    });
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -44,22 +65,8 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "gpt-4o",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "image_url",
-                image_url: { url: `data:image/jpeg;base64,${imageBase64}` },
-              },
-              {
-                type: "text",
-                text: 'Analyze this fridge/pantry photo. List ALL visible food items with estimated quantities. Return ONLY a valid JSON array, no markdown or code fences: [{"name":"Milk","quantity":1,"unit":"L"},{"name":"Eggs","quantity":6,"unit":"pcs"}]. Use units: g, kg, ml, L, pcs, packs.',
-              },
-            ],
-          },
-        ],
-        max_tokens: 500,
+        messages: [{ role: "user", content }],
+        max_tokens: 1000,
       }),
     });
 
