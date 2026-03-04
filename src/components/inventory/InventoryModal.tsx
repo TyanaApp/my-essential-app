@@ -18,6 +18,17 @@ const LOCATIONS: { id: string; emoji: string; label: string }[] = [
   { id: 'freezer', emoji: '❄️', label: 'Freezer' },
 ];
 
+const CONSUMPTION_RATES = [
+  { id: 'slow', emoji: '🐌', label: 'Slowly', desc: 'weeks' },
+  { id: 'normal', emoji: '🚶', label: 'Normally', desc: 'days' },
+  { id: 'fast', emoji: '⚡️', label: 'Quickly', desc: 'daily' },
+];
+
+const TRACKING_MODES = [
+  { id: 'tracked', emoji: '📊', label: 'Tracked' },
+  { id: 'date_only', emoji: '📅', label: 'Date only' },
+];
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -33,6 +44,8 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
   const [location, setLocation] = useState('fridge');
   const [expiresAt, setExpiresAt] = useState('');
   const [price, setPrice] = useState('');
+  const [consumptionRate, setConsumptionRate] = useState('normal');
+  const [trackingMode, setTrackingMode] = useState('tracked');
   const [saving, setSaving] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -46,8 +59,11 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
       setLocation(editItem.storage_location);
       setExpiresAt(editItem.expires_at || '');
       setPrice(editItem.price_per_unit ? String(editItem.price_per_unit) : '');
+      setConsumptionRate(editItem.consumption_rate || 'normal');
+      setTrackingMode(editItem.tracking_mode || 'tracked');
     } else {
-      setName(''); setQuantity('1'); setUnit('pcs'); setLocation('fridge'); setExpiresAt(''); setPrice('');
+      setName(''); setQuantity('1'); setUnit('pcs'); setLocation('fridge');
+      setExpiresAt(''); setPrice(''); setConsumptionRate('normal'); setTrackingMode('tracked');
     }
   }, [editItem, open]);
 
@@ -74,6 +90,8 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
       storage_location: location,
       expires_at: expiresAt || null,
       price_per_unit: price ? parseFloat(price) : null,
+      consumption_rate: consumptionRate,
+      tracking_mode: trackingMode,
     };
 
     try {
@@ -103,10 +121,8 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        {/* Backdrop */}
         <div className="absolute inset-0 bg-black/30" onClick={onClose} />
 
-        {/* Panel */}
         <motion.div
           className="relative bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto"
           style={{ boxShadow: '0 -4px 40px rgba(124,58,237,0.12)' }}
@@ -194,6 +210,50 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
                     }}
                   >
                     {l.emoji} {l.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Consumption rate */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>How fast do you use this?</label>
+              <div className="flex gap-2">
+                {CONSUMPTION_RATES.map((r) => (
+                  <button
+                    key={r.id}
+                    onClick={() => setConsumptionRate(r.id)}
+                    className="flex-1 flex flex-col items-center gap-0.5 py-2.5 rounded-xl border-[1.5px] text-xs font-medium transition-all"
+                    style={{
+                      borderColor: consumptionRate === r.id ? '#7C3AED' : '#DDD6FE',
+                      backgroundColor: consumptionRate === r.id ? '#EDE9FE' : 'white',
+                      color: consumptionRate === r.id ? '#7C3AED' : '#6B7280',
+                    }}
+                  >
+                    <span className="text-base">{r.emoji}</span>
+                    <span>{r.label}</span>
+                    <span className="text-[10px] opacity-70">({r.desc})</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tracking mode */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>Tracking mode</label>
+              <div className="flex gap-2">
+                {TRACKING_MODES.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setTrackingMode(m.id)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl border-[1.5px] text-sm font-medium transition-all"
+                    style={{
+                      borderColor: trackingMode === m.id ? '#7C3AED' : '#DDD6FE',
+                      backgroundColor: trackingMode === m.id ? '#EDE9FE' : 'white',
+                      color: trackingMode === m.id ? '#7C3AED' : '#6B7280',
+                    }}
+                  >
+                    {m.emoji} {m.label}
                   </button>
                 ))}
               </div>
