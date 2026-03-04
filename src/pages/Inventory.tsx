@@ -175,16 +175,12 @@ const Inventory = () => {
       <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>Inventory</h1>
 
       {/* Tabs */}
-      <div
-        className="flex flex-nowrap gap-2 mb-4 -mx-4 px-4 pb-1" data-tabs-scroll
-        style={{ overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch', paddingRight: 16 }}
-      >
-        <style>{`[data-tabs-scroll]::-webkit-scrollbar { display: none; }`}</style>
+      <div className="grid grid-cols-4 gap-1.5 mb-4">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className="px-2.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            className="px-1 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition-all text-center"
             style={{
               backgroundColor: tab === t.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
               color: tab === t.id ? 'white' : '#6B7280',
@@ -193,7 +189,7 @@ const Inventory = () => {
             {t.label}
             {t.id === 'expiring' && (
               <span
-                className="ml-1 text-[10px] font-bold px-1 py-0.5 rounded-full text-white"
+                className="ml-0.5 text-[10px] font-bold px-1 py-0.5 rounded-full text-white"
                 style={{ backgroundColor: '#DC2626' }}
               >
                 {items.filter((i) => { const d = daysUntilExpiry(i.expires_at); return d !== null && d <= 3; }).length}
