@@ -223,6 +223,7 @@ export const translations = {
       ctaButton: 'Start Free — €0',
       ctaHint: '7 days all features free. No card required.',
       statSaved: 'avg. saved/month', statPayoff: 'to pay itself off', statScan: 'fridge scan',
+      statPayoffValue: '5 days', statScanValue: '10 sec',
       mockupTitle: 'How TYANA works',
       mockupScan: 'Scan', mockupCook: 'Cook', mockupSave: 'Save',
       weekSaved: 'This week saved', foodWaste: 'Food waste reduced', mealsPlanned: 'Meals planned',
