@@ -27,6 +27,7 @@ const Auth = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
+  const isMobile = useIsMobile();
 
   const emailSchema = z.string().email();
   const passwordSchema = z.string().min(6);
