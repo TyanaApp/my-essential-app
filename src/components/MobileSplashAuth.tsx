@@ -107,7 +107,7 @@ const MobileSplashAuth: React.FC = () => {
           TYANA
         </h1>
         <p className="text-white mt-1" style={{ fontSize: 16, opacity: 0.85 }}>
-          {t.auth.subtitle || 'Your Kitchen CFO'}
+          {t.auth.title}
         </p>
       </div>
 
@@ -236,7 +236,7 @@ const MobileSplashAuth: React.FC = () => {
               className="text-white mt-4 transition-opacity hover:opacity-90"
               style={{ fontSize: 14, textDecoration: 'underline', background: 'none', border: 'none' }}
             >
-              {t.auth.signUp} {t.auth.free || 'free'} →
+              {t.auth.signUp} →
             </button>
           </div>
         ) : (
