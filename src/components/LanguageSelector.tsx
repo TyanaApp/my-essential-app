@@ -58,7 +58,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       {showLabel && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground font-exo">
           <Globe className="w-4 h-4" />
-          <span>Language</span>
+          <span>{language === 'ru' ? 'Язык' : language === 'lv' ? 'Valoda' : 'Language'}</span>
         </div>
       )}
       <div className="flex gap-2">

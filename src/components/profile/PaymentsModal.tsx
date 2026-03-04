@@ -5,6 +5,7 @@ import { useSubscription, SUBSCRIPTION_PLANS, PlanType } from '@/hooks/useSubscr
 import { Check, Sparkles, Crown, Loader2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface PaymentsModalProps {
   open: boolean;
@@ -25,25 +26,23 @@ const PLAN_COLORS: Record<PlanType, string> = {
   pro_regular: 'bg-primary/10 text-primary',
 };
 
-const plans: { key: 'lite' | 'pro_founding' | 'pro_regular'; features: string[] }[] = [
-  {
-    key: 'lite',
-    features: ['15 fridge scans/month', '50 saved recipes', 'Basic AI suggestions', 'Shopping list'],
-  },
-  {
-    key: 'pro_founding',
-    features: ['🏆 Founding price — locked forever', 'Unlimited scans & recipes', 'Advanced AI insights', 'Priority support', 'Family sharing'],
-  },
-  {
-    key: 'pro_regular',
-    features: ['Unlimited scans & recipes', 'Advanced AI insights', 'Priority support', 'Family sharing', 'Custom reports'],
-  },
-];
+const FEATURE_KEYS: Record<string, 'lite' | 'proFounder' | 'proRegular'> = {
+  lite: 'lite',
+  pro_founding: 'proFounder',
+  pro_regular: 'proRegular',
+};
 
 const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => {
+  const { t } = useTranslation();
   const { subscribed, plan, subscriptionEnd, loading, createCheckout, openCustomerPortal, checkSubscription } = useSubscription();
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const [processingPortal, setProcessingPortal] = useState(false);
+
+  const plans: { key: 'lite' | 'pro_founding' | 'pro_regular' }[] = [
+    { key: 'lite' },
+    { key: 'pro_founding' },
+    { key: 'pro_regular' },
+  ];
 
   useEffect(() => {
     if (open) checkSubscription();
@@ -53,10 +52,10 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
     setProcessingPlan(planKey);
     try {
       await createCheckout(planKey);
-      toast.success('Redirecting to checkout...');
+      toast.success(t.payments.redirecting);
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Failed to start checkout');
+      toast.error(t.payments.failedCheckout);
     } finally {
       setProcessingPlan(null);
     }
@@ -67,7 +66,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
     try {
       await openCustomerPortal();
     } catch (error) {
-      toast.error('Failed to open billing portal');
+      toast.error(t.payments.failedPortal);
     } finally {
       setProcessingPortal(false);
     }
@@ -81,26 +80,28 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
         <DialogHeader>
           <DialogTitle className="font-nasa text-foreground flex items-center gap-2">
             <Crown className="w-6 h-6 text-primary" />
-            Subscription Plans
+            {t.payments.subscriptionPlans}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           {/* Current plan badge */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground font-exo">Current plan:</span>
+            <span className="text-sm text-muted-foreground font-exo">{t.payments.currentPlan}</span>
             <Badge className={PLAN_COLORS[plan]}>{PLAN_LABELS[plan]}</Badge>
             {subscribed && subscriptionEnd && (
               <span className="text-xs text-muted-foreground">
-                · renews {formatDate(subscriptionEnd)}
+                · {t.payments.renews} {formatDate(subscriptionEnd)}
               </span>
             )}
           </div>
 
           {/* Plan cards */}
-          {plans.map(({ key, features }) => {
+          {plans.map(({ key }) => {
             const p = SUBSCRIPTION_PLANS[key];
             const isActive = plan === key;
+            const featureKey = FEATURE_KEYS[key];
+            const features = t.payments.features[featureKey];
 
             return (
               <div
@@ -118,7 +119,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
                     </p>
                   </div>
                   {isActive && (
-                    <Badge className="bg-green-100 text-green-700">Active</Badge>
+                    <Badge className="bg-green-100 text-green-700">{t.payments.active}</Badge>
                   )}
                 </div>
 
@@ -140,7 +141,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
                     disabled={processingPortal}
                   >
                     {processingPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
-                    Manage Subscription
+                    {t.payments.manageSubscription}
                   </Button>
                 ) : (
                   <Button
@@ -150,7 +151,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
                     disabled={!!processingPlan || loading}
                   >
                     {processingPlan === key ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                    {plan === 'free' ? 'Subscribe' : 'Switch Plan'}
+                    {plan === 'free' ? t.payments.subscribe : t.payments.switchPlan}
                   </Button>
                 )}
               </div>
@@ -158,7 +159,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
           })}
 
           <p className="text-center text-xs text-muted-foreground font-exo">
-            Cancel anytime · Secure payment via Stripe
+            {t.payments.cancelAnytime}
           </p>
         </div>
       </DialogContent>
