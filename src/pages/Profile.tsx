@@ -92,6 +92,14 @@ const Profile = () => {
       label: t('payments'),
       onClick: () => setPaymentsOpen(true),
     },
+    ...(canInstall() ? [{
+      icon: Download,
+      label: '📲 Install App',
+      onClick: async () => {
+        const accepted = await triggerInstallPrompt();
+        if (accepted) toast.success('TYANA installed! 🎉');
+      },
+    }] : []),
   ];
 
   return (
