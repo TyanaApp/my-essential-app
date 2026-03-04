@@ -49,6 +49,7 @@ const cardStyle = {
 
 const Shopping = () => {
   const { user } = useAuth();
+  usePageTitle('Shopping');
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [budget, setBudget] = useState<number>(0);

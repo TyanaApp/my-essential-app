@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 interface Ingredient {
   name: string;
