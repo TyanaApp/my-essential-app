@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -23,12 +22,11 @@ const GoogleIcon = () => (
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t: tOld } = useLanguage();
   const { t } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
 
-  const emailSchema = z.string().email(tOld('invalidEmail'));
-  const passwordSchema = z.string().min(6, tOld('passwordMinLength'));
+  const emailSchema = z.string().email();
+  const passwordSchema = z.string().min(6);
   
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup');
   const [email, setEmail] = useState('');
@@ -47,22 +45,22 @@ const Auth = () => {
   const validateForm = (): boolean => {
     const newErrors: { email?: string; password?: string } = {};
     const emailResult = emailSchema.safeParse(email);
-    if (!emailResult.success) newErrors.email = tOld('invalidEmail');
+    if (!emailResult.success) newErrors.email = t.common.error;
     const passwordResult = passwordSchema.safeParse(password);
-    if (!passwordResult.success) newErrors.password = tOld('passwordMinLength');
+    if (!passwordResult.success) newErrors.password = t.common.error;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const getErrorMessage = (error: Error): string => {
     const message = error.message.toLowerCase();
-    if (message.includes('provider') && message.includes('not enabled')) return tOld('googleNotEnabled');
-    if (message.includes('redirect_uri_mismatch')) return tOld('invalidRedirectUrl');
-    if (message.includes('invalid login credentials')) return tOld('invalidCredentials');
-    if (message.includes('user already registered')) return tOld('userAlreadyRegistered');
-    if (message.includes('email not confirmed')) return tOld('emailNotConfirmed');
-    if (message.includes('rate limit')) return tOld('tooManyAttempts');
-    return tOld('errorOccurred');
+    if (message.includes('provider') && message.includes('not enabled')) return t.common.error;
+    if (message.includes('redirect_uri_mismatch')) return t.common.error;
+    if (message.includes('invalid login credentials')) return t.common.error;
+    if (message.includes('user already registered')) return t.common.error;
+    if (message.includes('email not confirmed')) return t.common.error;
+    if (message.includes('rate limit')) return t.common.error;
+    return t.common.error;
   };
 
   const handleGoogleSignIn = async () => {
@@ -70,19 +68,19 @@ const Auth = () => {
     try {
       const { error } = await signInWithGoogle();
       if (error) { toast.error(getErrorMessage(error)); }
-    } catch { toast.error(tOld('googleSignInFailed')); }
+    } catch { toast.error(t.common.error); }
     finally { setIsGoogleLoading(false); }
   };
 
   const handleMagicLinkSignIn = async () => {
     const emailResult = emailSchema.safeParse(email);
-    if (!emailResult.success) { setErrors((prev) => ({ ...prev, email: tOld('invalidEmail') })); return; }
+    if (!emailResult.success) { setErrors((prev) => ({ ...prev, email: t.common.error })); return; }
     setIsMagicLinkLoading(true);
     try {
       const { error } = await signInWithMagicLink(email);
       if (error) { toast.error(getErrorMessage(error)); return; }
-      toast.success(tOld('magicLinkSent'));
-    } catch { toast.error(tOld('errorOccurred')); }
+      toast.success(t.common.save);
+    } catch { toast.error(t.common.error); }
     finally { setIsMagicLinkLoading(false); }
   };
 
@@ -93,12 +91,12 @@ const Auth = () => {
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
-        if (error) { toast.error(getErrorMessage(error)); } else { toast.success(tOld('accountCreated')); navigate('/dashboard'); }
+        if (error) { toast.error(getErrorMessage(error)); } else { toast.success('✓'); navigate('/dashboard'); }
       } else {
         const { error } = await signIn(email, password);
-        if (error) { toast.error(getErrorMessage(error)); } else { toast.success(tOld('welcomeBack')); navigate('/dashboard'); }
+        if (error) { toast.error(getErrorMessage(error)); } else { toast.success('✓'); navigate('/dashboard'); }
       }
-    } catch { toast.error(tOld('unexpectedError')); }
+    } catch { toast.error(t.common.error); }
     finally { setIsSubmitting(false); }
   };
 
@@ -168,19 +166,19 @@ const Auth = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
             <div className="space-y-1.5">
-              <Label htmlFor="displayName" className="text-sm font-medium text-foreground">{tOld('displayName')}</Label>
+              <Label htmlFor="displayName" className="text-sm font-medium text-foreground">{t.auth.displayName}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input id="displayName" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}
                   className="pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0"
                   style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-                  placeholder={tOld('yourName')} />
+                  placeholder={t.auth.yourName} />
               </div>
             </div>
           )}
 
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-sm font-medium text-foreground">{tOld('email')}</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-foreground">{t.auth.emailLabel}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input id="email" type="email" value={email}
@@ -193,7 +191,7 @@ const Auth = () => {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-sm font-medium text-foreground">{tOld('password')}</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-foreground">{t.auth.password}</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input id="password" type={showPassword ? 'text' : 'password'} value={password}

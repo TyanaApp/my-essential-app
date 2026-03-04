@@ -310,7 +310,7 @@ const Inventory = () => {
                       </button>
                       {tab === 'expiring' && (
                         <button
-                          onClick={() => toast.info('Recipe finder coming soon!')}
+                          onClick={() => toast.info(t.inventory.recipeFinder)}
                           className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
                         >
                           <UtensilsCrossed className="w-4 h-4" style={{ color: '#7C3AED' }} />

@@ -17,13 +17,8 @@ import {
 interface ShoppingItem { id: string; user_id: string; name: string; quantity: number | null; unit: string | null; category: string | null; estimated_price: number | null; is_purchased: boolean | null; created_at: string | null; }
 interface LowStockItem { name: string; quantity: number | null; unit: string | null; category: string | null; reason: 'expiring' | 'low'; }
 
-const CATEGORIES: { id: string; emoji: string; label: string }[] = [
-  { id: 'meat', emoji: '🥩', label: 'Meat' },
-  { id: 'dairy', emoji: '🥛', label: 'Dairy' },
-  { id: 'produce', emoji: '🥬', label: 'Produce' },
-  { id: 'dry_goods', emoji: '🌾', label: 'Dry Goods' },
-  { id: 'other', emoji: '🧴', label: 'Other' },
-];
+const CATEGORY_IDS = ['meat', 'dairy', 'produce', 'dry_goods', 'other'] as const;
+const CATEGORY_EMOJIS: Record<string, string> = { meat: '🥩', dairy: '🥛', produce: '🥬', dry_goods: '🌾', other: '🧴' };
 
 const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 
@@ -97,9 +92,15 @@ const Shopping = () => {
   const activeItems = useMemo(() => items.filter((i) => !i.is_purchased), [items]);
   const purchasedItems = useMemo(() => items.filter((i) => i.is_purchased), [items]);
 
+  const CATEGORIES = CATEGORY_IDS.map((id) => ({
+    id,
+    emoji: CATEGORY_EMOJIS[id],
+    label: t.shopping[id === 'dry_goods' ? 'dryGoods' : id as keyof typeof t.shopping] as string,
+  }));
+
   const groupedActive = useMemo(() => {
     const groups: Record<string, ShoppingItem[]> = {};
-    for (const cat of CATEGORIES) groups[cat.id] = [];
+    for (const cat of CATEGORY_IDS) groups[cat] = [];
     for (const item of activeItems) {
       const cat = item.category || 'other';
       if (!groups[cat]) groups[cat] = [];
@@ -297,7 +298,7 @@ const Shopping = () => {
           <div className="space-y-3 mt-2">
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.name}</label>
-              <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="e.g. Chicken breast"
+              <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t.shopping.namePlaceholder}
                 className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
             </div>
             <div className="flex gap-2">

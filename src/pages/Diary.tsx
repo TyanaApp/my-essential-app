@@ -47,12 +47,12 @@ const getWeekDays = (selectedDate: Date) => {
   return days;
 };
 
-const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
 const Diary = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   usePageTitle(t.diary.title);
+
+  const DAY_LABELS = t.dayLabels;
 
   const MEAL_SECTIONS = [
     { type: 'breakfast', label: t.diary.breakfast, emoji: '🌅' },
@@ -246,7 +246,7 @@ const Diary = () => {
                     {sectionEntries.map((entry) => (
                       <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg" style={{ backgroundColor: '#FAFAFE' }}>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{entry.custom_name || 'Meal'}</p>
+                          <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{entry.custom_name || t.diary.meal}</p>
                           <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
                             {entry.total_calories || 0} kcal · P:{entry.total_protein || 0}g · F:{entry.total_fat || 0}g · C:{entry.total_carbs || 0}g
                           </p>
@@ -360,7 +360,7 @@ const Diary = () => {
                 <input
                   value={manualName}
                   onChange={(e) => setManualName(e.target.value)}
-                  placeholder="e.g. Oatmeal with banana"
+                  placeholder={t.diary.mealPlaceholder}
                   className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
                   style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
                 />

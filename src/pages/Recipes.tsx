@@ -15,7 +15,7 @@ interface Nutrition { calories: number; protein: number; fat: number; carbs: num
 interface Recipe { title: string; ingredients: Ingredient[]; instructions: string[]; nutrition: Nutrition; prepTime: number; estimatedCost: number; }
 interface SavedRecipe { id: string; title: string; ingredients: Ingredient[] | null; instructions: string[] | null; nutrition: Nutrition | null; prep_time: number | null; estimated_cost: number | null; is_favorite: boolean; }
 
-const MEAL_TYPES_EN = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+const MEAL_TYPE_KEYS = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
 const TIME_OPTIONS = ['<15 min', '30 min', '1 hour', 'Any'];
 const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 
@@ -28,7 +28,7 @@ const Recipes = () => {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const [cookingFor, setCookingFor] = useState(2);
-  const [selectedMeals, setSelectedMeals] = useState<string[]>(['Dinner']);
+  const [selectedMeals, setSelectedMeals] = useState<string[]>(['dinner']);
   const [timeAvailable, setTimeAvailable] = useState('30 min');
   const [useOnlyInventory, setUseOnlyInventory] = useState(false);
   const [generating, setGenerating] = useState(false);
@@ -202,11 +202,11 @@ const Recipes = () => {
                 <div>
                   <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.mealType}</label>
                   <div className="flex flex-wrap gap-2">
-                    {MEAL_TYPES_EN.map((m) => (
-                      <button key={m} onClick={() => toggleMeal(m)}
+                    {MEAL_TYPE_KEYS.map((key) => (
+                      <button key={key} onClick={() => toggleMeal(key)}
                         className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
-                        style={{ borderColor: selectedMeals.includes(m) ? '#7C3AED' : '#DDD6FE', backgroundColor: selectedMeals.includes(m) ? '#EDE9FE' : 'white', color: selectedMeals.includes(m) ? '#7C3AED' : '#6B7280' }}>
-                        {m}
+                        style={{ borderColor: selectedMeals.includes(key) ? '#7C3AED' : '#DDD6FE', backgroundColor: selectedMeals.includes(key) ? '#EDE9FE' : 'white', color: selectedMeals.includes(key) ? '#7C3AED' : '#6B7280' }}>
+                        {t.recipes[key]}
                       </button>
                     ))}
                   </div>
