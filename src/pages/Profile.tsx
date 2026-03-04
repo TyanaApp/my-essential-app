@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
-  Edit, CreditCard, Trash2, Shield, Download
+  Edit, CreditCard, Trash2, Shield, Download, Bell
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -19,6 +19,8 @@ import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 import { triggerInstallPrompt, canInstall } from '@/components/InstallBanner';
+import { useNotifications } from '@/hooks/useNotifications';
+import { Switch } from '@/components/ui/switch';
 
 const Profile = () => {
   const { t } = useTranslation();
