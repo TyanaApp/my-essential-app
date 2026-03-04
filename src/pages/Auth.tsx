@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,10 +11,6 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-const emailSchema = z.string().email('Некорректный email адрес');
-const passwordSchema = z.string().min(6, 'Пароль должен содержать минимум 6 символов');
-
-// Google Icon Component
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -26,8 +23,12 @@ const GoogleIcon = () => (
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t, language } = useLanguage();
+  const { t: tOld } = useLanguage();
+  const { t } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
+
+  const emailSchema = z.string().email(tOld('invalidEmail'));
+  const passwordSchema = z.string().min(6, tOld('passwordMinLength'));
   
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup');
   const [email, setEmail] = useState('');
@@ -40,50 +41,48 @@ const Auth = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   useEffect(() => {
-    if (!loading && user) {
-      navigate('/dashboard');
-    }
+    if (!loading && user) navigate('/dashboard');
   }, [user, loading, navigate]);
 
   const validateForm = (): boolean => {
     const newErrors: { email?: string; password?: string } = {};
     const emailResult = emailSchema.safeParse(email);
-    if (!emailResult.success) newErrors.email = t('invalidEmail');
+    if (!emailResult.success) newErrors.email = tOld('invalidEmail');
     const passwordResult = passwordSchema.safeParse(password);
-    if (!passwordResult.success) newErrors.password = t('passwordMinLength');
+    if (!passwordResult.success) newErrors.password = tOld('passwordMinLength');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const getErrorMessage = (error: Error): string => {
     const message = error.message.toLowerCase();
-    if (message.includes('provider') && message.includes('not enabled')) return t('googleNotEnabled');
-    if (message.includes('redirect_uri_mismatch') || message.includes('redirect uri mismatch')) return t('invalidRedirectUrl');
-    if (message.includes('invalid login credentials')) return t('invalidCredentials');
-    if (message.includes('user already registered')) return t('userAlreadyRegistered');
-    if (message.includes('email not confirmed')) return t('emailNotConfirmed');
-    if (message.includes('rate limit')) return t('tooManyAttempts');
-    return t('errorOccurred');
+    if (message.includes('provider') && message.includes('not enabled')) return tOld('googleNotEnabled');
+    if (message.includes('redirect_uri_mismatch')) return tOld('invalidRedirectUrl');
+    if (message.includes('invalid login credentials')) return tOld('invalidCredentials');
+    if (message.includes('user already registered')) return tOld('userAlreadyRegistered');
+    if (message.includes('email not confirmed')) return tOld('emailNotConfirmed');
+    if (message.includes('rate limit')) return tOld('tooManyAttempts');
+    return tOld('errorOccurred');
   };
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
       const { error } = await signInWithGoogle();
-      if (error) { console.error('Google sign-in error:', error); toast.error(getErrorMessage(error)); }
-    } catch (err) { console.error('Google sign-in failed:', err); toast.error(t('googleSignInFailed')); }
+      if (error) { toast.error(getErrorMessage(error)); }
+    } catch { toast.error(tOld('googleSignInFailed')); }
     finally { setIsGoogleLoading(false); }
   };
 
   const handleMagicLinkSignIn = async () => {
     const emailResult = emailSchema.safeParse(email);
-    if (!emailResult.success) { setErrors((prev) => ({ ...prev, email: t('invalidEmail') })); return; }
+    if (!emailResult.success) { setErrors((prev) => ({ ...prev, email: tOld('invalidEmail') })); return; }
     setIsMagicLinkLoading(true);
     try {
       const { error } = await signInWithMagicLink(email);
-      if (error) { console.error('Magic link sign-in error:', error); toast.error(getErrorMessage(error)); return; }
-      toast.success(t('magicLinkSent'));
-    } catch (err) { console.error('Magic link sign-in failed:', err); toast.error(t('errorOccurred')); }
+      if (error) { toast.error(getErrorMessage(error)); return; }
+      toast.success(tOld('magicLinkSent'));
+    } catch { toast.error(tOld('errorOccurred')); }
     finally { setIsMagicLinkLoading(false); }
   };
 
@@ -94,12 +93,12 @@ const Auth = () => {
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
-        if (error) { toast.error(getErrorMessage(error)); } else { toast.success(t('accountCreated')); navigate('/dashboard'); }
+        if (error) { toast.error(getErrorMessage(error)); } else { toast.success(tOld('accountCreated')); navigate('/dashboard'); }
       } else {
         const { error } = await signIn(email, password);
-        if (error) { toast.error(getErrorMessage(error)); } else { toast.success(t('welcomeBack')); navigate('/dashboard'); }
+        if (error) { toast.error(getErrorMessage(error)); } else { toast.success(tOld('welcomeBack')); navigate('/dashboard'); }
       }
-    } catch (err) { toast.error(t('unexpectedError')); }
+    } catch { toast.error(tOld('unexpectedError')); }
     finally { setIsSubmitting(false); }
   };
 
@@ -113,13 +112,12 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F5F3FF' }}>
-      {/* Back button */}
       <button
         onClick={() => navigate('/')}
         className="absolute top-6 left-6 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        {t('back')}
+        {t.common.back}
       </button>
 
       <motion.div
@@ -129,13 +127,11 @@ const Auth = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold" style={{ color: '#7C3AED' }}>TYANA</h1>
-          <p className="text-base mt-1" style={{ color: '#A78BFA' }}>Your Kitchen CFO</p>
+          <p className="text-base mt-1" style={{ color: '#A78BFA' }}>{t.auth.title}</p>
         </div>
 
-        {/* Google button */}
         <button
           onClick={handleGoogleSignIn}
           disabled={isGoogleLoading}
@@ -144,11 +140,10 @@ const Auth = () => {
         >
           <GoogleIcon />
           <span className="text-sm font-medium text-foreground">
-            {isGoogleLoading ? t('loading') : t('continueWithGoogle')}
+            {isGoogleLoading ? t.common.loading : t.auth.google}
           </span>
         </button>
 
-        {/* Magic link (sign in only) */}
         {!isSignUp && (
           <button
             type="button"
@@ -159,70 +154,53 @@ const Auth = () => {
           >
             <Mail className="w-5 h-5 text-muted-foreground" />
             <span className="text-sm font-medium text-foreground">
-              {isMagicLinkLoading ? t('loading') : t('signInWithEmail')}
+              {isMagicLinkLoading ? t.common.loading : t.auth.email}
             </span>
           </button>
         )}
 
-        {/* Divider */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px" style={{ backgroundColor: '#DDD6FE' }} />
-          <span className="text-xs text-muted-foreground">{t('or')}</span>
+          <span className="text-xs text-muted-foreground">{t.common.or}</span>
           <div className="flex-1 h-px" style={{ backgroundColor: '#DDD6FE' }} />
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
             <div className="space-y-1.5">
-              <Label htmlFor="displayName" className="text-sm font-medium text-foreground">{t('displayName')}</Label>
+              <Label htmlFor="displayName" className="text-sm font-medium text-foreground">{tOld('displayName')}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="displayName"
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                <Input id="displayName" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}
                   className="pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0"
                   style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-                  placeholder={t('yourName')}
-                />
+                  placeholder={tOld('yourName')} />
               </div>
             </div>
           )}
 
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-sm font-medium text-foreground">{t('email')}</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-foreground">{tOld('email')}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                id="email"
-                type="email"
-                value={email}
+              <Input id="email" type="email" value={email}
                 onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors(prev => ({ ...prev, email: undefined })); }}
                 className={`pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 ${errors.email ? 'border-red-500' : ''}`}
                 style={{ backgroundColor: '#F5F3FF', borderColor: errors.email ? undefined : '#DDD6FE' }}
-                placeholder="your@email.com"
-                required
-              />
+                placeholder="your@email.com" required />
             </div>
             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-sm font-medium text-foreground">{t('password')}</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-foreground">{tOld('password')}</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
+              <Input id="password" type={showPassword ? 'text' : 'password'} value={password}
                 onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors(prev => ({ ...prev, password: undefined })); }}
                 className={`pl-10 pr-10 h-[52px] rounded-xl border-[1px] focus:ring-0 ${errors.password ? 'border-red-500' : ''}`}
                 style={{ backgroundColor: '#F5F3FF', borderColor: errors.password ? undefined : '#DDD6FE' }}
-                placeholder="••••••••"
-                required
-              />
+                placeholder="••••••••" required />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -230,29 +208,24 @@ const Auth = () => {
             {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
           </div>
 
-          <Button
-            type="submit"
-            disabled={isSubmitting}
+          <Button type="submit" disabled={isSubmitting}
             className="w-full h-[52px] rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#7C3AED' }}
-          >
-            {isSubmitting ? t('loading') : isSignUp ? t('createAccount') : t('signIn')}
+            style={{ backgroundColor: '#7C3AED' }}>
+            {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
           </Button>
         </form>
 
-        {/* Toggle mode */}
         <div className="mt-5 text-center">
           <p className="text-muted-foreground text-sm">
-            {isSignUp ? t('alreadyHaveAccount') : t('noAccount')}{' '}
+            {isSignUp ? t.auth.alreadyHaveAccount : t.auth.noAccount}{' '}
             <button onClick={() => { setIsSignUp(!isSignUp); setErrors({}); }} className="font-medium hover:underline" style={{ color: '#7C3AED' }}>
-              {isSignUp ? t('signIn') : t('signUp')}
+              {isSignUp ? t.auth.signIn : t.auth.signUp}
             </button>
           </p>
         </div>
 
-        {/* Footer */}
         <p className="mt-6 text-center text-[13px]" style={{ color: '#6B7280' }}>
-          By continuing you agree to our Terms & Privacy Policy
+          {t.auth.terms}
         </p>
       </motion.div>
     </div>
