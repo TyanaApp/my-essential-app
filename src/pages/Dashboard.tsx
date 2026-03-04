@@ -147,7 +147,7 @@ const Dashboard = () => {
       <div className="space-y-4">
         {/* Card 1 — Calories */}
         <motion.div {...fadeUp(1)} style={cardStyle} className="p-5">
-          <div className="flex items-center gap-5">
+          <div className="flex flex-col sm:flex-row items-center gap-5">
             {/* SVG Gauge */}
             <div className="relative shrink-0" style={{ width: 180, height: 180 }}>
               <svg width="180" height="180" viewBox="0 0 180 180">
