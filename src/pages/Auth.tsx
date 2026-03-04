@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import tyanaLogoText from '@/assets/tyana-logo-text.png';
 import { z } from 'zod';
+import { useIsMobile } from '@/hooks/use-mobile';
+import MobileSplashAuth from '@/components/MobileSplashAuth';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -25,6 +27,7 @@ const Auth = () => {
   const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
+  const isMobile = useIsMobile();
 
   const emailSchema = z.string().email();
   const passwordSchema = z.string().min(6);
@@ -107,6 +110,10 @@ const Auth = () => {
         <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
       </div>
     );
+  }
+
+  if (isMobile) {
+    return <MobileSplashAuth />;
   }
 
   return (
