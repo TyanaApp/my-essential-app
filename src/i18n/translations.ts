@@ -739,6 +739,7 @@ export const translations = {
       ctaButton: 'Sākt bezmaksas — €0',
       ctaHint: '7 dienas visas funkcijas bezmaksas. Karte nav vajadzīga.',
       statSaved: 'ietaupīts/mēn', statPayoff: 'līdz atmaksai', statScan: 'ledusskapja skens',
+      statPayoffValue: '5 dienas', statScanValue: '10 sek',
       mockupTitle: 'Kā TYANA darbojas',
       mockupScan: 'Skenē', mockupCook: 'Gatavo', mockupSave: 'Ietaupa',
       weekSaved: 'Ietaupīts šonedēļ', foodWaste: 'Atkritumu samazinājums', mealsPlanned: 'Ēdienu plānots',
