@@ -515,7 +515,6 @@ const Recipes = () => {
               <div className="flex justify-center pt-2 sm:hidden">
                 <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
               </div>
-            >
               {(() => {
                 const r = normalizeRecipe(detailRecipe);
                 const cc = calorieColor(r.nutrition.calories);
