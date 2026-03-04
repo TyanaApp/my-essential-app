@@ -197,7 +197,6 @@ const Profile = () => {
       <AccountSettingsModal open={accountSettingsOpen} onOpenChange={setAccountSettingsOpen} />
       <SystemSettingsModal open={systemSettingsOpen} onOpenChange={setSystemSettingsOpen} />
       <PaymentsModal open={paymentsOpen} onOpenChange={setPaymentsOpen} />
-      <DeviceSyncModal open={deviceSyncOpen} onOpenChange={setDeviceSyncOpen} />
       <DeleteAccountModal open={deleteAccountOpen} onOpenChange={setDeleteAccountOpen} />
     </div>
   );
