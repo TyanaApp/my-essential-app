@@ -38,8 +38,20 @@ const formatDate = () => {
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { checkSubscription } = useSubscription();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Handle upgrade success
+  useEffect(() => {
+    if (searchParams.get('upgrade') === 'success') {
+      const planName = searchParams.get('plan') || 'Pro';
+      toast.success(`🎉 Welcome to ${planName}! Enjoy your upgrade.`);
+      checkSubscription();
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams, checkSubscription]);
 
   useEffect(() => {
     if (!user) return;
