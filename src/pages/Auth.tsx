@@ -100,15 +100,30 @@ const Auth = () => {
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
-        if (error) { toast.error(getErrorMessage(error)); } else {
+        console.log('SignUp result - error:', error);
+        if (error) {
+          console.error('SignUp error details:', error.message, error);
+          toast.error(getErrorMessage(error));
+        } else {
           toast.success(t.auth.checkEmail || 'Check your email to confirm your account');
         }
       } else {
         const { error } = await signIn(email, password);
-        if (error) { toast.error(getErrorMessage(error)); } else { toast.success('✓'); navigate('/dashboard'); }
+        console.log('SignIn result - error:', error);
+        if (error) {
+          console.error('SignIn error details:', error.message, error);
+          toast.error(getErrorMessage(error));
+        } else {
+          toast.success('✓');
+          navigate('/dashboard');
+        }
       }
-    } catch { toast.error(t.common.error); }
-    finally { setIsSubmitting(false); }
+    } catch (err: any) {
+      console.error('Auth catch block error:', err);
+      toast.error(err?.message || t.common.error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (loading) {
