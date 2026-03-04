@@ -184,16 +184,16 @@ const Inventory = () => {
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-all"
+            className="px-2.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
             style={{
               backgroundColor: tab === t.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
               color: tab === t.id ? 'white' : '#6B7280',
             }}
           >
-            <span>{t.emoji}</span> {t.label}
+            {t.label}
             {t.id === 'expiring' && (
               <span
-                className="ml-1 text-[11px] font-bold px-1.5 py-0.5 rounded-full text-white"
+                className="ml-1 text-[10px] font-bold px-1 py-0.5 rounded-full text-white"
                 style={{ backgroundColor: '#DC2626' }}
               >
                 {items.filter((i) => { const d = daysUntilExpiry(i.expires_at); return d !== null && d <= 3; }).length}
