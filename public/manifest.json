@@ -1,16 +1,14 @@
 {
-  "name": "TYANA",
+  "name": "TYANA — Kitchen CFO",
   "short_name": "TYANA",
-  "description": "TYANA Kitchen — Your smart kitchen assistant",
-  "start_url": "/dashboard",
+  "description": "Your AI-powered kitchen assistant",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#7C3AED",
   "background_color": "#F5F3FF",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait",
   "icons": [
-    {
-      "src": "/favicon.ico",
-      "sizes": "64x64",
-      "type": "image/x-icon"
-    }
+    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
