@@ -481,6 +481,7 @@ export const translations = {
       ctaButton: 'Начать бесплатно — €0',
       ctaHint: '7 дней все функции бесплатно. Карта не нужна.',
       statSaved: 'экономия/мес', statPayoff: 'до окупаемости', statScan: 'скан холодильника',
+      statPayoffValue: '5 дней', statScanValue: '10 сек',
       mockupTitle: 'Как работает TYANA',
       mockupScan: 'Скан', mockupCook: 'Готовим', mockupSave: 'Экономим',
       weekSaved: 'Сэкономлено за неделю', foodWaste: 'Снижение отходов', mealsPlanned: 'Блюд спланировано',
