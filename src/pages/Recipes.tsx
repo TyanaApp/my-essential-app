@@ -16,7 +16,8 @@ interface Recipe { title: string; ingredients: Ingredient[]; instructions: strin
 interface SavedRecipe { id: string; title: string; ingredients: Ingredient[] | null; instructions: string[] | null; nutrition: Nutrition | null; prep_time: number | null; estimated_cost: number | null; is_favorite: boolean; }
 
 const MEAL_TYPE_KEYS = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
-const TIME_OPTIONS = ['<15 min', '30 min', '1 hour', 'Any'];
+const TIME_OPTION_KEYS = ['time15', 'time30', 'time1h', 'timeAny'] as const;
+const TIME_VALUES = ['<15 min', '30 min', '1 hour', 'Any'];
 const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 
 const Recipes = () => {
@@ -214,11 +215,11 @@ const Recipes = () => {
                 <div>
                   <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.time}</label>
                   <div className="flex flex-wrap gap-2">
-                    {TIME_OPTIONS.map((to) => (
-                      <button key={to} onClick={() => setTimeAvailable(to)}
+                    {TIME_OPTION_KEYS.map((key, i) => (
+                      <button key={key} onClick={() => setTimeAvailable(TIME_VALUES[i])}
                         className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
-                        style={{ borderColor: timeAvailable === to ? '#7C3AED' : '#DDD6FE', backgroundColor: timeAvailable === to ? '#EDE9FE' : 'white', color: timeAvailable === to ? '#7C3AED' : '#6B7280' }}>
-                        {to}
+                        style={{ borderColor: timeAvailable === TIME_VALUES[i] ? '#7C3AED' : '#DDD6FE', backgroundColor: timeAvailable === TIME_VALUES[i] ? '#EDE9FE' : 'white', color: timeAvailable === TIME_VALUES[i] ? '#7C3AED' : '#6B7280' }}>
+                        {t.recipes[key]}
                       </button>
                     ))}
                   </div>

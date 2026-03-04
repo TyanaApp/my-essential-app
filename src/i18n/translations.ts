@@ -39,6 +39,7 @@ export const translations = {
       failedGenerate: 'Failed to generate recipes', failedSave: 'Failed to save recipe',
       recipeSaved: 'saved ❤️', recipesGenerated: '{count} recipes generated ✨',
       breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
+      time15: '<15 min', time30: '30 min', time1h: '1 hour', timeAny: 'Any',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
@@ -95,6 +96,8 @@ export const translations = {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
       systemSettings: 'System Settings', payments: 'Payments', logout: 'Log Out',
       deleteAccount: 'Delete Account', installApp: '📲 Install App',
+      displayName: 'Display Name', bio: 'Bio', gender: 'Gender', dateOfBirth: 'Date of Birth',
+      male: 'Male', female: 'Female', other: 'Other', preferNotToSay: 'Prefer not to say',
     },
     onboarding: {
       step1Title: "Let's set up your profile", step1Sub: "We'll personalize TYANA for you.",
@@ -267,6 +270,7 @@ export const translations = {
       failedGenerate: 'Не удалось найти рецепты', failedSave: 'Не удалось сохранить рецепт',
       recipeSaved: 'сохранён ❤️', recipesGenerated: '{count} рецептов найдено ✨',
       breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус',
+      time15: '<15 мин', time30: '30 мин', time1h: '1 час', timeAny: 'Любое',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -323,6 +327,8 @@ export const translations = {
       title: 'Профиль', editProfile: 'Редактировать профиль', accountSettings: 'Настройки аккаунта',
       systemSettings: 'Системные настройки', payments: 'Платежи', logout: 'Выйти',
       deleteAccount: 'Удалить аккаунт', installApp: '📲 Установить приложение',
+      displayName: 'Имя', bio: 'О себе', gender: 'Пол', dateOfBirth: 'Дата рождения',
+      male: 'Мужской', female: 'Женский', other: 'Другой', preferNotToSay: 'Не указывать',
     },
     onboarding: {
       step1Title: 'Давайте настроим ваш профиль', step1Sub: 'Мы персонализируем TYANA для вас.',
@@ -495,6 +501,7 @@ export const translations = {
       failedGenerate: 'Neizdevās atrast receptes', failedSave: 'Neizdevās saglabāt recepti',
       recipeSaved: 'saglabāts ❤️', recipesGenerated: '{count} receptes atrastas ✨',
       breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda',
+      time15: '<15 min', time30: '30 min', time1h: '1 stunda', timeAny: 'Jebkurš',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
@@ -551,6 +558,8 @@ export const translations = {
       title: 'Profils', editProfile: 'Rediģēt profilu', accountSettings: 'Konta iestatījumi',
       systemSettings: 'Sistēmas iestatījumi', payments: 'Maksājumi', logout: 'Iziet',
       deleteAccount: 'Dzēst kontu', installApp: '📲 Instalēt lietotni',
+      displayName: 'Vārds', bio: 'Par sevi', gender: 'Dzimums', dateOfBirth: 'Dzimšanas datums',
+      male: 'Vīrietis', female: 'Sieviete', other: 'Cits', preferNotToSay: 'Nevēlos norādīt',
     },
     onboarding: {
       step1Title: 'Iestatīsim jūsu profilu', step1Sub: 'Mēs personalizēsim TYANA jums.',

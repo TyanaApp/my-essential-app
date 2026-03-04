@@ -62,7 +62,7 @@ const Index = () => {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <Link
               to="/auth?mode=signin"
               className="hidden sm:inline-flex text-sm font-medium px-4 py-2 rounded-lg transition-colors hover:opacity-70"
@@ -72,7 +72,7 @@ const Index = () => {
             </Link>
             <Link
               to="/auth?mode=signup"
-              className="text-sm font-semibold px-5 py-2.5 rounded-xl text-white transition-opacity hover:opacity-90"
+              className="text-xs md:text-sm font-semibold px-3 md:px-5 py-2 md:py-2.5 rounded-xl text-white transition-opacity hover:opacity-90 whitespace-nowrap"
               style={{ backgroundColor: '#7C3AED' }}
             >
               {t.landing.startFree}
@@ -97,7 +97,7 @@ const Index = () => {
             </span>
 
             <h1
-              className="text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-5"
+              className="text-[28px] md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-5"
               style={{
                 background: 'linear-gradient(135deg, #1E1B4B 0%, #7C3AED 100%)',
                 WebkitBackgroundClip: 'text',
@@ -107,39 +107,39 @@ const Index = () => {
               {t.landing.heroTitle}
             </h1>
 
-            <p className="text-lg lg:text-[22px] leading-relaxed mb-8" style={{ color: '#6B7280' }}>
+            <p className="text-base md:text-lg lg:text-[22px] leading-relaxed mb-8" style={{ color: '#6B7280' }}>
               {t.landing.heroSubtitle}{' '}
               <strong style={{ color: '#7C3AED' }}>{t.landing.heroSavings}</strong>
             </p>
 
             <Link
               to="/auth?mode=signup"
-              className="inline-flex items-center justify-center gap-2 text-white text-lg font-semibold rounded-2xl transition-opacity hover:opacity-90"
+              className="w-full md:w-auto inline-flex items-center justify-center gap-2 text-white text-base md:text-lg font-semibold rounded-2xl transition-opacity hover:opacity-90"
               style={{
                 backgroundColor: '#7C3AED',
-                height: '56px',
-                width: '260px',
+                height: '52px',
+                minWidth: '260px',
               }}
             >
               {t.landing.ctaButton}
               <ArrowRight className="w-5 h-5" />
             </Link>
 
-            <p className="mt-3 text-[13px]" style={{ color: '#6B7280' }}>
+            <p className="mt-3 text-[13px] text-center md:text-left" style={{ color: '#6B7280' }}>
               {t.landing.ctaHint}
             </p>
 
-            <div className="flex flex-wrap gap-6 mt-8">
+            <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-6 mt-8">
               {[
                 { value: '€80', label: t.landing.statSaved },
                 { value: '5 days', label: t.landing.statPayoff },
                 { value: '10 sec', label: t.landing.statScan },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="text-xl font-bold" style={{ color: '#7C3AED' }}>
+                  <div className="text-base md:text-xl font-bold" style={{ color: '#7C3AED' }}>
                     {stat.value}
                   </div>
-                  <div className="text-xs" style={{ color: '#6B7280' }}>
+                  <div className="text-[10px] md:text-xs" style={{ color: '#6B7280' }}>
                     {stat.label}
                   </div>
                 </div>
