@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings } from "lucide-react";
-import tyanaLogo from '@/assets/tyana-logo.png';
+import tyanaLogo from '@/assets/tyana-logo-text.png';
 import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
 import BottomNav from './BottomNav';
