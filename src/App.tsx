@@ -9,7 +9,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OfflineBanner from "./components/OfflineBanner";
-import Index from "./pages/Index";
+import LandingRedirect from "./pages/LandingRedirect";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import Onboarding from "./pages/Onboarding";
@@ -36,7 +36,7 @@ const App = () => {
             <BrowserRouter>
               <AuthProvider>
                 <Routes>
-                  <Route path="/" element={<Index />} />
+                  <Route path="/" element={<LandingRedirect />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/onboarding" element={
