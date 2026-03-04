@@ -111,35 +111,35 @@ const MobileSplashAuth: React.FC = () => {
         </p>
       </div>
 
-      {/* Slides area - 45% of screen */}
+      {/* Slides area */}
       <div
         className="flex-1 flex flex-col items-center justify-center"
-        style={{ minHeight: '45vh' }}
+        style={{ minHeight: '40vh' }}
       >
-        <div className="w-full overflow-hidden relative" style={{ height: 200 }}>
+        <div className="w-full overflow-hidden relative" style={{ height: 260 }}>
           <div
-            className="flex transition-transform duration-[400ms] ease-out"
+            className="flex transition-transform duration-500 ease-in-out h-full"
             style={{
-              transform: `translateX(-${currentSlide * 100}%)`,
+              transform: `translateX(-${currentSlide * (100 / slides.length)}%)`,
               width: `${slides.length * 100}%`,
             }}
           >
             {slides.map((slide, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center justify-center text-center px-8"
+                className="flex flex-col items-center justify-center text-center px-8 h-full"
                 style={{ width: `${100 / slides.length}%` }}
               >
-                <span style={{ fontSize: 64, lineHeight: 1.2 }}>{slide.emoji}</span>
+                <span style={{ fontSize: 56, lineHeight: 1 }}>{slide.emoji}</span>
                 <h2
-                  className="text-white font-bold mt-4"
-                  style={{ fontSize: 26 }}
+                  className="text-white font-bold mt-3"
+                  style={{ fontSize: 22 }}
                 >
                   {t.auth[slide.titleKey]}
                 </h2>
                 <p
                   className="text-white mt-2"
-                  style={{ fontSize: 16, opacity: 0.8, lineHeight: 1.5, maxWidth: 280 }}
+                  style={{ fontSize: 15, opacity: 0.8, lineHeight: 1.5, maxWidth: 280 }}
                 >
                   {t.auth[slide.subKey]}
                 </p>
