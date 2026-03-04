@@ -214,6 +214,10 @@ export const translations = {
       iosStep1Hint: 'at the bottom of Safari',
       iosStep2: 'Scroll down and tap "Add to Home Screen"',
       iosStep3: 'Tap "Add" in the top right corner',
+      androidStep1: 'Open tyana.lovable.app in Chrome',
+      androidStep1Hint: 'Make sure you\'re using Chrome browser',
+      androidStep2: 'Tap the menu ⋮ in the top right',
+      androidStep3: 'Tap "Add to Home Screen"',
     },
     landing: {
       signIn: 'Sign In', startFree: 'Start Free',
@@ -473,6 +477,10 @@ export const translations = {
       iosStep1Hint: 'внизу экрана Safari',
       iosStep2: 'Прокрутите вниз и нажмите «На экран «Домой»»',
       iosStep3: 'Нажмите «Добавить» в правом верхнем углу',
+      androidStep1: 'Откройте tyana.lovable.app в Chrome',
+      androidStep1Hint: 'Убедитесь, что используете Chrome',
+      androidStep2: 'Нажмите меню ⋮ в правом верхнем углу',
+      androidStep3: 'Нажмите «Добавить на главный экран»',
     },
     landing: {
       signIn: 'Войти', startFree: 'Начать бесплатно',
@@ -732,6 +740,10 @@ export const translations = {
       iosStep1Hint: 'Safari apakšā',
       iosStep2: 'Ritiniet uz leju un spiediet "Pievienot sākuma ekrānam"',
       iosStep3: 'Spiediet "Pievienot" augšējā labajā stūrī',
+      androidStep1: 'Atveriet tyana.lovable.app Chrome',
+      androidStep1Hint: 'Pārliecinieties, ka izmantojat Chrome pārlūku',
+      androidStep2: 'Spiediet izvēlni ⋮ augšējā labajā stūrī',
+      androidStep3: 'Spiediet "Pievienot sākuma ekrānam"',
     },
     landing: {
       signIn: 'Ieiet', startFree: 'Sākt bezmaksas',
