@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
+import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import UpgradeModal from '@/components/UpgradeModal';
 
 export interface InventoryItem {
   id: string;
@@ -32,6 +34,7 @@ const TABS: { id: Tab; emoji: string; label: string }[] = [
 
 const Inventory = () => {
   const { user } = useAuth();
+  const { plan } = useSubscription();
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>('fridge');
@@ -39,6 +42,29 @@ const Inventory = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [scanCount, setScanCount] = useState(0);
+
+  // Count scans this month
+  useEffect(() => {
+    // We track scans via a simple localStorage counter per month
+    const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
+    setScanCount(Number(localStorage.getItem(key) || '0'));
+  }, []);
+
+  const handleScanClick = () => {
+    const limit = PLAN_LIMITS[plan].scansPerMonth;
+    if (scanCount >= limit) {
+      setUpgradeOpen(true);
+      return;
+    }
+    // Increment scan count
+    const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
+    const newCount = scanCount + 1;
+    localStorage.setItem(key, String(newCount));
+    setScanCount(newCount);
+    setScanOpen(true);
+  };
 
   const fetchItems = async () => {
     if (!user) return;
@@ -151,7 +177,7 @@ const Inventory = () => {
         <button
           className="flex items-center gap-1.5 px-4 h-10 rounded-xl border-[1.5px] text-sm font-medium"
           style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
-          onClick={() => setScanOpen(true)}
+          onClick={handleScanClick}
         >
           <Camera className="w-4 h-4" /> Scan
         </button>
@@ -263,6 +289,13 @@ const Inventory = () => {
         open={scanOpen}
         onClose={() => setScanOpen(false)}
         onSaved={fetchItems}
+      />
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        title="Scan limit reached"
+        description="Free users get 1 fridge scan per month. Upgrade to Lite for 15 scans/month!"
+        suggestedPlan="lite"
       />
     </div>
   );

@@ -4,6 +4,8 @@ import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown } from 'l
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import UpgradeModal from '@/components/UpgradeModal';
 
 interface Ingredient {
   name: string;
@@ -44,6 +46,8 @@ const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 
 const Recipes = () => {
   const { user } = useAuth();
+  const { plan } = useSubscription();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   // Generation settings
   const [cookingFor, setCookingFor] = useState(2);
@@ -118,6 +122,12 @@ const Recipes = () => {
 
   const handleSaveRecipe = async (recipe: Recipe) => {
     if (!user) return;
+    // Check plan limit
+    const limit = PLAN_LIMITS[plan].maxRecipes;
+    if (savedRecipes.length >= limit) {
+      setUpgradeOpen(true);
+      return;
+    }
     try {
       const { error } = await supabase.from('recipes').insert({
         user_id: user.id,
@@ -615,6 +625,14 @@ const Recipes = () => {
           </div>
         )}
       </AnimatePresence>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        title="Recipe limit reached"
+        description="Free users can save up to 3 recipes. Upgrade to unlock unlimited recipes!"
+        suggestedPlan="lite"
+      />
     </div>
   );
 };
