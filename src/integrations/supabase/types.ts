@@ -18,12 +18,16 @@ export type Database = {
         Row: {
           added_at: string | null
           category: string | null
+          consumption_rate: string | null
           expires_at: string | null
           id: string
+          is_opened: boolean | null
           name: string
+          opened_at: string | null
           price_per_unit: number | null
           quantity: number | null
           storage_location: string | null
+          tracking_mode: string | null
           unit: string | null
           updated_at: string | null
           user_id: string
@@ -31,12 +35,16 @@ export type Database = {
         Insert: {
           added_at?: string | null
           category?: string | null
+          consumption_rate?: string | null
           expires_at?: string | null
           id?: string
+          is_opened?: boolean | null
           name: string
+          opened_at?: string | null
           price_per_unit?: number | null
           quantity?: number | null
           storage_location?: string | null
+          tracking_mode?: string | null
           unit?: string | null
           updated_at?: string | null
           user_id: string
@@ -44,12 +52,16 @@ export type Database = {
         Update: {
           added_at?: string | null
           category?: string | null
+          consumption_rate?: string | null
           expires_at?: string | null
           id?: string
+          is_opened?: boolean | null
           name?: string
+          opened_at?: string | null
           price_per_unit?: number | null
           quantity?: number | null
           storage_location?: string | null
+          tracking_mode?: string | null
           unit?: string | null
           updated_at?: string | null
           user_id?: string
