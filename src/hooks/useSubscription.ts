@@ -41,7 +41,7 @@ export type PlanType = 'free' | 'lite' | 'pro_founding' | 'pro_regular';
 
 // Plan limits
 export const PLAN_LIMITS: Record<PlanType, { scansPerMonth: number; maxRecipes: number }> = {
-  free: { scansPerMonth: 1, maxRecipes: 3 },
+  free: { scansPerMonth: 5, maxRecipes: 3 },
   lite: { scansPerMonth: 15, maxRecipes: 50 },
   pro_founding: { scansPerMonth: Infinity, maxRecipes: Infinity },
   pro_regular: { scansPerMonth: Infinity, maxRecipes: Infinity },
