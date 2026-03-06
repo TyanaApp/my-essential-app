@@ -270,7 +270,7 @@ export const translations = {
       markedOpened: 'Отмечено как открытое', markedSealed: 'Отмечено как закрытое',
       opened: 'Открыто', low: 'Мало', noDate: 'Нет даты', expired: 'Просрочено', daysLeft: 'д осталось',
       dateOnly: '📅 Только дата', tracked: '📊 Учёт',
-      scanLimit: 'Лимит сканирований', scanLimitDesc: 'Бесплатно 1 сканирование/мес. Перейдите на Lite для 15 сканирований/мес!',
+      scanLimit: 'Лимит сканирований', scanLimitDesc: 'Бесплатно 5 сканирований/мес. Перейдите на Lite для 15 сканирований/мес!',
       editItem: 'Редактировать', addItem: 'Добавить', productName: 'Название продукта', productPlaceholder: 'напр. Молоко',
       quantity: 'Количество', unit: 'Ед. изм.', storageLocation: 'Место хранения',
       consumptionRate: 'Как быстро используете?', trackingMode: 'Режим учёта',
