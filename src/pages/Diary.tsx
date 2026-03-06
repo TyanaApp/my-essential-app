@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Search } from 'lucide-react';
+import { Plus, X, Search, Camera } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
+import MealScanModal from '@/components/diary/MealScanModal';
 import {
   Dialog,
   DialogContent,
@@ -53,6 +54,7 @@ const Diary = () => {
   usePageTitle(t.diary.title);
 
   const DAY_LABELS = t.dayLabels;
+  const ms = (t as any).mealScan || {} as any;
 
   const MEAL_SECTIONS = [
     { type: 'breakfast', label: t.diary.breakfast, emoji: '🌅' },
@@ -76,6 +78,10 @@ const Diary = () => {
   const [manualProtein, setManualProtein] = useState('');
   const [manualFat, setManualFat] = useState('');
   const [manualCarbs, setManualCarbs] = useState('');
+
+  // Scan modal state
+  const [scanOpen, setScanOpen] = useState(false);
+  const [scanMealType, setScanMealType] = useState('breakfast');
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
@@ -113,6 +119,30 @@ const Diary = () => {
     setRecipeSearch('');
     setModalOpen(true);
     loadRecipes();
+  };
+
+  const openScanModal = (mealType: string) => {
+    setScanMealType(mealType);
+    setScanOpen(true);
+  };
+
+  const handleScanSaved = (entry: any) => {
+    if (entry?._prefill) {
+      // Open manual modal with pre-filled values
+      setScanOpen(false);
+      setModalMealType(scanMealType);
+      setManualName(entry.custom_name || '');
+      setManualCalories(String(entry.total_calories || 0));
+      setManualProtein(String(entry.total_protein || 0));
+      setManualFat(String(entry.total_fat || 0));
+      setManualCarbs(String(entry.total_carbs || 0));
+      setAddMode('manual');
+      setModalOpen(true);
+      return;
+    }
+    if (entry) {
+      setEntries(prev => [...prev, entry as MealEntry]);
+    }
   };
 
   const handleAddFromRecipe = async (recipe: SavedRecipe) => {
@@ -230,13 +260,22 @@ const Diary = () => {
                   <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
                     {section.emoji} {section.label}
                   </h3>
-                  <button
-                    onClick={() => openAddModal(section.type)}
-                    className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg"
-                    style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
-                  >
-                    <Plus className="w-3.5 h-3.5" /> {t.diary.addMeal}
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openScanModal(section.type)}
+                      className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg"
+                      style={{ color: '#7C3AED', backgroundColor: '#F5F3FF' }}
+                    >
+                      <Camera className="w-3.5 h-3.5" /> {ms.scanMealBtn || '📸'}
+                    </button>
+                    <button
+                      onClick={() => openAddModal(section.type)}
+                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg"
+                      style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
+                    >
+                      <Plus className="w-3.5 h-3.5" /> {t.diary.addMeal}
+                    </button>
+                  </div>
                 </div>
 
                 {sectionEntries.length === 0 ? (
@@ -286,6 +325,15 @@ const Diary = () => {
           />
         </div>
       </div>
+
+      {/* Meal scan modal */}
+      <MealScanModal
+        open={scanOpen}
+        onClose={() => setScanOpen(false)}
+        mealType={scanMealType}
+        dateStr={dateStr}
+        onSaved={handleScanSaved}
+      />
 
       {/* Add meal modal */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
