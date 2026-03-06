@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,7 @@ const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '
 const Shopping = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { language } = useLanguage();
   usePageTitle(t.shopping.title);
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,18 +44,46 @@ const Shopping = () => {
     }
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
-    recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = language === 'ru' ? 'ru-RU' : language === 'lv' ? 'lv-LV' : 'en-US';
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
     recognition.onerror = () => { setIsListening(false); toast.error(t.shopping.couldNotHear); };
     recognition.onresult = async (event: any) => {
       const transcript = event.results[0][0].transcript;
-      const voiceItems = transcript.split(/,|and/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
-      if (!user || voiceItems.length === 0) return;
-      const inserts = voiceItems.map((name: string) => ({ user_id: user.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
-      await supabase.from('shopping_items').insert(inserts as any);
-      await fetchItems();
-      toast.success(`Added: ${voiceItems.join(', ')} ✓`);
+      toast(`🎤 ${(t.shopping as any).heard || 'Heard'}: "${transcript}"`);
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('parse-voice-shopping', {
+          body: { transcript, language }
+        });
+        
+        if (error || !data?.items?.length) {
+          // Fallback: split by comma/and
+          const voiceItems = transcript.split(/,|and|и|un/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+          if (!user || voiceItems.length === 0) return;
+          const inserts = voiceItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
+          await supabase.from('shopping_items').insert(inserts as any);
+          await fetchItems();
+          toast.success(`${(t.shopping as any).adding || 'Adding'}: ${voiceItems.join(', ')} ✓`);
+          return;
+        }
+        
+        const inserts = data.items.map((item: any) => ({
+          user_id: user!.id,
+          name: item.name,
+          quantity: item.quantity || 1,
+          unit: item.unit || 'pcs',
+          category: 'other'
+        }));
+        await supabase.from('shopping_items').insert(inserts as any);
+        await fetchItems();
+        const summary = data.items.map((i: any) => `${i.name} ${i.quantity}${i.unit}`).join(', ');
+        toast.success(`${(t.shopping as any).adding || 'Adding'}: ${summary} ✓`);
+      } catch {
+        toast.error(t.shopping.couldNotHear);
+      }
     };
     recognition.start();
   };
