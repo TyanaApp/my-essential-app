@@ -316,6 +316,7 @@ export const translations = {
       clearedPurchased: 'Купленные товары очищены', itemsAdded: '{count} товаров добавлено',
       voiceNotSupported: 'Голосовой ввод не поддерживается',
       couldNotHear: 'Не удалось распознать. Попробуйте снова.', listening: 'Слушаю...',
+      heard: 'Услышал', adding: 'Добавляю',
       namePlaceholder: 'напр. Куриная грудка',
       meat: 'Мясо', dairy: 'Молочные', produce: 'Овощи/Фрукты', dryGoods: 'Крупы', other: 'Другое',
     },
@@ -370,6 +371,7 @@ export const translations = {
       deleteAccount: 'Удалить аккаунт', installApp: '📲 Установить приложение',
       displayName: 'Имя', bio: 'О себе', gender: 'Пол', dateOfBirth: 'Дата рождения',
       male: 'Мужской', female: 'Женский', other: 'Другой', preferNotToSay: 'Не указывать',
+      connectDevices: 'Подключить устройства', soon: 'Скоро',
     },
     onboarding: {
       step1Title: 'Привет! Я TYANA', step1Sub: 'Я настрою твоего персонального кухонного помощника за 2 минуты',
