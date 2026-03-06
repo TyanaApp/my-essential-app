@@ -531,7 +531,7 @@ export const translations = {
       markedOpened: 'Atzīmēts kā atvērts', markedSealed: 'Atzīmēts kā aizvērts',
       opened: 'Atvērts', low: 'Maz', noDate: 'Nav datuma', expired: 'Beidzies', daysLeft: 'd atlicis',
       dateOnly: '📅 Tikai datums', tracked: '📊 Uzskaitīts',
-      scanLimit: 'Skenēšanas limits', scanLimitDesc: 'Bezmaksas 1 skenēšana/mēn. Uzlabojiet uz Lite 15 skenēšanām/mēn!',
+      scanLimit: 'Skenēšanas limits', scanLimitDesc: 'Bezmaksas 5 skenēšanas/mēn. Uzlabojiet uz Lite 15 skenēšanām/mēn!',
       editItem: 'Rediģēt', addItem: 'Pievienot', productName: 'Produkta nosaukums', productPlaceholder: 'piem. Piens',
       quantity: 'Daudzums', unit: 'Vienība', storageLocation: 'Uzglabāšanas vieta',
       consumptionRate: 'Cik ātri to izmantojat?', trackingMode: 'Uzskaites režīms',
