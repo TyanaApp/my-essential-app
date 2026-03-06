@@ -11,18 +11,10 @@ serve(async (req) => {
   }
 
   try {
-    const { images } = await req.json();
-    if (!images || !Array.isArray(images) || images.length === 0) {
-      return new Response(JSON.stringify({ error: "No images provided" }), {
+    const { transcript, language } = await req.json();
+    if (!transcript) {
+      return new Response(JSON.stringify({ error: "No transcript provided" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -35,32 +27,6 @@ serve(async (req) => {
       });
     }
 
-    const content: any[] = images.map((img: string) => ({
-      type: "image_url",
-      image_url: { url: `data:image/jpeg;base64,${img}` },
-    }));
-
-    content.push({
-      type: "text",
-      text: `Analyze this fridge photo.
-
-ONLY list actual food products and ingredients you can clearly identify.
-
-SKIP entirely: pots, pans, dishes, bowls, plates, containers, utensils, cookware.
-
-If you see a covered pot or bowl with unknown contents - add ONE item: 'Covered dish (unknown contents)' with unknown=true.
-
-For each item, assign a category from: dairy, meat, produce, drinks, eggs, other.
-
-Return ONLY a valid JSON array, no markdown or code fences:
-[{"name":"Eggs","quantity":6,"unit":"pcs","category":"eggs","unknown":false},{"name":"Covered dish","quantity":1,"unit":"pcs","category":"other","unknown":true}]
-
-Be specific with names: not 'sauce' but 'Ketchup'.
-Estimate quantities realistically.
-Use units: g, kg, ml, L, pcs, packs.
-Remove duplicates. Combine all visible items into one list.`,
-    });
-
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -69,15 +35,27 @@ Remove duplicates. Combine all visible items into one list.`,
       },
       body: JSON.stringify({
         model: "gpt-4o",
-        messages: [{ role: "user", content }],
-        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: `Extract shopping items from this voice input: "${transcript}"
+Language: ${language || 'en'}
+Return ONLY JSON array: [{"name":"Milk","quantity":1,"unit":"L"},{"name":"Eggs","quantity":12,"unit":"pcs"}]
+Be smart about quantities:
+- "пол литра молока" = {"name":"Молоко", "quantity":0.5, "unit":"L"}
+- "десяток яиц" = {"name":"Яйца", "quantity":10, "unit":"pcs"}
+- "two packs of butter" = {"name":"Butter", "quantity":2, "unit":"packs"}
+- "puslitru piena" = {"name":"Piens", "quantity":0.5, "unit":"L"}
+Keep the item names in the same language as the input.
+No markdown, just JSON.`
+        }],
+        max_tokens: 300,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error("OpenAI error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "AI analysis failed" }), {
+      return new Response(JSON.stringify({ error: "AI parsing failed" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -97,7 +75,7 @@ Remove duplicates. Combine all visible items into one list.`,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    console.error("scan-fridge error:", e);
+    console.error("parse-voice-shopping error:", e);
     return new Response(JSON.stringify({ error: "Internal error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

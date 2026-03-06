@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
-  Edit, CreditCard, Trash2, Shield, Bell
+  Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
@@ -196,6 +197,43 @@ const Profile = () => {
                     checked={notifSettings[item.key]}
                     onCheckedChange={(checked) => updateNotifSettings({ ...notifSettings, [item.key]: checked })}
                   />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Connect Devices - Coming Soon */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.18 }}
+      >
+        <Card className="bg-card border-border mb-4">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Watch className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-foreground">{(t.profile as any).connectDevices || 'Connect Devices'}</h3>
+            </div>
+            <div className="space-y-3">
+              {[
+                { emoji: '⌚️', name: 'Apple Watch', icon: Watch },
+                { emoji: '📱', name: 'Google Fit', icon: Smartphone },
+                { emoji: '💪', name: 'Fitbit', icon: Activity },
+                { emoji: '🔵', name: 'Garmin', icon: Watch },
+              ].map(device => (
+                <div key={device.name} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{device.emoji}</span>
+                    <span className="text-sm font-medium text-muted-foreground">{device.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-purple-100 text-purple-600 border-purple-200 text-[10px] px-2 py-0.5">
+                      {(t.profile as any).soon || 'Soon'}
+                    </Badge>
+                    <Switch disabled checked={false} className="opacity-40" />
+                  </div>
                 </div>
               ))}
             </div>

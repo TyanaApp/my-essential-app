@@ -13,6 +13,7 @@ interface ScannedItem {
   unit: string;
   category: string;
   storage_location: string;
+  unknown?: boolean;
 }
 
 const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'packs'];
@@ -100,6 +101,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
         unit: UNITS.includes(i.unit) ? i.unit : 'pcs',
         category: CATEGORIES.some(c => c.id === i.category) ? i.category : 'other',
         storage_location: 'fridge',
+        unknown: Boolean(i.unknown),
       }));
 
       setScannedItems(items);
@@ -308,12 +310,12 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                       </div>
                       <div className="space-y-1.5">
                         {group.items.map(item => (
-                          <div key={item._idx} className="flex items-center gap-1.5 p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
-                            {/* Name */}
+                          <div key={item._idx} className={`flex items-center gap-1.5 p-2 rounded-xl ${item.unknown ? 'border border-dashed' : ''}`} style={{ backgroundColor: item.unknown ? '#F3F4F6' : '#F5F3FF', borderColor: item.unknown ? '#9CA3AF' : undefined }}>
+                            {item.unknown && <span className="text-lg shrink-0">❓</span>}
                             <input
                               value={item.name}
                               onChange={e => updateItem(item._idx, 'name', e.target.value)}
-                              placeholder={t.inventory.itemName}
+                              placeholder={item.unknown ? (t.scan as any).unknownPlaceholder || "What's inside? (optional)" : t.inventory.itemName}
                               className="flex-1 min-w-0 text-sm font-medium bg-white rounded-lg px-2 py-1.5 border outline-none focus:border-[#7C3AED]"
                               style={{ borderColor: '#DDD6FE', color: '#1E1B4B' }}
                             />
