@@ -577,6 +577,7 @@ export const translations = {
       clearedPurchased: 'Nopirktie produkti notīrīti', itemsAdded: '{count} preces pievienotas',
       voiceNotSupported: 'Balss ievade netiek atbalstīta',
       couldNotHear: 'Neizdevās saprast. Mēģiniet vēlreiz.', listening: 'Klausos...',
+      heard: 'Dzirdēju', adding: 'Pievienoju',
       namePlaceholder: 'piem. Vistas fileja',
       meat: 'Gaļa', dairy: 'Piena prod.', produce: 'Dārzeņi/Augļi', dryGoods: 'Sausi produkti', other: 'Cits',
     },
@@ -631,6 +632,7 @@ export const translations = {
       deleteAccount: 'Dzēst kontu', installApp: '📲 Instalēt lietotni',
       displayName: 'Vārds', bio: 'Par sevi', gender: 'Dzimums', dateOfBirth: 'Dzimšanas datums',
       male: 'Vīrietis', female: 'Sieviete', other: 'Cits', preferNotToSay: 'Nevēlos norādīt',
+      connectDevices: 'Savienot ierīces', soon: 'Drīzumā',
     },
     onboarding: {
       step1Title: 'Sveiki! Es esmu TYANA', step1Sub: 'Es iestatīšu tavu personīgo virtuves palīgu 2 minūtēs',
