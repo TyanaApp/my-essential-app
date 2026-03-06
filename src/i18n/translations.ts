@@ -685,6 +685,7 @@ export const translations = {
     },
     scan: {
       title: '📸 Skenēt ledusskapi', analyzing: '🤖 Analizē...', results: '✅ Rezultāti',
+      unknownPlaceholder: 'Kas iekšā? (neobligāti)',
       multiPhotoHint: 'Uzņemiet līdz 4 foto no dažādām ledusskapja daļām',
       scanAllPhotos: 'Skenēt visus foto',
       aiAnalyzing: 'Analizējam jūsu ledusskapi... 🤖 ~15 sekundes',
@@ -759,7 +760,7 @@ export const translations = {
       pricingTitle: 'Vienkāršas un caurspīdīgas cenas',
       pricingSubtitle: 'Sāciet bezmaksas, uzlabojiet, kad esat gatavi.',
       free: 'Bezmaksas', freeTrial: '7 dienu Pro izmēģinājums',
-      freeFeatures: ['1 skens/mēn', '3 receptes/mēn', '1 ģimenes loceklis', 'Pamata kaloriju skaitītājs'],
+      freeFeatures: ['5 skeni/mēn', '3 receptes/mēn', '1 ģimenes loceklis', 'Pamata kaloriju skaitītājs'],
       forFamilies: 'Ģimenēm', lite: 'Lite', month: '/mēn',
       liteFeatures: ['15 skeni/mēn', 'Neierobežotas receptes', '5 čeki/mēn', '4 ģimenes locekļi', 'Alerģiju profili', 'Atlaides tiešsaistē', 'Iknedēļas pārskats'],
       getLite: 'Izvēlēties Lite',
