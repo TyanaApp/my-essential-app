@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.parse-voice-shopping]
 verify_jwt = false
+
+[functions.scan-meal-calories]
+verify_jwt = false
