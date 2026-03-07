@@ -6,15 +6,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-
-const CURRENCIES = [
-  { code: 'EUR', symbol: '€' },
-  { code: 'USD', symbol: '$' },
-  { code: 'GBP', symbol: '£' },
-  { code: 'PLN', symbol: 'zł' },
-  { code: 'UAH', symbol: '₴' },
-  { code: 'RUB', symbol: '₽' },
-];
+import { formatMoney } from '@/lib/formatMoney';
 
 interface SavingsEntry {
   id: string;
@@ -27,7 +19,7 @@ interface SavingsEntry {
 const Savings = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
   usePageTitle(t.savings.title);
   const [spent, setSpent] = useState(0);
   const [saved, setSaved] = useState(0);
@@ -52,8 +44,6 @@ const Savings = () => {
     };
     load();
   }, [user]);
-
-  const currSymbol = CURRENCIES.find(c => c.code === currency)?.symbol || '€';
 
   const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 
@@ -82,12 +72,12 @@ const Savings = () => {
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">💸</span>
                 <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-                  {language === 'ru' ? 'Потрачено в этом месяце' : language === 'lv' ? 'Iztērēts šomēnes' : 'Spent this month'}
+                  {t.savings.spent}
                 </h3>
               </div>
-              <p className="text-3xl font-bold" style={{ color: '#DC2626' }}>{currSymbol}{spent.toFixed(2)}</p>
+              <p className="text-3xl font-bold" style={{ color: '#DC2626' }}>{formatMoney(spent, currency)}</p>
               <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>
-                {language === 'ru' ? 'Покупки продуктов' : language === 'lv' ? 'Pārtikas pirkumi' : 'Grocery purchases'}
+                {t.savings.groceryPurchases}
               </p>
             </div>
 
@@ -96,23 +86,23 @@ const Savings = () => {
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">💚</span>
                 <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-                  {language === 'ru' ? 'Сэкономлено от отходов' : language === 'lv' ? 'Ietaupīts no atkritumiem' : 'Saved from waste'}
+                  {t.savings.saved}
                 </h3>
               </div>
-              <p className="text-3xl font-bold" style={{ color: '#059669' }}>{currSymbol}{saved.toFixed(2)}</p>
+              <p className="text-3xl font-bold" style={{ color: '#059669' }}>{formatMoney(saved, currency)}</p>
               <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>
-                {language === 'ru' ? 'Продукты использованы до истечения срока' : language === 'lv' ? 'Produkti izlietoti pirms termiņa' : 'Items used before expiry'}
+                {t.savings.usedBeforeExpiry}
               </p>
             </div>
 
             {/* History */}
             <div style={cardStyle} className="p-5">
               <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
-                {language === 'ru' ? 'История' : language === 'lv' ? 'Vēsture' : 'History'}
+                {t.savings.history}
               </h3>
               {entries.length === 0 ? (
                 <p className="text-sm text-center py-6" style={{ color: '#9CA3AF' }}>
-                  {language === 'ru' ? 'Пока нет записей' : language === 'lv' ? 'Pagaidām nav ierakstu' : 'No entries yet'}
+                  {t.savings.noEntries}
                 </p>
               ) : (
                 <div className="space-y-2 max-h-[50vh] overflow-y-auto">
@@ -128,7 +118,7 @@ const Savings = () => {
                         </div>
                       </div>
                       <span className="text-xs font-bold" style={{ color: e.type === 'purchase' ? '#DC2626' : '#059669' }}>
-                        {e.type === 'purchase' ? '-' : '+'}{currSymbol}{Math.abs(e.amount).toFixed(2)}
+                        {e.type === 'purchase' ? '-' : '+'}{formatMoney(Math.abs(e.amount), currency)}
                       </span>
                     </div>
                   ))}

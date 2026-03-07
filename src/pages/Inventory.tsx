@@ -298,7 +298,7 @@ const Inventory = () => {
                           {exp.label}
                         </span>
                         {item.price_per_unit && (
-                          <span className="text-[11px]" style={{ color: '#9CA3AF' }}>€{item.price_per_unit}</span>
+                          <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{getCurrencySymbol('EUR')}{item.price_per_unit}</span>
                         )}
                         <button
                           onClick={() => handleToggleTrackingMode(item)}

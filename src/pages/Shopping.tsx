@@ -7,6 +7,8 @@ import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Dialog,
   DialogContent,
@@ -222,7 +224,7 @@ const Shopping = () => {
           🎤 {isListening ? t.shopping.listening : ''}
         </button>
         <div className="flex-1 flex items-center gap-1.5">
-          <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>{t.shopping.budget} €</span>
+          <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>{t.shopping.budget}</span>
           <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
             className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
             style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
@@ -232,7 +234,7 @@ const Shopping = () => {
       {budget > 0 && (
         <motion.div {...fadeUp(2)} className="mb-5">
           <div className="flex justify-between text-xs mb-1">
-            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} €{totalEstimated.toFixed(2)}</span>
+            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} {formatMoney(totalEstimated, 'EUR')}</span>
             <span style={{ color: budgetColor }} className="font-semibold">{budgetPct.toFixed(0)}{t.shopping.ofBudget}</span>
           </div>
           <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
@@ -281,7 +283,7 @@ const Shopping = () => {
                         <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0" style={{ borderColor: '#DDD6FE' }} />
                         <span className="flex-1 text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{item.name}</span>
                         <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {item.unit || 'pcs'}</span>
-                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>€{(item.estimated_price * (item.quantity || 1)).toFixed(2)}</span>}
+                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), 'EUR')}</span>}
                         <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-[#EDE9FE]"><Pencil className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} /></button>
                         <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" style={{ color: '#DC2626' }} /></button>
                       </motion.div>
@@ -313,7 +315,7 @@ const Shopping = () => {
                   </div>
                 ))}
               </div>
-              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} €{purchasedTotal.toFixed(2)}</p>}
+              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, 'EUR')}</p>}
             </motion.div>
           )}
         </div>
