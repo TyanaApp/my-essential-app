@@ -9,6 +9,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OfflineBanner from "./components/OfflineBanner";
+import TrialManager from "./components/TrialManager";
 import LandingRedirect from "./pages/LandingRedirect";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
@@ -35,6 +36,7 @@ const App = () => {
             <OfflineBanner />
             <BrowserRouter>
               <AuthProvider>
+                <TrialManager />
                 <Routes>
                   <Route path="/" element={<LandingRedirect />} />
                   <Route path="/auth" element={<Auth />} />
