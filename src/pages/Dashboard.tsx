@@ -111,15 +111,22 @@ const Dashboard = () => {
         supabase.from('inventory_items').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
       ]);
 
-      const meals = mealsRes.data || [];
-      const rawCalories = meals.reduce((s, m) => s + (m.total_calories || 0), 0);
-      const caloriesConsumed = rawCalories > 9999 ? 0 : rawCalories;
-      if (rawCalories > 9999) {
-        console.error(`Calorie data error: raw sum = ${rawCalories} kcal from ${meals.length} entries. Reset to 0.`, meals);
-      }
-      const protein = meals.reduce((s, m) => s + Number(m.total_protein || 0), 0);
-      const fat = meals.reduce((s, m) => s + Number(m.total_fat || 0), 0);
-      const carbs = meals.reduce((s, m) => s + Number(m.total_carbs || 0), 0);
+      // Filter out corrupted meal entries (single meal > 3000 kcal is flagged as error)
+      const validMeals = (mealsRes.data || []).filter(m => {
+        const cal = Number(m.total_calories || 0);
+        const prot = Number(m.total_protein || 0);
+        const fatVal = Number(m.total_fat || 0);
+        const carbVal = Number(m.total_carbs || 0);
+        if (cal > 3000 || prot > 500 || fatVal > 500 || carbVal > 1000) {
+          console.warn('Excluded corrupted meal entry:', m);
+          return false;
+        }
+        return true;
+      });
+      const caloriesConsumed = validMeals.reduce((s, m) => s + (Number(m.total_calories) || 0), 0);
+      const protein = validMeals.reduce((s, m) => s + (Number(m.total_protein) || 0), 0);
+      const fat = validMeals.reduce((s, m) => s + (Number(m.total_fat) || 0), 0);
+      const carbs = validMeals.reduce((s, m) => s + (Number(m.total_carbs) || 0), 0);
 
       const expiringItems = (expiringRes.data || []).map((i: any) => ({
         id: i.id,

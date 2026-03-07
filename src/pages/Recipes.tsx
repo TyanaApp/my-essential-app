@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus } from 'lucide-react';
+import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -29,6 +29,7 @@ const Recipes = () => {
   const { plan } = useSubscription();
   const { updateStreak } = useStreak();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const [cookingFor, setCookingFor] = useState(2);
   const [selectedMeals, setSelectedMeals] = useState<string[]>(['dinner']);
@@ -110,6 +111,14 @@ const Recipes = () => {
     setSavedRecipes((prev) => prev.map((r) => (r.id === id ? { ...r, is_favorite: !current } : r)));
   };
 
+  const handleDeleteRecipe = async (id: string) => {
+    await supabase.from('recipes').delete().eq('id', id);
+    setSavedRecipes((prev) => prev.filter((r) => r.id !== id));
+    setDeleteConfirmId(null);
+    setDetailRecipe(null);
+    toast.success((t.recipes as any).recipeDeleted || 'Recipe removed');
+  };
+
   const addMissingToShopping = async (ingredients: Ingredient[]) => {
     if (!user) return;
     const missing = ingredients.filter((i) => !i.inFridge);
@@ -170,15 +179,22 @@ const Recipes = () => {
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
-            {isSaved && savedId ? (
-              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(savedId, !!isFav); }} className="shrink-0 p-1">
-                <Heart className="w-5 h-5" fill={isFav ? '#7C3AED' : 'none'} style={{ color: '#7C3AED' }} />
-              </button>
-            ) : (
-              <button onClick={(e) => { e.stopPropagation(); handleSaveRecipe(recipe as Recipe); }} className="shrink-0 p-1">
-                <Heart className="w-5 h-5" style={{ color: '#7C3AED' }} />
-              </button>
-            )}
+            <div className="flex items-center gap-0.5 shrink-0">
+              {isSaved && savedId && (
+                <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(savedId); }} className="p-1">
+                  <Trash2 className="w-4 h-4" style={{ color: '#DC2626' }} />
+                </button>
+              )}
+              {isSaved && savedId ? (
+                <button onClick={(e) => { e.stopPropagation(); toggleFavorite(savedId, !!isFav); }} className="p-1">
+                  <Heart className="w-5 h-5" fill={isFav ? '#7C3AED' : 'none'} style={{ color: '#7C3AED' }} />
+                </button>
+              ) : (
+                <button onClick={(e) => { e.stopPropagation(); handleSaveRecipe(recipe as Recipe); }} className="p-1">
+                  <Heart className="w-5 h-5" style={{ color: '#7C3AED' }} />
+                </button>
+              )}
+            </div>
           </div>
           <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2" style={{ backgroundColor: cc.bg, color: cc.text }}>
             {n.nutrition.calories} kcal
@@ -430,6 +446,30 @@ const Recipes = () => {
       </AnimatePresence>
 
       <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} title={t.recipes.recipeLimit} description={t.recipes.recipeLimitDesc} suggestedPlan="lite" />
+
+      {/* Delete confirmation dialog */}
+      <AnimatePresence>
+        {deleteConfirmId && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setDeleteConfirmId(null)}>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
+              <p className="text-base font-semibold mb-4" style={{ color: '#1E1B4B' }}>
+                {(t.recipes as any).deleteFromSaved || 'Remove from saved?'}
+              </p>
+              <div className="flex gap-3">
+                <button onClick={() => setDeleteConfirmId(null)}
+                  className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
+                  {(t.recipes as any).deleteNo || 'No'}
+                </button>
+                <button onClick={() => handleDeleteRecipe(deleteConfirmId)}
+                  className="flex-1 h-10 rounded-xl font-semibold text-sm text-white" style={{ backgroundColor: '#DC2626' }}>
+                  {(t.recipes as any).deleteYes || 'Yes'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

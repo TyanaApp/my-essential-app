@@ -51,6 +51,7 @@ export const translations = {
       breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
       time15: '<15 min', time30: '30 min', time1h: '1 hour', timeAny: 'Any',
       addAllMissing: 'Add all missing →',
+      deleteFromSaved: 'Remove from saved?', deleteYes: 'Yes', deleteNo: 'No', recipeDeleted: 'Recipe removed',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
@@ -407,6 +408,7 @@ export const translations = {
       breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус',
       time15: '<15 мин', time30: '30 мин', time1h: '1 час', timeAny: 'Любое',
       addAllMissing: 'Добавить всё →',
+      deleteFromSaved: 'Удалить из сохранённых?', deleteYes: 'Да', deleteNo: 'Нет', recipeDeleted: 'Рецепт удалён',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -763,6 +765,7 @@ export const translations = {
       breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda',
       time15: '<15 min', time30: '30 min', time1h: '1 stunda', timeAny: 'Jebkurš',
       addAllMissing: 'Pievienot visu →',
+      deleteFromSaved: 'Noņemt no saglabātajiem?', deleteYes: 'Jā', deleteNo: 'Nē', recipeDeleted: 'Recepte noņemta',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
