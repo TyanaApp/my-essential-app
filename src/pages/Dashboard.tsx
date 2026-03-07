@@ -165,6 +165,25 @@ const Dashboard = () => {
     );
   }
 
+  const currSymbol = CURRENCIES.find(c => c.code === data?.currency)?.symbol || '€';
+
+  const saveBudget = async () => {
+    if (!user) return;
+    const val = parseFloat(budgetInput) || 200;
+    await supabase.from('user_goals').update({ monthly_budget: val } as any).eq('user_id', user.id);
+    setData(prev => prev ? { ...prev, monthlyBudget: val } : prev);
+    setEditingBudget(false);
+    toast.success(language === 'ru' ? 'Бюджет обновлён ✓' : language === 'lv' ? 'Budžets atjaunināts ✓' : 'Budget updated ✓');
+  };
+
+  const saveCurrency = async (code: string) => {
+    if (!user) return;
+    await supabase.from('profiles').update({ currency: code } as any).eq('user_id', user.id);
+    setData(prev => prev ? { ...prev, currency: code } : prev);
+    setShowCurrencyPicker(false);
+    toast.success(`${code} ✓`);
+  };
+
   if (!data) return null;
 
   const remaining = data.caloriesTarget - data.caloriesConsumed;
