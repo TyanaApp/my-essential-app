@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useStreak } from '@/hooks/useStreak';
+import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import {
   Dialog,
@@ -160,6 +162,9 @@ const Diary = () => {
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
       toast.success(`${recipe.title} ${t.diary.logged}`);
       setModalOpen(false);
+      // Update streak
+      const reward = await updateStreak();
+      if (reward) setStreakReward(reward);
     } catch { toast.error(t.common.error); }
   };
 
@@ -178,6 +183,8 @@ const Diary = () => {
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
       toast.success(`${manualName} ${t.diary.logged}`);
       setModalOpen(false);
+      const reward = await updateStreak();
+      if (reward) setStreakReward(reward);
     } catch { toast.error(t.common.error); }
   };
 
