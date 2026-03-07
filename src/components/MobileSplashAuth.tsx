@@ -19,9 +19,9 @@ const GoogleIcon = () => (
 );
 
 const slides = [
-  { emoji: '🧊', titleKey: 'slide1Title' as const, subKey: 'slide1Sub' as const },
-  { emoji: '🍽', titleKey: 'slide2Title' as const, subKey: 'slide2Sub' as const },
-  { emoji: '💰', titleKey: 'slide3Title' as const, subKey: 'slide3Sub' as const },
+  { emoji: '🧠', titleKey: 'slide1Title' as const, subKey: 'slide1Sub' as const },
+  { emoji: '✨', titleKey: 'slide2Title' as const, subKey: 'slide2Sub' as const },
+  { emoji: '🔥', titleKey: 'slide3Title' as const, subKey: 'slide3Sub' as const },
 ];
 
 const langs = [
@@ -112,7 +112,7 @@ const MobileSplashAuth: React.FC = () => {
       {showInstallGuide && <PWAInstallGuide onDismiss={() => setShowInstallGuide(false)} />}
       {/* Top branding */}
       <div className="text-center" style={{ marginTop: 60 }}>
-        <h1 className="text-white font-bold" style={{ fontSize: 32 }}>
+        <h1 className="text-white font-bold" style={{ fontSize: 32, fontFamily: "'Playfair Display', serif", letterSpacing: '0.15em', textTransform: 'uppercase' as const }}>
           TYANA
         </h1>
         <p className="text-white mt-1" style={{ fontSize: 16, opacity: 0.85 }}>
