@@ -50,6 +50,7 @@ export const translations = {
       recipeSaved: 'saved ❤️', recipesGenerated: '{count} recipes generated ✨',
       breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
       time15: '<15 min', time30: '30 min', time1h: '1 hour', timeAny: 'Any',
+      addAllMissing: 'Add all missing →',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
