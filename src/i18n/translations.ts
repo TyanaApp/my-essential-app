@@ -823,6 +823,8 @@ export const translations = {
       current: 'Pašreizējā sērija', longest: 'Garākā sērija',
       bonusScanUsed: 'Izmantots bonusa skens (atlikuši {left})',
     },
+    trial: {
+      endsIn: '⏰ Pro izmēģinājums beidzas pēc {days} d. → ',
       upgradeNow: 'Uzlabot tagad',
       expiredTitle: 'Izmēģinājums beidzies',
       expiredDesc: 'Uzlabojiet, lai saglabātu Pro funkcijas.',
