@@ -414,7 +414,26 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Card 2 — Expiring Soon */}
+        {/* Missing body data banner */}
+        {data.missingBodyData && (
+          <motion.div {...fadeUp(1.5)}>
+            <button
+              onClick={() => setEditProfileOpen(true)}
+              className="w-full p-3 rounded-2xl flex items-center gap-3 text-left"
+              style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}
+            >
+              <span className="text-lg">⚙️</span>
+              <span className="text-xs font-medium flex-1" style={{ color: '#92400E' }}>
+                {language === 'ru' ? 'Укажи свои данные для точного расчёта калорий →'
+                  : language === 'lv' ? 'Norādi savus datus precīzam kaloriju aprēķinam →'
+                  : 'Enter your body data for accurate calorie calculation →'}
+              </span>
+              <ChevronRight className="w-4 h-4" style={{ color: '#92400E' }} />
+            </button>
+          </motion.div>
+        )}
+
+
         <motion.div {...fadeUp(2)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#1E1B4B' }}>
