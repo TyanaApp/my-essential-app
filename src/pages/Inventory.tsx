@@ -8,6 +8,7 @@ import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAutoReduce } from '@/hooks/useAutoReduce';
@@ -298,7 +299,7 @@ const Inventory = () => {
                           {exp.label}
                         </span>
                         {item.price_per_unit && (
-                          <span className="text-[11px]" style={{ color: '#9CA3AF' }}>€{item.price_per_unit}</span>
+                          <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{getCurrencySymbol('EUR')}{item.price_per_unit}</span>
                         )}
                         <button
                           onClick={() => handleToggleTrackingMode(item)}
