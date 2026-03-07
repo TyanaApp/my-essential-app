@@ -8,6 +8,7 @@ import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAutoReduce } from '@/hooks/useAutoReduce';

@@ -8,7 +8,6 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
-import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Dialog,
   DialogContent,
