@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown } from 'lucide-react';
+import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -41,6 +41,7 @@ const Recipes = () => {
   const [loading, setLoading] = useState(true);
 
   const [detailRecipe, setDetailRecipe] = useState<Recipe | SavedRecipe | null>(null);
+  const [addedIngredients, setAddedIngredients] = useState<Set<string>>(new Set());
   const [showSettings, setShowSettings] = useState(true);
 
   useEffect(() => {
@@ -112,7 +113,21 @@ const Recipes = () => {
     if (missing.length === 0) { toast.info(t.recipes.allIngredients); return; }
     const items = missing.map((i) => ({ user_id: user.id, name: i.name, quantity: 1, unit: 'pcs' }));
     await supabase.from('shopping_items').insert(items as any);
+    setAddedIngredients(prev => {
+      const next = new Set(prev);
+      missing.forEach(i => next.add(i.name));
+      return next;
+    });
     toast.success(t.recipes.itemsAdded.replace('{count}', String(missing.length)));
+  };
+
+  const addSingleToShopping = async (ing: Ingredient) => {
+    if (!user) return;
+    await supabase.from('shopping_items').insert({
+      user_id: user.id, name: ing.name, quantity: 1, unit: 'pcs',
+    } as any);
+    setAddedIngredients(prev => new Set(prev).add(ing.name));
+    toast.success(`${ing.name} ${t.inventory.addedToShopping}`);
   };
 
   const dailyTarget = userGoals?.daily_calories_target || 2000;
@@ -141,7 +156,7 @@ const Recipes = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl overflow-hidden cursor-pointer"
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
-        onClick={() => setDetailRecipe(recipe)}
+        onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
         <img
           src={`https://source.unsplash.com/400x300/?${encodeURIComponent(n.title + ' food')}`}
@@ -334,13 +349,46 @@ const Recipes = () => {
                         ))}
                       </div>
                       <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>{t.recipes.ingredients}</h3>
+                      {/* Missing ingredients banner */}
+                      {missing.length > 0 && (
+                        <div className="flex items-center justify-between p-2.5 rounded-xl mb-2" style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}>
+                          <span className="text-xs font-semibold" style={{ color: '#92400E' }}>
+                            🛒 {(t.recipes as any).needItems?.replace('{count}', String(missing.length)) || `Need ${missing.length} ingredients`}
+                          </span>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); addMissingToShopping(r.ingredients); }}
+                            className="text-[11px] font-bold px-2.5 py-1 rounded-lg text-white shrink-0"
+                            style={{ backgroundColor: '#7C3AED' }}
+                          >
+                            {(t.recipes as any).addAllMissing || 'Add all missing →'}
+                          </button>
+                        </div>
+                      )}
                       <div className="space-y-1.5 mb-4">
-                        {r.ingredients.map((ing, idx) => (
-                          <div key={idx} className="flex items-center justify-between p-2 rounded-lg text-sm" style={{ backgroundColor: '#FAFAFE' }}>
-                            <span style={{ color: '#1E1B4B' }}>{ing.name}<span className="ml-2" style={{ color: '#9CA3AF' }}>{ing.amount}</span></span>
-                            <span className="text-xs font-medium">{ing.inFridge ? <span style={{ color: '#059669' }}>✅</span> : <span style={{ color: '#EA580C' }}>🛒</span>}</span>
-                          </div>
-                        ))}
+                        {r.ingredients.map((ing, idx) => {
+                          const isAdded = addedIngredients.has(ing.name);
+                          return (
+                            <div key={idx} className="flex items-center justify-between p-2 rounded-lg text-sm" style={{ backgroundColor: '#FAFAFE' }}>
+                              <span style={{ color: ing.inFridge ? '#1E1B4B' : '#6B7280' }}>
+                                {!ing.inFridge && '🛒 '}{ing.name}
+                                <span className="ml-2" style={{ color: '#9CA3AF' }}>{ing.amount}</span>
+                              </span>
+                              {ing.inFridge ? (
+                                <span className="text-xs font-medium" style={{ color: '#059669' }}>✅</span>
+                              ) : isAdded ? (
+                                <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#D1FAE5', color: '#059669' }}>✓</span>
+                              ) : (
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); addSingleToShopping(ing); }}
+                                  className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+                                  style={{ backgroundColor: '#7C3AED' }}
+                                >
+                                  <Plus className="w-3.5 h-3.5 text-white" />
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                       <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>{t.recipes.instructions}</h3>
                       <ol className="space-y-2 mb-5">

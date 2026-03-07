@@ -50,6 +50,7 @@ export const translations = {
       recipeSaved: 'saved ❤️', recipesGenerated: '{count} recipes generated ✨',
       breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
       time15: '<15 min', time30: '30 min', time1h: '1 hour', timeAny: 'Any',
+      addAllMissing: 'Add all missing →',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
@@ -92,6 +93,8 @@ export const translations = {
       portionEaten: 'Portion eaten:',
       portionFull: 'Full', portionThreeQuarters: '¾', portionHalf: 'Half', portionQuarter: '¼',
       confHigh: 'High confidence', confMedium: 'Estimated', confLow: 'Low confidence',
+      tapToEdit: 'Tap item name to edit & recalculate',
+      recalculated: 'Recalculated ✓', recalcFailed: 'Recalculation failed',
     },
     dashboard: {
       morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
@@ -358,6 +361,7 @@ export const translations = {
       recipeSaved: 'сохранён ❤️', recipesGenerated: '{count} рецептов найдено ✨',
       breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус',
       time15: '<15 мин', time30: '30 мин', time1h: '1 час', timeAny: 'Любое',
+      addAllMissing: 'Добавить всё →',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -400,6 +404,8 @@ export const translations = {
       portionEaten: 'Сколько съели:',
       portionFull: 'Всё', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
       confHigh: 'Высокая точность', confMedium: 'Приблизительно', confLow: 'Низкая точность',
+      tapToEdit: 'Нажмите на название чтобы изменить',
+      recalculated: 'Пересчитано ✓', recalcFailed: 'Ошибка пересчёта',
     },
     dashboard: {
       morning: 'Доброе утро', afternoon: 'Добрый день', evening: 'Добрый вечер',
@@ -666,6 +672,7 @@ export const translations = {
       recipeSaved: 'saglabāts ❤️', recipesGenerated: '{count} receptes atrastas ✨',
       breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda',
       time15: '<15 min', time30: '30 min', time1h: '1 stunda', timeAny: 'Jebkurš',
+      addAllMissing: 'Pievienot visu →',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
@@ -708,6 +715,8 @@ export const translations = {
       portionEaten: 'Cik apēdāt:',
       portionFull: 'Visu', portionThreeQuarters: '¾', portionHalf: 'Pusi', portionQuarter: '¼',
       confHigh: 'Augsta precizitāte', confMedium: 'Aptuveni', confLow: 'Zema precizitāte',
+      tapToEdit: 'Nospiediet nosaukumu lai rediģētu',
+      recalculated: 'Pārrēķināts ✓', recalcFailed: 'Pārrēķins neizdevās',
     },
     dashboard: {
       morning: 'Labrīt', afternoon: 'Labdien', evening: 'Labvakar',

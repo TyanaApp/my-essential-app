@@ -11,18 +11,65 @@ serve(async (req) => {
   }
 
   try {
-    const { imageBase64, language } = await req.json();
-    if (!imageBase64) {
-      return new Response(JSON.stringify({ error: "No image provided" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const body = await req.json();
+    const { imageBase64, language, recalculate, itemName, portion } = body;
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
       return new Response(JSON.stringify({ error: "API key not configured" }), {
         status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // RECALCULATE MODE: single item nutrition recalculation
+    if (recalculate && itemName) {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [{
+            role: "user",
+            content: `Recalculate nutrition for "${itemName}", portion: ${portion || "100g"}.
+Return ONLY JSON, no markdown:
+{"calories":X,"protein":X,"fat":X,"carbs":X}
+Be realistic. Values in grams for macros, kcal for calories.`
+          }],
+          max_tokens: 150,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("OpenAI error:", response.status, errorText);
+        return new Response(JSON.stringify({ error: "Recalculation failed" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const data = await response.json();
+      let result: any = {};
+      try {
+        const text = data.choices?.[0]?.message?.content || "{}";
+        result = JSON.parse(text.replace(/```json|```/g, "").trim());
+      } catch {
+        result = { error: true };
+      }
+
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // IMAGE SCAN MODE
+    if (!imageBase64) {
+      return new Response(JSON.stringify({ error: "No image provided" }), {
+        status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

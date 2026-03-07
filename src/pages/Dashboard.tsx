@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Plus, ChevronRight, AlertTriangle, Check } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +10,15 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
+
+const CURRENCIES = [
+  { code: 'EUR', symbol: '€' },
+  { code: 'USD', symbol: '$' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'PLN', symbol: 'zł' },
+  { code: 'UAH', symbol: '₴' },
+  { code: 'RUB', symbol: '₽' },
+];
 
 interface DashboardData {
   displayName: string;
@@ -22,6 +31,7 @@ interface DashboardData {
   recentRecipes: { id: string; title: string; prepTime: number | null; estimatedCost: number | null }[];
   savingsThisMonth: number;
   monthlyBudget: number;
+  currency: string;
   useItUpRecipe: { id: string; title: string; matchCount: number } | null;
 }
 
@@ -34,6 +44,9 @@ const Dashboard = () => {
   const { checkSubscription } = useSubscription();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editingBudget, setEditingBudget] = useState(false);
+  const [budgetInput, setBudgetInput] = useState('');
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -69,7 +82,7 @@ const Dashboard = () => {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
 
       const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes] = await Promise.all([
-        supabase.from('profiles').select('display_name').eq('user_id', user.id).maybeSingle(),
+        supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
         supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).gte('expires_at', today).order('expires_at', { ascending: true }).limit(5),
@@ -132,6 +145,7 @@ const Dashboard = () => {
         recentRecipes: (recipesRes.data || []).slice(0, 3) as any,
         savingsThisMonth,
         monthlyBudget: Number(goalsRes.data?.monthly_budget) || 200,
+        currency: profileRes.data?.currency || 'EUR',
         useItUpRecipe,
       });
       setLoading(false);
@@ -150,6 +164,25 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  const currSymbol = CURRENCIES.find(c => c.code === data?.currency)?.symbol || '€';
+
+  const saveBudget = async () => {
+    if (!user) return;
+    const val = parseFloat(budgetInput) || 200;
+    await supabase.from('user_goals').update({ monthly_budget: val } as any).eq('user_id', user.id);
+    setData(prev => prev ? { ...prev, monthlyBudget: val } : prev);
+    setEditingBudget(false);
+    toast.success(language === 'ru' ? 'Бюджет обновлён ✓' : language === 'lv' ? 'Budžets atjaunināts ✓' : 'Budget updated ✓');
+  };
+
+  const saveCurrency = async (code: string) => {
+    if (!user) return;
+    await supabase.from('profiles').update({ currency: code } as any).eq('user_id', user.id);
+    setData(prev => prev ? { ...prev, currency: code } : prev);
+    setShowCurrencyPicker(false);
+    toast.success(`${code} ✓`);
+  };
 
   if (!data) return null;
 
@@ -376,7 +409,7 @@ const Dashboard = () => {
         <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-              💚 €{data.savingsThisMonth.toFixed(2)} {t.dashboard.savedMonth}
+              💚 {currSymbol}{data.savingsThisMonth.toFixed(2)} {t.dashboard.savedMonth}
             </h3>
             <button
               onClick={() => navigate('/savings')}
@@ -395,9 +428,68 @@ const Dashboard = () => {
               }}
             />
           </div>
-          <p className="text-xs mt-1.5" style={{ color: '#9CA3AF' }}>
-            {t.dashboard.ofGoal.replace('{amount}', String(data.monthlyBudget))}
-          </p>
+          <div className="flex items-center justify-between mt-1.5">
+            <div className="flex items-center gap-1.5">
+              {editingBudget ? (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
+                    className="text-xs font-bold px-1.5 py-0.5 rounded-md border"
+                    style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
+                  >
+                    {currSymbol}
+                  </button>
+                  <input
+                    type="number"
+                    value={budgetInput}
+                    onChange={e => setBudgetInput(e.target.value)}
+                    className="w-20 h-7 px-2 rounded-lg border text-xs outline-none focus:border-[#7C3AED]"
+                    style={{ borderColor: '#DDD6FE' }}
+                    autoFocus
+                    onKeyDown={e => { if (e.key === 'Enter') saveBudget(); }}
+                  />
+                  <button onClick={saveBudget} className="p-0.5 rounded" style={{ color: '#059669' }}>
+                    <Check className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { setBudgetInput(String(data.monthlyBudget)); setEditingBudget(true); }}
+                  className="text-xs cursor-pointer hover:underline"
+                  style={{ color: '#9CA3AF' }}
+                >
+                  {t.dashboard.ofGoal.replace('{amount}', `${currSymbol}${data.monthlyBudget}`)}
+                </button>
+              )}
+            </div>
+            {!editingBudget && (
+              <button
+                onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
+                className="text-[10px] font-medium px-1.5 py-0.5 rounded-md"
+                style={{ backgroundColor: '#F5F3FF', color: '#7C3AED' }}
+              >
+                {data.currency}
+              </button>
+            )}
+          </div>
+          {showCurrencyPicker && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {CURRENCIES.map(c => (
+                <button
+                  key={c.code}
+                  onClick={() => saveCurrency(c.code)}
+                  className="text-xs px-2 py-1 rounded-lg border-[1.5px] font-medium transition-all"
+                  style={{
+                    borderColor: data.currency === c.code ? '#7C3AED' : '#E5E7EB',
+                    backgroundColor: data.currency === c.code ? '#EDE9FE' : 'white',
+                    color: data.currency === c.code ? '#7C3AED' : '#374151',
+                  }}
+                >
+                  {c.symbol} {c.code}
+                </button>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Card 5 — Zero Waste Tip */}
