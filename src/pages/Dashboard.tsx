@@ -501,6 +501,28 @@ const Dashboard = () => {
           </motion.div>
         )}
 
+        {/* AI Nutrition Advice Card */}
+        <motion.div {...fadeUp(1.8)} className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)', borderLeft: '4px solid #7C3AED' }}>
+          <p className="text-xs font-medium mb-1.5 flex items-center gap-1.5" style={{ color: '#9CA3AF' }}>
+            🧠 {(t as any).nutritionAdvice?.title || "TYANA's advice"}
+          </p>
+          {adviceLoading ? (
+            <div className="flex items-center gap-2 py-2">
+              <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
+            </div>
+          ) : advice ? (
+            <p className="text-sm leading-relaxed mb-2" style={{ color: '#1E1B4B' }}>{advice}</p>
+          ) : (
+            <p className="text-sm" style={{ color: '#9CA3AF' }}>{(t as any).nutritionAdvice?.noData || 'Log meals to get personalized advice'}</p>
+          )}
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[10px]" style={{ color: '#C4B5FD' }}>{(t as any).nutritionAdvice?.basedOnData || 'Based on your data today'}</span>
+            <button onClick={() => navigate('/nutrition-analysis')} className="text-xs font-semibold flex items-center gap-1" style={{ color: '#7C3AED' }}>
+              📊 {(t as any).nutritionAdvice?.fullAnalysis || 'Full analysis'} →
+            </button>
+          </div>
+        </motion.div>
 
         <motion.div {...fadeUp(2)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
