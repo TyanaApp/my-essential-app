@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Plus, ChevronRight, AlertTriangle, Check } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -390,7 +390,7 @@ const Dashboard = () => {
         <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-              💚 €{data.savingsThisMonth.toFixed(2)} {t.dashboard.savedMonth}
+              💚 {currSymbol}{data.savingsThisMonth.toFixed(2)} {t.dashboard.savedMonth}
             </h3>
             <button
               onClick={() => navigate('/savings')}
@@ -409,9 +409,68 @@ const Dashboard = () => {
               }}
             />
           </div>
-          <p className="text-xs mt-1.5" style={{ color: '#9CA3AF' }}>
-            {t.dashboard.ofGoal.replace('{amount}', String(data.monthlyBudget))}
-          </p>
+          <div className="flex items-center justify-between mt-1.5">
+            <div className="flex items-center gap-1.5">
+              {editingBudget ? (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
+                    className="text-xs font-bold px-1.5 py-0.5 rounded-md border"
+                    style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
+                  >
+                    {currSymbol}
+                  </button>
+                  <input
+                    type="number"
+                    value={budgetInput}
+                    onChange={e => setBudgetInput(e.target.value)}
+                    className="w-20 h-7 px-2 rounded-lg border text-xs outline-none focus:border-[#7C3AED]"
+                    style={{ borderColor: '#DDD6FE' }}
+                    autoFocus
+                    onKeyDown={e => { if (e.key === 'Enter') saveBudget(); }}
+                  />
+                  <button onClick={saveBudget} className="p-0.5 rounded" style={{ color: '#059669' }}>
+                    <Check className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { setBudgetInput(String(data.monthlyBudget)); setEditingBudget(true); }}
+                  className="text-xs cursor-pointer hover:underline"
+                  style={{ color: '#9CA3AF' }}
+                >
+                  {t.dashboard.ofGoal.replace('{amount}', `${currSymbol}${data.monthlyBudget}`)}
+                </button>
+              )}
+            </div>
+            {!editingBudget && (
+              <button
+                onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
+                className="text-[10px] font-medium px-1.5 py-0.5 rounded-md"
+                style={{ backgroundColor: '#F5F3FF', color: '#7C3AED' }}
+              >
+                {data.currency}
+              </button>
+            )}
+          </div>
+          {showCurrencyPicker && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {CURRENCIES.map(c => (
+                <button
+                  key={c.code}
+                  onClick={() => saveCurrency(c.code)}
+                  className="text-xs px-2 py-1 rounded-lg border-[1.5px] font-medium transition-all"
+                  style={{
+                    borderColor: data.currency === c.code ? '#7C3AED' : '#E5E7EB',
+                    backgroundColor: data.currency === c.code ? '#EDE9FE' : 'white',
+                    color: data.currency === c.code ? '#7C3AED' : '#374151',
+                  }}
+                >
+                  {c.symbol} {c.code}
+                </button>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Card 5 — Zero Waste Tip */}
