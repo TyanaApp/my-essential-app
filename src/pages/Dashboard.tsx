@@ -11,6 +11,7 @@ import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
+import EditProfileModal from '@/components/profile/EditProfileModal';
 
 // Russian pluralization helper
 const pluralizeRu = (n: number, one: string, few: string, many: string) => {
@@ -47,6 +48,7 @@ interface DashboardData {
   inventoryCount: number;
   streakCurrent: number;
   streakLongest: number;
+  missingBodyData: boolean;
 }
 
 const Dashboard = () => {
@@ -62,6 +64,7 @@ const Dashboard = () => {
   const [budgetInput, setBudgetInput] = useState('');
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -97,8 +100,8 @@ const Dashboard = () => {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
 
       const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes, inventoryCountRes] = await Promise.all([
-        supabase.from('profiles').select('display_name, currency, streak_current, streak_longest').eq('user_id', user.id).maybeSingle(),
-        supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
+        supabase.from('profiles').select('display_name, currency, streak_current, streak_longest, gender').eq('user_id', user.id).maybeSingle(),
+        supabase.from('user_goals').select('daily_calories_target, monthly_budget, weight_kg, height_cm, age, activity_level, goals').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
         supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).order('expires_at', { ascending: true }).limit(10),
         supabase.from('recipes').select('id, title, prep_time, estimated_cost, ingredients').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20),
@@ -156,10 +159,43 @@ const Dashboard = () => {
         }
       }
 
+      // Calculate personal calorie target
+      const goalsData = goalsRes.data;
+      const profileData = profileRes.data;
+      let caloriesTarget = goalsData?.daily_calories_target || 0;
+      const weight = Number(goalsData?.weight_kg) || 0;
+      const height = Number(goalsData?.height_cm) || 0;
+      const userAge = Number(goalsData?.age) || 0;
+      const gender = profileData?.gender || '';
+      const activity = (goalsData as any)?.activity_level || 'normal';
+      const userGoals: string[] = (goalsData as any)?.goals || [];
+      const missingBodyData = !weight || !height || !userAge;
+
+      if (!caloriesTarget && weight && height && userAge) {
+        const activityMultiplier: Record<string, number> = {
+          low: 1.2, normal: 1.375, moderate: 1.375, active: 1.55, very_active: 1.725,
+        };
+        const mult = activityMultiplier[activity] || 1.375;
+        const BMR = gender === 'male'
+          ? 10 * weight + 6.25 * height - 5 * userAge + 5
+          : 10 * weight + 6.25 * height - 5 * userAge - 161;
+        let TDEE = BMR * mult;
+        if (userGoals.includes('lose_weight')) TDEE -= 400;
+        if (userGoals.includes('gain_muscle')) TDEE += 300;
+        caloriesTarget = Math.round(TDEE);
+
+        // Save calculated target back
+        if (goalsData) {
+          supabase.from('user_goals').update({ daily_calories_target: caloriesTarget } as any).eq('user_id', user.id).then(() => {});
+        }
+      }
+
+      if (!caloriesTarget) caloriesTarget = 2000;
+
       setData({
-        displayName: profileRes.data?.display_name || user?.email?.split('@')[0] || 'there',
+        displayName: profileData?.display_name || user?.email?.split('@')[0] || 'there',
         caloriesConsumed,
-        caloriesTarget: goalsRes.data?.daily_calories_target || 2000,
+        caloriesTarget,
         protein: Math.round(protein),
         fat: Math.round(fat),
         carbs: Math.round(carbs),
@@ -167,12 +203,13 @@ const Dashboard = () => {
         recentRecipes: (recipesRes.data || []).slice(0, 3) as any,
         spentThisMonth,
         savedThisMonth,
-        monthlyBudget: Number(goalsRes.data?.monthly_budget) || 200,
-        currency: profileRes.data?.currency || 'EUR',
+        monthlyBudget: Number(goalsData?.monthly_budget) || 200,
+        currency: profileData?.currency || 'EUR',
         useItUpRecipe,
         inventoryCount: inventoryCountRes.count || 0,
-        streakCurrent: (profileRes.data as any)?.streak_current || 0,
-        streakLongest: (profileRes.data as any)?.streak_longest || 0,
+        streakCurrent: (profileData as any)?.streak_current || 0,
+        streakLongest: (profileData as any)?.streak_longest || 0,
+        missingBodyData,
       });
       setLoading(false);
 
@@ -332,7 +369,7 @@ const Dashboard = () => {
                   {data.caloriesConsumed}
                 </span>
                 <span className="text-xs" style={{ color: '#9CA3AF' }}>
-                  / {data.caloriesTarget} kcal
+                  / {data.caloriesTarget} {(t as any).diary?.kcalUnit || 'kcal'}
                 </span>
               </div>
             </div>
@@ -377,7 +414,26 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Card 2 — Expiring Soon */}
+        {/* Missing body data banner */}
+        {data.missingBodyData && (
+          <motion.div {...fadeUp(1.5)}>
+            <button
+              onClick={() => setEditProfileOpen(true)}
+              className="w-full p-3 rounded-2xl flex items-center gap-3 text-left"
+              style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}
+            >
+              <span className="text-lg">⚙️</span>
+              <span className="text-xs font-medium flex-1" style={{ color: '#92400E' }}>
+                {language === 'ru' ? 'Укажи свои данные для точного расчёта калорий →'
+                  : language === 'lv' ? 'Norādi savus datus precīzam kaloriju aprēķinam →'
+                  : 'Enter your body data for accurate calorie calculation →'}
+              </span>
+              <ChevronRight className="w-4 h-4" style={{ color: '#92400E' }} />
+            </button>
+          </motion.div>
+        )}
+
+
         <motion.div {...fadeUp(2)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#1E1B4B' }}>
@@ -660,6 +716,7 @@ const Dashboard = () => {
           </p>
         </motion.div>
       </div>
+      <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
     </div>
   );
 };
