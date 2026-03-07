@@ -1,7 +1,7 @@
 {
-  "name": "TYANA — Your kitchen thinks for you.",
+  "name": "TYANA — Knows you better than you know yourself.",
   "short_name": "TYANA",
-  "description": "Your kitchen thinks for you. AI-powered kitchen assistant to track inventory, generate recipes, and save money.",
+  "description": "Knows you better than you know yourself. AI-powered personal nutritionist and kitchen assistant.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F5F3FF",
