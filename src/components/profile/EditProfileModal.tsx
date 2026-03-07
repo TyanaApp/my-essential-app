@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useTranslation } from '@/hooks/useTranslation';
 import { useProfile, Profile } from '@/hooks/useProfile';
 import { toast } from 'sonner';
+import GoalChangeModal from '@/components/profile/GoalChangeModal';
 
 interface EditProfileModalProps {
   open: boolean;
@@ -22,6 +23,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const [gender, setGender] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [saving, setSaving] = useState(false);
+  const [goalModalOpen, setGoalModalOpen] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -112,6 +114,16 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
               className="bg-secondary/50 border-border"
             />
           </div>
+
+          {/* Change Goal button */}
+          <Button
+            variant="outline"
+            onClick={() => setGoalModalOpen(true)}
+            className="w-full font-exo text-sm"
+            style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
+          >
+            🎯 {(t as any).trial?.changeGoal || 'Change my goal'}
+          </Button>
         </div>
 
         <div className="flex gap-3">
@@ -131,6 +143,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
           </Button>
         </div>
       </DialogContent>
+      <GoalChangeModal open={goalModalOpen} onOpenChange={setGoalModalOpen} />
     </Dialog>
   );
 };
