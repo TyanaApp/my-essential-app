@@ -359,6 +359,7 @@ export const translations = {
       recipeSaved: 'сохранён ❤️', recipesGenerated: '{count} рецептов найдено ✨',
       breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус',
       time15: '<15 мин', time30: '30 мин', time1h: '1 час', timeAny: 'Любое',
+      addAllMissing: 'Добавить всё →',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -667,6 +668,7 @@ export const translations = {
       recipeSaved: 'saglabāts ❤️', recipesGenerated: '{count} receptes atrastas ✨',
       breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda',
       time15: '<15 min', time30: '30 min', time1h: '1 stunda', timeAny: 'Jebkurš',
+      addAllMissing: 'Pievienot visu →',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
