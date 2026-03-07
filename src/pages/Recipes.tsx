@@ -9,6 +9,7 @@ import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useStreak } from '@/hooks/useStreak';
 
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
@@ -26,6 +27,7 @@ const Recipes = () => {
   const { t, language } = useTranslation();
   usePageTitle(t.recipes.title);
   const { plan } = useSubscription();
+  const { updateStreak } = useStreak();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const [cookingFor, setCookingFor] = useState(2);
@@ -79,6 +81,7 @@ const Recipes = () => {
         setGeneratedRecipes(recipes);
         setShowSettings(false);
         toast.success(t.recipes.recipesGenerated.replace('{count}', String(recipes.length)));
+        await updateStreak();
       }
     } catch {
       toast.error(t.recipes.failedGenerate);

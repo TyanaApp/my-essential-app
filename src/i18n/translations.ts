@@ -172,6 +172,13 @@ export const translations = {
       groceryPurchases: 'Grocery purchases', usedBeforeExpiry: 'Items used before expiry',
       comingSoon: 'Coming soon', comingSoonDesc: 'Detailed savings reports and insights are on the way!',
     },
+    streak: {
+      daysInRow: 'days in a row', achievements: 'Achievements',
+      claimReward: 'Claim reward ✓', keepGoing: 'Keep going',
+      untilNext: '{days} days until next reward!',
+      current: 'Current streak', longest: 'Longest streak',
+      bonusScanUsed: 'Bonus scan used ({left} left)',
+    },
     trial: {
       endsIn: '⏰ Pro trial ends in {days} day(s) → ',
       upgradeNow: 'Upgrade now',
@@ -499,6 +506,13 @@ export const translations = {
       smartDevices: 'Умные устройства',
       notifyDevice: 'Мы сообщим, когда будет готово!',
     },
+    streak: {
+      daysInRow: 'дней подряд', achievements: 'Достижения',
+      claimReward: 'Забрать награду ✓', keepGoing: 'Продолжай',
+      untilNext: 'До награды ещё {days} дней!',
+      current: 'Текущая серия', longest: 'Лучшая серия',
+      bonusScanUsed: 'Использован бонусный скан (осталось {left})',
+    },
     tips: {
       title: 'Совет дня: ноль отходов',
       daily: [
@@ -801,6 +815,13 @@ export const translations = {
       history: 'Vēsture', noEntries: 'Pagaidām nav ierakstu',
       groceryPurchases: 'Pārtikas pirkumi', usedBeforeExpiry: 'Produkti izlietoti pirms termiņa',
       comingSoon: 'Drīzumā', comingSoonDesc: 'Detalizēti ietaupījumu pārskati ir ceļā!',
+    },
+    streak: {
+      daysInRow: 'dienas pēc kārtas', achievements: 'Sasniegumi',
+      claimReward: 'Saņemt balvu ✓', keepGoing: 'Turpini',
+      untilNext: 'Līdz nākamajai balvai vēl {days} dienas!',
+      current: 'Pašreizējā sērija', longest: 'Garākā sērija',
+      bonusScanUsed: 'Izmantots bonusa skens (atlikuši {left})',
     },
     trial: {
       endsIn: '⏰ Pro izmēģinājums beidzas pēc {days} d. → ',

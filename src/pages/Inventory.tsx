@@ -13,6 +13,8 @@ import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAutoReduce } from '@/hooks/useAutoReduce';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useStreak } from '@/hooks/useStreak';
+import { toast as sonnerToast } from 'sonner';
 
 export interface InventoryItem {
   id: string;
@@ -62,20 +64,34 @@ const Inventory = () => {
     setScanCount(Number(localStorage.getItem(key) || '0'));
   }, []);
 
-  const handleScanClick = () => {
+  const { updateStreak, useBonusScan } = useStreak();
+  const streakT = (t as any).streak || {};
+
+  const handleScanClick = async () => {
     const limit = PLAN_LIMITS[plan].scansPerMonth;
     if (scanCount >= limit) {
+      // Try bonus scan first
+      const used = await useBonusScan();
+      if (used) {
+        const { data: prof } = await supabase.from('profiles').select('bonus_scans').eq('user_id', user!.id).maybeSingle();
+        const left = (prof as any)?.bonus_scans || 0;
+        toast.success((streakT.bonusScanUsed || 'Bonus scan used ({left} left)').replace('{left}', String(left)));
+        setScanOpen(true);
+        return;
+      }
       setUpgradeOpen(true);
       return;
     }
     setScanOpen(true);
   };
 
-  const handleScanCompleted = () => {
+  const handleScanCompleted = async () => {
     const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
     const newCount = scanCount + 1;
     localStorage.setItem(key, String(newCount));
     setScanCount(newCount);
+    // Update streak on scan
+    await updateStreak();
   };
 
   const fetchItems = async () => {

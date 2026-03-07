@@ -123,6 +123,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           birth_date: string | null
+          bonus_scans: number | null
           city: string | null
           created_at: string
           currency: string | null
@@ -130,6 +131,10 @@ export type Database = {
           gender: string | null
           id: string
           onboarding_completed: boolean | null
+          streak_badges: string[] | null
+          streak_current: number | null
+          streak_last_activity: string | null
+          streak_longest: number | null
           stripe_customer_id: string | null
           subscription_plan: string | null
           subscription_status: string | null
@@ -141,6 +146,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
+          bonus_scans?: number | null
           city?: string | null
           created_at?: string
           currency?: string | null
@@ -148,6 +154,10 @@ export type Database = {
           gender?: string | null
           id?: string
           onboarding_completed?: boolean | null
+          streak_badges?: string[] | null
+          streak_current?: number | null
+          streak_last_activity?: string | null
+          streak_longest?: number | null
           stripe_customer_id?: string | null
           subscription_plan?: string | null
           subscription_status?: string | null
@@ -159,6 +169,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
+          bonus_scans?: number | null
           city?: string | null
           created_at?: string
           currency?: string | null
@@ -166,6 +177,10 @@ export type Database = {
           gender?: string | null
           id?: string
           onboarding_completed?: boolean | null
+          streak_badges?: string[] | null
+          streak_current?: number | null
+          streak_last_activity?: string | null
+          streak_longest?: number | null
           stripe_customer_id?: string | null
           subscription_plan?: string | null
           subscription_status?: string | null

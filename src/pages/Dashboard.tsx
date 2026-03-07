@@ -45,6 +45,8 @@ interface DashboardData {
   currency: string;
   useItUpRecipe: { id: string; title: string; matchCount: number } | null;
   inventoryCount: number;
+  streakCurrent: number;
+  streakLongest: number;
 }
 
 const Dashboard = () => {
@@ -95,7 +97,7 @@ const Dashboard = () => {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
 
       const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes, inventoryCountRes] = await Promise.all([
-        supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
+        supabase.from('profiles').select('display_name, currency, streak_current, streak_longest').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
         supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).order('expires_at', { ascending: true }).limit(10),
@@ -169,6 +171,8 @@ const Dashboard = () => {
         currency: profileRes.data?.currency || 'EUR',
         useItUpRecipe,
         inventoryCount: inventoryCountRes.count || 0,
+        streakCurrent: (profileRes.data as any)?.streak_current || 0,
+        streakLongest: (profileRes.data as any)?.streak_longest || 0,
       });
       setLoading(false);
 
@@ -263,6 +267,46 @@ const Dashboard = () => {
         </h2>
         <p className="text-sm mt-0.5" style={{ color: '#9CA3AF' }}>{formatDate()}</p>
       </motion.div>
+
+      {/* Streak card */}
+      {data.streakCurrent > 0 && (
+        <motion.div {...fadeUp(0.5)} className="mb-4">
+          <button
+            onClick={() => navigate('/achievements')}
+            style={cardStyle}
+            className="w-full p-4 flex items-center gap-3 text-left"
+          >
+            <span className="text-2xl">🔥</span>
+            <div className="flex-1">
+              <p className="text-base font-bold" style={{ color: '#1E1B4B' }}>
+                {data.streakCurrent} {(t as any).streak?.daysInRow || 'days in a row'}
+              </p>
+              <p className="text-xs" style={{ color: '#9CA3AF' }}>
+                {(() => {
+                  const milestones = [3, 7, 14, 30, 100];
+                  const next = milestones.find(m => m > data.streakCurrent);
+                  if (!next) return (t as any).streak?.keepGoing || 'Keep going!';
+                  const daysLeft = next - data.streakCurrent;
+                  return ((t as any).streak?.untilNext || '{days} days until next reward!').replace('{days}', String(daysLeft));
+                })()}
+              </p>
+            </div>
+            <div className="w-16 h-1.5 rounded-full" style={{ backgroundColor: '#EDE9FE' }}>
+              <div
+                className="h-full rounded-full"
+                style={{
+                  backgroundColor: '#7C3AED',
+                  width: `${Math.min(
+                    (data.streakCurrent / ([3, 7, 14, 30, 100].find(m => m > data.streakCurrent) || 100)) * 100,
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+            <ChevronRight className="w-4 h-4" style={{ color: '#9CA3AF' }} />
+          </button>
+        </motion.div>
+      )}
 
       <div className="space-y-4">
         {/* Card 1 — Calories */}

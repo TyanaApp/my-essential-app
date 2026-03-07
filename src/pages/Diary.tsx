@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useStreak } from '@/hooks/useStreak';
+import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import {
   Dialog,
@@ -51,6 +53,8 @@ const getWeekDays = (selectedDate: Date) => {
 const Diary = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { updateStreak } = useStreak();
+  const [streakReward, setStreakReward] = useState<{ badge: string; message: string; bonusScans?: number; grantLite?: boolean; grantPro?: boolean } | null>(null);
   usePageTitle(t.diary.title);
 
   const DAY_LABELS = t.dayLabels;
@@ -160,6 +164,9 @@ const Diary = () => {
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
       toast.success(`${recipe.title} ${t.diary.logged}`);
       setModalOpen(false);
+      // Update streak
+      const reward = await updateStreak();
+      if (reward) setStreakReward(reward);
     } catch { toast.error(t.common.error); }
   };
 
@@ -178,6 +185,8 @@ const Diary = () => {
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
       toast.success(`${manualName} ${t.diary.logged}`);
       setModalOpen(false);
+      const reward = await updateStreak();
+      if (reward) setStreakReward(reward);
     } catch { toast.error(t.common.error); }
   };
 
@@ -451,6 +460,15 @@ const Diary = () => {
           )}
         </DialogContent>
       </Dialog>
+      <RewardModal
+        open={!!streakReward}
+        onClose={() => setStreakReward(null)}
+        badge={streakReward?.badge || ''}
+        streakDays={Number(streakReward?.message || 0)}
+        bonusScans={streakReward?.bonusScans}
+        grantLite={streakReward?.grantLite}
+        grantPro={streakReward?.grantPro}
+      />
     </div>
   );
 };
