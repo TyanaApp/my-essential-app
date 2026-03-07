@@ -156,6 +156,7 @@ const Inventory = () => {
   };
 
   const openAdd = () => { setEditItem(null); setModalOpen(true); };
+  const activeLocation = tab === 'expiring' ? 'fridge' : tab;
   const openEdit = (item: InventoryItem) => { setEditItem(item); setModalOpen(true); };
 
   const expiryColor = (date: string | null) => {
@@ -349,6 +350,7 @@ const Inventory = () => {
         onClose={() => { setModalOpen(false); setEditItem(null); }}
         editItem={editItem}
         onSaved={fetchItems}
+        defaultLocation={activeLocation}
       />
       <ScanModal
         open={scanOpen}

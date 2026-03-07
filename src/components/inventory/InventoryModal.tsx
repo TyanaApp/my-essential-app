@@ -19,9 +19,10 @@ interface Props {
   onClose: () => void;
   editItem: InventoryItem | null;
   onSaved: () => void;
+  defaultLocation?: string;
 }
 
-const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
+const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'fridge' }: Props) => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const [name, setName] = useState('');
@@ -65,7 +66,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved }: Props) => {
       setConsumptionRate(editItem.consumption_rate || 'normal');
       setTrackingMode(editItem.tracking_mode || 'tracked');
     } else {
-      setName(''); setQuantity('1'); setUnit('pcs'); setLocation('fridge');
+      setName(''); setQuantity('1'); setUnit('pcs'); setLocation(defaultLocation);
       setExpiresAt(''); setPrice(''); setConsumptionRate('normal'); setTrackingMode('tracked');
     }
   }, [editItem, open]);
