@@ -23,6 +23,21 @@ const activityLevels = [
   { value: 'very_active', emoji: '🔥' },
 ] as const;
 
+const DISLIKE_CHIPS = [
+  { id: 'fish', emoji: '🐟' },
+  { id: 'broccoli', emoji: '🥦' },
+  { id: 'onion', emoji: '🧅' },
+  { id: 'mushrooms', emoji: '🍄' },
+  { id: 'bell_pepper', emoji: '🫑' },
+  { id: 'eggplant', emoji: '🍆' },
+  { id: 'spinach', emoji: '🥬' },
+  { id: 'legumes', emoji: '🫘' },
+  { id: 'offal', emoji: '🥩' },
+  { id: 'spicy', emoji: '🌶' },
+  { id: 'dairy', emoji: '🥛' },
+  { id: 'garlic', emoji: '🧄' },
+];
+
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
   const { profile, updateProfile } = useProfile();
@@ -37,28 +52,45 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const [activityLevel, setActivityLevel] = useState('normal');
   const [saving, setSaving] = useState(false);
   const [goalModalOpen, setGoalModalOpen] = useState(false);
+  const [dislikedFoods, setDislikedFoods] = useState<string[]>([]);
+  const [dislikedFreeText, setDislikedFreeText] = useState('');
 
   const ep = (t as any).editProfile || {};
+  const dl = (t as any).dislikes || {};
+
+  const getDislikeLabel = (id: string) => dl[id] || id;
+
+  // Map chip IDs to known dislike labels for matching
+  const knownDislikeLabels = DISLIKE_CHIPS.map(c => ({ id: c.id, label: getDislikeLabel(c.id) }));
 
   useEffect(() => {
     if (!open || !user) return;
-    // Load profile data
     if (profile) {
       setDisplayName(profile.display_name || '');
       setGender(profile.gender || '');
       setBirthDate(profile.birth_date || '');
     }
-    // Load goals data (weight, height, age, activity)
     const loadGoals = async () => {
       const { data } = await supabase
         .from('user_goals')
-        .select('weight_kg, height_cm, age, activity_level')
+        .select('weight_kg, height_cm, age, activity_level, disliked_foods')
         .eq('user_id', user.id)
         .maybeSingle();
       if (data) {
         if (data.weight_kg) setWeightInput(String(data.weight_kg));
         if (data.height_cm) setHeightInput(String(data.height_cm));
         setActivityLevel(data.activity_level || 'normal');
+        // Parse existing dislikes back into chips + free text
+        const existing: string[] = (data as any).disliked_foods || [];
+        const chipIds: string[] = [];
+        const freeItems: string[] = [];
+        for (const item of existing) {
+          const match = knownDislikeLabels.find(k => k.label.toLowerCase() === item.toLowerCase());
+          if (match) chipIds.push(match.id);
+          else freeItems.push(item);
+        }
+        setDislikedFoods(chipIds);
+        setDislikedFreeText(freeItems.join(', '));
       }
     };
     loadGoals();
@@ -77,11 +109,20 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const toKg = (val: number, unit: string) => unit === 'lbs' ? Math.round(val * 0.453592) : val;
   const toCm = (val: number, unit: string) => unit === 'ft' ? Math.round(val * 30.48) : val;
 
+  const toggleDislike = (id: string) => setDislikedFoods(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+
+  const buildDislikeArray = (): string[] => {
+    const items = [...dislikedFoods.map(id => getDislikeLabel(id))];
+    if (dislikedFreeText.trim()) {
+      items.push(...dislikedFreeText.split(',').map(s => s.trim()).filter(Boolean));
+    }
+    return items;
+  };
+
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
 
-    // Save profile fields
     const { error: profileError } = await updateProfile({
       display_name: displayName,
       gender: gender || null,
@@ -94,17 +135,16 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       return;
     }
 
-    // Compute values in kg/cm
     const weightKg = toKg(Number(weightInput) || 0, weightUnit);
     const heightCm = toCm(Number(heightInput) || 0, heightUnit);
     const age = calculateAge(birthDate);
 
-    // Upsert user_goals with body data
     const goalsUpdate: Record<string, any> = {
       weight_kg: weightKg || null,
       height_cm: heightCm || null,
       age: age || null,
       activity_level: activityLevel,
+      disliked_foods: buildDislikeArray(),
     };
 
     const { data: existingGoals } = await supabase
@@ -119,7 +159,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       await supabase.from('user_goals').insert({ user_id: user.id, ...goalsUpdate });
     }
 
-    // Recalculate calories if we have all data
     if (weightKg && heightCm && age) {
       const activityMultiplier: Record<string, number> = {
         low: 1.2, normal: 1.375, moderate: 1.375, active: 1.55, very_active: 1.725,
@@ -283,6 +322,34 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Food Preferences / Dislikes */}
+          <div className="space-y-2">
+            <Label className="font-exo text-muted-foreground">{dl.sectionTitle || 'Food preferences'}</Label>
+            <p className="text-xs text-muted-foreground">{dl.subtitle || "TYANA will never suggest these"}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {DISLIKE_CHIPS.map((chip) => (
+                <button
+                  key={chip.id}
+                  type="button"
+                  onClick={() => toggleDislike(chip.id)}
+                  className={`px-2.5 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                    dislikedFoods.includes(chip.id)
+                      ? 'border-primary bg-primary/10 text-foreground'
+                      : 'border-border bg-secondary/30 text-muted-foreground hover:bg-secondary/50'
+                  }`}
+                >
+                  {dislikedFoods.includes(chip.id) && '✕ '}{chip.emoji} {getDislikeLabel(chip.id)}
+                </button>
+              ))}
+            </div>
+            <Input
+              value={dislikedFreeText}
+              onChange={(e) => setDislikedFreeText(e.target.value)}
+              placeholder={dl.placeholder || "Add anything else... (e.g. cilantro, avocado)"}
+              className="bg-secondary/50 border-border"
+            />
           </div>
 
           {/* Change Goal button */}

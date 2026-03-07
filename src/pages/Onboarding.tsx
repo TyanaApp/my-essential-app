@@ -12,6 +12,22 @@ type Diet = 'omnivore' | 'vegetarian' | 'vegan' | 'keto' | 'gluten-free';
 type Activity = 'sedentary' | 'light' | 'moderate' | 'active';
 
 const ALLERGIES = ['Nuts', 'Dairy', 'Eggs', 'Gluten', 'Fish', 'Soy'];
+
+const DISLIKE_CHIPS = [
+  { id: 'fish', emoji: '🐟' },
+  { id: 'broccoli', emoji: '🥦' },
+  { id: 'onion', emoji: '🧅' },
+  { id: 'mushrooms', emoji: '🍄' },
+  { id: 'bell_pepper', emoji: '🫑' },
+  { id: 'eggplant', emoji: '🍆' },
+  { id: 'spinach', emoji: '🥬' },
+  { id: 'legumes', emoji: '🫘' },
+  { id: 'offal', emoji: '🥩' },
+  { id: 'spicy', emoji: '🌶' },
+  { id: 'dairy', emoji: '🥛' },
+  { id: 'garlic', emoji: '🧄' },
+];
+
 const TOTAL_STEPS = 5;
 
 const Onboarding = () => {
@@ -39,6 +55,13 @@ const Onboarding = () => {
   const [householdSize, setHouseholdSize] = useState(2);
   const [dietType, setDietType] = useState<Diet>('omnivore');
   const [allergies, setAllergies] = useState<string[]>([]);
+  const [dislikedFoods, setDislikedFoods] = useState<string[]>([]);
+  const [dislikedFreeText, setDislikedFreeText] = useState('');
+  const [hasFamilyDislikes, setHasFamilyDislikes] = useState(false);
+  const [familyDislikes, setFamilyDislikes] = useState<string[]>([]);
+  const [familyDislikesFreeText, setFamilyDislikesFreeText] = useState('');
+
+  const dl = (t as any).dislikes || {};
 
   const GOALS: { id: Goal; emoji: string; labelKey: keyof typeof t.onboarding }[] = [
     { id: 'lose', emoji: '🏃', labelKey: 'goalLose' },
@@ -63,6 +86,10 @@ const Onboarding = () => {
     { id: 'moderate', labelKey: 'moderatelyActive', factor: 1.55 },
     { id: 'active', labelKey: 'veryActive', factor: 1.725 },
   ];
+
+  const getDislikeLabel = (id: string) => {
+    return dl[id] || id;
+  };
 
   // Pre-fill name from OAuth
   useEffect(() => {
@@ -97,6 +124,16 @@ const Onboarding = () => {
 
   const toggleGoal = (g: Goal) => setGoals((prev) => prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]);
   const toggleAllergy = (a: string) => setAllergies((prev) => prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]);
+  const toggleDislike = (id: string) => setDislikedFoods((prev) => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  const toggleFamilyDislike = (id: string) => setFamilyDislikes((prev) => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+
+  const buildDislikeArray = (chips: string[], freeText: string): string[] => {
+    const items = [...chips.map(id => getDislikeLabel(id))];
+    if (freeText.trim()) {
+      items.push(...freeText.split(',').map(s => s.trim()).filter(Boolean));
+    }
+    return items;
+  };
 
   const handleNext = useCallback(async () => {
     setSaving(true);
@@ -112,12 +149,17 @@ const Onboarding = () => {
           trial_end: new Date(Date.now() + 7 * 86400000).toISOString(),
         } as any).eq('user_id', user.id);
 
+        const finalDislikes = buildDislikeArray(dislikedFoods, dislikedFreeText);
+        const finalFamilyDislikes = hasFamilyDislikes ? buildDislikeArray(familyDislikes, familyDislikesFreeText) : [];
+
         await supabase.from('user_goals').upsert({
           user_id: user.id,
           goals,
           diet_type: dietType,
           household_size: householdSize,
           allergies,
+          disliked_foods: finalDislikes,
+          family_dislikes: finalFamilyDislikes,
           daily_calories_target: calories || 2000,
           weight_kg: weight ? parseFloat(weight) : null,
           height_cm: height ? parseInt(height) : null,
@@ -136,7 +178,7 @@ const Onboarding = () => {
     } finally {
       setSaving(false);
     }
-  }, [step, user, name, goals, dietType, householdSize, allergies, calories, weight, height, age, activity, navigate, t, needsBody]);
+  }, [step, user, name, goals, dietType, householdSize, allergies, calories, weight, height, age, activity, navigate, t, needsBody, dislikedFoods, dislikedFreeText, hasFamilyDislikes, familyDislikes, familyDislikesFreeText]);
 
   const handleBack = () => {
     if (step === 3 && !needsBody) setStep(1);
@@ -323,7 +365,7 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* ─── STEP 4: Diet & Family ─── */}
+              {/* ─── STEP 4: Diet & Family & Dislikes ─── */}
               {step === 3 && (
                 <div>
                   <h2 className="text-white font-bold text-center" style={{ fontSize: 26 }}>
@@ -367,7 +409,7 @@ const Onboarding = () => {
                   <label className="text-white/70 text-xs mb-2 block">
                     {t.onboarding.allergies} {t.onboarding.allergyOptional}
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-5">
                     {ALLERGIES.map((a) => (
                       <button
                         key={a}
@@ -382,6 +424,81 @@ const Onboarding = () => {
                       </button>
                     ))}
                   </div>
+
+                  {/* Disliked Foods */}
+                  <label className="text-white/70 text-xs mb-1 block">
+                    {dl.title || "What foods do you dislike?"}
+                  </label>
+                  <p className="text-white/50 text-[11px] mb-2">{dl.subtitle || "TYANA will never suggest these"}</p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {DISLIKE_CHIPS.map((chip) => (
+                      <button
+                        key={chip.id}
+                        onClick={() => toggleDislike(chip.id)}
+                        className="px-3 py-2 text-white text-xs font-medium transition-all rounded-full"
+                        style={{
+                          background: dislikedFoods.includes(chip.id) ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
+                          border: dislikedFoods.includes(chip.id) ? '1.5px solid white' : '1.5px solid rgba(255,255,255,0.2)',
+                        }}
+                      >
+                        {dislikedFoods.includes(chip.id) && '✕ '}{chip.emoji} {getDislikeLabel(chip.id)}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    value={dislikedFreeText}
+                    onChange={(e) => setDislikedFreeText(e.target.value)}
+                    placeholder={dl.placeholder || "Add anything else... (e.g. cilantro, avocado)"}
+                    className="w-full h-10 rounded-xl px-4 text-white placeholder:text-white/40 border-0 outline-none text-sm mb-5"
+                    style={{ background: 'rgba(255,255,255,0.12)' }}
+                  />
+
+                  {/* Family dislikes */}
+                  {householdSize > 1 && (
+                    <>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-white/70 text-xs">{dl.familyQuestion || "Does anyone in your family avoid certain foods?"}</span>
+                        <div className="flex rounded-lg overflow-hidden" style={{ border: '1.5px solid rgba(255,255,255,0.3)' }}>
+                          {[{ label: dl.yes || 'Yes', val: true }, { label: dl.no || 'No', val: false }].map(opt => (
+                            <button
+                              key={String(opt.val)}
+                              onClick={() => setHasFamilyDislikes(opt.val)}
+                              className="px-3 py-1.5 text-xs font-medium text-white transition-all"
+                              style={{ background: hasFamilyDislikes === opt.val ? 'rgba(255,255,255,0.25)' : 'transparent' }}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      {hasFamilyDislikes && (
+                        <>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {DISLIKE_CHIPS.map((chip) => (
+                              <button
+                                key={chip.id}
+                                onClick={() => toggleFamilyDislike(chip.id)}
+                                className="px-3 py-1.5 text-white text-[11px] font-medium transition-all rounded-full"
+                                style={{
+                                  background: familyDislikes.includes(chip.id) ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
+                                  border: familyDislikes.includes(chip.id) ? '1.5px solid white' : '1.5px solid rgba(255,255,255,0.2)',
+                                }}
+                              >
+                                {familyDislikes.includes(chip.id) && '✕ '}{chip.emoji} {getDislikeLabel(chip.id)}
+                              </button>
+                            ))}
+                          </div>
+                          <input
+                            value={familyDislikesFreeText}
+                            onChange={(e) => setFamilyDislikesFreeText(e.target.value)}
+                            placeholder={dl.placeholder || "Add anything else..."}
+                            className="w-full h-10 rounded-xl px-4 text-white placeholder:text-white/40 border-0 outline-none text-sm"
+                            style={{ background: 'rgba(255,255,255,0.12)' }}
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               )}
 

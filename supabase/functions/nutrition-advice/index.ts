@@ -25,13 +25,28 @@ serve(async (req) => {
     const langMap: Record<string, string> = { ru: "Russian", lv: "Latvian", en: "English" };
     const lang = langMap[language] || "English";
 
+    const dislikedFoods = (userGoals?.disliked_foods || []).join(', ');
+    const familyDislikes = (userGoals?.family_dislikes || []).join(', ');
+    const allergies = (userGoals?.allergies || []).join(', ');
+
+    const restrictionsBlock = `
+CRITICAL FOOD RESTRICTIONS - user trust depends on this:
+- NEVER mention or suggest foods the user DISLIKES: ${dislikedFoods || 'none'}
+- NEVER mention foods the user's FAMILY dislikes: ${familyDislikes || 'none'}
+- NEVER mention ALLERGENS: ${allergies || 'none'}
+- Diet type: ${userGoals?.diet_type || 'omnivore'}
+If suggesting foods, only suggest things compatible with these restrictions.`;
+
     const userDataPrompt = `User profile:
 - Goal: ${userGoals?.goals?.join(', ') || 'not set'}
 - Daily calorie target: ${userGoals?.daily_calories_target || 2000} kcal
 - Diet type: ${userGoals?.diet_type || 'omnivore'}
-- Allergies: ${userGoals?.allergies?.join(', ') || 'none'}
+- Allergies: ${allergies || 'none'}
+- Disliked foods: ${dislikedFoods || 'none'}
+- Family dislikes: ${familyDislikes || 'none'}
 - Weight: ${userProfile?.weight_kg || '?'}kg, Height: ${userProfile?.height_cm || '?'}cm
 - Age: ${userProfile?.age || '?'}, Activity: ${userProfile?.activity_level || 'normal'}
+- Household size: ${userGoals?.household_size || 1} people
 
 Today's meals and nutrition:
 ${JSON.stringify(todayMeals || [])}
@@ -65,9 +80,13 @@ ${(inventory || []).slice(0, 10).map((i: any) => i.name).join(', ') || 'unknown'
 📈 Weekly prediction
 (if they continue this way, what happens in 1-2 weeks)
 
+${restrictionsBlock}
+
 YOU MUST respond ENTIRELY in ${lang}. Be specific, use their actual numbers. Be warm and motivating.`;
     } else {
       systemPrompt = `You are an expert nutritionist and health coach. Analyze the user's data deeply and give ONE specific, actionable advice today. Be like a personal nutritionist who knows everything about this person. Respond in ${lang}. Be warm, specific, and motivating. Max 3 sentences.
+
+${restrictionsBlock}
 
 Examples of good advice:
 - "You only had 45g protein today with a target of 120g. Add chicken breast or eggs for dinner — you have them in your fridge!"
