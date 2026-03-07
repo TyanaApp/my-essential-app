@@ -816,8 +816,13 @@ export const translations = {
       groceryPurchases: 'Pārtikas pirkumi', usedBeforeExpiry: 'Produkti izlietoti pirms termiņa',
       comingSoon: 'Drīzumā', comingSoonDesc: 'Detalizēti ietaupījumu pārskati ir ceļā!',
     },
-    trial: {
-      endsIn: '⏰ Pro izmēģinājums beidzas pēc {days} d. → ',
+    streak: {
+      daysInRow: 'dienas pēc kārtas', achievements: 'Sasniegumi',
+      claimReward: 'Saņemt balvu ✓', keepGoing: 'Turpini',
+      untilNext: 'Līdz nākamajai balvai vēl {days} dienas!',
+      current: 'Pašreizējā sērija', longest: 'Garākā sērija',
+      bonusScanUsed: 'Izmantots bonusa skens (atlikuši {left})',
+    },
       upgradeNow: 'Uzlabot tagad',
       expiredTitle: 'Izmēģinājums beidzies',
       expiredDesc: 'Uzlabojiet, lai saglabātu Pro funkcijas.',
