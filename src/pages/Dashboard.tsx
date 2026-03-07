@@ -82,7 +82,7 @@ const Dashboard = () => {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
 
       const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes] = await Promise.all([
-        supabase.from('profiles').select('display_name').eq('user_id', user.id).maybeSingle(),
+        supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
         supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).gte('expires_at', today).order('expires_at', { ascending: true }).limit(5),
@@ -145,6 +145,7 @@ const Dashboard = () => {
         recentRecipes: (recipesRes.data || []).slice(0, 3) as any,
         savingsThisMonth,
         monthlyBudget: Number(goalsRes.data?.monthly_budget) || 200,
+        currency: profileRes.data?.currency || 'EUR',
         useItUpRecipe,
       });
       setLoading(false);
