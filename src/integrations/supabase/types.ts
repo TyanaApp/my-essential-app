@@ -300,6 +300,7 @@ export type Database = {
           daily_calories_target: number | null
           diet_type: string | null
           disliked_foods: string[] | null
+          family_dislikes: string[] | null
           goals: string[] | null
           height_cm: number | null
           household_size: number | null
@@ -317,6 +318,7 @@ export type Database = {
           daily_calories_target?: number | null
           diet_type?: string | null
           disliked_foods?: string[] | null
+          family_dislikes?: string[] | null
           goals?: string[] | null
           height_cm?: number | null
           household_size?: number | null
@@ -334,6 +336,7 @@ export type Database = {
           daily_calories_target?: number | null
           diet_type?: string | null
           disliked_foods?: string[] | null
+          family_dislikes?: string[] | null
           goals?: string[] | null
           height_cm?: number | null
           household_size?: number | null
