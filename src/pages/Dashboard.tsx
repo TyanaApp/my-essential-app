@@ -345,7 +345,12 @@ const Dashboard = () => {
             <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#1E1B4B' }}>
               <AlertTriangle className="w-4 h-4" style={{ color: '#EA580C' }} />
               {data.expiringItems.length > 0
-                ? t.dashboard.expiringTitle.replace('{count}', String(data.expiringItems.length))
+                ? (() => {
+                    const n = data.expiringItems.length;
+                    if (language === 'ru') return `${n} ${pluralizeRu(n, 'продукт истекает', 'продукта истекают', 'продуктов истекают')}`;
+                    if (language === 'lv') return `${n} ${n === 1 ? 'produkts beidzas' : 'produkti beidzas'}`;
+                    return `${n} ${n === 1 ? 'item expiring soon' : 'items expiring soon'}`;
+                  })()
                 : t.dashboard.nothingExpiring}
             </h3>
             <button
@@ -382,7 +387,12 @@ const Dashboard = () => {
                           ? ((t.dashboard as any).expired || 'Expired')
                           : isToday
                           ? t.dashboard.today
-                          : t.dashboard.daysLeft.replace('{days}', String(item.days))}
+                          : (() => {
+                              const d = item.days;
+                              if (language === 'ru') return `${d} ${pluralizeRu(d, 'день', 'дня', 'дней')}`;
+                              if (language === 'lv') return `${d} ${d === 1 ? 'diena' : 'dienas'}`;
+                              return `${d}d left`;
+                            }())}
                       </span>
                     </div>
                     {item.suggestion && (
@@ -418,7 +428,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>{data.useItUpRecipe.title}</p>
                   <p className="text-[11px]" style={{ color: '#059669' }}>
-                    {data.useItUpRecipe.matchCount} {language === 'ru' ? 'совпадающих продуктов' : language === 'lv' ? 'atbilstoši produkti' : 'matching ingredients'}
+                    {data.useItUpRecipe.matchCount} {language === 'ru' ? pluralizeRu(data.useItUpRecipe.matchCount, 'совпадающий продукт', 'совпадающих продукта', 'совпадающих продуктов') : language === 'lv' ? 'atbilstoši produkti' : 'matching ingredients'}
                   </p>
                 </div>
               </div>
@@ -455,21 +465,30 @@ const Dashboard = () => {
                   style={{ backgroundColor: '#F5F3FF', border: '1px solid #EDE9FE' }}
                   onClick={() => navigate('/recipes')}
                 >
-                  <div
-                    className="h-20 flex items-center justify-center text-2xl"
-                    style={{ background: 'linear-gradient(135deg, #7C3AED, #A78BFA)' }}
-                  >
-                    🍽
-                  </div>
+                  <img
+                    src={`https://source.unsplash.com/400x300/?${encodeURIComponent(r.title + ' food')}`}
+                    alt={r.title}
+                    className="w-full h-20 object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
                   <div className="p-2.5">
                     <p className="text-xs font-semibold truncate" style={{ color: '#1E1B4B' }}>{r.title}</p>
                     <p className="text-[10px] mt-0.5" style={{ color: '#9CA3AF' }}>
-                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · €${r.estimatedCost.toFixed(2)}` : ''}
+                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · ${currSymbol}${r.estimatedCost.toFixed(2)}` : ''}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
+          ) : data.inventoryCount > 0 ? (
+            <button
+              onClick={() => navigate('/recipes?useHome=true')}
+              className="w-full py-6 rounded-xl text-sm font-medium flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', border: '1px dashed #DDD6FE' }}
+            >
+              <Sparkles className="w-4 h-4" />
+              {language === 'ru' ? '✨ Сгенерировать рецепты из холодильника →' : language === 'lv' ? '✨ Ģenerēt receptes no ledusskapja →' : '✨ Generate recipes from your fridge →'}
+            </button>
           ) : (
             <button
               onClick={() => navigate('/recipes')}
