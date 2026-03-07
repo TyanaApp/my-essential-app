@@ -158,6 +158,31 @@ const Dashboard = () => {
         useItUpRecipe,
       });
       setLoading(false);
+
+      // Fetch AI suggestions for expiring items
+      if (expiringItems.length > 0) {
+        setLoadingSuggestions(true);
+        try {
+          const { data: sugData } = await supabase.functions.invoke('expiring-suggestions', {
+            body: { items: expiringItems, language },
+          });
+          if (sugData?.suggestions && Array.isArray(sugData.suggestions)) {
+            setData(prev => {
+              if (!prev) return prev;
+              const updated = prev.expiringItems.map(item => {
+                const sug = sugData.suggestions.find((s: any) => 
+                  s.name?.toLowerCase() === item.name.toLowerCase()
+                );
+                return sug ? { ...item, suggestion: sug.suggestion, action: sug.action } : item;
+              });
+              return { ...prev, expiringItems: updated };
+            });
+          }
+        } catch (e) {
+          console.error('Suggestions error:', e);
+        }
+        setLoadingSuggestions(false);
+      }
     };
     load();
   }, [user]);
