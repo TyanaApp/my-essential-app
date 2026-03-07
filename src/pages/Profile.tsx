@@ -104,6 +104,11 @@ const Profile = () => {
       onClick: () => setEditProfileOpen(true),
     },
     {
+      icon: Activity,
+      label: (t as any).streak?.achievements || 'Achievements',
+      onClick: () => navigate('/achievements'),
+    },
+    {
       icon: Shield,
       label: t.profile.accountSettings,
       onClick: () => setAccountSettingsOpen(true),

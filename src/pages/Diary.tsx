@@ -460,6 +460,15 @@ const Diary = () => {
           )}
         </DialogContent>
       </Dialog>
+      <RewardModal
+        open={!!streakReward}
+        onClose={() => setStreakReward(null)}
+        badge={streakReward?.badge || ''}
+        streakDays={Number(streakReward?.message || 0)}
+        bonusScans={streakReward?.bonusScans}
+        grantLite={streakReward?.grantLite}
+        grantPro={streakReward?.grantPro}
+      />
     </div>
   );
 };
