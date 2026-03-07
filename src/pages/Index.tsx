@@ -47,7 +47,7 @@ const Index = () => {
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
-          <img src={tyanaLogoText} alt="TYANA" className="h-7" />
+          <span className="font-tyana text-xl" style={{ color: '#7C3AED' }}>TYANA</span>
 
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item, i) => (
@@ -408,7 +408,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
             <div>
-              <img src={tyanaLogoText} alt="TYANA" className="h-6" />
+              <span className="font-tyana text-lg" style={{ color: '#7C3AED' }}>TYANA</span>
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <div className="flex gap-6">
