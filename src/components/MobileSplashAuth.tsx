@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import MobileInstallBanner from '@/components/install/MobileInstallBanner';
+import PWAInstallGuide from '@/components/install/PWAInstallGuide';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -49,6 +50,9 @@ const MobileSplashAuth: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [showInstallGuide, setShowInstallGuide] = useState(() => {
+    return !localStorage.getItem('install_prompt_shown');
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -104,6 +108,8 @@ const MobileSplashAuth: React.FC = () => {
     >
       {/* Install banner at top */}
       <MobileInstallBanner />
+      {/* First-time install guide modal */}
+      {showInstallGuide && <PWAInstallGuide onDismiss={() => setShowInstallGuide(false)} />}
       {/* Top branding */}
       <div className="text-center" style={{ marginTop: 60 }}>
         <h1 className="text-white font-bold" style={{ fontSize: 32 }}>
