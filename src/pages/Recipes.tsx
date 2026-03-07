@@ -81,6 +81,7 @@ const Recipes = () => {
         setGeneratedRecipes(recipes);
         setShowSettings(false);
         toast.success(t.recipes.recipesGenerated.replace('{count}', String(recipes.length)));
+        await updateStreak();
       }
     } catch {
       toast.error(t.recipes.failedGenerate);
