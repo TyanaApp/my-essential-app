@@ -20,6 +20,14 @@ const CURRENCIES = [
   { code: 'RUB', symbol: '₽' },
 ];
 
+interface ExpiringItem {
+  id: string;
+  name: string;
+  days: number;
+  suggestion?: string;
+  action?: 'use' | 'use_or_discard' | 'discard';
+}
+
 interface DashboardData {
   displayName: string;
   caloriesConsumed: number;
@@ -27,7 +35,7 @@ interface DashboardData {
   protein: number;
   fat: number;
   carbs: number;
-  expiringItems: { id: string; name: string; days: number }[];
+  expiringItems: ExpiringItem[];
   recentRecipes: { id: string; title: string; prepTime: number | null; estimatedCost: number | null }[];
   savingsThisMonth: number;
   monthlyBudget: number;
