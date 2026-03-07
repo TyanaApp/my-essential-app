@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { calcMacroTargets } from '@/pages/NutritionAnalysis';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Search, Camera } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -70,6 +71,7 @@ const Diary = () => {
   const [entries, setEntries] = useState<MealEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [dailyTarget, setDailyTarget] = useState(2000);
+  const [macroTargets, setMacroTargets] = useState({ protein: 120, fat: 60, carbs: 250 });
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMealType, setModalMealType] = useState('breakfast');
