@@ -160,6 +160,18 @@ export const translations = {
       fat: 'Fat',
       carbs: 'Carbs',
     },
+    dislikes: {
+      title: 'What foods do you dislike?',
+      subtitle: 'TYANA will never suggest these',
+      sectionTitle: 'Food preferences',
+      placeholder: 'Add anything else... (e.g. cilantro, avocado)',
+      familyQuestion: 'Does anyone in your family avoid certain foods?',
+      yes: 'Yes', no: 'No',
+      fish: 'Fish', broccoli: 'Broccoli', onion: 'Onion', mushrooms: 'Mushrooms',
+      bell_pepper: 'Bell pepper', eggplant: 'Eggplant', spinach: 'Spinach',
+      legumes: 'Legumes', offal: 'Offal', spicy: 'Spicy food', dairy: 'Dairy', garlic: 'Garlic',
+      dislikeWarning: '⚠️ This contains {food} — you usually avoid it',
+    },
     onboarding: {
       step1Title: "Hi! I'm TYANA", step1Sub: "I'll set up your personal kitchen assistant in 2 minutes",
       yourName: 'Your name', namePlaceholder: 'Maria',
