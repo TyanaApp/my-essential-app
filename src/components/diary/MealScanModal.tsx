@@ -1,11 +1,13 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { X, Camera, RotateCcw, Pencil } from 'lucide-react';
+import { X, Camera, RotateCcw, Pencil, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+interface ScanItem { name: string; calories: number; portion: string; }
 
 interface MealScanResult {
   meal_name: string;
@@ -13,7 +15,7 @@ interface MealScanResult {
   protein: number;
   fat: number;
   carbs: number;
-  items: { name: string; calories: number; portion: string }[];
+  items: ScanItem[];
   confidence: 'high' | 'medium' | 'low';
 }
 
@@ -44,6 +46,9 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
   const [portion, setPortion] = useState('full');
   const [editName, setEditName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [editingItemIdx, setEditingItemIdx] = useState<number | null>(null);
+  const [editingItemName, setEditingItemName] = useState('');
+  const [recalculating, setRecalculating] = useState(false);
 
   const ds = t.diary as any;
   const ms = (t as any).mealScan || {} as any;
@@ -54,6 +59,8 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
     setResult(null);
     setPortion('full');
     setEditName('');
+    setEditingItemIdx(null);
+    setEditingItemName('');
   };
 
   const handleClose = () => { reset(); onClose(); };
@@ -101,6 +108,53 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
     }
   };
 
+  const recalculateItem = async (idx: number, newName: string) => {
+    if (!result || !newName.trim()) return;
+    const oldItem = result.items[idx];
+    setRecalculating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('scan-meal-calories', {
+        body: {
+          recalculate: true,
+          itemName: newName.trim(),
+          portion: oldItem.portion,
+          language,
+        },
+      });
+
+      if (error || data?.error) {
+        toast.error(ms.recalcFailed || 'Recalculation failed');
+        setRecalculating(false);
+        return;
+      }
+
+      const newNutrition = data as { calories: number; protein: number; fat: number; carbs: number };
+      const oldCalRatio = result.calories > 0 ? oldItem.calories / result.calories : 0;
+      const calDiff = newNutrition.calories - oldItem.calories;
+      const protDiff = newNutrition.protein - (result.protein * oldCalRatio);
+      const fatDiff = newNutrition.fat - (result.fat * oldCalRatio);
+      const carbsDiff = newNutrition.carbs - (result.carbs * oldCalRatio);
+
+      const updatedItems = [...result.items];
+      updatedItems[idx] = { name: newName.trim(), calories: newNutrition.calories, portion: oldItem.portion };
+
+      setResult({
+        ...result,
+        items: updatedItems,
+        calories: Math.max(0, Math.round(result.calories + calDiff)),
+        protein: Math.max(0, Math.round(result.protein + protDiff)),
+        fat: Math.max(0, Math.round(result.fat + fatDiff)),
+        carbs: Math.max(0, Math.round(result.carbs + carbsDiff)),
+      });
+      setEditingItemIdx(null);
+      toast.success(ms.recalculated || 'Recalculated ✓');
+    } catch {
+      toast.error(ms.recalcFailed || 'Recalculation failed');
+    } finally {
+      setRecalculating(false);
+    }
+  };
+
   const handleLog = async () => {
     if (!user || !adjustedResult) return;
     setSaving(true);
@@ -128,9 +182,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
   };
 
   const handleEditManually = () => {
-    // Close this modal — parent will open manual modal with pre-filled values
     onClose();
-    // We pass data through the onSaved callback with a special flag
     if (result && adjustedResult) {
       onSaved({
         _prefill: true,
@@ -229,12 +281,10 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
           {/* RESULTS */}
           {step === 'results' && result && adjustedResult && (
             <div className="space-y-4">
-              {/* Photo preview */}
               {photo && (
                 <img src={photo} alt="meal" className="w-full h-40 object-cover rounded-xl" />
               )}
 
-              {/* Meal name (editable) */}
               <input
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
@@ -244,10 +294,14 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
 
               {/* Big calorie number */}
               <div className="text-center py-2">
-                <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>
-                  {adjustedResult.calories}
-                </span>
-                <span className="text-lg ml-1" style={{ color: '#7C3AED' }}>kcal</span>
+                {recalculating ? (
+                  <Loader2 className="w-8 h-8 animate-spin mx-auto" style={{ color: '#7C3AED' }} />
+                ) : (
+                  <>
+                    <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>{adjustedResult.calories}</span>
+                    <span className="text-lg ml-1" style={{ color: '#7C3AED' }}>kcal</span>
+                  </>
+                )}
               </div>
 
               {/* Macro bar */}
@@ -264,7 +318,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 ))}
               </div>
 
-              {/* Confidence badge */}
+              {/* Confidence */}
               {result.confidence && (() => {
                 const badge = confidenceBadge(result.confidence);
                 return (
@@ -276,17 +330,51 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 );
               })()}
 
-              {/* Items breakdown */}
+              {/* Items breakdown — editable */}
               {result.items && result.items.length > 0 && (
                 <div className="rounded-xl p-3 space-y-1.5" style={{ backgroundColor: '#F5F3FF' }}>
                   {result.items.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between text-sm">
-                      <span style={{ color: '#1E1B4B' }}>{item.name}</span>
-                      <span style={{ color: '#6B7280' }}>
-                        {Math.round(item.calories * portionMultiplier)} kcal · {item.portion}
-                      </span>
+                    <div key={i} className="flex items-center justify-between text-sm gap-2">
+                      {editingItemIdx === i ? (
+                        <div className="flex-1 flex items-center gap-1">
+                          <input
+                            value={editingItemName}
+                            onChange={e => setEditingItemName(e.target.value)}
+                            className="flex-1 h-7 px-2 rounded-lg border text-xs outline-none focus:border-[#7C3AED]"
+                            style={{ borderColor: '#DDD6FE', backgroundColor: 'white' }}
+                            autoFocus
+                            onKeyDown={e => { if (e.key === 'Enter') recalculateItem(i, editingItemName); }}
+                          />
+                          <button
+                            onClick={() => recalculateItem(i, editingItemName)}
+                            disabled={recalculating}
+                            className="text-xs font-semibold px-2 py-1 rounded-lg text-white shrink-0"
+                            style={{ backgroundColor: '#7C3AED' }}
+                          >
+                            {recalculating ? <Loader2 className="w-3 h-3 animate-spin" /> : '✓'}
+                          </button>
+                          <button onClick={() => setEditingItemIdx(null)} className="text-xs px-1 py-1 rounded-lg" style={{ color: '#6B7280' }}>✕</button>
+                        </div>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => { setEditingItemIdx(i); setEditingItemName(item.name); }}
+                            className="flex items-center gap-1 text-left"
+                            style={{ color: '#1E1B4B' }}
+                          >
+                            <Pencil className="w-3 h-3 shrink-0" style={{ color: '#9CA3AF' }} />
+                            {item.name}
+                          </button>
+                          <span style={{ color: '#6B7280' }}>
+                            {Math.round(item.calories * portionMultiplier)} kcal · {item.portion}
+                          </span>
+                        </>
+                      )}
                     </div>
                   ))}
+                  <p className="text-[10px] mt-1" style={{ color: '#9CA3AF' }}>
+                    {ms.tapToEdit || 'Tap item name to edit & recalculate'}
+                  </p>
                 </div>
               )}
 
