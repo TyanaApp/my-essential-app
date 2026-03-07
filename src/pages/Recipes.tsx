@@ -179,15 +179,22 @@ const Recipes = () => {
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
-            {isSaved && savedId ? (
-              <button onClick={(e) => { e.stopPropagation(); toggleFavorite(savedId, !!isFav); }} className="shrink-0 p-1">
-                <Heart className="w-5 h-5" fill={isFav ? '#7C3AED' : 'none'} style={{ color: '#7C3AED' }} />
-              </button>
-            ) : (
-              <button onClick={(e) => { e.stopPropagation(); handleSaveRecipe(recipe as Recipe); }} className="shrink-0 p-1">
-                <Heart className="w-5 h-5" style={{ color: '#7C3AED' }} />
-              </button>
-            )}
+            <div className="flex items-center gap-0.5 shrink-0">
+              {isSaved && savedId && (
+                <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(savedId); }} className="p-1">
+                  <Trash2 className="w-4 h-4" style={{ color: '#DC2626' }} />
+                </button>
+              )}
+              {isSaved && savedId ? (
+                <button onClick={(e) => { e.stopPropagation(); toggleFavorite(savedId, !!isFav); }} className="p-1">
+                  <Heart className="w-5 h-5" fill={isFav ? '#7C3AED' : 'none'} style={{ color: '#7C3AED' }} />
+                </button>
+              ) : (
+                <button onClick={(e) => { e.stopPropagation(); handleSaveRecipe(recipe as Recipe); }} className="p-1">
+                  <Heart className="w-5 h-5" style={{ color: '#7C3AED' }} />
+                </button>
+              )}
+            </div>
           </div>
           <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2" style={{ backgroundColor: cc.bg, color: cc.text }}>
             {n.nutrition.calories} kcal
