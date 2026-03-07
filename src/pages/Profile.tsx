@@ -204,7 +204,7 @@ const Profile = () => {
         </Card>
       </motion.div>
 
-      {/* Connect Devices - Coming Soon */}
+      {/* Connect Devices - Smart Devices */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -214,40 +214,13 @@ const Profile = () => {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-4">
               <Watch className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold text-foreground">{(t.profile as any).connectDevices || 'Connect Devices'}</h3>
+              <h3 className="font-semibold text-foreground">{(t as any).trial?.smartDevices || (t.profile as any).connectDevices || 'Smart Devices'}</h3>
             </div>
             <div className="space-y-3">
-              {[
-                { emoji: '⌚️', name: 'Apple Watch', icon: Watch },
-                { emoji: '📱', name: 'Google Fit', icon: Smartphone },
-                { emoji: '💪', name: 'Fitbit', icon: Activity },
-                { emoji: '⌚', name: 'Garmin', icon: Watch },
-              ].map(device => {
-                const storageKey = `notify_device_${device.name}`;
-                const [notify, setNotify] = React.useState(() => localStorage.getItem(storageKey) === '1');
-                const handleNotify = (checked: boolean) => {
-                  setNotify(checked);
-                  localStorage.setItem(storageKey, checked ? '1' : '0');
-                  if (checked) toast.success((t as any).trial?.notifyDevice || "We'll notify you when ready!");
-                };
-                return (
-                  <div key={device.name} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{device.emoji}</span>
-                      <span className="text-sm font-medium text-muted-foreground">{device.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-purple-100 text-purple-600 border-purple-200 text-[10px] px-2 py-0.5">
-                        {(t.profile as any).soon || 'Soon'}
-                      </Badge>
-                      <Switch
-                        checked={notify}
-                        onCheckedChange={handleNotify}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+              <DeviceRow emoji="⌚️" name="Apple Watch" badge={(t.profile as any).soon || 'Soon'} />
+              <DeviceRow emoji="📱" name="Google Fit" badge={(t.profile as any).soon || 'Soon'} />
+              <DeviceRow emoji="💪" name="Fitbit" badge={(t.profile as any).soon || 'Soon'} />
+              <DeviceRow emoji="⌚" name="Garmin" badge={(t.profile as any).soon || 'Soon'} />
             </div>
           </CardContent>
         </Card>
