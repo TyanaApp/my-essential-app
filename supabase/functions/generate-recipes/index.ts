@@ -47,11 +47,8 @@ serve(async (req) => {
       language,
     } = await req.json();
 
-    const langInstruction = language === 'ru'
-      ? 'Write ALL recipe content in Russian: title, ingredients, instructions.'
-      : language === 'lv'
-      ? 'Write ALL recipe content in Latvian: title, ingredients, instructions.'
-      : 'Write ALL recipe content in English.';
+    const langMap: Record<string, string> = { ru: 'Russian', lv: 'Latvian', en: 'English' };
+    const lang = langMap[language] || 'English';
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
@@ -65,7 +62,12 @@ serve(async (req) => {
       .map((i: any) => `${i.name} ${i.quantity}${i.unit}`)
       .join(", ");
 
-    const prompt = `You are TYANA kitchen assistant. Generate 3 recipes.
+    const prompt = `YOU MUST respond ENTIRELY in ${lang}. 
+ALL fields must be in ${lang}: title, ingredients names, instructions, units.
+DO NOT use English if language is not English.
+This is critical.
+
+You are TYANA kitchen assistant. Generate 3 recipes.
 User has these ingredients at home: ${inventoryList}
 Daily calorie target: ${userGoals?.daily_calories_target || 2000} kcal
 Diet: ${userGoals?.diet_type || "omnivore"}
@@ -74,8 +76,6 @@ Cooking for: ${cookingFor || 1} people
 Meal type: ${mealType || "any"}
 Time available: ${timeAvailable || "any"}
 Use only available ingredients: ${useOnlyInventory ? "yes" : "no"}
-
-${langInstruction}
 
 Return ONLY a valid JSON array of 3 recipes, no markdown or code fences:
 [{"title":"string","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50}]`;

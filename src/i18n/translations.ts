@@ -104,8 +104,9 @@ export const translations = {
       savedMonth: 'saved this month', generateRecipes: 'Generate your first recipes →',
       viewAll: 'View all', seeDetails: 'See details',
       ofGoal: 'of €{amount} monthly goal', protein: 'Protein', fat: 'Fat', carbs: 'Carbs',
-      today: 'Today!', daysLeft: '{days}d left',
+      today: 'Today!', daysLeft: '{days}d left', expired: 'Expired',
       upgradeSuccess: '🎉 Welcome to {plan}! Enjoy your upgrade.',
+      loadingSuggestions: 'Getting suggestions...', aiSuggestionError: 'Could not load suggestions',
     },
     auth: {
       title: 'Your kitchen thinks for you.', google: 'Continue with Google', email: 'Sign in with Email',
@@ -415,8 +416,9 @@ export const translations = {
       savedMonth: 'сэкономлено в этом месяце', generateRecipes: 'Сгенерировать первые рецепты →',
       viewAll: 'Все', seeDetails: 'Подробнее',
       ofGoal: 'из €{amount} месячной цели', protein: 'Белок', fat: 'Жир', carbs: 'Углеводы',
-      today: 'Сегодня!', daysLeft: '{days}д осталось',
+      today: 'Сегодня!', daysLeft: '{days}д осталось', expired: 'Просрочено',
       upgradeSuccess: '🎉 Добро пожаловать в {plan}! Наслаждайтесь обновлением.',
+      loadingSuggestions: 'Загружаю советы...', aiSuggestionError: 'Не удалось загрузить советы',
     },
     auth: {
       title: 'Твоя кухня думает за тебя.', google: 'Войти через Google', email: 'Войти по email',
@@ -726,8 +728,9 @@ export const translations = {
       savedMonth: 'ietaupīts šomēnes', generateRecipes: 'Ģenerēt pirmās receptes →',
       viewAll: 'Skatīt visu', seeDetails: 'Sīkāk',
       ofGoal: 'no €{amount} mēneša mērķa', protein: 'Olbaltumvielas', fat: 'Tauki', carbs: 'Ogļhidrāti',
-      today: 'Šodien!', daysLeft: '{days}d atlicis',
+      today: 'Šodien!', daysLeft: '{days}d atlicis', expired: 'Beidzies',
       upgradeSuccess: '🎉 Laipni lūdzam {plan}! Baudiet uzlabojumu.',
+      loadingSuggestions: 'Ielādē ieteikumus...', aiSuggestionError: 'Neizdevās ielādēt ieteikumus',
     },
     auth: {
       title: 'Tava virtuve domā tavā vietā.', google: 'Ieiet ar Google', email: 'Ieiet ar e-pastu',

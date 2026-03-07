@@ -20,6 +20,14 @@ const CURRENCIES = [
   { code: 'RUB', symbol: '₽' },
 ];
 
+interface ExpiringItem {
+  id: string;
+  name: string;
+  days: number;
+  suggestion?: string;
+  action?: 'use' | 'use_or_discard' | 'discard';
+}
+
 interface DashboardData {
   displayName: string;
   caloriesConsumed: number;
@@ -27,7 +35,7 @@ interface DashboardData {
   protein: number;
   fat: number;
   carbs: number;
-  expiringItems: { id: string; name: string; days: number }[];
+  expiringItems: ExpiringItem[];
   recentRecipes: { id: string; title: string; prepTime: number | null; estimatedCost: number | null }[];
   savingsThisMonth: number;
   monthlyBudget: number;
@@ -47,6 +55,7 @@ const Dashboard = () => {
   const [editingBudget, setEditingBudget] = useState(false);
   const [budgetInput, setBudgetInput] = useState('');
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -85,7 +94,7 @@ const Dashboard = () => {
         supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
-        supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).gte('expires_at', today).order('expires_at', { ascending: true }).limit(5),
+        supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).order('expires_at', { ascending: true }).limit(10),
         supabase.from('recipes').select('id, title, prep_time, estimated_cost, ingredients').eq('user_id', user.id).eq('is_favorite', true).order('created_at', { ascending: false }).limit(20),
         supabase.from('savings_log').select('amount').eq('user_id', user.id).gte('created_at', monthStart),
       ]);
@@ -149,6 +158,31 @@ const Dashboard = () => {
         useItUpRecipe,
       });
       setLoading(false);
+
+      // Fetch AI suggestions for expiring items
+      if (expiringItems.length > 0) {
+        setLoadingSuggestions(true);
+        try {
+          const { data: sugData } = await supabase.functions.invoke('expiring-suggestions', {
+            body: { items: expiringItems, language },
+          });
+          if (sugData?.suggestions && Array.isArray(sugData.suggestions)) {
+            setData(prev => {
+              if (!prev) return prev;
+              const updated = prev.expiringItems.map(item => {
+                const sug = sugData.suggestions.find((s: any) => 
+                  s.name?.toLowerCase() === item.name.toLowerCase()
+                );
+                return sug ? { ...item, suggestion: sug.suggestion, action: sug.action } : item;
+              });
+              return { ...prev, expiringItems: updated };
+            });
+          }
+        } catch (e) {
+          console.error('Suggestions error:', e);
+        }
+        setLoadingSuggestions(false);
+      }
     };
     load();
   }, [user]);
@@ -305,24 +339,46 @@ const Dashboard = () => {
 
           {data.expiringItems.length > 0 ? (
             <div className="space-y-2">
-              {data.expiringItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center justify-between p-2.5 rounded-xl"
-                  style={{ backgroundColor: '#FEF3C7' }}
-                >
-                  <span className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{item.name}</span>
-                  <span
-                    className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style={{
-                      backgroundColor: item.days <= 1 ? '#FEE2E2' : '#FEF3C7',
-                      color: item.days <= 1 ? '#DC2626' : '#EA580C',
-                    }}
+              {data.expiringItems.map((item) => {
+                const isExpired = item.days < 0;
+                const isToday = item.days === 0;
+                const actionDot = item.action === 'discard' ? '#DC2626' : item.action === 'use_or_discard' ? '#EA580C' : '#059669';
+                return (
+                  <div
+                    key={item.id}
+                    className="p-2.5 rounded-xl"
+                    style={{ backgroundColor: isExpired ? '#FEE2E2' : '#FEF3C7' }}
                   >
-                    {item.days <= 0 ? t.dashboard.today : t.dashboard.daysLeft.replace('{days}', String(item.days))}
-                  </span>
-                </div>
-              ))}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{item.name}</span>
+                      <span
+                        className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: isExpired ? '#DC2626' : isToday ? '#FEE2E2' : '#FEF3C7',
+                          color: isExpired ? 'white' : isToday ? '#DC2626' : '#EA580C',
+                        }}
+                      >
+                        {isExpired
+                          ? ((t.dashboard as any).expired || 'Expired')
+                          : isToday
+                          ? t.dashboard.today
+                          : t.dashboard.daysLeft.replace('{days}', String(item.days))}
+                      </span>
+                    </div>
+                    {item.suggestion && (
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
+                        <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                      </div>
+                    )}
+                    {loadingSuggestions && !item.suggestion && (
+                      <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
+                        {(t.dashboard as any).loadingSuggestions || '...'}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ) : null}
         </motion.div>
