@@ -272,14 +272,15 @@ const Diary = () => {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => openScanModal(section.type)}
-                      className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg"
+                      className="flex items-center justify-center w-8 h-8 rounded-lg"
                       style={{ color: '#7C3AED', backgroundColor: '#F5F3FF' }}
+                      aria-label="Scan meal"
                     >
-                      <Camera className="w-3.5 h-3.5" /> {ms.scanMealBtn || '📸'}
+                      <Camera className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => openAddModal(section.type)}
-                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg"
+                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg"
                       style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
                     >
                       <Plus className="w-3.5 h-3.5" /> {t.diary.addMeal}
@@ -296,7 +297,10 @@ const Diary = () => {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{entry.custom_name || t.diary.meal}</p>
                           <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
-                            {entry.total_calories || 0} kcal · P:{entry.total_protein || 0}g · F:{entry.total_fat || 0}g · C:{entry.total_carbs || 0}g
+                            {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
+                            {(entry.total_protein ?? 0) > 0 && ` · P:${entry.total_protein}g`}
+                            {(entry.total_fat ?? 0) > 0 && ` · F:${entry.total_fat}g`}
+                            {(entry.total_carbs ?? 0) > 0 && ` · C:${entry.total_carbs}g`}
                           </p>
                         </div>
                         <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-red-50 shrink-0">
@@ -319,7 +323,7 @@ const Diary = () => {
       >
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <span className="text-sm font-bold" style={{ color: totalsColor }}>
-            {t.diary.todayTotal} {totals.calories} kcal
+            {t.diary.todayTotal} {totals.calories} {(t as any).diary?.kcalUnit || 'kcal'}
           </span>
           <div className="flex gap-3 text-xs font-medium" style={{ color: '#6B7280' }}>
             <span>P: {Math.round(totals.protein)}g</span>
