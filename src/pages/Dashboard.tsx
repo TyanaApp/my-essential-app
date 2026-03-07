@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, ChevronRight, AlertTriangle, Check } from 'lucide-react';
+import { Plus, ChevronRight, AlertTriangle, Check, Sparkles } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +10,14 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
+
+// Russian pluralization helper
+const pluralizeRu = (n: number, one: string, few: string, many: string) => {
+  const abs = Math.abs(n);
+  if (abs % 10 === 1 && abs % 100 !== 11) return one;
+  if ([2, 3, 4].includes(abs % 10) && ![12, 13, 14].includes(abs % 100)) return few;
+  return many;
+};
 
 const CURRENCIES = [
   { code: 'EUR', symbol: '€' },
@@ -42,6 +50,7 @@ interface DashboardData {
   monthlyBudget: number;
   currency: string;
   useItUpRecipe: { id: string; title: string; matchCount: number } | null;
+  inventoryCount: number;
 }
 
 const Dashboard = () => {
@@ -91,17 +100,22 @@ const Dashboard = () => {
       const threeDaysFromNow = new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0];
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
 
-      const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes] = await Promise.all([
+      const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes, inventoryCountRes] = await Promise.all([
         supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
         supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).order('expires_at', { ascending: true }).limit(10),
-        supabase.from('recipes').select('id, title, prep_time, estimated_cost, ingredients').eq('user_id', user.id).eq('is_favorite', true).order('created_at', { ascending: false }).limit(20),
-        supabase.from('savings_log').select('amount').eq('user_id', user.id).gte('created_at', monthStart),
+        supabase.from('recipes').select('id, title, prep_time, estimated_cost, ingredients').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20),
+        supabase.from('savings_log').select('amount, type').eq('user_id', user.id).gte('created_at', monthStart),
+        supabase.from('inventory_items').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
       ]);
 
       const meals = mealsRes.data || [];
-      const caloriesConsumed = meals.reduce((s, m) => s + (m.total_calories || 0), 0);
+      const rawCalories = meals.reduce((s, m) => s + (m.total_calories || 0), 0);
+      const caloriesConsumed = rawCalories > 9999 ? 0 : rawCalories;
+      if (rawCalories > 9999) {
+        console.error(`Calorie data error: raw sum = ${rawCalories} kcal from ${meals.length} entries. Reset to 0.`, meals);
+      }
       const protein = meals.reduce((s, m) => s + Number(m.total_protein || 0), 0);
       const fat = meals.reduce((s, m) => s + Number(m.total_fat || 0), 0);
       const carbs = meals.reduce((s, m) => s + Number(m.total_carbs || 0), 0);
@@ -148,7 +162,7 @@ const Dashboard = () => {
 
       setData({
         displayName: profileRes.data?.display_name || 'there',
-        caloriesConsumed: Math.min(caloriesConsumed, 9999),
+        caloriesConsumed,
         caloriesTarget: goalsRes.data?.daily_calories_target || 2000,
         protein: Math.round(protein),
         fat: Math.round(fat),
@@ -160,6 +174,7 @@ const Dashboard = () => {
         monthlyBudget: Number(goalsRes.data?.monthly_budget) || 200,
         currency: profileRes.data?.currency || 'EUR',
         useItUpRecipe,
+        inventoryCount: inventoryCountRes.count || 0,
       });
       setLoading(false);
 
@@ -275,8 +290,8 @@ const Dashboard = () => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold" style={{ color: caloriesConsumed >= 9999 ? '#DC2626' : '#1E1B4B' }}>
-                  {caloriesConsumed >= 9999 ? '⚠️' : data.caloriesConsumed}
+              <span className="text-2xl font-bold" style={{ color: data.caloriesConsumed === 0 && caloriesConsumed === 0 ? '#1E1B4B' : '#1E1B4B' }}>
+                  {data.caloriesConsumed}
                 </span>
                 <span className="text-xs" style={{ color: '#9CA3AF' }}>
                   / {data.caloriesTarget} kcal
@@ -330,7 +345,12 @@ const Dashboard = () => {
             <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#1E1B4B' }}>
               <AlertTriangle className="w-4 h-4" style={{ color: '#EA580C' }} />
               {data.expiringItems.length > 0
-                ? t.dashboard.expiringTitle.replace('{count}', String(data.expiringItems.length))
+                ? (() => {
+                    const n = data.expiringItems.length;
+                    if (language === 'ru') return `${n} ${pluralizeRu(n, 'продукт истекает', 'продукта истекают', 'продуктов истекают')}`;
+                    if (language === 'lv') return `${n} ${n === 1 ? 'produkts beidzas' : 'produkti beidzas'}`;
+                    return `${n} ${n === 1 ? 'item expiring soon' : 'items expiring soon'}`;
+                  })()
                 : t.dashboard.nothingExpiring}
             </h3>
             <button
@@ -367,7 +387,12 @@ const Dashboard = () => {
                           ? ((t.dashboard as any).expired || 'Expired')
                           : isToday
                           ? t.dashboard.today
-                          : t.dashboard.daysLeft.replace('{days}', String(item.days))}
+                          : (() => {
+                              const d = item.days;
+                              if (language === 'ru') return `${d} ${pluralizeRu(d, 'день', 'дня', 'дней')}`;
+                              if (language === 'lv') return `${d} ${d === 1 ? 'diena' : 'dienas'}`;
+                              return `${d}d left`;
+                            })()}
                       </span>
                     </div>
                     {item.suggestion && (
@@ -403,7 +428,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>{data.useItUpRecipe.title}</p>
                   <p className="text-[11px]" style={{ color: '#059669' }}>
-                    {data.useItUpRecipe.matchCount} {language === 'ru' ? 'совпадающих продуктов' : language === 'lv' ? 'atbilstoši produkti' : 'matching ingredients'}
+                    {data.useItUpRecipe.matchCount} {language === 'ru' ? pluralizeRu(data.useItUpRecipe.matchCount, 'совпадающий продукт', 'совпадающих продукта', 'совпадающих продуктов') : language === 'lv' ? 'atbilstoši produkti' : 'matching ingredients'}
                   </p>
                 </div>
               </div>
@@ -440,21 +465,30 @@ const Dashboard = () => {
                   style={{ backgroundColor: '#F5F3FF', border: '1px solid #EDE9FE' }}
                   onClick={() => navigate('/recipes')}
                 >
-                  <div
-                    className="h-20 flex items-center justify-center text-2xl"
-                    style={{ background: 'linear-gradient(135deg, #7C3AED, #A78BFA)' }}
-                  >
-                    🍽
-                  </div>
+                  <img
+                    src={`https://source.unsplash.com/400x300/?${encodeURIComponent(r.title + ' food')}`}
+                    alt={r.title}
+                    className="w-full h-20 object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
                   <div className="p-2.5">
                     <p className="text-xs font-semibold truncate" style={{ color: '#1E1B4B' }}>{r.title}</p>
                     <p className="text-[10px] mt-0.5" style={{ color: '#9CA3AF' }}>
-                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · €${r.estimatedCost.toFixed(2)}` : ''}
+                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · ${currSymbol}${r.estimatedCost.toFixed(2)}` : ''}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
+          ) : data.inventoryCount > 0 ? (
+            <button
+              onClick={() => navigate('/recipes?useHome=true')}
+              className="w-full py-6 rounded-xl text-sm font-medium flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', border: '1px dashed #DDD6FE' }}
+            >
+              <Sparkles className="w-4 h-4" />
+              {language === 'ru' ? '✨ Сгенерировать рецепты из холодильника →' : language === 'lv' ? '✨ Ģenerēt receptes no ledusskapja →' : '✨ Generate recipes from your fridge →'}
+            </button>
           ) : (
             <button
               onClick={() => navigate('/recipes')}
