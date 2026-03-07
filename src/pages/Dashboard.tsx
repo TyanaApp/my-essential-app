@@ -339,24 +339,46 @@ const Dashboard = () => {
 
           {data.expiringItems.length > 0 ? (
             <div className="space-y-2">
-              {data.expiringItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center justify-between p-2.5 rounded-xl"
-                  style={{ backgroundColor: '#FEF3C7' }}
-                >
-                  <span className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{item.name}</span>
-                  <span
-                    className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style={{
-                      backgroundColor: item.days <= 1 ? '#FEE2E2' : '#FEF3C7',
-                      color: item.days <= 1 ? '#DC2626' : '#EA580C',
-                    }}
+              {data.expiringItems.map((item) => {
+                const isExpired = item.days < 0;
+                const isToday = item.days === 0;
+                const actionDot = item.action === 'discard' ? '#DC2626' : item.action === 'use_or_discard' ? '#EA580C' : '#059669';
+                return (
+                  <div
+                    key={item.id}
+                    className="p-2.5 rounded-xl"
+                    style={{ backgroundColor: isExpired ? '#FEE2E2' : '#FEF3C7' }}
                   >
-                    {item.days <= 0 ? t.dashboard.today : t.dashboard.daysLeft.replace('{days}', String(item.days))}
-                  </span>
-                </div>
-              ))}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{item.name}</span>
+                      <span
+                        className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: isExpired ? '#DC2626' : isToday ? '#FEE2E2' : '#FEF3C7',
+                          color: isExpired ? 'white' : isToday ? '#DC2626' : '#EA580C',
+                        }}
+                      >
+                        {isExpired
+                          ? ((t.dashboard as any).expired || 'Expired')
+                          : isToday
+                          ? t.dashboard.today
+                          : t.dashboard.daysLeft.replace('{days}', String(item.days))}
+                      </span>
+                    </div>
+                    {item.suggestion && (
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
+                        <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                      </div>
+                    )}
+                    {loadingSuggestions && !item.suggestion && (
+                      <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
+                        {(t.dashboard as any).loadingSuggestions || '...'}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ) : null}
         </motion.div>
