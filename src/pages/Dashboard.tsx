@@ -11,6 +11,15 @@ import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
 
+const CURRENCIES = [
+  { code: 'EUR', symbol: '€' },
+  { code: 'USD', symbol: '$' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'PLN', symbol: 'zł' },
+  { code: 'UAH', symbol: '₴' },
+  { code: 'RUB', symbol: '₽' },
+];
+
 interface DashboardData {
   displayName: string;
   caloriesConsumed: number;
@@ -22,6 +31,7 @@ interface DashboardData {
   recentRecipes: { id: string; title: string; prepTime: number | null; estimatedCost: number | null }[];
   savingsThisMonth: number;
   monthlyBudget: number;
+  currency: string;
   useItUpRecipe: { id: string; title: string; matchCount: number } | null;
 }
 
@@ -34,6 +44,9 @@ const Dashboard = () => {
   const { checkSubscription } = useSubscription();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editingBudget, setEditingBudget] = useState(false);
+  const [budgetInput, setBudgetInput] = useState('');
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
