@@ -23,7 +23,7 @@ const SERVING_OPTIONS = [1, 2, 3, 4, 5];
 const Recipes = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   usePageTitle(t.recipes.title);
   const { plan } = useSubscription();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
