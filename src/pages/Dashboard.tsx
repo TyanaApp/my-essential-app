@@ -45,6 +45,8 @@ interface DashboardData {
   currency: string;
   useItUpRecipe: { id: string; title: string; matchCount: number } | null;
   inventoryCount: number;
+  streakCurrent: number;
+  streakLongest: number;
 }
 
 const Dashboard = () => {
@@ -95,7 +97,7 @@ const Dashboard = () => {
       const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
 
       const [profileRes, goalsRes, mealsRes, expiringRes, recipesRes, savingsRes, inventoryCountRes] = await Promise.all([
-        supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
+        supabase.from('profiles').select('display_name, currency, streak_current, streak_longest').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
         supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).order('expires_at', { ascending: true }).limit(10),
@@ -169,6 +171,8 @@ const Dashboard = () => {
         currency: profileRes.data?.currency || 'EUR',
         useItUpRecipe,
         inventoryCount: inventoryCountRes.count || 0,
+        streakCurrent: (profileRes.data as any)?.streak_current || 0,
+        streakLongest: (profileRes.data as any)?.streak_longest || 0,
       });
       setLoading(false);
 
