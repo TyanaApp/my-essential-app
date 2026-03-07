@@ -55,6 +55,7 @@ const Dashboard = () => {
   const [editingBudget, setEditingBudget] = useState(false);
   const [budgetInput, setBudgetInput] = useState('');
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -93,7 +94,7 @@ const Dashboard = () => {
         supabase.from('profiles').select('display_name, currency').eq('user_id', user.id).maybeSingle(),
         supabase.from('user_goals').select('daily_calories_target, monthly_budget').eq('user_id', user.id).maybeSingle(),
         supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
-        supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).gte('expires_at', today).order('expires_at', { ascending: true }).limit(5),
+        supabase.from('inventory_items').select('id, name, expires_at').eq('user_id', user.id).not('expires_at', 'is', null).lte('expires_at', threeDaysFromNow).order('expires_at', { ascending: true }).limit(10),
         supabase.from('recipes').select('id, title, prep_time, estimated_cost, ingredients').eq('user_id', user.id).eq('is_favorite', true).order('created_at', { ascending: false }).limit(20),
         supabase.from('savings_log').select('amount').eq('user_id', user.id).gte('created_at', monthStart),
       ]);
