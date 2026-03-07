@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { calcMacroTargets } from '@/pages/NutritionAnalysis';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Search, Camera } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -70,6 +71,7 @@ const Diary = () => {
   const [entries, setEntries] = useState<MealEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [dailyTarget, setDailyTarget] = useState(2000);
+  const [macroTargets, setMacroTargets] = useState({ protein: 120, fat: 60, carbs: 250 });
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMealType, setModalMealType] = useState('breakfast');
@@ -97,10 +99,16 @@ const Diary = () => {
       try {
         const [entriesRes, goalsRes] = await Promise.all([
           supabase.from('meal_entries').select('*').eq('user_id', user.id).eq('date', dateStr),
-          supabase.from('user_goals').select('daily_calories_target').eq('user_id', user.id).maybeSingle(),
+          supabase.from('user_goals').select('daily_calories_target, weight_kg, goals').eq('user_id', user.id).maybeSingle(),
         ]);
         if (entriesRes.data) setEntries(entriesRes.data as unknown as MealEntry[]);
         if (goalsRes.data?.daily_calories_target) setDailyTarget(goalsRes.data.daily_calories_target);
+        if (goalsRes.data) {
+          const w = Number(goalsRes.data.weight_kg) || 70;
+          const cal = goalsRes.data.daily_calories_target || 2000;
+          const g: string[] = (goalsRes.data as any).goals || [];
+          setMacroTargets(calcMacroTargets(w, cal, g));
+        }
       } catch {
         toast.error(t.common.error);
       }
@@ -324,10 +332,20 @@ const Diary = () => {
           <span className="text-sm font-bold" style={{ color: totalsColor }}>
             {t.diary.todayTotal} {totals.calories} {(t as any).diary?.kcalUnit || 'kcal'}
           </span>
-          <div className="flex gap-3 text-xs font-medium" style={{ color: '#6B7280' }}>
-            <span>P: {Math.round(totals.protein)}g</span>
-            <span>F: {Math.round(totals.fat)}g</span>
-            <span>C: {Math.round(totals.carbs)}g</span>
+          <div className="flex gap-3 text-xs font-medium">
+            {[
+              { label: 'P', value: Math.round(totals.protein), target: macroTargets.protein },
+              { label: 'F', value: Math.round(totals.fat), target: macroTargets.fat },
+              { label: 'C', value: Math.round(totals.carbs), target: macroTargets.carbs },
+            ].map(m => {
+              const ratio = m.target > 0 ? m.value / m.target : 0;
+              const color = ratio > 1.15 ? '#DC2626' : ratio >= 0.7 ? '#059669' : '#EA580C';
+              return (
+                <span key={m.label} style={{ color }}>
+                  {m.label}: {m.value}/{m.target}g
+                </span>
+              );
+            })}
           </div>
         </div>
         <div className="mt-1.5 h-1.5 rounded-full max-w-lg mx-auto" style={{ backgroundColor: '#F3F4F6' }}>
