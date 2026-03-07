@@ -268,6 +268,46 @@ const Dashboard = () => {
         <p className="text-sm mt-0.5" style={{ color: '#9CA3AF' }}>{formatDate()}</p>
       </motion.div>
 
+      {/* Streak card */}
+      {data.streakCurrent > 0 && (
+        <motion.div {...fadeUp(0.5)} className="mb-4">
+          <button
+            onClick={() => navigate('/achievements')}
+            style={cardStyle}
+            className="w-full p-4 flex items-center gap-3 text-left"
+          >
+            <span className="text-2xl">🔥</span>
+            <div className="flex-1">
+              <p className="text-base font-bold" style={{ color: '#1E1B4B' }}>
+                {data.streakCurrent} {(t as any).streak?.daysInRow || 'days in a row'}
+              </p>
+              <p className="text-xs" style={{ color: '#9CA3AF' }}>
+                {(() => {
+                  const milestones = [3, 7, 14, 30, 100];
+                  const next = milestones.find(m => m > data.streakCurrent);
+                  if (!next) return (t as any).streak?.keepGoing || 'Keep going!';
+                  const daysLeft = next - data.streakCurrent;
+                  return ((t as any).streak?.untilNext || '{days} days until next reward!').replace('{days}', String(daysLeft));
+                })()}
+              </p>
+            </div>
+            <div className="w-16 h-1.5 rounded-full" style={{ backgroundColor: '#EDE9FE' }}>
+              <div
+                className="h-full rounded-full"
+                style={{
+                  backgroundColor: '#7C3AED',
+                  width: `${Math.min(
+                    (data.streakCurrent / ([3, 7, 14, 30, 100].find(m => m > data.streakCurrent) || 100)) * 100,
+                    100
+                  )}%`,
+                }}
+              />
+            </div>
+            <ChevronRight className="w-4 h-4" style={{ color: '#9CA3AF' }} />
+          </button>
+        </motion.div>
+      )}
+
       <div className="space-y-4">
         {/* Card 1 — Calories */}
         <motion.div {...fadeUp(1)} style={cardStyle} className="p-5">
