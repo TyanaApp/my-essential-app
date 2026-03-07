@@ -32,6 +32,7 @@ const Shopping = () => {
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [budget, setBudget] = useState<number>(0);
+  const [currency, setCurrency] = useState('EUR');
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<ShoppingItem | null>(null);
   const [confirmItem, setConfirmItem] = useState<ShoppingItem | null>(null);
