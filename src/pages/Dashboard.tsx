@@ -11,6 +11,7 @@ import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
+import EditProfileModal from '@/components/profile/EditProfileModal';
 
 // Russian pluralization helper
 const pluralizeRu = (n: number, one: string, few: string, many: string) => {
@@ -63,6 +64,7 @@ const Dashboard = () => {
   const [budgetInput, setBudgetInput] = useState('');
   const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -367,7 +369,7 @@ const Dashboard = () => {
                   {data.caloriesConsumed}
                 </span>
                 <span className="text-xs" style={{ color: '#9CA3AF' }}>
-                  / {data.caloriesTarget} kcal
+                  / {data.caloriesTarget} {(t as any).diary?.kcalUnit || 'kcal'}
                 </span>
               </div>
             </div>
