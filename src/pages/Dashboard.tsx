@@ -10,6 +10,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import { useTranslation } from '@/hooks/useTranslation';
+import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 
 // Russian pluralization helper
 const pluralizeRu = (n: number, one: string, few: string, many: string) => {
@@ -19,14 +20,7 @@ const pluralizeRu = (n: number, one: string, few: string, many: string) => {
   return many;
 };
 
-const CURRENCIES = [
-  { code: 'EUR', symbol: '€' },
-  { code: 'USD', symbol: '$' },
-  { code: 'GBP', symbol: '£' },
-  { code: 'PLN', symbol: 'zł' },
-  { code: 'UAH', symbol: '₴' },
-  { code: 'RUB', symbol: '₽' },
-];
+// No more CURRENCIES array - using formatMoney utility
 
 interface ExpiringItem {
   id: string;
@@ -218,7 +212,7 @@ const Dashboard = () => {
     );
   }
 
-  const currSymbol = CURRENCIES.find(c => c.code === data?.currency)?.symbol || '€';
+  const currSymbol = getCurrencySymbol(data?.currency || 'EUR');
 
   const saveBudget = async () => {
     if (!user) return;
@@ -474,7 +468,7 @@ const Dashboard = () => {
                   <div className="p-2.5">
                     <p className="text-xs font-semibold truncate" style={{ color: '#1E1B4B' }}>{r.title}</p>
                     <p className="text-[10px] mt-0.5" style={{ color: '#9CA3AF' }}>
-                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · ${currSymbol}${r.estimatedCost.toFixed(2)}` : ''}
+                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · ${formatMoney(r.estimatedCost, data.currency)}` : ''}
                     </p>
                   </div>
                 </div>
@@ -504,7 +498,7 @@ const Dashboard = () => {
         <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-              {(t.dashboard as any).budgetTitle || 'Budget & Savings'}
+              {t.savings.title}
             </h3>
             <button
               onClick={() => navigate('/savings')}
@@ -517,8 +511,8 @@ const Dashboard = () => {
 
           {/* Spent this month */}
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs" style={{ color: '#6B7280' }}>💸 {(t.dashboard as any).spentMonth || 'Spent this month'}</span>
-            <span className="text-sm font-bold" style={{ color: '#DC2626' }}>{currSymbol}{data.spentThisMonth.toFixed(2)}</span>
+            <span className="text-xs" style={{ color: '#6B7280' }}>💸 {t.savings.spent}</span>
+            <span className="text-sm font-bold" style={{ color: '#DC2626' }}>{formatMoney(data.spentThisMonth, data.currency)}</span>
           </div>
           <div className="h-2 rounded-full mb-3" style={{ backgroundColor: '#F3F4F6' }}>
             <div
@@ -532,8 +526,8 @@ const Dashboard = () => {
 
           {/* Saved from waste */}
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs" style={{ color: '#6B7280' }}>💚 {(t.dashboard as any).savedWaste || 'Saved from waste'}</span>
-            <span className="text-sm font-bold" style={{ color: '#059669' }}>{currSymbol}{data.savedThisMonth.toFixed(2)}</span>
+            <span className="text-xs" style={{ color: '#6B7280' }}>💚 {t.savings.saved}</span>
+            <span className="text-sm font-bold" style={{ color: '#059669' }}>{formatMoney(data.savedThisMonth, data.currency)}</span>
           </div>
 
           {/* Budget editing */}
@@ -541,7 +535,7 @@ const Dashboard = () => {
             <div className="flex items-center gap-1.5">
               {editingBudget ? (
                 <div className="flex items-center gap-1">
-                  <button
+                    <button
                     onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
                     className="text-xs font-bold px-1.5 py-0.5 rounded-md border"
                     style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
@@ -583,18 +577,18 @@ const Dashboard = () => {
           </div>
           {showCurrencyPicker && (
             <div className="flex flex-wrap gap-1 mt-2">
-              {CURRENCIES.map(c => (
+              {['EUR', 'USD', 'GBP', 'PLN', 'UAH', 'RUB'].map(code => (
                 <button
-                  key={c.code}
-                  onClick={() => saveCurrency(c.code)}
+                  key={code}
+                  onClick={() => saveCurrency(code)}
                   className="text-xs px-2 py-1 rounded-lg border-[1.5px] font-medium transition-all"
                   style={{
-                    borderColor: data.currency === c.code ? '#7C3AED' : '#E5E7EB',
-                    backgroundColor: data.currency === c.code ? '#EDE9FE' : 'white',
-                    color: data.currency === c.code ? '#7C3AED' : '#374151',
+                    borderColor: data.currency === code ? '#7C3AED' : '#E5E7EB',
+                    backgroundColor: data.currency === code ? '#EDE9FE' : 'white',
+                    color: data.currency === code ? '#7C3AED' : '#374151',
                   }}
                 >
-                  {c.symbol} {c.code}
+                  {getCurrencySymbol(code)} {code}
                 </button>
               ))}
             </div>
