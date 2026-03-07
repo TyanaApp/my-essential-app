@@ -155,7 +155,7 @@ const Dashboard = () => {
       }
 
       setData({
-        displayName: profileRes.data?.display_name || 'there',
+        displayName: profileRes.data?.display_name || user?.email?.split('@')[0] || 'there',
         caloriesConsumed,
         caloriesTarget: goalsRes.data?.daily_calories_target || 2000,
         protein: Math.round(protein),
