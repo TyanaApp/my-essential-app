@@ -392,7 +392,7 @@ const Dashboard = () => {
                               if (language === 'ru') return `${d} ${pluralizeRu(d, 'день', 'дня', 'дней')}`;
                               if (language === 'lv') return `${d} ${d === 1 ? 'diena' : 'dienas'}`;
                               return `${d}d left`;
-                            }())}
+                            })()}
                       </span>
                     </div>
                     {item.suggestion && (
