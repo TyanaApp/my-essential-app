@@ -107,6 +107,9 @@ const Onboarding = () => {
         await supabase.from('profiles').update({
           display_name: name,
           onboarding_completed: true,
+          subscription_plan: 'pro',
+          subscription_status: 'trial',
+          trial_end: new Date(Date.now() + 7 * 86400000).toISOString(),
         } as any).eq('user_id', user.id);
 
         await supabase.from('user_goals').upsert({
