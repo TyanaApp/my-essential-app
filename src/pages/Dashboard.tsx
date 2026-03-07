@@ -307,6 +307,7 @@ const Dashboard = () => {
       setAdviceLoading(false);
     };
     fetchAdvice();
+  }, [user, data]);
 
   if (loading) {
     return (
