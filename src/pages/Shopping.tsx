@@ -239,16 +239,19 @@ const Shopping = () => {
         </button>
         <div className="flex-1 flex items-center gap-1.5">
           <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>{t.shopping.budget}</span>
-          <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
-            className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
-            style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+            <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
+              className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
+              style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+          </div>
         </div>
       </motion.div>
 
       {budget > 0 && (
         <motion.div {...fadeUp(2)} className="mb-5">
           <div className="flex justify-between text-xs mb-1">
-            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} {formatMoney(totalEstimated, 'EUR')}</span>
+            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} {formatMoney(totalEstimated, currency)}</span>
             <span style={{ color: budgetColor }} className="font-semibold">{budgetPct.toFixed(0)}{t.shopping.ofBudget}</span>
           </div>
           <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
@@ -296,8 +299,8 @@ const Shopping = () => {
                         className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-[#F5F3FF] transition-colors">
                         <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0" style={{ borderColor: '#DDD6FE' }} />
                         <span className="flex-1 text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{item.name}</span>
-                        <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {item.unit || 'pcs'}</span>
-                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), 'EUR')}</span>}
+                        <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
+                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
                         <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-[#EDE9FE]"><Pencil className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} /></button>
                         <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" style={{ color: '#DC2626' }} /></button>
                       </motion.div>
@@ -325,11 +328,11 @@ const Shopping = () => {
                       <Check className="w-3 h-3 text-white" />
                     </button>
                     <span className="flex-1 text-sm line-through truncate" style={{ color: '#9CA3AF' }}>{item.name}</span>
-                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {item.unit || 'pcs'}</span>
+                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
                   </div>
                 ))}
               </div>
-              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, 'EUR')}</p>}
+              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, currency)}</p>}
             </motion.div>
           )}
         </div>
