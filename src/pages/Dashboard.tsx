@@ -243,6 +243,71 @@ const Dashboard = () => {
     load();
   }, [user]);
 
+  // Fetch daily AI advice with localStorage cache
+  useEffect(() => {
+    if (!user || !data) return;
+    const cacheKey = `tyana_advice_${user.id}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { date, text } = JSON.parse(cached);
+        if (date === new Date().toISOString().split('T')[0]) {
+          setAdvice(text);
+          return;
+        }
+      } catch {}
+    }
+
+    const fetchAdvice = async () => {
+      setAdviceLoading(true);
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+        const [todayMealsRes, weekMealsRes, inventoryRes, goalsRes] = await Promise.all([
+          supabase.from('meal_entries').select('custom_name, total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
+          supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).gte('date', weekAgo),
+          supabase.from('inventory_items').select('name').eq('user_id', user.id).limit(10),
+          supabase.from('user_goals').select('*').eq('user_id', user.id).maybeSingle(),
+        ]);
+
+        const wm = weekMealsRes.data || [];
+        const weekLen = Math.max(wm.length, 1);
+
+        const { data: adviceData } = await supabase.functions.invoke('nutrition-advice', {
+          body: {
+            userProfile: {
+              weight_kg: goalsRes.data?.weight_kg,
+              height_cm: goalsRes.data?.height_cm,
+              age: goalsRes.data?.age,
+              activity_level: goalsRes.data?.activity_level,
+            },
+            todayMeals: (todayMealsRes.data || []).map(m => ({
+              name: m.custom_name, calories: m.total_calories, protein: m.total_protein, fat: m.total_fat, carbs: m.total_carbs,
+            })),
+            weekMeals: {
+              avgCalories: Math.round(wm.reduce((s, m) => s + (m.total_calories || 0), 0) / weekLen),
+              avgProtein: Math.round(wm.reduce((s, m) => s + Number(m.total_protein || 0), 0) / weekLen),
+              avgFat: Math.round(wm.reduce((s, m) => s + Number(m.total_fat || 0), 0) / weekLen),
+              avgCarbs: Math.round(wm.reduce((s, m) => s + Number(m.total_carbs || 0), 0) / weekLen),
+            },
+            inventory: inventoryRes.data || [],
+            userGoals: goalsRes.data || {},
+            language,
+            mode: 'tip',
+          },
+        });
+
+        if (adviceData?.advice) {
+          setAdvice(adviceData.advice);
+          localStorage.setItem(cacheKey, JSON.stringify({ date: today, text: adviceData.advice }));
+        }
+      } catch (e) {
+        console.error('Advice fetch error:', e);
+      }
+      setAdviceLoading(false);
+    };
+    fetchAdvice();
+
   if (loading) {
     return (
       <div className="min-h-screen p-6 pb-mobile-safe space-y-4">
