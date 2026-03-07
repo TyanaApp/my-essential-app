@@ -58,7 +58,6 @@ const Diary = () => {
   usePageTitle(t.diary.title);
 
   const DAY_LABELS = t.dayLabels;
-  const DAY_LABELS = t.dayLabels;
 
   const MEAL_SECTIONS = [
     { type: 'breakfast', label: t.diary.breakfast, emoji: '🌅' },
