@@ -44,7 +44,14 @@ serve(async (req) => {
       useOnlyInventory,
       inventory,
       userGoals,
+      language,
     } = await req.json();
+
+    const langInstruction = language === 'ru'
+      ? 'Write ALL recipe content in Russian: title, ingredients, instructions.'
+      : language === 'lv'
+      ? 'Write ALL recipe content in Latvian: title, ingredients, instructions.'
+      : 'Write ALL recipe content in English.';
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
@@ -67,6 +74,8 @@ Cooking for: ${cookingFor || 1} people
 Meal type: ${mealType || "any"}
 Time available: ${timeAvailable || "any"}
 Use only available ingredients: ${useOnlyInventory ? "yes" : "no"}
+
+${langInstruction}
 
 Return ONLY a valid JSON array of 3 recipes, no markdown or code fences:
 [{"title":"string","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50}]`;

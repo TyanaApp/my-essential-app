@@ -68,7 +68,7 @@ const Recipes = () => {
     setGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-recipes', {
-        body: { mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory, inventory, userGoals: userGoals || {} },
+        body: { mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory, inventory, userGoals: userGoals || {}, language },
       });
       if (error) throw error;
       const recipes: Recipe[] = data?.recipes || [];
@@ -143,8 +143,12 @@ const Recipes = () => {
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => setDetailRecipe(recipe)}
       >
-        <div className="h-40 flex items-center justify-center text-5xl"
-          style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #C4B5FD 100%)' }}>🍽</div>
+        <img
+          src={`https://source.unsplash.com/400x300/?${encodeURIComponent(n.title + ' food')}`}
+          alt={n.title}
+          className="h-40 w-full object-cover"
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
@@ -303,8 +307,13 @@ const Recipes = () => {
                 const missing = r.ingredients.filter((i) => !i.inFridge);
                 return (
                   <>
-                    <div className="h-44 flex items-center justify-center text-6xl relative" style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #C4B5FD 100%)' }}>
-                      🍽
+                    <div className="h-44 relative">
+                      <img
+                        src={`https://source.unsplash.com/600x400/?${encodeURIComponent(r.title + ' food dish')}`}
+                        alt={r.title}
+                        className="h-full w-full object-cover"
+                        onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.background = 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #C4B5FD 100%)'; }}
+                      />
                       <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm">
                         <X className="w-5 h-5 text-white" />
                       </button>

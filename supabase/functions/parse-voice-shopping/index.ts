@@ -39,14 +39,17 @@ serve(async (req) => {
           role: "user",
           content: `Extract shopping items from this voice input: "${transcript}"
 Language: ${language || 'en'}
-Return ONLY JSON array: [{"name":"Milk","quantity":1,"unit":"L"},{"name":"Eggs","quantity":12,"unit":"pcs"}]
-Be smart about quantities:
-- "пол литра молока" = {"name":"Молоко", "quantity":0.5, "unit":"L"}
-- "десяток яиц" = {"name":"Яйца", "quantity":10, "unit":"pcs"}
-- "two packs of butter" = {"name":"Butter", "quantity":2, "unit":"packs"}
-- "puslitru piena" = {"name":"Piens", "quantity":0.5, "unit":"L"}
-Keep the item names in the same language as the input.
-No markdown, just JSON.`
+
+STRICT RULES:
+- Return EXACTLY ONE item per product mentioned. Never return variants or alternatives.
+- If the user says "говядина 3кг" return ONLY [{"name":"Говядина","quantity":3,"unit":"kg"}]
+- If quantity is not mentioned, default to 1 pcs.
+- Keep item names in the same language as the input.
+- Be specific: "молоко и яйца" = [{"name":"Молоко","quantity":1,"unit":"L"},{"name":"Яйца","quantity":10,"unit":"pcs"}]
+- "пол литра молока" = {"name":"Молоко","quantity":0.5,"unit":"L"}
+- "puslitru piena" = {"name":"Piens","quantity":0.5,"unit":"L"}
+
+Return ONLY a JSON array, no markdown, no alternatives, no explanations.`
         }],
         max_tokens: 300,
       }),
