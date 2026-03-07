@@ -221,21 +221,33 @@ const Profile = () => {
                 { emoji: '⌚️', name: 'Apple Watch', icon: Watch },
                 { emoji: '📱', name: 'Google Fit', icon: Smartphone },
                 { emoji: '💪', name: 'Fitbit', icon: Activity },
-                { emoji: '🔵', name: 'Garmin', icon: Watch },
-              ].map(device => (
-                <div key={device.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{device.emoji}</span>
-                    <span className="text-sm font-medium text-muted-foreground">{device.name}</span>
+                { emoji: '⌚', name: 'Garmin', icon: Watch },
+              ].map(device => {
+                const storageKey = `notify_device_${device.name}`;
+                const [notify, setNotify] = React.useState(() => localStorage.getItem(storageKey) === '1');
+                const handleNotify = (checked: boolean) => {
+                  setNotify(checked);
+                  localStorage.setItem(storageKey, checked ? '1' : '0');
+                  if (checked) toast.success((t as any).trial?.notifyDevice || "We'll notify you when ready!");
+                };
+                return (
+                  <div key={device.name} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{device.emoji}</span>
+                      <span className="text-sm font-medium text-muted-foreground">{device.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-purple-100 text-purple-600 border-purple-200 text-[10px] px-2 py-0.5">
+                        {(t.profile as any).soon || 'Soon'}
+                      </Badge>
+                      <Switch
+                        checked={notify}
+                        onCheckedChange={handleNotify}
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-purple-100 text-purple-600 border-purple-200 text-[10px] px-2 py-0.5">
-                      {(t.profile as any).soon || 'Soon'}
-                    </Badge>
-                    <Switch disabled checked={false} className="opacity-40" />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>

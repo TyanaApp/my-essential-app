@@ -399,6 +399,27 @@ const Dashboard = () => {
             {t.dashboard.ofGoal.replace('{amount}', String(data.monthlyBudget))}
           </p>
         </motion.div>
+
+        {/* Card 5 — Zero Waste Tip */}
+        <motion.div {...fadeUp(5)} style={cardStyle} className="p-5">
+          <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>
+            ♻️ {(t as any).tips?.title || 'Zero waste tip of the day'}
+          </h3>
+          <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+            {(() => {
+              const tips = (t as any).tips?.daily || [
+                'Use leftover rice for fried rice tomorrow',
+                'Vegetable peels make great broth',
+                'Freeze bread before it goes stale',
+                'Wilting herbs? Make herb oil',
+                'Almost-expired yogurt works great in smoothies',
+                'Plan meals Sunday to waste 40% less',
+                'Check your fridge before grocery shopping',
+              ];
+              return tips[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+            })()}
+          </p>
+        </motion.div>
       </div>
     </div>
   );
