@@ -716,6 +716,7 @@ const Dashboard = () => {
           </p>
         </motion.div>
       </div>
+      <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
     </div>
   );
 };
