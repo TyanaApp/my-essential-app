@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
+import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -156,6 +157,7 @@ const Inventory = () => {
   };
 
   const openAdd = () => { setEditItem(null); setModalOpen(true); };
+  const activeLocation = tab === 'expiring' ? 'fridge' : tab;
   const openEdit = (item: InventoryItem) => { setEditItem(item); setModalOpen(true); };
 
   const expiryColor = (date: string | null) => {
@@ -225,6 +227,11 @@ const Inventory = () => {
           <Plus className="w-4 h-4" /> {t.inventory.add}
         </button>
       </div>
+
+      {/* Pantry Quick Add */}
+      {tab === 'pantry' && (
+        <PantryQuickAdd onSaved={fetchItems} onOpenManual={openAdd} />
+      )}
 
       {/* Item list */}
       {loading ? (
@@ -349,6 +356,7 @@ const Inventory = () => {
         onClose={() => { setModalOpen(false); setEditItem(null); }}
         editItem={editItem}
         onSaved={fetchItems}
+        defaultLocation={activeLocation}
       />
       <ScanModal
         open={scanOpen}
