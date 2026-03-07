@@ -32,6 +32,7 @@ const Shopping = () => {
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [budget, setBudget] = useState<number>(0);
+  const [currency, setCurrency] = useState('EUR');
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<ShoppingItem | null>(null);
   const [confirmItem, setConfirmItem] = useState<ShoppingItem | null>(null);
@@ -97,8 +98,12 @@ const Shopping = () => {
 
   const fetchItems = async () => {
     if (!user) return;
-    const { data } = await supabase.from('shopping_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+    const [{ data }, profileRes] = await Promise.all([
+      supabase.from('shopping_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      supabase.from('profiles').select('currency').eq('user_id', user.id).maybeSingle(),
+    ]);
     if (data) setItems(data as unknown as ShoppingItem[]);
+    if (profileRes.data?.currency) setCurrency(profileRes.data.currency);
     setLoading(false);
   };
 
@@ -157,6 +162,16 @@ const Shopping = () => {
     if (!confirmItem || !user) return;
     await supabase.from('shopping_items').update({ is_purchased: true } as any).eq('id', confirmItem.id);
     setItems((prev) => prev.map((i) => (i.id === confirmItem.id ? { ...i, is_purchased: true } : i)));
+    // Log spending to savings_log
+    const itemTotal = (confirmItem.estimated_price || 0) * (confirmItem.quantity || 1);
+    if (itemTotal > 0) {
+      await supabase.from('savings_log').insert({
+        user_id: user.id,
+        type: 'purchase',
+        amount: itemTotal,
+        description: confirmItem.name,
+      } as any);
+    }
     if (addToInventory) {
       await supabase.from('inventory_items').insert({ user_id: user.id, name: confirmItem.name, quantity: confirmItem.quantity || 1, unit: confirmItem.unit || 'pcs', category: confirmItem.category, storage_location: 'fridge' } as any);
       toast.success(`${confirmItem.name} ${t.shopping.addedToInventory}`);
@@ -224,16 +239,19 @@ const Shopping = () => {
         </button>
         <div className="flex-1 flex items-center gap-1.5">
           <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>{t.shopping.budget}</span>
-          <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
-            className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
-            style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+            <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
+              className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
+              style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+          </div>
         </div>
       </motion.div>
 
       {budget > 0 && (
         <motion.div {...fadeUp(2)} className="mb-5">
           <div className="flex justify-between text-xs mb-1">
-            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} {formatMoney(totalEstimated, 'EUR')}</span>
+            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} {formatMoney(totalEstimated, currency)}</span>
             <span style={{ color: budgetColor }} className="font-semibold">{budgetPct.toFixed(0)}{t.shopping.ofBudget}</span>
           </div>
           <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
@@ -281,8 +299,8 @@ const Shopping = () => {
                         className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-[#F5F3FF] transition-colors">
                         <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0" style={{ borderColor: '#DDD6FE' }} />
                         <span className="flex-1 text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{item.name}</span>
-                        <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {item.unit || 'pcs'}</span>
-                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), 'EUR')}</span>}
+                        <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
+                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
                         <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-[#EDE9FE]"><Pencil className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} /></button>
                         <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" style={{ color: '#DC2626' }} /></button>
                       </motion.div>
@@ -310,11 +328,11 @@ const Shopping = () => {
                       <Check className="w-3 h-3 text-white" />
                     </button>
                     <span className="flex-1 text-sm line-through truncate" style={{ color: '#9CA3AF' }}>{item.name}</span>
-                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {item.unit || 'pcs'}</span>
+                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
                   </div>
                 ))}
               </div>
-              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, 'EUR')}</p>}
+              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, currency)}</p>}
             </motion.div>
           )}
         </div>
@@ -342,7 +360,7 @@ const Shopping = () => {
                 <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.unit}</label>
                 <select value={formUnit} onChange={(e) => setFormUnit(e.target.value)}
                   className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED] appearance-none" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}>
-                  {['pcs', 'kg', 'g', 'L', 'ml', 'pack'].map((u) => <option key={u} value={u}>{u}</option>)}
+                  {['pcs', 'kg', 'g', 'L', 'ml', 'pack'].map((u) => <option key={u} value={u}>{(t.shopping as any).units?.[u] || u}</option>)}
                 </select>
               </div>
             </div>
@@ -360,8 +378,11 @@ const Shopping = () => {
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.estPrice}</label>
-              <input type="number" step="0.01" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder="0.00"
-                className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+                <input type="number" step="0.01" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder="0.00"
+                  className="w-full h-10 pl-8 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+              </div>
             </div>
             <button onClick={handleSave} disabled={!formName.trim()} className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{ backgroundColor: '#7C3AED' }}>
               {editItem ? t.shopping.update : t.shopping.addToList}
