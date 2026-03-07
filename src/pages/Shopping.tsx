@@ -360,7 +360,7 @@ const Shopping = () => {
                 <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.unit}</label>
                 <select value={formUnit} onChange={(e) => setFormUnit(e.target.value)}
                   className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED] appearance-none" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}>
-                  {['pcs', 'kg', 'g', 'L', 'ml', 'pack'].map((u) => <option key={u} value={u}>{u}</option>)}
+                  {['pcs', 'kg', 'g', 'L', 'ml', 'pack'].map((u) => <option key={u} value={u}>{(t.shopping as any).units?.[u] || u}</option>)}
                 </select>
               </div>
             </div>
@@ -378,8 +378,11 @@ const Shopping = () => {
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.estPrice}</label>
-              <input type="number" step="0.01" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder="0.00"
-                className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+                <input type="number" step="0.01" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder="0.00"
+                  className="w-full h-10 pl-8 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+              </div>
             </div>
             <button onClick={handleSave} disabled={!formName.trim()} className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{ backgroundColor: '#7C3AED' }}>
               {editItem ? t.shopping.update : t.shopping.addToList}
