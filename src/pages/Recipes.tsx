@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus } from 'lucide-react';
+import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -29,6 +29,7 @@ const Recipes = () => {
   const { plan } = useSubscription();
   const { updateStreak } = useStreak();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const [cookingFor, setCookingFor] = useState(2);
   const [selectedMeals, setSelectedMeals] = useState<string[]>(['dinner']);
@@ -108,6 +109,14 @@ const Recipes = () => {
   const toggleFavorite = async (id: string, current: boolean) => {
     await supabase.from('recipes').update({ is_favorite: !current }).eq('id', id);
     setSavedRecipes((prev) => prev.map((r) => (r.id === id ? { ...r, is_favorite: !current } : r)));
+  };
+
+  const handleDeleteRecipe = async (id: string) => {
+    await supabase.from('recipes').delete().eq('id', id);
+    setSavedRecipes((prev) => prev.filter((r) => r.id !== id));
+    setDeleteConfirmId(null);
+    setDetailRecipe(null);
+    toast.success((t.recipes as any).recipeDeleted || 'Recipe removed');
   };
 
   const addMissingToShopping = async (ingredients: Ingredient[]) => {
