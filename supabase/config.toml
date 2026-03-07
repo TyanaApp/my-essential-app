@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.scan-meal-calories]
 verify_jwt = false
+
+[functions.expiring-suggestions]
+verify_jwt = false
