@@ -1,0 +1,1 @@
+ALTER TABLE public.user_goals ADD COLUMN IF NOT EXISTS family_dislikes text[] DEFAULT '{}'::text[];

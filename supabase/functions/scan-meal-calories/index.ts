@@ -12,7 +12,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { imageBase64, language, recalculate, itemName, portion } = body;
+    const { imageBase64, language, recalculate, itemName, portion, dislikedFoods } = body;
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
@@ -78,6 +78,11 @@ Be realistic. Values in grams for macros, kcal for calories.`
       : language === 'lv' ? 'Use Latvian for meal_name and item names.' 
       : 'Use English for meal_name and item names.';
 
+    const dislikedList = (dislikedFoods || []).join(', ');
+    const dislikeCheck = dislikedList 
+      ? `\n\nIMPORTANT: The user dislikes these foods: ${dislikedList}. If any detected item matches a disliked food, add "disliked": true to that item in the items array.`
+      : '';
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -91,7 +96,7 @@ Be realistic. Values in grams for macros, kcal for calories.`
           content: [
             { type: "image_url", image_url: { url: `data:image/jpeg;base64,${imageBase64}` } },
             { type: "text", text: `Analyze this meal photo. Identify what food is on the plate and estimate calories and macros.
-${langHint}
+${langHint}${dislikeCheck}
 Return ONLY JSON, no markdown or code fences:
 {
   "meal_name": "Pasta with tomato sauce",
@@ -100,9 +105,8 @@ Return ONLY JSON, no markdown or code fences:
   "fat": 12,
   "carbs": 68,
   "items": [
-    {"name": "Pasta", "calories": 300, "portion": "150g"},
-    {"name": "Tomato sauce", "calories": 80, "portion": "100ml"},
-    {"name": "Parmesan", "calories": 70, "portion": "20g"}
+    {"name": "Pasta", "calories": 300, "portion": "150g", "disliked": false},
+    {"name": "Tomato sauce", "calories": 80, "portion": "100ml", "disliked": false}
   ],
   "confidence": "medium"
 }

@@ -62,6 +62,9 @@ serve(async (req) => {
       .map((i: any) => `${i.name} ${i.quantity}${i.unit}`)
       .join(", ");
 
+    const dislikedFoods = (userGoals?.disliked_foods || []).join(", ");
+    const familyDislikes = (userGoals?.family_dislikes || []).join(", ");
+
     const prompt = `YOU MUST respond ENTIRELY in ${lang}. 
 ALL fields must be in ${lang}: title, ingredients names, instructions, units.
 DO NOT use English if language is not English.
@@ -71,11 +74,19 @@ You are TYANA kitchen assistant. Generate 3 recipes.
 User has these ingredients at home: ${inventoryList}
 Daily calorie target: ${userGoals?.daily_calories_target || 2000} kcal
 Diet: ${userGoals?.diet_type || "omnivore"}
-Allergies - NEVER include these: ${(userGoals?.allergies || []).join(", ") || "none"}
+Allergies - NEVER include these allergens: ${(userGoals?.allergies || []).join(", ") || "none"}
 Cooking for: ${cookingFor || 1} people
 Meal type: ${mealType || "any"}
 Time available: ${timeAvailable || "any"}
 Use only available ingredients: ${useOnlyInventory ? "yes" : "no"}
+Primary goals: ${(userGoals?.goals || []).join(", ") || "balanced eating"}
+Household size: ${userGoals?.household_size || 1} people (adjust portions accordingly)
+
+CRITICAL FOOD RESTRICTIONS - NEVER VIOLATE:
+- NEVER suggest recipes containing these DISLIKED foods: ${dislikedFoods || "none"}
+- NEVER suggest recipes containing these FAMILY DISLIKES: ${familyDislikes || "none"}  
+- NEVER suggest recipes containing these ALLERGENS: ${(userGoals?.allergies || []).join(", ") || "none"}
+Violating food preferences destroys user trust. Double-check every ingredient.
 
 Return ONLY a valid JSON array of 3 recipes, no markdown or code fences:
 [{"title":"string","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50}]`;
