@@ -22,6 +22,7 @@ import Shopping from "./pages/Shopping";
 import Profile from "./pages/Profile";
 import Savings from "./pages/Savings";
 import Achievements from "./pages/Achievements";
+import NutritionAnalysis from "./pages/NutritionAnalysis";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ const App = () => {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/savings" element={<Savings />} />
                     <Route path="/achievements" element={<Achievements />} />
+                    <Route path="/nutrition-analysis" element={<NutritionAnalysis />} />
                   </Route>
                   <Route path="*" element={<NotFound />} />
                 </Routes>
