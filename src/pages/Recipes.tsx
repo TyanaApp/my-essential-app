@@ -156,7 +156,7 @@ const Recipes = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl overflow-hidden cursor-pointer"
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
-        onClick={() => setDetailRecipe(recipe)}
+        onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
         <img
           src={`https://source.unsplash.com/400x300/?${encodeURIComponent(n.title + ' food')}`}
