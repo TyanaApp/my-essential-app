@@ -98,8 +98,12 @@ const Shopping = () => {
 
   const fetchItems = async () => {
     if (!user) return;
-    const { data } = await supabase.from('shopping_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+    const [{ data }, profileRes] = await Promise.all([
+      supabase.from('shopping_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      supabase.from('profiles').select('currency').eq('user_id', user.id).maybeSingle(),
+    ]);
     if (data) setItems(data as unknown as ShoppingItem[]);
+    if (profileRes.data?.currency) setCurrency(profileRes.data.currency);
     setLoading(false);
   };
 
