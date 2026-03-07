@@ -162,6 +162,16 @@ const Shopping = () => {
     if (!confirmItem || !user) return;
     await supabase.from('shopping_items').update({ is_purchased: true } as any).eq('id', confirmItem.id);
     setItems((prev) => prev.map((i) => (i.id === confirmItem.id ? { ...i, is_purchased: true } : i)));
+    // Log spending to savings_log
+    const itemTotal = (confirmItem.estimated_price || 0) * (confirmItem.quantity || 1);
+    if (itemTotal > 0) {
+      await supabase.from('savings_log').insert({
+        user_id: user.id,
+        type: 'purchase',
+        amount: itemTotal,
+        description: confirmItem.name,
+      } as any);
+    }
     if (addToInventory) {
       await supabase.from('inventory_items').insert({ user_id: user.id, name: confirmItem.name, quantity: confirmItem.quantity || 1, unit: confirmItem.unit || 'pcs', category: confirmItem.category, storage_location: 'fridge' } as any);
       toast.success(`${confirmItem.name} ${t.shopping.addedToInventory}`);
