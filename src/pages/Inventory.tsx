@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
+import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -226,6 +227,11 @@ const Inventory = () => {
           <Plus className="w-4 h-4" /> {t.inventory.add}
         </button>
       </div>
+
+      {/* Pantry Quick Add */}
+      {tab === 'pantry' && (
+        <PantryQuickAdd onSaved={fetchItems} onOpenManual={openAdd} />
+      )}
 
       {/* Item list */}
       {loading ? (
