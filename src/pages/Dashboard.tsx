@@ -470,7 +470,7 @@ const Dashboard = () => {
         <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-              {t.dashboard.budgetTitle || 'Budget & Savings'}
+              {(t.dashboard as any).budgetTitle || 'Budget & Savings'}
             </h3>
             <button
               onClick={() => navigate('/savings')}
