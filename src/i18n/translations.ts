@@ -78,7 +78,7 @@ export const translations = {
       searchRecipes: 'Search saved recipes...', noSavedRecipes: 'No saved recipes yet',
       noMatchingRecipes: 'No matching recipes', name: 'Name', calories: 'Calories',
       protein: 'Protein (g)', fat: 'Fat (g)', carbs: 'Carbs (g)', logMeal: 'Log Meal',
-      logged: 'logged ✓', meal: 'Meal',
+      logged: 'logged ✓', meal: 'Meal', kcalUnit: 'kcal',
       mealPlaceholder: 'e.g. Oatmeal with banana',
     },
     mealScan: {
@@ -400,7 +400,7 @@ export const translations = {
       searchRecipes: 'Поиск сохранённых рецептов...', noSavedRecipes: 'Нет сохранённых рецептов',
       noMatchingRecipes: 'Рецепты не найдены', name: 'Название', calories: 'Калории',
       protein: 'Белок (г)', fat: 'Жир (г)', carbs: 'Углеводы (г)', logMeal: 'Записать',
-      logged: 'записано ✓', meal: 'Блюдо',
+      logged: 'записано ✓', meal: 'Блюдо', kcalUnit: 'ккал',
       mealPlaceholder: 'напр. Овсянка с бананом',
     },
     mealScan: {
@@ -722,7 +722,7 @@ export const translations = {
       searchRecipes: 'Meklēt saglabātās receptes...', noSavedRecipes: 'Nav saglabātu recepšu',
       noMatchingRecipes: 'Receptes nav atrastas', name: 'Nosaukums', calories: 'Kalorijas',
       protein: 'Olbaltumvielas (g)', fat: 'Tauki (g)', carbs: 'Ogļhidrāti (g)', logMeal: 'Ierakstīt',
-      logged: 'ierakstīts ✓', meal: 'Ēdiens',
+      logged: 'ierakstīts ✓', meal: 'Ēdiens', kcalUnit: 'kcal',
       mealPlaceholder: 'piem. Auzu pārslas ar banānu',
     },
     mealScan: {
