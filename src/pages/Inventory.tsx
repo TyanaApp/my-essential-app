@@ -67,11 +67,14 @@ const Inventory = () => {
       setUpgradeOpen(true);
       return;
     }
+    setScanOpen(true);
+  };
+
+  const handleScanCompleted = () => {
     const key = `scan_count_${new Date().getFullYear()}_${new Date().getMonth()}`;
     const newCount = scanCount + 1;
     localStorage.setItem(key, String(newCount));
     setScanCount(newCount);
-    setScanOpen(true);
   };
 
   const fetchItems = async () => {
@@ -361,7 +364,7 @@ const Inventory = () => {
       <ScanModal
         open={scanOpen}
         onClose={() => setScanOpen(false)}
-        onSaved={fetchItems}
+        onSaved={() => { fetchItems(); handleScanCompleted(); }}
       />
       <UpgradeModal
         open={upgradeOpen}

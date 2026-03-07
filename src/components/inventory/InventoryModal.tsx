@@ -103,8 +103,23 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
         await supabase.from('inventory_items').update(payload).eq('id', editItem.id);
         toast.success(t.inventory.updated);
       } else {
-        await supabase.from('inventory_items').insert(payload);
-        toast.success(t.inventory.added);
+        // Check for duplicate (case-insensitive, same storage location)
+        const { data: existing } = await supabase
+          .from('inventory_items')
+          .select('id, name, quantity, unit')
+          .eq('user_id', user.id)
+          .eq('storage_location', location)
+          .ilike('name', name.trim());
+
+        if (existing && existing.length > 0) {
+          const match = existing[0];
+          const newQty = Number(match.quantity || 0) + (parseFloat(quantity) || 1);
+          await supabase.from('inventory_items').update({ quantity: newQty } as any).eq('id', match.id);
+          toast.success(`${(t.inventory as any).addedToExisting || 'Added to existing'} ${match.name} (${newQty}${match.unit || unit})`);
+        } else {
+          await supabase.from('inventory_items').insert(payload);
+          toast.success(t.inventory.added);
+        }
       }
       onSaved();
       onClose();

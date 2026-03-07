@@ -37,7 +37,8 @@ interface DashboardData {
   carbs: number;
   expiringItems: ExpiringItem[];
   recentRecipes: { id: string; title: string; prepTime: number | null; estimatedCost: number | null }[];
-  savingsThisMonth: number;
+  spentThisMonth: number;
+  savedThisMonth: number;
   monthlyBudget: number;
   currency: string;
   useItUpRecipe: { id: string; title: string; matchCount: number } | null;
@@ -111,7 +112,9 @@ const Dashboard = () => {
         days: Math.ceil((new Date(i.expires_at).getTime() - Date.now()) / 86400000),
       }));
 
-      const savingsThisMonth = (savingsRes.data || []).reduce((s: number, r: any) => s + Number(r.amount || 0), 0);
+      const savingsLogs = savingsRes.data || [];
+      const spentThisMonth = savingsLogs.filter((r: any) => r.type === 'purchase').reduce((s: number, r: any) => s + Math.abs(Number(r.amount || 0)), 0);
+      const savedThisMonth = savingsLogs.filter((r: any) => r.type === 'saved' || r.type === 'waste_prevented').reduce((s: number, r: any) => s + Number(r.amount || 0), 0);
 
       // Find "use it up" recipe — the saved recipe that uses the most expiring ingredients
       let useItUpRecipe: DashboardData['useItUpRecipe'] = null;
@@ -145,14 +148,15 @@ const Dashboard = () => {
 
       setData({
         displayName: profileRes.data?.display_name || 'there',
-        caloriesConsumed,
+        caloriesConsumed: Math.min(caloriesConsumed, 9999),
         caloriesTarget: goalsRes.data?.daily_calories_target || 2000,
         protein: Math.round(protein),
         fat: Math.round(fat),
         carbs: Math.round(carbs),
         expiringItems,
         recentRecipes: (recipesRes.data || []).slice(0, 3) as any,
-        savingsThisMonth,
+        spentThisMonth,
+        savedThisMonth,
         monthlyBudget: Number(goalsRes.data?.monthly_budget) || 200,
         currency: profileRes.data?.currency || 'EUR',
         useItUpRecipe,
@@ -218,9 +222,10 @@ const Dashboard = () => {
     toast.success(`${code} ✓`);
   };
 
-  if (!data) return null;
+   if (!data) return null;
 
-  const remaining = data.caloriesTarget - data.caloriesConsumed;
+  const caloriesConsumed = data.caloriesConsumed;
+  const remaining = data.caloriesTarget - caloriesConsumed;
   const pct = Math.min(data.caloriesConsumed / data.caloriesTarget, 1);
   const circumference = 2 * Math.PI * 72;
   const strokeDashoffset = circumference * (1 - pct);
@@ -270,8 +275,8 @@ const Dashboard = () => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>
-                  {data.caloriesConsumed}
+              <span className="text-2xl font-bold" style={{ color: caloriesConsumed >= 9999 ? '#DC2626' : '#1E1B4B' }}>
+                  {caloriesConsumed >= 9999 ? '⚠️' : data.caloriesConsumed}
                 </span>
                 <span className="text-xs" style={{ color: '#9CA3AF' }}>
                   / {data.caloriesTarget} kcal
@@ -461,11 +466,11 @@ const Dashboard = () => {
           )}
         </motion.div>
 
-        {/* Card 4 — Savings */}
+        {/* Card 4 — Budget & Savings */}
         <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
-              💚 {currSymbol}{data.savingsThisMonth.toFixed(2)} {t.dashboard.savedMonth}
+              {(t.dashboard as any).budgetTitle || 'Budget & Savings'}
             </h3>
             <button
               onClick={() => navigate('/savings')}
@@ -475,16 +480,30 @@ const Dashboard = () => {
               {t.dashboard.seeDetails} <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
-          <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+
+          {/* Spent this month */}
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs" style={{ color: '#6B7280' }}>💸 {(t.dashboard as any).spentMonth || 'Spent this month'}</span>
+            <span className="text-sm font-bold" style={{ color: '#DC2626' }}>{currSymbol}{data.spentThisMonth.toFixed(2)}</span>
+          </div>
+          <div className="h-2 rounded-full mb-3" style={{ backgroundColor: '#F3F4F6' }}>
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
-                backgroundColor: '#059669',
-                width: `${Math.min((data.savingsThisMonth / data.monthlyBudget) * 100, 100)}%`,
+                backgroundColor: data.spentThisMonth > data.monthlyBudget ? '#DC2626' : '#EA580C',
+                width: `${Math.min((data.spentThisMonth / data.monthlyBudget) * 100, 100)}%`,
               }}
             />
           </div>
-          <div className="flex items-center justify-between mt-1.5">
+
+          {/* Saved from waste */}
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs" style={{ color: '#6B7280' }}>💚 {(t.dashboard as any).savedWaste || 'Saved from waste'}</span>
+            <span className="text-sm font-bold" style={{ color: '#059669' }}>{currSymbol}{data.savedThisMonth.toFixed(2)}</span>
+          </div>
+
+          {/* Budget editing */}
+          <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: '1px solid #F3F4F6' }}>
             <div className="flex items-center gap-1.5">
               {editingBudget ? (
                 <div className="flex items-center gap-1">
