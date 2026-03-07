@@ -13,8 +13,8 @@ interface Translations {
 const translations: Translations = {
   // Landing Page
   appName: { en: 'TYANA', ru: 'TYANA', lv: 'TYANA' },
-  tagline: { en: 'TIME-BASED HEALTH', ru: 'ЗДОРОВЬЕ ВО ВРЕМЕНИ', lv: 'LAIKA VESELĪBA' },
-  subtitle: { en: 'Design Your Future Biology', ru: 'Создайте свою биологию будущего', lv: 'Veidojiet savu nākotnes bioloģiju' },
+  tagline: { en: 'Knows you better than you know yourself.', ru: 'Знает тебя лучше, чем ты сама.', lv: 'Pazīst tevi labāk nekā tu pati.' },
+  subtitle: { en: 'Your personal AI nutritionist', ru: 'Твой персональный ИИ-нутрициолог', lv: 'Tavs personīgais AI uztura speciālists' },
   signIn: { en: 'Sign In', ru: 'Войти', lv: 'Ieiet' },
   signUp: { en: 'Sign Up', ru: 'Регистрация', lv: 'Reģistrēties' },
   continueWithGoogle: { en: 'Continue with Google', ru: 'Продолжить с Google', lv: 'Turpināt ar Google' },

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.font-tyana {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
 @layer base {
   :root {
     /* TYANA Kitchen CFO - Light Theme */
