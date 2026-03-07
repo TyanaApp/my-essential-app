@@ -22,6 +22,29 @@ import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 
+const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge: string }) => {
+  const [notify, setNotify] = useState(() => localStorage.getItem(`notify_device_${name}`) === '1');
+  const handleNotify = (checked: boolean) => {
+    setNotify(checked);
+    localStorage.setItem(`notify_device_${name}`, checked ? '1' : '0');
+    if (checked) toast.success("We'll notify you when ready!");
+  };
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <span className="text-lg">{emoji}</span>
+        <span className="text-sm font-medium text-muted-foreground">{name}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Badge className="bg-purple-100 text-purple-600 border-purple-200 text-[10px] px-2 py-0.5">
+          {badge}
+        </Badge>
+        <Switch checked={notify} onCheckedChange={handleNotify} />
+      </div>
+    </div>
+  );
+};
+
 const Profile = () => {
   const { t } = useTranslation();
   usePageTitle(t.profile.title);
