@@ -93,6 +93,8 @@ export const translations = {
       portionEaten: 'Portion eaten:',
       portionFull: 'Full', portionThreeQuarters: '¾', portionHalf: 'Half', portionQuarter: '¼',
       confHigh: 'High confidence', confMedium: 'Estimated', confLow: 'Low confidence',
+      tapToEdit: 'Tap item name to edit & recalculate',
+      recalculated: 'Recalculated ✓', recalcFailed: 'Recalculation failed',
     },
     dashboard: {
       morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
@@ -402,6 +404,8 @@ export const translations = {
       portionEaten: 'Сколько съели:',
       portionFull: 'Всё', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
       confHigh: 'Высокая точность', confMedium: 'Приблизительно', confLow: 'Низкая точность',
+      tapToEdit: 'Нажмите на название чтобы изменить',
+      recalculated: 'Пересчитано ✓', recalcFailed: 'Ошибка пересчёта',
     },
     dashboard: {
       morning: 'Доброе утро', afternoon: 'Добрый день', evening: 'Добрый вечер',
@@ -711,6 +715,8 @@ export const translations = {
       portionEaten: 'Cik apēdāt:',
       portionFull: 'Visu', portionThreeQuarters: '¾', portionHalf: 'Pusi', portionQuarter: '¼',
       confHigh: 'Augsta precizitāte', confMedium: 'Aptuveni', confLow: 'Zema precizitāte',
+      tapToEdit: 'Nospiediet nosaukumu lai rediģētu',
+      recalculated: 'Pārrēķināts ✓', recalcFailed: 'Pārrēķins neizdevās',
     },
     dashboard: {
       morning: 'Labrīt', afternoon: 'Labdien', evening: 'Labvakar',
