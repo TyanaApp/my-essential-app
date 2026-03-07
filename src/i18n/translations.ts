@@ -139,6 +139,12 @@ export const translations = {
       male: 'Male', female: 'Female', other: 'Other', preferNotToSay: 'Prefer not to say',
       connectDevices: 'Connect Devices', soon: 'Soon',
     },
+    editProfile: {
+      weight: 'Weight', height: 'Height', age: 'Age', years: 'years',
+      activityLevel: 'Activity level', cm: 'cm', ft: 'ft',
+      actLow: '🛋 Low', actNormal: '🚶 Normal', actActive: '🏃 Active', actVeryActive: '🔥 Very active',
+      caloriesRecalculated: 'Calories recalculated', dayShort: 'day',
+    },
     onboarding: {
       step1Title: "Hi! I'm TYANA", step1Sub: "I'll set up your personal kitchen assistant in 2 minutes",
       yourName: 'Your name', namePlaceholder: 'Maria',
@@ -461,6 +467,12 @@ export const translations = {
       male: 'Мужской', female: 'Женский', other: 'Другой', preferNotToSay: 'Не указывать',
       connectDevices: 'Подключить устройства', soon: 'Скоро',
     },
+    editProfile: {
+      weight: 'Вес', height: 'Рост', age: 'Возраст', years: 'лет',
+      activityLevel: 'Уровень активности', cm: 'см', ft: 'фт',
+      actLow: '🛋 Низкая', actNormal: '🚶 Обычная', actActive: '🏃 Активная', actVeryActive: '🔥 Очень активная',
+      caloriesRecalculated: 'Калории пересчитаны', dayShort: 'день',
+    },
     onboarding: {
       step1Title: 'Привет! Я TYANA', step1Sub: 'Я настрою твоего персонального кухонного помощника за 2 минуты',
       yourName: 'Ваше имя', namePlaceholder: 'Мария',
@@ -782,6 +794,12 @@ export const translations = {
       displayName: 'Vārds', bio: 'Par sevi', gender: 'Dzimums', dateOfBirth: 'Dzimšanas datums',
       male: 'Vīrietis', female: 'Sieviete', other: 'Cits', preferNotToSay: 'Nevēlos norādīt',
       connectDevices: 'Savienot ierīces', soon: 'Drīzumā',
+    },
+    editProfile: {
+      weight: 'Svars', height: 'Augums', age: 'Vecums', years: 'gadi',
+      activityLevel: 'Aktivitātes līmenis', cm: 'cm', ft: 'ft',
+      actLow: '🛋 Zema', actNormal: '🚶 Vidēja', actActive: '🏃 Aktīva', actVeryActive: '🔥 Ļoti aktīva',
+      caloriesRecalculated: 'Kalorijas pārrēķinātas', dayShort: 'diena',
     },
     onboarding: {
       step1Title: 'Sveiki! Es esmu TYANA', step1Sub: 'Es iestatīšu tavu personīgo virtuves palīgu 2 minūtēs',
