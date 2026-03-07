@@ -99,10 +99,16 @@ const Diary = () => {
       try {
         const [entriesRes, goalsRes] = await Promise.all([
           supabase.from('meal_entries').select('*').eq('user_id', user.id).eq('date', dateStr),
-          supabase.from('user_goals').select('daily_calories_target').eq('user_id', user.id).maybeSingle(),
+          supabase.from('user_goals').select('daily_calories_target, weight_kg, goals').eq('user_id', user.id).maybeSingle(),
         ]);
         if (entriesRes.data) setEntries(entriesRes.data as unknown as MealEntry[]);
         if (goalsRes.data?.daily_calories_target) setDailyTarget(goalsRes.data.daily_calories_target);
+        if (goalsRes.data) {
+          const w = Number(goalsRes.data.weight_kg) || 70;
+          const cal = goalsRes.data.daily_calories_target || 2000;
+          const g: string[] = (goalsRes.data as any).goals || [];
+          setMacroTargets(calcMacroTargets(w, cal, g));
+        }
       } catch {
         toast.error(t.common.error);
       }
