@@ -1675,7 +1675,7 @@ export const translations = {
     dashboard: {
       morning: 'Доброго ранку', afternoon: 'Добрий день', evening: 'Добрий вечір',
       remaining: 'ккал залишилось сьогодні', overTarget: 'ккал понад норму',
-      logMeal: '+ Записати прийом їжі', nothingExpiring: 'Нічого не закінчується ✅',
+      logMeal: 'Записати прийом їжі', nothingExpiring: 'Нічого не закінчується ✅',
       expiringTitle: '{count} продуктів закінчується', ideasToday: '🍳 Ідеї на сьогодні',
       savedMonth: 'зекономлено цього місяця', generateRecipes: 'Згенерувати перші рецепти →',
       viewAll: 'Усі', seeDetails: 'Детальніше',
