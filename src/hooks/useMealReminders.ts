@@ -61,7 +61,6 @@ export const useMealReminders = (language: string) => {
 
     const settings = getMealReminderSettings();
     const now = new Date();
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     const todayStr = now.toISOString().split('T')[0];
     const lastCheck = localStorage.getItem(LAST_MEAL_CHECK_KEY);
 

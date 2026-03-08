@@ -8,11 +8,11 @@ export const useFoundingCounter = () => {
   useEffect(() => {
     const fetch = async () => {
       const { data } = await supabase
-        .from('app_settings' as any)
+        .from('app_settings')
         .select('value')
         .eq('key', 'total_registered_users')
         .maybeSingle();
-      if (data) setCount(parseInt((data as any).value) || 0);
+      if (data) setCount(parseInt(data.value) || 0);
       setLoading(false);
     };
     fetch();
