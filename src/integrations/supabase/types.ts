@@ -556,27 +556,36 @@ export type Database = {
       }
       support_tickets: {
         Row: {
+          app_version: string | null
           created_at: string | null
+          device: string | null
           email: string | null
           id: string
+          language: string | null
           message: string
           status: string | null
           subject: string
           user_id: string
         }
         Insert: {
+          app_version?: string | null
           created_at?: string | null
+          device?: string | null
           email?: string | null
           id?: string
+          language?: string | null
           message: string
           status?: string | null
           subject: string
           user_id: string
         }
         Update: {
+          app_version?: string | null
           created_at?: string | null
+          device?: string | null
           email?: string | null
           id?: string
+          language?: string | null
           message?: string
           status?: string | null
           subject?: string
