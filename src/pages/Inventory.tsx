@@ -37,7 +37,7 @@ export interface InventoryItem {
   tracking_mode: string | null;
 }
 
-type Tab = 'fridge' | 'pantry' | 'freezer' | 'home' | 'expiring';
+type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
 
 const Inventory = () => {
   const { user } = useAuth();
