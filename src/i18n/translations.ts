@@ -1374,6 +1374,20 @@ export const translations = {
       waitlistCount: '{count} lietotāji gaida šo funkciju',
       profileLabel: '🏪 Veikalu integrācija',
     },
+    reminders: {
+      title: 'Mani atgādinājumi', addReminder: 'Pievienot atgādinājumu', whatToRemind: 'Ko atgādināt?',
+      placeholder: 'Aiziet uz veikalu pēc piena', voiceReminder: 'Balss atgādinājums',
+      once: 'Vienreiz', daily: 'Katru dienu', weekdays: 'Darba dienās', weekends: 'Brīvdienās',
+      dateLabel: 'Datums', timeLabel: 'Laiks', repeatLabel: 'Atkārtot',
+      saved: 'Atgādinājums saglabāts ✓', saveFailed: 'Neizdevās saglabāt', voiceFailed: 'Neizdevās atpazīt balsi',
+      processing: 'Apstrādājam balsi...', confirmReminder: 'Apstiprināt atgādinājumu',
+      willRemind: 'Atgādināšu', empty: 'Nav atgādinājumu',
+      today: 'Šodien', tomorrow: 'Rīt', recurring: 'Atkārtojoši', completed: 'Izpildīti',
+    },
+    mealReminders: {
+      title: '🍽 Ēdienreižu atgādinājumi',
+      breakfast: '🌅 Brokastis', lunch: '☀️ Pusdienas', dinner: '🌙 Vakariņas',
+    },
   },
   uk: {
     nav: { home: 'Головна', inventory: 'Продукти', recipes: 'Рецепти', shopping: 'Покупки', diary: 'Щоденник', settings: 'Налаштування', profile: 'Профіль' },
