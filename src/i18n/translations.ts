@@ -98,7 +98,7 @@ export const translations = {
     },
     diary: {
       title: 'Diary', breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
-      addMeal: '+ Add', todayTotal: 'Today:', noMeals: 'No meals logged',
+      addMeal: 'Add', todayTotal: 'Today:', noMeals: 'No meals logged',
       addMealTitle: 'Add {meal}', logWhatYouAte: 'Log what you ate',
       fromRecipes: 'From Recipes', manualEntry: 'Manual Entry',
       searchRecipes: 'Search saved recipes...', noSavedRecipes: 'No saved recipes yet',
