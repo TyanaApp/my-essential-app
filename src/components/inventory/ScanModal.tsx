@@ -129,8 +129,9 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
     setScannedItems(prev => [...prev, { name: '', quantity: 1, unit: 'pcs', category: 'other', storage_location: 'fridge' }]);
   };
 
-  const groupedItems = CATEGORIES.map(cat => ({
+  const groupedItems = CATEGORIES_DATA.map(cat => ({
     ...cat,
+    label: cat.labels[language] || cat.labels.en,
     items: scannedItems
       .map((item, idx) => ({ ...item, _idx: idx }))
       .filter(item => item.category === cat.id),
