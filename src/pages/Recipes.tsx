@@ -288,7 +288,6 @@ const Recipes = () => {
                   <div className="flex gap-2">
                     {SERVING_OPTIONS.map((n) => (
                       <button key={n} onClick={() => setCookingFor(n)}
-                        className="w-10 h-10 rounded-xl text-sm font-bold border-[1.5px] transition-all"
                         className={`w-10 h-10 rounded-xl text-sm font-bold border-[1.5px] transition-all ${cookingFor === n ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {n}{n === 5 ? '+' : ''}
                       </button>
