@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { X } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 
 const T = {
@@ -157,13 +158,22 @@ const TrialManager = () => {
     <>
       {showBanner && (
         <div
-          className="fixed top-0 left-0 right-0 z-[60] px-4 py-2 text-center text-sm font-medium text-white"
+          className="fixed top-0 left-0 right-0 z-[60] px-4 py-2 text-center text-sm font-medium text-white flex items-center justify-center gap-2"
           style={{ backgroundColor: getBannerColor() }}
         >
-          {getBannerText()}
-          {' → '}
-          <button onClick={handleUpgrade} className="underline font-bold">
-            {trialDaysLeft && trialDaysLeft <= 1 ? t.choosePlan : t.viewPlans}
+          <span>
+            {getBannerText()}
+            {' → '}
+            <button onClick={handleUpgrade} className="underline font-bold">
+              {trialDaysLeft && trialDaysLeft <= 1 ? t.choosePlan : t.viewPlans}
+            </button>
+          </span>
+          <button
+            onClick={() => setTrialDaysLeft(null)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/80 hover:text-white"
+            aria-label="Close"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
       )}
