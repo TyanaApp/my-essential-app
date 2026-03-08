@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
+import RecipePhoto from '@/components/RecipePhoto';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
