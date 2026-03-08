@@ -1437,6 +1437,9 @@ export const translations = {
       greatYesterday: '💪 Vakar biji lieliska! Turpini šodien.',
       logLunch: '📊 Reģistrē pusdienas — tā kalorijas tiek skaitītas precīzāk',
     },
+    weeklyReport: {
+      lastWeekTitle: 'Pagājušās nedēļas kopsavilkums', calDay: 'kcal/dienā', meals: 'ēdienreizes', saved: 'ietaupīts', streakDays: 'dienas pēc kārtas',
+    },
     dayLabels: ['P', 'O', 'T', 'C', 'Pk', 'S', 'Sv'],
     notifications: {
       bannerTitle: '🔔 Saņemiet brīdinājumus par derīguma termiņiem', enable: 'Ieslēgt paziņojumus', maybeLater: 'Varbūt vēlāk',
