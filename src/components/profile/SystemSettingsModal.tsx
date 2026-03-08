@@ -25,7 +25,7 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border max-w-md max-h-[80vh] overflow-y-auto">
+      <DialogContent className="bg-card border-border max-w-[95vw] sm:max-w-md max-h-[90vh] sm:max-h-[80vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="font-nasa text-foreground">{t('systemSettings')}</DialogTitle>
         </DialogHeader>
