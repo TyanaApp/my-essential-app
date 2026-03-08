@@ -256,9 +256,9 @@ const Auth = () => {
                   type="checkbox"
                   checked={termsAccepted}
                   onChange={(e) => { setTermsAccepted(e.target.checked); setTermsError(''); }}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 accent-[#7C3AED]"
+                  className="mt-1 h-4 w-4 rounded border-border accent-primary"
                 />
-                <span className="text-xs" style={{ color: '#6B7280' }}>
+                <span className="text-xs text-muted-foreground">
                   {language === 'ru' ? 'Я принимаю ' : language === 'uk' ? 'Я приймаю ' : language === 'lv' ? 'Es piekrītu ' : 'I accept the '}
                   <Link to="/terms" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
                     {language === 'ru' ? 'Условия использования' : language === 'uk' ? 'Умови використання' : language === 'lv' ? 'Lietošanas noteikumiem' : 'Terms of Service'}
