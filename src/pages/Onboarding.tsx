@@ -174,6 +174,11 @@ const Onboarding = () => {
           activity_level: activity,
         } as any, { onConflict: 'user_id' });
 
+        // Fire-and-forget welcome email
+        supabase.functions.invoke('send-welcome-email', {
+          body: { email: user.email, name: name || user.email?.split('@')[0], language: t === translations.ru ? 'ru' : t === translations.uk ? 'uk' : t === translations.lv ? 'lv' : 'en' },
+        }).catch(() => {});
+
         navigate('/dashboard');
         return;
       }
