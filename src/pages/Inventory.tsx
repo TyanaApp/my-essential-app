@@ -242,11 +242,10 @@ const Inventory = () => {
             <button
               key={filt}
               onClick={() => setFamilyFilter(filt)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-              style={{
-                backgroundColor: familyFilter === filt ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
-                color: familyFilter === filt ? 'white' : '#6B7280',
-              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                familyFilter === filt ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
+              }`}
+            >
             >
               {filt === 'all' ? (f.all || 'All') : filt === 'mine' ? (f.mine || 'Mine') : (f.shared || 'Shared')}
             </button>
