@@ -251,7 +251,7 @@ const NutritionCalculator = ({ embedded }: { embedded?: boolean }) => {
   const useRu = language === 'ru' || language === 'uk';
 
   return (
-    <div className="p-4 pb-24 md:p-6 max-w-2xl mx-auto space-y-4">
+    <div className={embedded ? "space-y-4" : "p-4 pb-24 md:p-6 max-w-2xl mx-auto space-y-4"}>
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
