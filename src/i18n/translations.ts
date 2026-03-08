@@ -1113,9 +1113,10 @@ export const translations = {
       quickAddFlow: {
         title: 'Kas ir mājās?', subtitle: 'Vienkārši atzīmē — glabāšanas vieta nav svarīga',
         quickAddBtn: '⚡️ Ātrā pievienošana', searchPlaceholder: 'Sāc rakstīt vai izvēlies no saraksta...',
-        selectedCount: 'Izvēlēts: {count} produkti', addAll: 'Pievienot visu', done: 'Gatavs ✓',
+        selectedCount: 'Izvēlēts: {count} produkti', addAll: 'Pievienot visu', addAllCount: 'Pievienot visus {count} produktus', done: 'Gatavs ✓',
         adjustQty: 'Pielāgo daudzumu', backToSelect: '← Atpakaļ', addedSuccess: '{count} produkti pievienoti',
         noResults: 'Nekas nav atrasts', homeTab: '🏡 Mājās',
+        howMuch: 'Cik daudz?', custom: 'Cits', enterQty: 'Ievadiet daudzumu', addItem: 'Pievienot', cancelBtn: 'Atcelt',
       },
       quickAddCategories: {
         dairy: 'Olas un piena produkti', meat: 'Gaļa un zivis', vegetables: 'Dārzeņi', fruits: 'Augļi',
