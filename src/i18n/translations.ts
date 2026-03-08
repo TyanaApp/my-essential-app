@@ -93,7 +93,7 @@ export const translations = {
       editManually: 'Edit manually',
       scanAgain: 'Scan again',
       portionEaten: 'Portion eaten:',
-      portionFull: 'Full', portionThreeQuarters: '¾', portionHalf: 'Half', portionQuarter: '¼',
+      portionExtra: '150%', portionFull: 'Full', portionThreeQuarters: '¾', portionHalf: 'Half', portionQuarter: '¼',
       confHigh: 'High confidence', confMedium: 'Estimated', confLow: 'Low confidence',
       tapToEdit: 'Tap item name to edit & recalculate',
       recalculated: 'Recalculated ✓', recalcFailed: 'Recalculation failed',
