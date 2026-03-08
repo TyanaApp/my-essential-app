@@ -5,6 +5,7 @@ import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Tr
 import RecipePhoto from '@/components/RecipePhoto';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useFamily } from '@/hooks/useFamily';
 import { toast } from 'sonner';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
@@ -29,6 +30,7 @@ const Recipes = () => {
   usePageTitle(t.recipes.title);
   const { plan } = useSubscription();
   const { updateStreak } = useStreak();
+  const { subMembers, familyMode } = useFamily();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
@@ -73,7 +75,13 @@ const Recipes = () => {
     setGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-recipes', {
-        body: { mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory, inventory, userGoals: userGoals || {}, language },
+        body: {
+          mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory,
+          inventory, userGoals: userGoals || {}, language,
+          familyMembers: familyMode ? subMembers.map(m => ({
+            name: m.name, age: m.age, allergies: m.allergies, diet_type: m.diet_type,
+          })) : undefined,
+        },
       });
       if (error) throw error;
       const recipes: Recipe[] = data?.recipes || [];
