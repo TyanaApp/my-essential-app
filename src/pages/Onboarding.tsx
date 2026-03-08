@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
 
+
 /* ───────── types ───────── */
 type Goal = 'lose' | 'gain' | 'balanced' | 'family' | 'time' | 'budget';
 type Diet = 'omnivore' | 'vegetarian' | 'vegan' | 'keto' | 'gluten-free';
@@ -33,7 +34,7 @@ const TOTAL_STEPS = 5;
 const Onboarding = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
 
@@ -173,6 +174,11 @@ const Onboarding = () => {
           age: age ? parseInt(age) : null,
           activity_level: activity,
         } as any, { onConflict: 'user_id' });
+
+        // Fire-and-forget welcome email
+        supabase.functions.invoke('send-welcome-email', {
+          body: { email: user.email, name: name || user.email?.split('@')[0], language },
+        }).catch(() => {});
 
         navigate('/dashboard');
         return;

@@ -38,3 +38,9 @@ verify_jwt = false
 
 [functions.nutrition-advice]
 verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.lunara-voice-chat]
+verify_jwt = false

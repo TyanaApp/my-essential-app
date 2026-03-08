@@ -28,6 +28,7 @@ interface MealScanModalProps {
 }
 
 const PORTION_OPTIONS = [
+  { id: 'extra', multiplier: 1.5, labelKey: 'portionExtra' },
   { id: 'full', multiplier: 1, labelKey: 'portionFull' },
   { id: 'three_quarters', multiplier: 0.75, labelKey: 'portionThreeQuarters' },
   { id: 'half', multiplier: 0.5, labelKey: 'portionHalf' },
@@ -393,7 +394,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                         color: portion === p.id ? '#7C3AED' : '#6B7280',
                       }}
                     >
-                      {(ms as any)?.[p.labelKey] || (p.id === 'full' ? '100%' : p.id === 'three_quarters' ? '75%' : p.id === 'half' ? '50%' : '25%')}
+                      {(ms as any)?.[p.labelKey] || (p.id === 'extra' ? '150%' : p.id === 'full' ? '100%' : p.id === 'three_quarters' ? '75%' : p.id === 'half' ? '50%' : '25%')}
                     </button>
                   ))}
                 </div>
