@@ -269,22 +269,21 @@ const Shopping = () => {
         <h1 className="text-2xl font-bold text-foreground">{t.shopping.title}</h1>
       </motion.div>
 
-      <motion.div {...fadeUp(1)} className="flex items-center gap-2 mb-4">
+      <motion.div {...fadeUp(1)} className="flex flex-wrap items-center gap-2 mb-4">
         <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: '#7C3AED' }}>
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
         <button onClick={handleVoiceInput}
           className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] transition-all"
-          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'white', color: isListening ? '#7C3AED' : '#6B7280' }}>
+          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}>
           🎤 {isListening ? t.shopping.listening : ''}
         </button>
-        <div className="flex-1 flex items-center gap-1.5">
-          <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>{t.shopping.budget}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">{t.shopping.budget}</span>
           <div className="flex items-center gap-1">
-            <span className="text-xs font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+            <span className="text-xs font-medium text-primary">{getCurrencySymbol(currency)}</span>
             <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
-              className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
-              style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+              className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-primary bg-secondary border-border" />
           </div>
         </div>
       </motion.div>

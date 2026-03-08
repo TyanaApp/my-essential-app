@@ -276,8 +276,8 @@ const Recipes = () => {
                 {!loading && inventory.length === 0 ? (
                   <div className="text-center py-4 rounded-xl" style={{ backgroundColor: 'white' }}>
                     <div className="text-4xl mb-2">🧊</div>
-                    <p className="text-sm font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.recipes.noInventory}</p>
-                    <p className="text-xs mb-3" style={{ color: '#6B7280' }}>{t.recipes.noInventoryHint}</p>
+                    <p className="text-sm font-bold mb-1 text-foreground">{t.recipes.noInventory}</p>
+                    <p className="text-xs mb-3 text-muted-foreground">{t.recipes.noInventoryHint}</p>
                     <button onClick={() => navigate('/inventory')} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: '#7C3AED' }}>
                       {t.recipes.goToInventory}
                     </button>
