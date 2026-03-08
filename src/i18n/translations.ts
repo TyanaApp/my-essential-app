@@ -885,6 +885,9 @@ export const translations = {
       title: 'Nulles atkritumu padoms dienai',
       daily: ['Izmantojiet atlikušos rīsus ceptiem rīsiem rīt', 'No dārzeņu mizām sanāk lielisks buljons', 'Sasaldējiet maizi pirms tā kļūst novecojusi', 'Vīstošie garšaugi? Uztaisiet garšaugu eļļu', 'Gandrīz beigušies jogurts lieliski der smūtijiem', 'Plānojiet ēdienus svētdien — izmetīsiet par 40% mazāk', 'Pārbaudiet ledusskapi pirms iepirkšanās'],
     },
+    weeklyReport: {
+      lastWeekTitle: 'Pagājušās nedēļas kopsavilkums', calDay: 'kcal/dienā', meals: 'ēdienreizes', saved: 'ietaupīts', streakDays: 'dienas pēc kārtas',
+    },
     dayLabels: ['P', 'O', 'T', 'C', 'Pk', 'S', 'Sv'],
     notifications: {
       bannerTitle: '🔔 Saņemiet brīdinājumus par derīguma termiņiem', enable: 'Ieslēgt paziņojumus', maybeLater: 'Varbūt vēlāk',
