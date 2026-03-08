@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Globe } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Globe, ChevronDown } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LanguageSelectorProps {
@@ -20,36 +20,58 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   showLabel = false 
 }) => {
   const { language, setLanguage } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const current = languages.find(l => l.code === language) || languages[0];
 
   if (variant === 'compact') {
     return (
-      <div className="flex items-center gap-1.5">
-        {showLabel && (
-          <Globe className="w-4 h-4 text-muted-foreground" />
-        )}
-        <div className="flex rounded-full bg-surface/50 backdrop-blur-sm border border-border/50 p-0.5">
-          {languages.map((lang) => (
-            <motion.button
-              key={lang.code}
-              onClick={() => setLanguage(lang.code)}
-              className={`relative px-2.5 py-1 text-xs font-exo font-medium rounded-full transition-colors ${
-                language === lang.code
-                  ? 'text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-              whileTap={{ scale: 0.95 }}
+      <div className="relative" ref={ref}>
+        <motion.button
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-1 px-3 py-1.5 text-xs font-exo font-medium rounded-full bg-surface/50 backdrop-blur-sm border border-border/50 transition-colors hover:bg-surface"
+          whileTap={{ scale: 0.95 }}
+        >
+          <Globe className="w-3.5 h-3.5" />
+          <span>{current.short}</span>
+          <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </motion.button>
+
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: -4, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -4, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="absolute right-0 top-full mt-1 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[120px]"
             >
-              {language === lang.code && (
-                <motion.div
-                  className="absolute inset-0 bg-primary rounded-full pointer-events-none"
-                  layoutId="language-indicator"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10">{lang.short}</span>
-            </motion.button>
-          ))}
-        </div>
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => { setLanguage(lang.code); setOpen(false); }}
+                  className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-exo font-medium transition-colors ${
+                    language === lang.code
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-foreground hover:bg-accent'
+                  }`}
+                >
+                  <span className="w-6 text-right opacity-70">{lang.short}</span>
+                  <span>{lang.label}</span>
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
