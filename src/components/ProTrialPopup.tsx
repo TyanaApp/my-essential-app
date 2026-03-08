@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 const TRANSLATIONS = {
   en: {
     title: '7 days Pro for free!',
-    foundingBadge: '🏆 You are one of the first 1000! Price €6.49 locked forever',
+    earlyBirdBadge: '🎉 Your special price €6.49/mo — locked forever',
     feat1: '✨ Unlimited scanning',
     feat2: '🤖 AI recipes for your products',
     feat3: '📊 Personal nutrition analysis',
@@ -21,7 +21,7 @@ const TRANSLATIONS = {
   },
   ru: {
     title: '7 дней Pro бесплатно!',
-    foundingBadge: '🏆 Вы один из первых 1000! Цена €6.49 заблокирована навсегда',
+    earlyBirdBadge: '🎉 Ваша специальная цена €6.49/мес — навсегда',
     feat1: '✨ Безлимитное сканирование',
     feat2: '🤖 ИИ-рецепты под ваши продукты',
     feat3: '📊 Персональный анализ питания',
@@ -34,7 +34,7 @@ const TRANSLATIONS = {
   },
   lv: {
     title: '7 dienas Pro bez maksas!',
-    foundingBadge: '🏆 Jūs esat viens no pirmajiem 1000! Cena €6.49 fiksēta mūžīgi',
+    earlyBirdBadge: '🎉 Jūsu īpašā cena €6.49/mēn — uz visiem laikiem',
     feat1: '✨ Neierobežota skenēšana',
     feat2: '🤖 AI receptes jūsu produktiem',
     feat3: '📊 Personalizēta uztura analīze',
@@ -47,7 +47,7 @@ const TRANSLATIONS = {
   },
   uk: {
     title: '7 днів Pro безкоштовно!',
-    foundingBadge: '🏆 Ви один з перших 1000! Ціна €6.49 зафіксована назавжди',
+    earlyBirdBadge: '🎉 Ваша спеціальна ціна €6.49/міс — назавжди',
     feat1: '✨ Безлімітне сканування',
     feat2: '🤖 ШІ-рецепти під ваші продукти',
     feat3: '📊 Персональний аналіз харчування',
@@ -130,7 +130,7 @@ const ProTrialPopup = () => {
 
             {isFoundingMember && (
               <div className="rounded-xl px-4 py-2 mb-4 text-sm font-medium" style={{ backgroundColor: 'rgba(255,215,0,0.25)', border: '1px solid rgba(255,215,0,0.5)' }}>
-                {t.foundingBadge}
+                {t.earlyBirdBadge}
               </div>
             )}
 

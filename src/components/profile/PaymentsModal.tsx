@@ -15,7 +15,7 @@ interface PaymentsModalProps {
 const PLAN_LABELS: Record<PlanType, string> = {
   free: 'Free',
   lite: 'Lite',
-  pro_founding: 'Pro (Founder)',
+  pro_founding: 'Pro (Early Bird)',
   pro_regular: 'Pro',
 };
 

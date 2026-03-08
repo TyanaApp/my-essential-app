@@ -15,10 +15,10 @@ const T = {
     endsToday: 'Your Pro trial ends today',
     viewPlans: 'View plans',
     choosePlan: 'Choose plan',
-    founderPro: '👑 Pro Founder €6.49/mo — forever',
+    earlyBirdPro: '👑 Pro €6.49/mo — locked forever',
     regularPro: '👑 Pro €12.99/mo',
     lite: '⭐️ Lite €5.99/mo',
-    founderNote: 'Founder price available only now',
+    earlyBirdNote: 'Early Bird Price — locked forever',
     continueFree: 'Continue Free',
     expiredTitle: 'Your trial ended',
     expiredDesc: 'Upgrade to keep Pro features.',
@@ -29,10 +29,10 @@ const T = {
     endsToday: 'Ваш Pro trial завершается сегодня',
     viewPlans: 'Посмотреть планы',
     choosePlan: 'Выбрать план',
-    founderPro: '👑 Pro Founder €6.49/мес — навсегда',
+    earlyBirdPro: '👑 Pro €6.49/мес — навсегда',
     regularPro: '👑 Pro €12.99/мес',
     lite: '⭐️ Lite €5.99/мес',
-    founderNote: 'Цена основателя доступна только сейчас',
+    earlyBirdNote: 'Цена раннего доступа — навсегда',
     continueFree: 'Продолжить бесплатно',
     expiredTitle: 'Ваш пробный период завершён',
     expiredDesc: 'Обновите подписку, чтобы сохранить Pro функции.',
@@ -43,10 +43,10 @@ const T = {
     endsToday: 'Jūsu Pro beidzas šodien',
     viewPlans: 'Skatīt plānus',
     choosePlan: 'Izvēlēties plānu',
-    founderPro: '👑 Pro Dibinātājs €6.49/mēn — mūžīgi',
+    earlyBirdPro: '👑 Pro €6.49/mēn — uz visiem laikiem',
     regularPro: '👑 Pro €12.99/mēn',
     lite: '⭐️ Lite €5.99/mēn',
-    founderNote: 'Dibinātāja cena pieejama tikai tagad',
+    earlyBirdNote: 'Agrīnā piekļuve — uz visiem laikiem',
     continueFree: 'Turpināt bez maksas',
     expiredTitle: 'Jūsu izmēģinājums beidzies',
     expiredDesc: 'Uzlabojiet, lai saglabātu Pro funkcijas.',
@@ -57,10 +57,10 @@ const T = {
     endsToday: 'Ваш Pro trial завершується сьогодні',
     viewPlans: 'Переглянути плани',
     choosePlan: 'Обрати план',
-    founderPro: '👑 Pro Засновник €6.49/міс — назавжди',
+    earlyBirdPro: '👑 Pro €6.49/міс — назавжди',
     regularPro: '👑 Pro €12.99/міс',
     lite: '⭐️ Lite €5.99/міс',
-    founderNote: 'Ціна засновника доступна тільки зараз',
+    earlyBirdNote: 'Ціна раннього доступу — назавжди',
     continueFree: 'Продовжити безкоштовно',
     expiredTitle: 'Пробний період закінчився',
     expiredDesc: 'Оновіть підписку, щоб зберегти Pro функції.',
@@ -217,7 +217,7 @@ const TrialManager = () => {
               className="w-full font-semibold text-white"
               style={{ backgroundColor: '#7C3AED' }}
             >
-              {isFoundingMember ? t.founderPro : t.regularPro}
+              {isFoundingMember ? t.earlyBirdPro : t.regularPro}
             </Button>
             <Button
               onClick={() => handleCheckout('lite')}
@@ -227,7 +227,7 @@ const TrialManager = () => {
               {t.lite}
             </Button>
             {isFoundingMember && (
-              <p className="text-xs text-amber-600 font-medium">{t.founderNote}</p>
+              <p className="text-xs text-green-600 font-medium">{t.earlyBirdNote}</p>
             )}
             <Button
               variant="ghost"

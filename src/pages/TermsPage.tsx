@@ -30,8 +30,8 @@ const TermsPage = () => {
       s4Items: [
         'Free plan: basic features, no time limit',
         'Lite €5.99/month: 15 scans/month, AI recipes, basic tracking',
-        'Pro Founder €6.49/month: first 1000 users only, price locked forever, unlimited',
-        'Pro €12.99/month: users after first 1000, unlimited',
+        'Pro Early Bird €6.49/month: eligible early users, price locked forever, unlimited',
+        'Pro €12.99/month: standard price, unlimited',
         '7-day trial: free for all new users, no card required, auto-switches to Free after',
         'Refunds: contact us within 7 days of payment',
       ],
@@ -59,8 +59,8 @@ const TermsPage = () => {
       s4Items: [
         'Бесплатный план: базовые функции, без ограничения по времени',
         'Lite €5.99/мес: 15 сканирований/мес, ИИ-рецепты, базовый трекинг',
-        'Pro Founder €6.49/мес: только первые 1000 пользователей, цена заблокирована навсегда',
-        'Pro €12.99/мес: для пользователей после первой 1000, безлимит',
+        'Pro Early Bird €6.49/мес: для ранних пользователей, цена зафиксирована навсегда',
+        'Pro €12.99/мес: стандартная цена, безлимит',
         '7-дневный пробный период: бесплатно, без карты, автоматически переключается на Free',
         'Возврат: свяжитесь с нами в течение 7 дней после оплаты',
       ],
@@ -88,8 +88,8 @@ const TermsPage = () => {
       s4Items: [
         'Безкоштовний план: базові функції, без обмеження за часом',
         'Lite €5.99/міс: 15 сканувань/міс, ШІ-рецепти, базовий трекінг',
-        'Pro Founder €6.49/міс: лише перші 1000 користувачів, ціна заблокована назавжди',
-        'Pro €12.99/міс: для користувачів після перших 1000, безліміт',
+        'Pro Early Bird €6.49/міс: для ранніх користувачів, ціна зафіксована назавжди',
+        'Pro €12.99/міс: стандартна ціна, безліміт',
         '7-денний пробний період: безкоштовно, без карти, автоматично переключається на Free',
         'Повернення: зв\'яжіться з нами протягом 7 днів після оплати',
       ],
@@ -117,8 +117,8 @@ const TermsPage = () => {
       s4Items: [
         'Bezmaksas plāns: pamata funkcijas, bez laika ierobežojuma',
         'Lite €5.99/mēn: 15 skenēšanas/mēn, AI receptes, pamata izsekošana',
-        'Pro Founder €6.49/mēn: tikai pirmie 1000 lietotāji, cena fiksēta uz visiem laikiem',
-        'Pro €12.99/mēn: lietotāji pēc pirmajiem 1000, neierobežoti',
+        'Pro Early Bird €6.49/mēn: agrīnajiem lietotājiem, cena fiksēta uz visiem laikiem',
+        'Pro €12.99/mēn: standarta cena, neierobežoti',
         '7 dienu izmēģinājums: bezmaksas, bez kartes, automātiski pārslēdzas uz Free',
         'Atmaksa: sazinieties ar mums 7 dienu laikā pēc maksājuma',
       ],

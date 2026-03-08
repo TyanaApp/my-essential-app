@@ -17,13 +17,13 @@ export const SUBSCRIPTION_PLANS = {
   pro_founding: {
     priceId: 'price_1T79ut2N2asjxki45jclLOlc',
     productId: 'prod_U5Ka0VFomXsCwg',
-    name: 'TYANA Pro (Founder)',
+    name: 'TYANA Pro',
     price: 6.49,
     currency: '€',
     interval: 'month',
     scansPerMonth: Infinity,
     maxRecipes: Infinity,
-    badge: '🏆 Founding Member',
+    badge: '✅ Early Bird',
   },
   pro_regular: {
     priceId: 'price_1T79vc2N2asjxki4EpkvxSDD',

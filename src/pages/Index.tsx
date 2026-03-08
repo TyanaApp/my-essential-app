@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useFoundingCounter } from '@/hooks/useFoundingCounter';
-import { Progress } from '@/components/ui/progress';
 import TyanaLogo from '@/components/TyanaLogo';
 import LanguageSelector from '@/components/LanguageSelector';
 
@@ -128,27 +127,6 @@ const Index = () => {
               {t.landing.ctaHint}
             </p>
 
-            {/* Founding Members Counter */}
-            <motion.div
-              className="mt-6 rounded-2xl p-4"
-              style={{ backgroundColor: '#EDE9FE' }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              {isFull ? (
-                <p className="text-sm font-medium text-center" style={{ color: '#7C3AED' }}>
-                  🔒 {(t.landing as any).foundingFull || 'All founder spots taken. Pro is now €12.99/mo'}
-                </p>
-              ) : (
-                <>
-                  <p className="text-sm font-medium mb-2 text-center" style={{ color: '#7C3AED' }}>
-                    🏆 {(t.landing as any).foundingCounter?.replace('{count}', String(foundingCount)) || `${foundingCount} of 1000 founder spots taken`}
-                  </p>
-                  <Progress value={(foundingCount / 1000) * 100} className="h-2" />
-                </>
-              )}
-            </motion.div>
 
             <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-6 mt-6">
               {[
@@ -412,55 +390,45 @@ const Index = () => {
             {/* PRO */}
             {!isFull ? (
               <motion.div
-                className="bg-white rounded-2xl border-2 relative overflow-hidden"
+                className="bg-white rounded-2xl border-2 relative overflow-hidden p-7"
                 style={{ borderColor: '#7C3AED', boxShadow: '0 4px 30px rgba(124,58,237,0.15)' }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                {/* Urgency banner */}
-                <div className="px-5 py-2.5 text-center text-sm font-semibold text-white" style={{ backgroundColor: '#DC2626' }}>
-                  🔥 {(t.landing as any).founderSpotsLeft?.replace('{count}', String(1000 - foundingCount)) || `Only ${1000 - foundingCount} of 1,000 spots left at this price`}
+                <div
+                  className="absolute top-4 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
+                  style={{ backgroundColor: '#7C3AED' }}
+                >
+                  {t.landing.mostPopular}
                 </div>
 
-                <div className="p-7">
-                  <div
-                    className="absolute top-14 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
-                    style={{ backgroundColor: '#7C3AED' }}
-                  >
-                    {t.landing.mostPopular}
-                  </div>
-
-                  <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>TYANA Pro</h3>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-lg line-through" style={{ color: '#9CA3AF' }}>€12.99</span>
-                    <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>€6.49</span>
-                    <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.mo}</span>
-                  </div>
-
-                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-semibold mt-1 mb-1" style={{ backgroundColor: '#DCFCE7', color: '#166534' }}>
-                    -50% {(t.landing as any).founderForever || 'forever'}
-                  </div>
-                  <p className="text-[13px] font-medium mb-5" style={{ color: '#16A34A' }}>
-                    ✅ {(t.landing as any).founderYouAreFirst || "You're among the first 1,000 — this price is yours forever"}
-                  </p>
-
-                  <ul className="space-y-3 mb-8">
-                    {t.landing.proFeatures.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
-                        <span style={{ color: '#7C3AED' }}>✓</span> {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    to="/auth?mode=signup"
-                    className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: '#7C3AED' }}
-                  >
-                    {t.landing.getPro} <ArrowRight className="w-4 h-4" />
-                  </Link>
+                <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>TYANA Pro</h3>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="text-lg line-through" style={{ color: '#9CA3AF' }}>€12.99</span>
+                  <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>€6.49</span>
+                  <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.mo}</span>
                 </div>
+
+                <p className="text-[13px] font-medium mb-5" style={{ color: '#16A34A' }}>
+                  ✅ {(t.landing as any).earlyBirdLabel || 'Early Bird Price — locked forever'}
+                </p>
+
+                <ul className="space-y-3 mb-8">
+                  {t.landing.proFeatures.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
+                      <span style={{ color: '#7C3AED' }}>✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/auth?mode=signup"
+                  className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: '#7C3AED' }}
+                >
+                  {t.landing.getPro} <ArrowRight className="w-4 h-4" />
+                </Link>
               </motion.div>
             ) : (
               <motion.div

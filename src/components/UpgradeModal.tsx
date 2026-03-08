@@ -15,12 +15,10 @@ const T = {
     startTrial: 'Start free trial',
     viewPlans: 'View plans',
     trialActivated: 'Pro activated! 7 days ahead 🎉',
-    founderTitle: '⚡️ Special offer for you',
-    founderDesc: "You're among the first 1,000 users",
-    founderPrice: '€6.49/mo — forever',
-    founderOnly: 'This price is only for you, only now',
+    earlyBirdTitle: '🎉 Your special price',
+    earlyBirdDesc: 'Your price €6.49/mo is locked forever',
+    earlyBirdSaving: "That's 2x cheaper than the regular price",
     subscribe: 'Subscribe for €6.49/mo',
-    offerValid: 'Offer valid 24 hours',
     expiredTitle: 'Upgrade to Pro',
     regularPrice: '€12.99/mo',
     subscribePro: 'Subscribe',
@@ -33,12 +31,10 @@ const T = {
     startTrial: 'Начать бесплатный trial',
     viewPlans: 'Посмотреть планы',
     trialActivated: 'Pro активирован! 7 дней впереди 🎉',
-    founderTitle: '⚡️ Специальное предложение для вас',
-    founderDesc: 'Вы в числе первых 1000 пользователей',
-    founderPrice: '€6.49/мес — навсегда',
-    founderOnly: 'Эта цена только для вас и только сейчас',
+    earlyBirdTitle: '🎉 У вас специальная цена',
+    earlyBirdDesc: 'Ваша цена €6.49/мес зафиксирована навсегда',
+    earlyBirdSaving: 'Это в 2 раза дешевле обычной цены',
     subscribe: 'Подписаться за €6.49/мес',
-    offerValid: 'Предложение действительно 24 часа',
     expiredTitle: 'Перейди на Pro',
     regularPrice: '€12.99/мес',
     subscribePro: 'Подписаться',
@@ -51,12 +47,10 @@ const T = {
     startTrial: 'Sākt bezmaksas izmēģinājumu',
     viewPlans: 'Skatīt plānus',
     trialActivated: 'Pro aktivizēts! 7 dienas priekšā 🎉',
-    founderTitle: '⚡️ Īpašs piedāvājums jums',
-    founderDesc: 'Jūs esat viens no pirmajiem 1000 lietotājiem',
-    founderPrice: '€6.49/mēn — mūžīgi',
-    founderOnly: 'Šī cena tikai jums un tikai tagad',
+    earlyBirdTitle: '🎉 Jūsu īpašā cena',
+    earlyBirdDesc: 'Jūsu cena €6.49/mēn ir fiksēta uz visiem laikiem',
+    earlyBirdSaving: 'Tas ir 2x lētāk nekā parastā cena',
     subscribe: 'Abonēt par €6.49/mēn',
-    offerValid: 'Piedāvājums derīgs 24 stundas',
     expiredTitle: 'Pāriet uz Pro',
     regularPrice: '€12.99/mēn',
     subscribePro: 'Abonēt',
@@ -69,12 +63,10 @@ const T = {
     startTrial: 'Почати безкоштовний trial',
     viewPlans: 'Переглянути плани',
     trialActivated: 'Pro активовано! 7 днів попереду 🎉',
-    founderTitle: '⚡️ Спеціальна пропозиція для вас',
-    founderDesc: 'Ви серед перших 1000 користувачів',
-    founderPrice: '€6.49/міс — назавжди',
-    founderOnly: 'Ця ціна тільки для вас і тільки зараз',
+    earlyBirdTitle: '🎉 Ваша спеціальна ціна',
+    earlyBirdDesc: 'Ваша ціна €6.49/міс зафіксована назавжди',
+    earlyBirdSaving: 'Це вдвічі дешевше звичайної ціни',
     subscribe: 'Підписатися за €6.49/міс',
-    offerValid: 'Пропозиція дійсна 24 години',
     expiredTitle: 'Перейди на Pro',
     regularPrice: '€12.99/міс',
     subscribePro: 'Підписатися',
@@ -160,7 +152,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
 
   // Determine which view to show
   const showTrialOffer = trialStatus === 'none';
-  const showFounderOffer = trialStatus === 'expired' && isFoundingMember;
+  const showEarlyBirdOffer = trialStatus === 'expired' && isFoundingMember;
   const showRegularOffer = trialStatus === 'expired' && !isFoundingMember;
 
   return (
@@ -188,18 +180,18 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
           </div>
         )}
 
-        {showFounderOffer && (
+        {showEarlyBirdOffer && (
           <div className="text-center space-y-4">
-            <div className="text-5xl">⚡️</div>
+            <div className="text-5xl">🎉</div>
             <DrawerHeader className="p-0">
-              <DrawerTitle className="text-xl font-bold text-foreground">{t.founderTitle}</DrawerTitle>
+              <DrawerTitle className="text-xl font-bold text-foreground">{t.earlyBirdTitle}</DrawerTitle>
             </DrawerHeader>
-            <p className="text-sm text-muted-foreground">{t.founderDesc}</p>
+            <p className="text-sm text-muted-foreground">{t.earlyBirdDesc}</p>
             <div className="py-2">
               <span className="text-lg line-through text-muted-foreground mr-2">€12.99</span>
-              <span className="text-3xl font-bold" style={{ color: '#7C3AED' }}>{t.founderPrice}</span>
+              <span className="text-3xl font-bold" style={{ color: '#7C3AED' }}>€6.49/mo</span>
             </div>
-            <p className="text-xs text-muted-foreground">{t.founderOnly}</p>
+            <p className="text-xs text-green-600 font-medium">{t.earlyBirdSaving}</p>
             <Button
               className="w-full gap-2 text-base py-6"
               style={{ backgroundColor: '#7C3AED' }}
@@ -209,7 +201,6 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
               {processing === 'pro_founding' ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
               {t.subscribe}
             </Button>
-            <p className="text-xs text-amber-600 font-medium">⏳ {t.offerValid}</p>
             <Button variant="ghost" className="w-full text-muted-foreground" onClick={() => onOpenChange(false)}>
               {t.maybeLater}
             </Button>
