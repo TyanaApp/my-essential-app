@@ -189,7 +189,7 @@ const Recipes = () => {
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
-        <RecipePhoto title={n.title} size="sm" />
+        <RecipePhoto title={n.title} imageQuery={n.imageQuery} size="sm" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight text-foreground">{n.title}</h3>
