@@ -317,8 +317,7 @@ const Inventory = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -80 }}
-                  className="bg-white rounded-xl p-3 sm:p-4"
-                  style={{ boxShadow: '0 1px 6px rgba(124,58,237,0.04)' }}
+                  className="bg-card rounded-xl p-3 sm:p-4 shadow-[0_1px_6px_rgba(124,58,237,0.04)]"
                 >
                   <div className="flex items-center gap-3">
                     {/* Family member avatar */}
