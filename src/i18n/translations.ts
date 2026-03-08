@@ -356,6 +356,13 @@ export const translations = {
       footerTerms: 'Terms', footerPrivacy: 'Privacy',
       footerDisclaimer: 'TYANA is an AI-powered kitchen assistant. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.',
       footerCopyright: '© 2025 TYANA. All rights reserved.',
+      foundingCounter: '{count} of 1000 founder spots taken',
+      foundingFull: 'All founder spots taken. Pro is now €12.99/mo',
+    },
+    support: {
+      writeSupport: '💬 Write to support',
+      ideas: '💡 Ideas & Suggestions',
+      rateApp: '⭐️ Rate the app',
     },
   },
   ru: {
@@ -643,6 +650,13 @@ export const translations = {
       footerTerms: 'Условия', footerPrivacy: 'Конфиденциальность',
       footerDisclaimer: 'TYANA — ИИ-помощник для кухни. Рекомендации по питанию не являются медицинскими советами.',
       footerCopyright: '© 2025 TYANA. Все права защищены.',
+      foundingCounter: '{count} из 1000 мест основателя заняты',
+      foundingFull: '🔒 Все места основателя заняты. Pro теперь €12.99/мес',
+    },
+    support: {
+      writeSupport: '💬 Написать в поддержку',
+      ideas: '💡 Идеи и предложения',
+      rateApp: '⭐️ Оценить приложение',
     },
   },
   lv: {
@@ -904,6 +918,13 @@ export const translations = {
       footerTerms: 'Noteikumi', footerPrivacy: 'Konfidencialitāte',
       footerDisclaimer: 'TYANA ir AI virtuves palīgs. Uztura ieteikumi nav medicīniski padomi.',
       footerCopyright: '© 2025 TYANA. Visas tiesības aizsargātas.',
+      foundingCounter: '{count} no 1000 dibinātāju vietām aizņemtas',
+      foundingFull: '🔒 Visas dibinātāju vietas aizņemtas. Pro tagad €12.99/mēn',
+    },
+    support: {
+      writeSupport: '💬 Rakstīt atbalstam',
+      ideas: '💡 Idejas un priekšlikumi',
+      rateApp: '⭐️ Novērtēt lietotni',
     },
   },
   uk: {
@@ -1166,6 +1187,13 @@ export const translations = {
       footerTerms: 'Умови', footerPrivacy: 'Конфіденційність',
       footerDisclaimer: 'TYANA — ШІ-помічник для кухні. Рекомендації з харчування не є медичними порадами.',
       footerCopyright: '© 2025 TYANA. Всі права захищено.',
+      foundingCounter: '{count} з 1000 місць засновника зайнято',
+      foundingFull: '🔒 Всі місця засновника зайнято. Pro тепер €12.99/міс',
+    },
+    support: {
+      writeSupport: '💬 Написати в підтримку',
+      ideas: '💡 Ідеї та пропозиції',
+      rateApp: '⭐️ Оцінити додаток',
     },
   },
 } as const;

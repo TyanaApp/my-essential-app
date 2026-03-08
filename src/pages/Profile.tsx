@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
-  Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity
+  Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity,
+  MessageCircle, Lightbulb, Star
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -19,6 +20,7 @@ import AccountSettingsModal from '@/components/profile/AccountSettingsModal';
 import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
+import { SupportModal, IdeasModal, RatingModal } from '@/components/profile/SupportFeedbackModals';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 
@@ -59,6 +61,16 @@ const Profile = () => {
   const [systemSettingsOpen, setSystemSettingsOpen] = useState(false);
   const [paymentsOpen, setPaymentsOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
+  const [ideasOpen, setIdeasOpen] = useState(false);
+  const [ratingOpen, setRatingOpen] = useState(false);
+
+  // Listen for open-payments event
+  useEffect(() => {
+    const handler = () => setPaymentsOpen(true);
+    window.addEventListener('open-payments', handler);
+    return () => window.removeEventListener('open-payments', handler);
+  }, []);
 
   const handleLogout = async () => {
     await signOut();
@@ -232,11 +244,40 @@ const Profile = () => {
         </Card>
       </motion.div>
 
-      {/* Connect Devices - Smart Devices */}
+      {/* Support & Feedback */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.18 }}
+      >
+        <Card className="bg-card border-border mb-4">
+          <CardContent className="p-0">
+            {[
+              { icon: MessageCircle, label: (t as any).support?.writeSupport || '💬 Write to support', onClick: () => setSupportOpen(true) },
+              { icon: Lightbulb, label: (t as any).support?.ideas || '💡 Ideas & Suggestions', onClick: () => setIdeasOpen(true) },
+              { icon: Star, label: (t as any).support?.rateApp || '⭐️ Rate the app', onClick: () => setRatingOpen(true) },
+            ].map((item, index) => (
+              <button
+                key={index}
+                onClick={item.onClick}
+                className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors border-b border-border last:border-b-0"
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon className="w-5 h-5 text-primary" />
+                  <span className="font-exo text-foreground">{item.label}</span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </button>
+            ))}
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Connect Devices - Smart Devices */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.22 }}
       >
         <Card className="bg-card border-border mb-4">
           <CardContent className="p-4">
@@ -257,7 +298,7 @@ const Profile = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.25 }}
         className="space-y-3"
       >
         <Button
@@ -285,6 +326,9 @@ const Profile = () => {
       <SystemSettingsModal open={systemSettingsOpen} onOpenChange={setSystemSettingsOpen} />
       <PaymentsModal open={paymentsOpen} onOpenChange={setPaymentsOpen} />
       <DeleteAccountModal open={deleteAccountOpen} onOpenChange={setDeleteAccountOpen} />
+      <SupportModal open={supportOpen} onOpenChange={setSupportOpen} />
+      <IdeasModal open={ideasOpen} onOpenChange={setIdeasOpen} />
+      <RatingModal open={ratingOpen} onOpenChange={setRatingOpen} />
     </div>
   );
 };
