@@ -71,7 +71,7 @@ const iosSteps: Record<string, IOSStep[]> = {
   ru: [
     {
       icon: '🌐', title: 'Открой Safari',
-      text: 'Важно! Только через Safari — другие браузеры не подойдут.\n\nЕсли ты сейчас в Chrome или другом браузере — скопируй ссылку tyana.app и открой в Safari.',
+      text: 'Открой именно Safari — только в нём есть кнопка установки на iPhone.\n\nВ Chrome и других браузерах эта функция на iPhone недоступна.',
       illustration: '🧭',
     },
     {
