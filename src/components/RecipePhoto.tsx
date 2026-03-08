@@ -283,10 +283,11 @@ const RecipePhoto = ({ title, imageQuery, className = '', size = 'sm' }: RecipeP
       setAttempts(next);
       setStatus('loading');
       if (next === 1) {
-        // Retry with simpler query (first word + food)
-        const simpleWord = title.split(/\s+/)[0];
-        const simple = /^[a-zA-Z]/.test(simpleWord) ? simpleWord : 'food';
-        setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(simple + ' dish')}?lock=${hashCode(title) + 100}`);
+        // Retry: if imageQuery available use simpler version, otherwise use keyword mapping
+        const fallbackQuery = imageQuery 
+          ? imageQuery.split(' ')[0] + ' food'
+          : getSearchQuery(title).split(' ')[0] + ' dish';
+        setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(fallbackQuery)}?lock=${hashCode(title) + 100}`);
       } else {
         // Give up, show emoji
         setStatus('error');
