@@ -167,7 +167,7 @@ const PantryQuickAdd = ({ onSaved, onOpenManual }: Props) => {
             style={{ boxShadow: '0 -4px 12px rgba(0,0,0,0.08)' }}
           >
             <p className="text-xs text-muted-foreground mb-2">
-              {((t as any).inventory?.selectedCount || 'Selected: {count} products').replace('{count}', String(selected.size))}
+              {((t as any).common?.selectedCount || (t as any).inventory?.selectedCount || 'Selected: {count} products').replace('{count}', String(selected.size))}
             </p>
             <button
               onClick={handleAddAll}
@@ -175,7 +175,7 @@ const PantryQuickAdd = ({ onSaved, onOpenManual }: Props) => {
               className="w-full py-3.5 rounded-xl text-base font-semibold text-primary-foreground bg-primary disabled:opacity-50"
             >
               <Check className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
-              {((t as any).inventory?.saveProducts || 'Save {count} products').replace('{count}', String(selected.size))}
+              {((t as any).common?.saveProducts || (t as any).inventory?.saveProducts || 'Save {count} products').replace('{count}', String(selected.size))}
             </button>
           </motion.div>
         )}
