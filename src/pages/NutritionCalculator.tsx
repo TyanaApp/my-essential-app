@@ -64,12 +64,12 @@ const CATEGORY_CHIPS = [
   { key: 'drinks', emoji: '🥤', items_en: ['Latte 300ml', 'Orange juice 250ml', 'Coca-Cola 330ml'], items_ru: ['Латте 300мл', 'Апельсиновый сок 250мл', 'Кока-кола 330мл'] },
 ];
 
-const NutritionCalculator = () => {
+const NutritionCalculator = ({ embedded }: { embedded?: boolean }) => {
   const { user } = useAuth();
   const { t, language } = useTranslation();
   const nc = (t as any).nutritionCalc || {};
   const off = (t as any).openFoodFacts || {};
-  usePageTitle(nc.title || 'Nutrition Calculator');
+  usePageTitle(embedded ? '' : (nc.title || 'Nutrition Calculator'));
 
   const [mode, setMode] = useState<'food' | 'recipe'>('food');
   const [foodInput, setFoodInput] = useState('');
@@ -251,7 +251,7 @@ const NutritionCalculator = () => {
   const useRu = language === 'ru' || language === 'uk';
 
   return (
-    <div className="p-4 pb-24 md:p-6 max-w-2xl mx-auto space-y-4">
+    <div className={embedded ? "space-y-4" : "p-4 pb-24 md:p-6 max-w-2xl mx-auto space-y-4"}>
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
