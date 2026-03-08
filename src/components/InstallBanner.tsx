@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Download } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { toast } from 'sonner';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -19,6 +20,18 @@ export const triggerInstallPrompt = async () => {
 
 export const canInstall = () => !!deferredPrompt;
 
+// Capture beforeinstallprompt as early as possible
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e: Event) => {
+    e.preventDefault();
+    deferredPrompt = e as BeforeInstallPromptEvent;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+  });
+}
+
 const InstallBanner = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
@@ -33,8 +46,22 @@ const InstallBanner = () => {
       setShow(true);
     };
 
+    // If prompt was already captured
+    if (deferredPrompt) setShow(true);
+
     window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+
+    const installedHandler = () => {
+      setShow(false);
+      deferredPrompt = null;
+      toast.success((t.install as any)?.installed || 'TYANA installed! 🎉');
+    };
+    window.addEventListener('appinstalled', installedHandler);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', installedHandler);
+    };
   }, []);
 
   if (!show) return null;

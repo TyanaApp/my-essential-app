@@ -1,48 +1,85 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { triggerInstallPrompt, canInstall } from '@/components/InstallBanner';
 import { useIsStandalone } from '@/hooks/useStandalone';
+import { toast } from 'sonner';
 
-const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+const getDeviceType = () => {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
+  const isAndroid = /Android/.test(ua);
+  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(ua) && !/Chrome/.test(ua);
+  const isChrome = /Chrome/.test(ua) && /Google Inc/.test(navigator.vendor);
+  return { isIOS, isAndroid, isSafari, isChrome };
+};
 
 const MobileInstallBanner = () => {
   const { t } = useTranslation();
   const isStandalone = useIsStandalone();
   const [dismissed, setDismissed] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
   const [promptReady, setPromptReady] = useState(canInstall());
-  const tooltipTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const { isIOS, isAndroid, isSafari, isChrome } = getDeviceType();
+  const isDesktop = !isIOS && !isAndroid;
 
   useEffect(() => {
-    const d = localStorage.getItem('tyana_install_dismissed');
-    if (d) setDismissed(true);
-
+    if (localStorage.getItem('tyana_install_dismissed')) setDismissed(true);
     const handler = () => setPromptReady(true);
     window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', () => {
+      setDismissed(true);
+      toast.success((t.install as any)?.installed || 'TYANA installed! 🎉');
+    });
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
-  useEffect(() => {
-    return () => { if (tooltipTimeout.current) clearTimeout(tooltipTimeout.current); };
-  }, []);
-
-  if (isStandalone || dismissed) return null;
+  // Never show if standalone, dismissed, or desktop
+  if (isStandalone || dismissed || isDesktop) return null;
 
   const handleInstall = async () => {
+    // Android with native prompt
     if (promptReady && canInstall()) {
       const accepted = await triggerInstallPrompt();
-      if (accepted) setDismissed(true);
-    } else if (isIOS()) {
+      if (accepted) {
+        setDismissed(true);
+        return;
+      }
+    }
+    
+    // iOS Safari → show tooltip
+    if (isIOS && isSafari) {
       setShowTooltip(true);
-      if (tooltipTimeout.current) clearTimeout(tooltipTimeout.current);
-      tooltipTimeout.current = setTimeout(() => setShowTooltip(false), 6000);
+      setTimeout(() => setShowTooltip(false), 6000);
+      return;
+    }
+
+    // iOS other browser → copy link hint
+    if (isIOS && !isSafari) {
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 6000);
+      return;
     }
   };
 
   const handleDismiss = () => {
     setDismissed(true);
     localStorage.setItem('tyana_install_dismissed', '1');
+  };
+
+  // Choose tooltip text based on device
+  const getTooltipText = () => {
+    if (isIOS && !isSafari) {
+      return {
+        line1: (t.install as any)?.openInSafari || 'Open this page in Safari to install',
+        line2: (t.install as any)?.safariRequired || 'Safari → Share → Add to Home Screen',
+      };
+    }
+    return {
+      line1: t.install.iosTooltipLine1,
+      line2: t.install.iosTooltipLine2,
+    };
   };
 
   return (
@@ -72,17 +109,16 @@ const MobileInstallBanner = () => {
         </div>
       </div>
 
-      {/* Simple iOS tooltip */}
       {showTooltip && (
         <div
           className="absolute left-4 right-4 top-full mt-2 z-50 rounded-xl px-4 py-3 shadow-lg"
           style={{ backgroundColor: '#1E1B4B' }}
         >
           <p className="text-sm text-white font-medium">
-            {t.install.iosTooltipLine1}
+            {getTooltipText().line1}
           </p>
           <p className="text-xs mt-1" style={{ color: '#C4B5FD' }}>
-            {t.install.iosTooltipLine2}
+            {getTooltipText().line2}
           </p>
           <button
             onClick={() => setShowTooltip(false)}
