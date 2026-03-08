@@ -618,16 +618,6 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
                               {p.label}
                             </button>
                           ))}
-                          {/* By weight chip */}
-                          {isWeighable && (
-                            <button
-                              onClick={() => { setByWeight(true); setShowCustom(false); setQtyPopupSelected(-1); }}
-                              className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
-                              style={{ borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
-                            >
-                              {byWeightLabel}
-                            </button>
-                          )}
                           {/* Custom chip */}
                           <button
                             onClick={() => { setShowCustom(true); setQtyPopupSelected(-1); }}

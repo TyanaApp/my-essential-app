@@ -262,7 +262,6 @@ const getQtyPresets = (category: FoodCategory, lang: string): { question: string
         question: s.chooseConvenient,
         options: [
           { label: s.byCount, value: '__mode_count' },
-          { label: s.byWeight, value: '__mode_weight' },
           { label: s.byPortion, value: '__mode_portion' },
         ],
       };
