@@ -177,7 +177,7 @@ const Onboarding = () => {
 
         // Fire-and-forget welcome email
         supabase.functions.invoke('send-welcome-email', {
-          body: { email: user.email, name: name || user.email?.split('@')[0], language: t === translations.ru ? 'ru' : t === translations.uk ? 'uk' : t === translations.lv ? 'lv' : 'en' },
+          body: { email: user.email, name: name || user.email?.split('@')[0], language },
         }).catch(() => {});
 
         navigate('/dashboard');
