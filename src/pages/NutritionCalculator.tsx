@@ -69,7 +69,7 @@ const NutritionCalculator = ({ embedded }: { embedded?: boolean }) => {
   const { t, language } = useTranslation();
   const nc = (t as any).nutritionCalc || {};
   const off = (t as any).openFoodFacts || {};
-  usePageTitle(nc.title || 'Nutrition Calculator');
+  usePageTitle(embedded ? '' : (nc.title || 'Nutrition Calculator'));
 
   const [mode, setMode] = useState<'food' | 'recipe'>('food');
   const [foodInput, setFoodInput] = useState('');
