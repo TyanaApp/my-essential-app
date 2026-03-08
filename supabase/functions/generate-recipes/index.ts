@@ -114,7 +114,8 @@ ${(familyMembers && familyMembers.length > 0) ? `- NEVER include allergens from 
 Violating food preferences destroys user trust. Double-check every ingredient.
 
 Return ONLY a valid JSON array of 3 recipes, no markdown or code fences:
-[{"title":"string","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50,"familySafe":true,"familyWarnings":[]}]`;
+[{"title":"string","imageQuery":"english food name for photo search e.g. chicken fried rice","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50,"familySafe":true,"familyWarnings":[]}]
+IMPORTANT: "imageQuery" MUST always be in English regardless of language setting. It should be 2-4 words describing the dish for image search (e.g. "chicken caesar salad", "beef stroganoff", "mushroom risotto").`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
