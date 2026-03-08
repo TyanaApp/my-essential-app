@@ -30,7 +30,7 @@ const Layout = () => {
       <aside className="fixed left-0 top-0 bottom-0 w-60 bg-card border-r border-border flex-col z-50 hidden md:flex">
         {/* Logo */}
         <div className="flex items-center justify-between h-14 px-5 border-b border-border">
-          <span className="font-tyana text-base" style={{ color: '#7C3AED' }}>TYANA</span>
+          <TyanaLogo size="sm" />
           <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} onDeleteAlert={deleteAlert} onClearAll={clearAll} />
         </div>
 
