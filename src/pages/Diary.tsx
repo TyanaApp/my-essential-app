@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { calcMacroTargets } from '@/pages/NutritionAnalysis';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Search, Camera } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plus, X, Camera } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
