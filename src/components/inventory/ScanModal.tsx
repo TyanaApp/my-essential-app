@@ -16,27 +16,29 @@ interface ScannedItem {
   storage_location: string;
   unknown?: boolean;
 }
-const STORAGE_OPTIONS = [
-  { id: 'fridge', emoji: '🧊', label: 'Fridge' },
-  { id: 'pantry', emoji: '🏠', label: 'Pantry' },
-  { id: 'freezer', emoji: '❄️', label: 'Freezer' },
+const STORAGE_OPTIONS: Record<string, { id: string; emoji: string; labels: Record<string, string> }[]> = {
+  default: [
+    { id: 'fridge', emoji: '🧊', labels: { en: 'Fridge', ru: 'Холодильник', uk: 'Холодильник', lv: 'Ledusskapis' } },
+    { id: 'pantry', emoji: '🏠', labels: { en: 'Pantry', ru: 'Кладовая', uk: 'Комора', lv: 'Pieliekamais' } },
+    { id: 'freezer', emoji: '❄️', labels: { en: 'Freezer', ru: 'Морозилка', uk: 'Морозилка', lv: 'Saldētava' } },
+  ],
+};
+
+const CATEGORIES_DATA: { id: string; emoji: string; labels: Record<string, string> }[] = [
+  { id: 'dairy', emoji: '🥛', labels: { en: 'Dairy', ru: 'Молочное', uk: 'Молочне', lv: 'Piena prod.' } },
+  { id: 'meat', emoji: '🥩', labels: { en: 'Meat & Fish', ru: 'Мясо и рыба', uk: 'М\'ясо та риба', lv: 'Gaļa un zivis' } },
+  { id: 'produce', emoji: '🥬', labels: { en: 'Produce', ru: 'Овощи/Фрукты', uk: 'Овочі/Фрукти', lv: 'Dārzeņi' } },
+  { id: 'drinks', emoji: '🧃', labels: { en: 'Drinks', ru: 'Напитки', uk: 'Напої', lv: 'Dzērieni' } },
+  { id: 'eggs', emoji: '🥚', labels: { en: 'Eggs', ru: 'Яйца', uk: 'Яйця', lv: 'Olas' } },
+  { id: 'other', emoji: '🧀', labels: { en: 'Other', ru: 'Другое', uk: 'Інше', lv: 'Cits' } },
 ];
 
-const CATEGORIES: { id: string; emoji: string; label: string }[] = [
-  { id: 'dairy', emoji: '🥛', label: 'Dairy' },
-  { id: 'meat', emoji: '🥩', label: 'Meat & Fish' },
-  { id: 'produce', emoji: '🥬', label: 'Produce' },
-  { id: 'drinks', emoji: '🧃', label: 'Drinks' },
-  { id: 'eggs', emoji: '🥚', label: 'Eggs' },
-  { id: 'other', emoji: '🧀', label: 'Other' },
-];
-
-const PHOTO_SLOTS = [
-  { id: 0, label: '📷 Shelf 1' },
-  { id: 1, label: '📷 Shelf 2' },
-  { id: 2, label: '📷 Drawer' },
-  { id: 3, label: '📷 Door' },
-];
+const PHOTO_SLOTS_DATA: Record<string, { id: number; label: string }[]> = {
+  en: [{ id: 0, label: '📷 Shelf 1' }, { id: 1, label: '📷 Shelf 2' }, { id: 2, label: '📷 Drawer' }, { id: 3, label: '📷 Door' }],
+  ru: [{ id: 0, label: '📷 Полка 1' }, { id: 1, label: '📷 Полка 2' }, { id: 2, label: '📷 Ящик' }, { id: 3, label: '📷 Дверца' }],
+  uk: [{ id: 0, label: '📷 Полиця 1' }, { id: 1, label: '📷 Полиця 2' }, { id: 2, label: '📷 Ящик' }, { id: 3, label: '📷 Дверцята' }],
+  lv: [{ id: 0, label: '📷 Plaukts 1' }, { id: 1, label: '📷 Plaukts 2' }, { id: 2, label: '📷 Atvilktne' }, { id: 3, label: '📷 Durvis' }],
+};
 
 interface ScanModalProps {
   open: boolean;
