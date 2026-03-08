@@ -1687,9 +1687,8 @@ export const translations = {
       rateLimited: 'Забагато спроб. Зачекайте трохи.', checkEmail: 'Перевірте пошту для підтвердження акаунту ✉️',
     },
     update: {
-      title: '✨ Доступне оновлення TYANA!',
-      now: 'Оновити зараз',
-      later: 'Пізніше',
+      title: '✨ Нова версія TYANA готова!',
+      now: 'Оновити — 2 сек',
     },
     common: {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',
