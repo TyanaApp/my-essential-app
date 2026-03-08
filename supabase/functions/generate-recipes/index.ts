@@ -45,6 +45,7 @@ serve(async (req) => {
       inventory,
       userGoals,
       language,
+      familyMembers,
     } = await req.json();
 
     const langMap: Record<string, string> = { ru: 'Russian', lv: 'Latvian', en: 'English' };
