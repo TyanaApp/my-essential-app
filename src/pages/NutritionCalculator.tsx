@@ -271,12 +271,40 @@ const NutritionCalculator = () => {
 
           {/* MODE 1: Single food */}
           <TabsContent value="food" className="space-y-4 mt-4">
-            <textarea
-              value={foodInput}
-              onChange={e => setFoodInput(e.target.value)}
-              placeholder={placeholders[placeholderIdx]}
-              className="w-full min-h-[80px] p-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            />
+            <div className="relative">
+              <textarea
+                value={foodInput}
+                onChange={e => setFoodInput(e.target.value)}
+                placeholder={placeholders[placeholderIdx]}
+                className="w-full min-h-[80px] p-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+
+              {/* Open Food Facts suggestions */}
+              <OFFProductSuggestions
+                query={foodInput}
+                onSelect={(product: OFFProduct) => {
+                  // Use OFF data directly — set result without calling AI
+                  const offResult: NutritionResult = {
+                    food_name: product.brand ? `${product.name} (${product.brand})` : product.name,
+                    identified_amount: '100g',
+                    calories: product.calories,
+                    protein: product.protein,
+                    fat: product.fat,
+                    carbs: product.carbs,
+                    fiber: product.fiber,
+                    sugar: product.sugar,
+                    per_100g: { calories: product.calories, protein: product.protein, fat: product.fat, carbs: product.carbs },
+                    confidence: 'high',
+                    data_source: 'Open Food Facts',
+                    note: product.barcode ? `Barcode: ${product.barcode}` : undefined,
+                  };
+                  setResult(offResult);
+                  saveToHistory(offResult, 'food');
+                  setFoodInput(product.name);
+                }}
+                className="absolute z-10 left-0 right-0 top-full mt-1"
+              />
+            </div>
 
             {/* Category chips */}
             <div className="flex flex-wrap gap-1.5">
