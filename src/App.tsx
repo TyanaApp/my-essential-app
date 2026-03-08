@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OfflineBanner from "./components/OfflineBanner";
 import TrialManager from "./components/TrialManager";
+import UpdateBanner from "./components/UpdateBanner";
 import ProTrialPopup from "./components/ProTrialPopup";
 import LandingRedirect from "./pages/LandingRedirect";
 import Auth from "./pages/Auth";
@@ -41,6 +42,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <OfflineBanner />
+            <UpdateBanner />
             <BrowserRouter>
               <CookieConsent />
               <AuthProvider>

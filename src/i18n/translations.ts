@@ -135,6 +135,11 @@ export const translations = {
       loading: 'Loading...', error: 'Something went wrong. Please try again.', or: 'or', back: 'Back',
       theme: 'Theme', datePlaceholder: 'dd.mm.yyyy',
     },
+    update: {
+      title: '✨ TYANA update available!',
+      now: 'Update now',
+      later: 'Later',
+    },
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
       systemSettings: 'System Settings', payments: 'Payments', logout: 'Log Out',
@@ -524,6 +529,11 @@ export const translations = {
       rateLimited: 'Слишком много попыток. Подождите немного.',
       checkEmail: 'Проверьте почту для подтверждения аккаунта ✉️',
     },
+    update: {
+      title: '✨ Доступно обновление TYANA!',
+      now: 'Обновить сейчас',
+      later: 'Позже',
+    },
     common: {
       save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', close: 'Закрыть',
       loading: 'Загрузка...', error: 'Что-то пошло не так. Попробуйте снова.', or: 'или', back: 'Назад',
@@ -823,6 +833,11 @@ export const translations = {
       emailNotConfirmed: 'Lūdzu apstipriniet e-pastu pirms ieiet.', rateLimited: 'Pārāk daudz mēģinājumu.',
       checkEmail: 'Pārbaudiet e-pastu, lai apstiprinātu kontu ✉️',
     },
+    update: {
+      title: '✨ TYANA atjauninājums pieejams!',
+      now: 'Atjaunināt tagad',
+      later: 'Vēlāk',
+    },
     common: {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
       loading: 'Ielādē...', error: 'Kaut kas nogāja greizi. Lūdzu mēģiniet vēlreiz.', or: 'vai', back: 'Atpakaļ',
@@ -1117,6 +1132,11 @@ export const translations = {
       userAlreadyRegistered: 'Цей email вже зареєстрований. Спробуйте увійти.',
       invalidCredentials: 'Невірний email або пароль.', emailNotConfirmed: 'Підтвердіть email перед входом.',
       rateLimited: 'Забагато спроб. Зачекайте трохи.', checkEmail: 'Перевірте пошту для підтвердження акаунту ✉️',
+    },
+    update: {
+      title: '✨ Доступне оновлення TYANA!',
+      now: 'Оновити зараз',
+      later: 'Пізніше',
     },
     common: {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',
