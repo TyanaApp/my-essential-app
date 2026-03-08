@@ -17,7 +17,7 @@ export const SUBSCRIPTION_PLANS = {
   pro_founding: {
     priceId: 'price_1T79ut2N2asjxki45jclLOlc',
     productId: 'prod_U5Ka0VFomXsCwg',
-    name: 'TYANA Pro (Founder)',
+    name: 'TYANA Pro',
     price: 6.49,
     currency: '€',
     interval: 'month',
