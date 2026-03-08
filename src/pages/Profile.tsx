@@ -398,7 +398,6 @@ const Profile = () => {
           <CardContent className="p-0">
             {[
               { icon: MessageCircle, label: (t as any).support?.writeSupport || '💬 Write to support', onClick: () => setSupportOpen(true) },
-              { icon: Lightbulb, label: (t as any).support?.ideas || '💡 Ideas & Suggestions', onClick: () => setIdeasOpen(true) },
               { icon: Star, label: (t as any).support?.rateApp || '⭐️ Rate the app', onClick: () => setRatingOpen(true) },
             ].map((item, index) => (
               <button
