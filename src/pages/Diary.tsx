@@ -398,121 +398,14 @@ const Diary = () => {
         onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
       />
 
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="rounded-2xl max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">
-              {t.diary.addMealTitle.replace('{meal}', getMealLabel(modalMealType))}
-            </DialogTitle>
-            <DialogDescription>{t.diary.logWhatYouAte}</DialogDescription>
-          </DialogHeader>
-
-          <div className="flex gap-1 p-1 rounded-xl mb-3" style={{ backgroundColor: '#F5F3FF' }}>
-            <button
-              onClick={() => setAddMode('recipe')}
-              className="flex-1 py-2 rounded-lg text-xs font-semibold transition-all"
-              style={{
-                backgroundColor: addMode === 'recipe' ? '#7C3AED' : 'transparent',
-                color: addMode === 'recipe' ? 'white' : '#6B7280',
-              }}
-            >
-              {t.diary.fromRecipes}
-            </button>
-            <button
-              onClick={() => setAddMode('manual')}
-              className="flex-1 py-2 rounded-lg text-xs font-semibold transition-all"
-              style={{
-                backgroundColor: addMode === 'manual' ? '#7C3AED' : 'transparent',
-                color: addMode === 'manual' ? 'white' : '#6B7280',
-              }}
-            >
-              {t.diary.manualEntry}
-            </button>
-          </div>
-
-          {addMode === 'recipe' ? (
-            <div className="space-y-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-                <input
-                  value={recipeSearch}
-                  onChange={(e) => setRecipeSearch(e.target.value)}
-                  placeholder={t.diary.searchRecipes}
-                  className="w-full h-10 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                  style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                />
-              </div>
-              <div className="max-h-48 overflow-y-auto space-y-1">
-                {filteredRecipes.length === 0 ? (
-                  <p className="text-xs text-center py-4" style={{ color: '#9CA3AF' }}>
-                    {recipes.length === 0 ? t.diary.noSavedRecipes : t.diary.noMatchingRecipes}
-                  </p>
-                ) : (
-                  filteredRecipes.map((r) => (
-                    <button
-                      key={r.id}
-                      onClick={() => handleAddFromRecipe(r)}
-                      className="w-full text-left p-3 rounded-xl hover:bg-[#F5F3FF] transition-colors"
-                    >
-                      <p className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{r.title}</p>
-                      <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
-                        {r.nutrition?.calories || 0} kcal · P:{r.nutrition?.protein || 0}g · F:{r.nutrition?.fat || 0}g · C:{r.nutrition?.carbs || 0}g
-                      </p>
-                    </button>
-                  ))
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.name}</label>
-                <input
-                  value={manualName}
-                  onChange={(e) => setManualName(e.target.value)}
-                  placeholder={t.diary.mealPlaceholder}
-                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                  style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.calories}</label>
-                  <input type="number" value={manualCalories} onChange={(e) => setManualCalories(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.protein}</label>
-                  <input type="number" value={manualProtein} onChange={(e) => setManualProtein(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.fat}</label>
-                  <input type="number" value={manualFat} onChange={(e) => setManualFat(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.carbs}</label>
-                  <input type="number" value={manualCarbs} onChange={(e) => setManualCarbs(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-              </div>
-              <button
-                onClick={handleAddManual}
-                disabled={!manualName.trim()}
-                className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
-                style={{ backgroundColor: '#7C3AED' }}
-              >
-                {t.diary.logMeal}
-              </button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Smart meal entry modal */}
+      <SmartMealEntryModal
+        open={smartEntryOpen}
+        onClose={() => setSmartEntryOpen(false)}
+        mealType={smartEntryMealType}
+        dateStr={dateStr}
+        onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
+      />
       <RewardModal
         open={!!streakReward}
         onClose={() => setStreakReward(null)}
