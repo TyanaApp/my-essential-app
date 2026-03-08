@@ -328,7 +328,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
         name: val.name,
         quantity: val.qty,
         unit: val.unit,
-        storage_location: 'home',
+        storage_location: 'pantry',
         tracking_mode: 'date_only',
       }));
       const { error } = await supabase.from('inventory_items').insert(items as any);
