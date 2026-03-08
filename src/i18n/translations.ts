@@ -351,7 +351,7 @@ export const translations = {
       founderSpotsLeft: 'Only {count} of 1,000 spots left at this price',
       founderForever: 'forever',
       founderYouAreFirst: "You're among the first 1,000 — this price is yours forever",
-      proFeatures: ['Unlimited scans & recipes', 'Unlimited receipts', '6 family members', 'Full AI meal planning', 'Wearable integration', 'Priority support'],
+      proFeatures: ['Unlimited scans & recipes', 'Full meal history & analytics', '6 family members', 'Full AI meal planning', 'Wearable integration', 'Priority support'],
       getPro: 'Get Pro — €6.49/month',
       faqTitle: 'Frequently asked questions',
       faq1Q: 'How does fridge scanning work?', faq1A: 'Simply open the app, tap "Scan", and take a photo of your fridge. TYANA\'s AI identifies every item, estimates quantities and expiry dates, and adds them to your inventory automatically.',
