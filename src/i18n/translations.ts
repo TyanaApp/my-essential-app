@@ -160,9 +160,8 @@ export const translations = {
       theme: 'Theme', datePlaceholder: 'dd.mm.yyyy',
     },
     update: {
-      title: '✨ TYANA update available!',
-      now: 'Update now',
-      later: 'Later',
+      title: '✨ New TYANA version ready!',
+      now: 'Update — 2 sec',
     },
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
@@ -731,9 +730,8 @@ export const translations = {
       checkEmail: 'Проверьте почту для подтверждения аккаунта ✉️',
     },
     update: {
-      title: '✨ Доступно обновление TYANA!',
-      now: 'Обновить сейчас',
-      later: 'Позже',
+      title: '✨ Новая версия TYANA готова!',
+      now: 'Обновить — 2 сек',
     },
     common: {
       save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', close: 'Закрыть',
@@ -1212,9 +1210,8 @@ export const translations = {
       checkEmail: 'Pārbaudiet e-pastu, lai apstiprinātu kontu ✉️',
     },
     update: {
-      title: '✨ TYANA atjauninājums pieejams!',
-      now: 'Atjaunināt tagad',
-      later: 'Vēlāk',
+      title: '✨ Jauna TYANA versija gatava!',
+      now: 'Atjaunināt — 2 sek',
     },
     common: {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
@@ -1690,9 +1687,8 @@ export const translations = {
       rateLimited: 'Забагато спроб. Зачекайте трохи.', checkEmail: 'Перевірте пошту для підтвердження акаунту ✉️',
     },
     update: {
-      title: '✨ Доступне оновлення TYANA!',
-      now: 'Оновити зараз',
-      later: 'Пізніше',
+      title: '✨ Нова версія TYANA готова!',
+      now: 'Оновити — 2 сек',
     },
     common: {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',

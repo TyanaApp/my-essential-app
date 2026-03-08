@@ -1,41 +1,42 @@
-const CACHE_NAME = 'tyana-v3';
-const SHELL_URLS = [
-  '/',
-  '/index.html',
-  '/dashboard',
-  '/inventory',
-  '/recipes',
-  '/shopping',
-  '/diary',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-];
+const CACHE_VERSION = 'tyana-v4';
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_URLS))
-  );
-  // Do NOT call skipWaiting here — wait for user to confirm update
+// Install - activate immediately
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
-
+// Activate - delete old caches, claim clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    caches.keys().then((names) =>
+      Promise.all(
+        names
+          .filter((n) => n !== CACHE_VERSION)
+          .map((n) => {
+            console.log('Deleting old cache:', n);
+            return caches.delete(n);
+          })
+      )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
+// Fetch - network first, cache fallback
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  // Never cache API / external calls
+  if (
+    event.request.url.includes('/functions/v1/') ||
+    event.request.url.includes('supabase') ||
+    event.request.url.includes('openai') ||
+    event.request.url.includes('stripe')
+  ) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // HTML navigation - network first
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => caches.match('/index.html'))
@@ -43,15 +44,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Assets - stale-while-revalidate
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        if (response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-        }
-        return response;
+    caches.open(CACHE_VERSION).then((cache) =>
+      cache.match(event.request).then((cached) => {
+        const networkFetch = fetch(event.request).then((response) => {
+          if (response.ok) {
+            cache.put(event.request, response.clone());
+          }
+          return response;
+        });
+        return cached || networkFetch;
       })
-      .catch(() => caches.match(event.request))
+    )
   );
 });
