@@ -37,7 +37,7 @@ export const translations = {
         selectedCount: 'Selected: {count} items', addAll: 'Add all', addAllCount: 'Add all {count} items', done: 'Done ✓',
         adjustQty: 'Adjust quantities', backToSelect: '← Back', addedSuccess: '{count} items added',
         noResults: 'Nothing found', homeTab: '🏡 Home',
-        howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel',
+        howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel', backToPresets: 'Back to presets',
       },
       quickAddCategories: {
         dairy: 'Eggs & Dairy', meat: 'Meat & Fish', vegetables: 'Vegetables', fruits: 'Fruits',
@@ -615,7 +615,7 @@ export const translations = {
         selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', addAllCount: 'Добавить все {count} продуктов', done: 'Готово ✓',
         adjustQty: 'Уточни количество', backToSelect: '← Назад', addedSuccess: '{count} продуктов добавлено',
         noResults: 'Ничего не найдено', homeTab: '🏡 Дома',
-        howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена',
+        howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена', backToPresets: 'Назад к вариантам',
       },
       quickAddCategories: {
         dairy: 'Яйца и молочное', meat: 'Мясо и рыба', vegetables: 'Овощи', fruits: 'Фрукты',
@@ -1116,7 +1116,7 @@ export const translations = {
         selectedCount: 'Izvēlēts: {count} produkti', addAll: 'Pievienot visu', addAllCount: 'Pievienot visus {count} produktus', done: 'Gatavs ✓',
         adjustQty: 'Pielāgo daudzumu', backToSelect: '← Atpakaļ', addedSuccess: '{count} produkti pievienoti',
         noResults: 'Nekas nav atrasts', homeTab: '🏡 Mājās',
-        howMuch: 'Cik daudz?', custom: 'Cits', enterQty: 'Ievadiet daudzumu', addItem: 'Pievienot', cancelBtn: 'Atcelt',
+        howMuch: 'Cik daudz?', custom: 'Cits', enterQty: 'Ievadiet daudzumu', addItem: 'Pievienot', cancelBtn: 'Atcelt', backToPresets: 'Atpakaļ pie variantiem',
       },
       quickAddCategories: {
         dairy: 'Olas un piena produkti', meat: 'Gaļa un zivis', vegetables: 'Dārzeņi', fruits: 'Augļi',
@@ -1596,7 +1596,7 @@ export const translations = {
         selectedCount: 'Вибрано: {count} продуктів', addAll: 'Додати все', addAllCount: 'Додати всі {count} продуктів', done: 'Готово ✓',
         adjustQty: 'Уточни кількість', backToSelect: '← Назад', addedSuccess: '{count} продуктів додано',
         noResults: 'Нічого не знайдено', homeTab: '🏡 Вдома',
-        howMuch: 'Скільки?', custom: 'Своє', enterQty: 'Введіть кількість', addItem: 'Додати', cancelBtn: 'Скасувати',
+        howMuch: 'Скільки?', custom: 'Своє', enterQty: 'Введіть кількість', addItem: 'Додати', cancelBtn: 'Скасувати', backToPresets: 'Назад до варіантів',
       },
       quickAddCategories: {
         dairy: 'Яйця і молочне', meat: 'М\'ясо і риба', vegetables: 'Овочі', fruits: 'Фрукти',

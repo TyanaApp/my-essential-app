@@ -34,6 +34,21 @@ interface QtyPreset {
   unit: string;
 }
 
+// Items that can be sold by weight
+const WEIGHABLE_ITEMS = new Set([
+  'cheese', 'butter', 'cottageCheese', 'beef', 'chicken', 'pork', 'fish', 'mince',
+  'potato', 'onion', 'carrot', 'tomato', 'cucumber', 'pepper', 'broccoli',
+  'apple', 'banana', 'orange', 'lemon', 'grapes', 'strawberry', 'mango', 'pear',
+  'nuts', 'rice', 'pasta', 'buckwheat', 'oatmeal', 'barley', 'lentils',
+]);
+
+const BY_WEIGHT_LABEL: Record<string, string> = {
+  en: '⚖️ By weight',
+  ru: '⚖️ На развес',
+  uk: '⚖️ На вагу',
+  lv: '⚖️ Pēc svara',
+};
+
 // Smart quantity presets per product type
 const getPresetsForItem = (nameKey: string, lang: string): { presets: QtyPreset[]; defaultIdx: number } => {
   const u = UNIT_LABELS[lang] || UNIT_LABELS.en;
@@ -230,10 +245,14 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const [qtyPopupSelected, setQtyPopupSelected] = useState<number>(-1);
   const [customQty, setCustomQty] = useState('');
   const [showCustom, setShowCustom] = useState(false);
+  const [byWeight, setByWeight] = useState(false);
+  const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('g');
+  const [weightValue, setWeightValue] = useState('');
 
   if (!open) return null;
 
   const uLabels = UNIT_LABELS[language] || UNIT_LABELS.en;
+  const byWeightLabel = BY_WEIGHT_LABEL[language] || BY_WEIGHT_LABEL.en;
 
   const allItems = categories.flatMap(c => c.items);
   const filteredItems = search.trim()
@@ -242,7 +261,6 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
 
   const openQtyPopup = (item: QuickItem) => {
     if (selected.has(item.nameKey)) {
-      // Deselect
       setSelected(prev => {
         const next = new Map(prev);
         next.delete(item.nameKey);
@@ -255,6 +273,9 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
     setQtyPopupSelected(defaultIdx);
     setCustomQty('');
     setShowCustom(false);
+    setByWeight(false);
+    setWeightValue('');
+    setWeightUnit('g');
   };
 
   const confirmQtyPopup = () => {
@@ -265,7 +286,12 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
     let unit: string;
     let displayQty: string;
 
-    if (showCustom && customQty.trim()) {
+    if (byWeight && weightValue.trim()) {
+      const val = parseFloat(weightValue) || 0;
+      qty = val;
+      unit = weightUnit;
+      displayQty = `${val}${uLabels[weightUnit]}`;
+    } else if (showCustom && customQty.trim()) {
       qty = parseFloat(customQty) || 1;
       unit = 'pcs';
       displayQty = `${qty} ${uLabels.pcs}`;
@@ -501,51 +527,109 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
                   <p className="text-xs text-muted-foreground">{qa.howMuch || 'How much?'}</p>
                 </div>
 
-                {/* Preset chips */}
-                {(() => {
-                  const { presets } = getPresetsForItem(qtyPopupItem.nameKey, language);
-                  return (
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {presets.map((p, i) => (
+                {/* Preset chips or by-weight input */}
+                {byWeight ? (
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-muted-foreground text-center">{qa.howMuch || 'How much?'}</p>
+                    <div className="flex items-center gap-2 justify-center">
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        value={weightValue}
+                        onChange={e => setWeightValue(e.target.value)}
+                        placeholder="0"
+                        className="w-28 h-12 px-4 rounded-xl border text-lg text-center font-bold outline-none bg-secondary/50 border-border focus:border-primary"
+                        autoFocus
+                      />
+                      <div className="flex rounded-xl border-2 border-border overflow-hidden">
                         <button
-                          key={i}
-                          onClick={() => { setQtyPopupSelected(i); setShowCustom(false); }}
-                          className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
+                          onClick={() => setWeightUnit('g')}
+                          className="px-4 py-2.5 text-sm font-semibold transition-all"
                           style={{
-                            borderColor: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                            backgroundColor: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary) / 0.15)' : 'transparent',
-                            color: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                            backgroundColor: weightUnit === 'g' ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                            color: weightUnit === 'g' ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
                           }}
                         >
-                          {p.label}
+                          {uLabels.g}
                         </button>
-                      ))}
-                      {/* Custom chip */}
-                      <button
-                        onClick={() => setShowCustom(true)}
-                        className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
-                        style={{
-                          borderColor: showCustom ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                          backgroundColor: showCustom ? 'hsl(var(--primary) / 0.15)' : 'transparent',
-                          color: showCustom ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
-                        }}
-                      >
-                        ✏️ {qa.custom || 'Custom'}
-                      </button>
+                        <button
+                          onClick={() => setWeightUnit('kg')}
+                          className="px-4 py-2.5 text-sm font-semibold transition-all border-l-2 border-border"
+                          style={{
+                            backgroundColor: weightUnit === 'kg' ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                            color: weightUnit === 'kg' ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                          }}
+                        >
+                          {uLabels.kg}
+                        </button>
+                      </div>
                     </div>
-                  );
-                })()}
+                    <button
+                      onClick={() => { setByWeight(false); setWeightValue(''); }}
+                      className="text-xs text-muted-foreground underline mx-auto block"
+                    >
+                      ← {qa.backToPresets || 'Back to presets'}
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {(() => {
+                      const { presets } = getPresetsForItem(qtyPopupItem.nameKey, language);
+                      const isWeighable = WEIGHABLE_ITEMS.has(qtyPopupItem.nameKey);
+                      return (
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {presets.map((p, i) => (
+                            <button
+                              key={i}
+                              onClick={() => { setQtyPopupSelected(i); setShowCustom(false); }}
+                              className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
+                              style={{
+                                borderColor: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                                backgroundColor: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                                color: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                              }}
+                            >
+                              {p.label}
+                            </button>
+                          ))}
+                          {/* By weight chip */}
+                          {isWeighable && (
+                            <button
+                              onClick={() => { setByWeight(true); setShowCustom(false); setQtyPopupSelected(-1); }}
+                              className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
+                              style={{ borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                            >
+                              {byWeightLabel}
+                            </button>
+                          )}
+                          {/* Custom chip */}
+                          <button
+                            onClick={() => { setShowCustom(true); setQtyPopupSelected(-1); }}
+                            className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
+                            style={{
+                              borderColor: showCustom ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                              backgroundColor: showCustom ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                              color: showCustom ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                            }}
+                          >
+                            ✏️ {qa.custom || 'Custom'}
+                          </button>
+                        </div>
+                      );
+                    })()}
 
-                {/* Custom input */}
-                {showCustom && (
-                  <input
-                    type="number"
-                    value={customQty}
-                    onChange={e => setCustomQty(e.target.value)}
-                    placeholder={qa.enterQty || 'Enter quantity'}
-                    className="w-full h-11 px-4 rounded-xl border text-sm text-center font-semibold outline-none bg-secondary/50 border-border focus:border-primary"
-                    autoFocus
-                  />
+                    {/* Custom input */}
+                    {showCustom && (
+                      <input
+                        type="number"
+                        value={customQty}
+                        onChange={e => setCustomQty(e.target.value)}
+                        placeholder={qa.enterQty || 'Enter quantity'}
+                        className="w-full h-11 px-4 rounded-xl border text-sm text-center font-semibold outline-none bg-secondary/50 border-border focus:border-primary"
+                        autoFocus
+                      />
+                    )}
+                  </>
                 )}
 
                 {/* Buttons */}
