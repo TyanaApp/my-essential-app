@@ -37,7 +37,7 @@ export const translations = {
         selectedCount: 'Selected: {count} items', addAll: 'Add all', addAllCount: 'Add all {count} items', done: 'Done ✓',
         adjustQty: 'Adjust quantities', backToSelect: '← Back', addedSuccess: '{count} items added',
         noResults: 'Nothing found', homeTab: '🏡 Home',
-        howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel',
+        howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel', backToPresets: 'Back to presets',
       },
       quickAddCategories: {
         dairy: 'Eggs & Dairy', meat: 'Meat & Fish', vegetables: 'Vegetables', fruits: 'Fruits',
