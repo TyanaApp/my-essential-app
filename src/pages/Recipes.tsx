@@ -329,7 +329,7 @@ const Recipes = () => {
                 </div>
 
                 {!loading && inventory.length === 0 ? (
-                  <div className="text-center py-4 rounded-xl" style={{ backgroundColor: 'white' }}>
+                  <div className="text-center py-4 rounded-xl bg-card">
                     <div className="text-4xl mb-2">🧊</div>
                     <p className="text-sm font-bold mb-1 text-foreground">{t.recipes.noInventory}</p>
                     <p className="text-xs mb-3 text-muted-foreground">{t.recipes.noInventoryHint}</p>
