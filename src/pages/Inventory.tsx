@@ -65,7 +65,6 @@ const Inventory = () => {
     { id: 'fridge', label: t.inventory.fridge },
     { id: 'pantry', label: t.inventory.pantry },
     { id: 'freezer', label: t.inventory.freezer },
-    { id: 'home', label: qa.homeTab || '🏡 Home' },
     { id: 'expiring', label: t.inventory.expiring },
   ];
 
