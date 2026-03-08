@@ -277,10 +277,44 @@
 .dark [style*="color: #2563EB"] {
   color: hsl(217, 91%, 68%) !important;
 }
+/* Do not force white text globally: light cards in dark mode must keep dark text */
 .dark [style*="color: white"],
 .dark [style*="color: #FFFFFF"],
 .dark [style*="color: #fff"] {
-  color: white !important;
+  color: inherit;
+}
+
+/* Light-surface safety: if a block stays light, force dark readable text */
+.dark [style*="background-color: #F5F3FF"],
+.dark [style*="background-color: rgb(245, 243, 255)"],
+.dark [style*="background-color: #EDE9FE"],
+.dark [style*="background-color: #DDD6FE"],
+.dark [style*="background-color: #FEF3C7"],
+.dark [style*="background-color: #FFFFFF"],
+.dark [style*="background-color: #fff"],
+.dark [style*="background: #F5F3FF"],
+.dark [style*="background: #EDE9FE"],
+.dark [style*="background: #DDD6FE"],
+.dark [style*="background: #FEF3C7"],
+.dark [style*="background: #FFFFFF"],
+.dark [style*="background: #fff"] {
+  color: hsl(244 47% 20%) !important;
+}
+
+.dark [style*="background-color: #F5F3FF"] *,
+.dark [style*="background-color: rgb(245, 243, 255)"] *,
+.dark [style*="background-color: #EDE9FE"] *,
+.dark [style*="background-color: #DDD6FE"] *,
+.dark [style*="background-color: #FEF3C7"] *,
+.dark [style*="background-color: #FFFFFF"] *,
+.dark [style*="background-color: #fff"] *,
+.dark [style*="background: #F5F3FF"] *,
+.dark [style*="background: #EDE9FE"] *,
+.dark [style*="background: #DDD6FE"] *,
+.dark [style*="background: #FEF3C7"] *,
+.dark [style*="background: #FFFFFF"] *,
+.dark [style*="background: #fff"] * {
+  color: hsl(244 47% 20%) !important;
 }
 
 /* ——— DARK: Fix hardcoded border colors ——— */
