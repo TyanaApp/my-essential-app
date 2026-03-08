@@ -677,7 +677,7 @@ export const translations = {
     },
     diary: {
       title: 'Дневник', breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус',
-      addMeal: '+ Добавить', todayTotal: 'Сегодня:', noMeals: 'Нет записей',
+      addMeal: 'Добавить', todayTotal: 'Сегодня:', noMeals: 'Нет записей',
       addMealTitle: 'Добавить {meal}', logWhatYouAte: 'Запишите что вы ели',
       fromRecipes: 'Из рецептов', manualEntry: 'Вручную',
       searchRecipes: 'Поиск сохранённых рецептов...', noSavedRecipes: 'Нет сохранённых рецептов',
