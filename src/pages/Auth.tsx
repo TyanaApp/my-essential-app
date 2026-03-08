@@ -264,7 +264,7 @@ const Auth = () => {
                     {language === 'ru' ? 'Условия использования' : language === 'uk' ? 'Умови використання' : language === 'lv' ? 'Lietošanas noteikumiem' : 'Terms of Service'}
                   </Link>
                   {language === 'ru' ? ' и ' : language === 'uk' ? ' та ' : language === 'lv' ? ' un ' : ' and '}
-                  <Link to="/privacy" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                  <Link to="/privacy" target="_blank" className="underline text-primary">
                     {language === 'ru' ? 'Политику конфиденциальности' : language === 'uk' ? 'Політику конфіденційності' : language === 'lv' ? 'Privātuma politiku' : 'Privacy Policy'}
                   </Link>
                 </span>
