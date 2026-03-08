@@ -363,8 +363,8 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                               className="text-[11px] bg-white rounded-lg px-1 py-1.5 border outline-none"
                               style={{ borderColor: '#DDD6FE', color: '#6B7280' }}
                             >
-                              {STORAGE_OPTIONS.map(s => (
-                                <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
+                              {STORAGE_OPTIONS.default.map(s => (
+                                <option key={s.id} value={s.id}>{s.emoji} {s.labels[language] || s.labels.en}</option>
                               ))}
                             </select>
                             {/* Remove */}
