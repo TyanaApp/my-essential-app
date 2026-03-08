@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
+import { getUnits } from '@/lib/units';
 
 interface ScannedItem {
   name: string;
@@ -15,8 +16,6 @@ interface ScannedItem {
   storage_location: string;
   unknown?: boolean;
 }
-
-const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'packs'];
 const STORAGE_OPTIONS = [
   { id: 'fridge', emoji: '🧊', label: 'Fridge' },
   { id: 'pantry', emoji: '🏠', label: 'Pantry' },
