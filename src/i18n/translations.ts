@@ -1057,7 +1057,7 @@ export const translations = {
       portionSmall: 'Маленькая', portionMedium: 'Средняя', portionLarge: 'Большая', portionXLarge: 'Очень большая',
       portionSmallHint: 'Полпорции', portionMediumHint: 'Обычная', portionLargeHint: 'Добавка', portionXLargeHint: 'Наелась до отвала',
       calculate: '🧮 Посчитать', analyzingHint: 'Считаем калории...',
-      approximate: 'приблизительно', logIt: '✓ Записать', changePortion: 'Изменить порцию',
+      approximate: 'приблизительно', logIt: '✓ Записать', logToDiary: '✓ Записать в дневник', changePortion: 'Изменить порцию', loggedToDiary: 'Записано в дневник ✓', calculatingBtn: '⏳ Считаем калории...',
       calcFailed: 'Не удалось посчитать. Попробуйте снова.',
       confHigh: 'Высокая точность', confMedium: 'Приблизительно', confLow: 'Примерно',
       forgotPhoto: 'Забыла сфоткать? Просто напиши что ела 📝',
