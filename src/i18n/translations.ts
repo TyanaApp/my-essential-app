@@ -1194,7 +1194,7 @@ export const translations = {
     dashboard: {
       morning: 'Labrīt', afternoon: 'Labdien', evening: 'Labvakar',
       remaining: 'kcal atlikušas šodien', overTarget: 'kcal pāri mērķim',
-      logMeal: '+ Ierakstīt ēdienreizi', nothingExpiring: 'Nekas drīz nebeidzas ✅',
+      logMeal: 'Ierakstīt ēdienreizi', nothingExpiring: 'Nekas drīz nebeidzas ✅',
       expiringTitle: '{count} produkti beidzas', ideasToday: '🍳 Idejas šodienai',
       savedMonth: 'ietaupīts šomēnes', generateRecipes: 'Ģenerēt pirmās receptes →',
       viewAll: 'Skatīt visu', seeDetails: 'Sīkāk',
