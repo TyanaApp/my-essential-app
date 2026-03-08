@@ -211,8 +211,7 @@ const Diary = () => {
                     </button>
                     <button
                       onClick={() => openAddModal(section.type)}
-                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg"
-                      style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
+                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-primary/15 text-primary"
                     >
                       <Plus className="w-3.5 h-3.5" /> {t.diary.addMeal}
                     </button>
