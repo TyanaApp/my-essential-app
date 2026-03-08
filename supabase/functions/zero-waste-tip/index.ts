@@ -14,9 +14,9 @@ serve(async (req) => {
   try {
     const { inventory, recentMeals, language } = await req.json();
 
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) {
-      return new Response(JSON.stringify({ tip: "Check your expiring items today!", emoji: "♻️", title: "Zero Waste Tip", category: "food", product: "" }), {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      return new Response(JSON.stringify({ confidence: "low", tip: null, title: null }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -24,50 +24,86 @@ serve(async (req) => {
     const langMap: Record<string, string> = { ru: 'Russian', uk: 'Ukrainian', lv: 'Latvian', en: 'English' };
     const lang = langMap[language] || 'English';
 
-    const expiringItems = (inventory || []).filter((i: any) =>
-      i.expires_at && new Date(i.expires_at) <= new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
-    );
+    const inventoryList = (inventory || []).map((i: any) =>
+      `${i.name} - ${i.quantity || '?'}${i.unit || 'pcs'}, expires: ${i.expires_at || 'no date'}, location: ${i.storage_location || '?'}`
+    ).join('\n') || 'empty inventory';
 
-    const recentlyUsedItems = (recentMeals || []).flatMap((m: any) => m.items || []);
+    const recentItems = (recentMeals || []).map((m: any) => m.custom_name || m.name || '').filter(Boolean);
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "google/gemini-2.5-flash",
         messages: [{
           role: "system",
-          content: `YOU MUST respond ENTIRELY in ${lang}. This is critical.
-You are a creative zero-waste lifestyle expert.
-Give ONE specific, creative, actionable tip in ${lang}.
-The tip must be based on the user's ACTUAL products.
-Be creative and specific - not generic advice.
-Think beyond cooking: cosmetics, cleaning, gardening, home fragrance.`
+          content: `You are a world-class zero waste expert and creative sustainability consultant.
+
+Before giving ANY tip you must:
+STEP 1 - Deeply analyze what the user actually has
+STEP 2 - Find the single most valuable insight
+STEP 3 - Only then write the tip
+
+RULES:
+- Only give tips about products user ACTUALLY HAS in their inventory
+- Never give generic home tips not related to their products
+- Focus on: food scraps reuse, secondary use of packaging, smart storage to extend shelf life, creative use of wilting/leftover ingredients
+- Each tip must have specific actionable steps
+- If you cannot find a genuinely useful tip, say so honestly - don't invent something useless
+- Respond entirely in ${lang}
+- No asterisks, no markdown, clean prose only`
         }, {
           role: "user",
-          content: `User's expiring products: ${expiringItems.map((i: any) => i.name).join(', ') || 'none'}
-Recently used products: ${recentlyUsedItems.join(', ') || 'none'}
-All inventory: ${(inventory || []).slice(0, 15).map((i: any) => i.name).join(', ') || 'none'}
+          content: `Analyze this user's inventory deeply and find ONE genuinely valuable zero waste insight.
 
-Give ONE zero-waste tip. Examples of good tips:
-- User has orange → "Высуши кожуру апельсина в духовке при 80°C 2 часа — получится натуральный ароматизатор для шкафа."
-- User has wilting herbs → "Залей увядающую петрушку оливковым маслом в форме для льда — заморозь."
-- User has old bread → "Нарежь старый хлеб кубиками, обжарь с чесноком и розмарином — домашние крутоны."
-- User has coffee grounds → "Кофейная гуща — идеальный скраб для тела."
+Current inventory:
+${inventoryList}
 
-Return ONLY valid JSON, no markdown:
-{"tip":"Full tip text with specific instructions","product":"Main product this tip is about","category":"food|beauty|cleaning|garden|home","emoji":"🍊","title":"Short catchy title max 5 words"}`
+Recently used/bought:
+${recentItems.join(', ') || 'none'}
+
+Think step by step:
+
+ANALYSIS:
+1. What is about to expire that could be used differently?
+2. What scraps from recent cooking could be reused?
+3. What is being stored wrong and losing quality faster?
+4. What combination of items could prevent waste?
+
+QUALITY CHECK before writing:
+- Is this tip specific to their actual products? YES/NO
+- Does this tip provide real value? YES/NO
+- Is this more useful than obvious advice? YES/NO
+
+If any answer is NO, find a different tip.
+
+Only after passing quality check, return JSON (no markdown, no code blocks):
+{"title":"Short specific title max 5 words","tip":"Full tip with specific steps. Reference actual product names from inventory. Include exact instructions.","product":"Main product this tip is about","category":"food|beauty|cleaning|garden|home","emoji":"🍊","why_valuable":"One sentence why this saves money or reduces waste","confidence":"high|medium","based_on":"Exactly what in inventory triggered this tip"}
+
+If truly no good tip found:
+{"title":null,"tip":null,"confidence":"low"}`
         }],
-        max_tokens: 300,
       }),
     });
 
     if (!response.ok) {
-      console.error("OpenAI error:", response.status);
-      return new Response(JSON.stringify({ tip: "Check your expiring items today!", emoji: "♻️", title: "Zero Waste Tip", category: "food", product: "" }), {
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: "Rate limited" }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "Payment required" }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      console.error("AI error:", response.status);
+      return new Response(JSON.stringify({ confidence: "low", tip: null, title: null }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -79,7 +115,12 @@ Return ONLY valid JSON, no markdown:
       const text = data.choices?.[0]?.message?.content || "{}";
       result = JSON.parse(text.replace(/```json|```/g, "").trim());
     } catch {
-      result = { tip: "Check your expiring items today!", emoji: "♻️", title: "Zero Waste Tip", category: "food", product: "" };
+      result = { confidence: "low", tip: null, title: null };
+    }
+
+    // Clean any accidental markdown from tip text
+    if (result.tip) {
+      result.tip = result.tip.replace(/\*+/g, '').replace(/#+\s?/g, '').replace(/`+/g, '').trim();
     }
 
     return new Response(JSON.stringify(result), {
@@ -87,7 +128,7 @@ Return ONLY valid JSON, no markdown:
     });
   } catch (e) {
     console.error("zero-waste-tip error:", e);
-    return new Response(JSON.stringify({ tip: "Check your expiring items today!", emoji: "♻️", title: "Zero Waste Tip", category: "food", product: "" }), {
+    return new Response(JSON.stringify({ confidence: "low", tip: null, title: null }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
