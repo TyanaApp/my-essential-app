@@ -444,6 +444,7 @@ export const translations = {
       itemsAddedToInventory: '{count} items added to inventory ✓',
       saveFailed: 'Failed to save',
       receipt: 'Receipt',
+      receiptHistory: 'Receipt History',
     },
     storeDeals: {
       title: 'Deals from your stores — coming soon!',
