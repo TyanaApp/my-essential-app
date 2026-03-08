@@ -1175,7 +1175,7 @@ export const translations = {
     },
     diary: {
       title: 'Dienasgrāmata', breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda',
-      addMeal: '+ Pievienot', todayTotal: 'Šodien:', noMeals: 'Nav ierakstu',
+      addMeal: 'Pievienot', todayTotal: 'Šodien:', noMeals: 'Nav ierakstu',
       addMealTitle: 'Pievienot {meal}', logWhatYouAte: 'Ierakstiet ko ēdāt',
       fromRecipes: 'No receptēm', manualEntry: 'Manuāli',
       searchRecipes: 'Meklēt saglabātās receptes...', noSavedRecipes: 'Nav saglabātu recepšu',
