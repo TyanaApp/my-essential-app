@@ -313,7 +313,7 @@ const Recipes = () => {
                     {TIME_OPTION_KEYS.map((key, i) => (
                       <button key={key} onClick={() => setTimeAvailable(TIME_VALUES[i])}
                         className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
-                        style={{ borderColor: timeAvailable === TIME_VALUES[i] ? '#7C3AED' : '#DDD6FE', backgroundColor: timeAvailable === TIME_VALUES[i] ? '#EDE9FE' : 'white', color: timeAvailable === TIME_VALUES[i] ? '#7C3AED' : '#6B7280' }}>
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all ${timeAvailable === TIME_VALUES[i] ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {t.recipes[key]}
                       </button>
                     ))}
