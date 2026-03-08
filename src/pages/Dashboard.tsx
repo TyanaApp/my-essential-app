@@ -526,6 +526,7 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+          <CalorieTargetCard />
         </motion.div>
 
         {/* Missing body data banner */}
