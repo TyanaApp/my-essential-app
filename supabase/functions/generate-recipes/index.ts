@@ -59,10 +59,6 @@ serve(async (req) => {
       });
     }
 
-    const inventoryList = (inventory || [])
-      .map((i: any) => `${i.name} ${i.quantity}${i.unit}`)
-      .join(", ");
-
     const dislikedFoods = (userGoals?.disliked_foods || []).join(", ");
     const familyDislikes = (userGoals?.family_dislikes || []).join(", ");
 
