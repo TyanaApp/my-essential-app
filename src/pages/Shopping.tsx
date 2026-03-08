@@ -277,15 +277,16 @@ const Shopping = () => {
         <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: '#7C3AED' }}>
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
+        <button onClick={handleVoiceInput}
+          className="flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all"
+          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}
+          aria-label="Voice input">
+          🎤
+        </button>
         <button onClick={() => setReceiptModalOpen(true)}
           className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px]"
           style={{ borderColor: '#DDD6FE', color: '#7C3AED', backgroundColor: '#F5F3FF' }}>
           🧾 {(t as any).receipt?.scanBtn || 'Scan receipt'}
-        </button>
-        <button onClick={handleVoiceInput}
-          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] transition-all"
-          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}>
-          🎤 {isListening ? t.shopping.listening : ''}
         </button>
         <div className="flex items-center gap-1.5">
           <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">{t.shopping.budget}</span>
