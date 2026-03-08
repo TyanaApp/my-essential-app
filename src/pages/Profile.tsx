@@ -23,7 +23,7 @@ import AccountSettingsModal from '@/components/profile/AccountSettingsModal';
 import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
-import { SupportModal, IdeasModal, RatingModal } from '@/components/profile/SupportFeedbackModals';
+import { SupportModal, RatingModal } from '@/components/profile/SupportFeedbackModals';
 import FamilySettingsModal from '@/components/profile/FamilySettingsModal';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
@@ -191,7 +191,7 @@ const Profile = () => {
   const [paymentsOpen, setPaymentsOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
-  const [ideasOpen, setIdeasOpen] = useState(false);
+  
   const [ratingOpen, setRatingOpen] = useState(false);
   const [familyOpen, setFamilyOpen] = useState(false);
   const [installGuideOpen, setInstallGuideOpen] = useState(false);
@@ -398,7 +398,6 @@ const Profile = () => {
           <CardContent className="p-0">
             {[
               { icon: MessageCircle, label: (t as any).support?.writeSupport || '💬 Write to support', onClick: () => setSupportOpen(true) },
-              { icon: Lightbulb, label: (t as any).support?.ideas || '💡 Ideas & Suggestions', onClick: () => setIdeasOpen(true) },
               { icon: Star, label: (t as any).support?.rateApp || '⭐️ Rate the app', onClick: () => setRatingOpen(true) },
             ].map((item, index) => (
               <button
@@ -520,7 +519,7 @@ const Profile = () => {
       <PaymentsModal open={paymentsOpen} onOpenChange={setPaymentsOpen} />
       <DeleteAccountModal open={deleteAccountOpen} onOpenChange={setDeleteAccountOpen} />
       <SupportModal open={supportOpen} onOpenChange={setSupportOpen} />
-      <IdeasModal open={ideasOpen} onOpenChange={setIdeasOpen} />
+      
       <RatingModal open={ratingOpen} onOpenChange={setRatingOpen} />
       {installGuideOpen && (
         <PWAInstallGuide onDismiss={() => setInstallGuideOpen(false)} forceOpen />
