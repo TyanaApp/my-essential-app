@@ -558,7 +558,7 @@ export const translations = {
       portionSmall: 'Small', portionMedium: 'Medium', portionLarge: 'Large', portionXLarge: 'Very large',
       portionSmallHint: 'Half portion', portionMediumHint: 'Normal', portionLargeHint: 'Second helping', portionXLargeHint: 'Stuffed',
       calculate: '🧮 Calculate', analyzingHint: 'Calculating nutrition...',
-      approximate: 'approximate', logIt: '✓ Log it', changePortion: 'Change portion',
+      approximate: 'approximate', logIt: '✓ Log it', logToDiary: '✓ Log to diary', changePortion: 'Change portion', loggedToDiary: 'Logged to diary ✓', calculatingBtn: '⏳ Calculating...',
       calcFailed: 'Could not calculate. Try again.',
       confHigh: 'High accuracy', confMedium: 'Estimated', confLow: 'Approximate',
       forgotPhoto: "Forgot to take a photo? Just write what you ate 📝",
