@@ -245,30 +245,28 @@ const Recipes = () => {
     <div className="min-h-screen p-6 pb-mobile-safe">
       {/* Tab bar */}
       <div className="flex gap-1 mb-5 bg-secondary rounded-xl p-1">
-        <button
-          onClick={() => setActiveMainTab('recipes')}
-          className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
-          style={{
-            backgroundColor: activeMainTab === 'recipes' ? 'hsl(var(--primary))' : 'transparent',
-            color: activeMainTab === 'recipes' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
-          }}
-        >
-          {tabLabels.recipes}
-        </button>
-        <button
-          onClick={() => setActiveMainTab('plan')}
-          className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
-          style={{
-            backgroundColor: activeMainTab === 'plan' ? 'hsl(var(--primary))' : 'transparent',
-            color: activeMainTab === 'plan' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
-          }}
-        >
-          {tabLabels.plan}
-        </button>
+        {(['recipes', 'plan', 'calc'] as const).map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveMainTab(tab)}
+            className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+            style={{
+              backgroundColor: activeMainTab === tab ? 'hsl(var(--primary))' : 'transparent',
+              color: activeMainTab === tab ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+            }}
+          >
+            {tabLabels[tab]}
+          </button>
+        ))}
       </div>
 
       {activeMainTab === 'plan' ? (
         <MealPlan embedded />
+      ) : activeMainTab === 'calc' ? (
+        <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>}>
+          <NutritionCalculator embedded />
+        </Suspense>
+      ) : (
       ) : (
       <>
       <h1 className="text-2xl font-bold mb-5 text-foreground">{t.recipes.title}</h1>
