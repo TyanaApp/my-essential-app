@@ -147,17 +147,6 @@ const PantryQuickAdd = ({ onSaved, onOpenManual }: Props) => {
       </div>
 
       <div className="flex gap-2">
-        {selected.size > 0 && (
-          <button
-            onClick={handleAddAll}
-            disabled={saving}
-            className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl text-sm font-semibold text-white transition-opacity disabled:opacity-50"
-            style={{ backgroundColor: '#7C3AED' }}
-          >
-            <Plus className="w-4 h-4" />
-            {((t as any).inventory?.addSelected || 'Add {count} items').replace('{count}', String(selected.size))}
-          </button>
-        )}
         <button
           onClick={onOpenManual}
           className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl border-[1.5px] text-sm font-medium"
@@ -167,6 +156,30 @@ const PantryQuickAdd = ({ onSaved, onOpenManual }: Props) => {
           {(t as any).inventory?.addSomethingElse || 'Add something else'}
         </button>
       </div>
+
+      <AnimatePresence>
+        {selected.size > 0 && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            className="fixed bottom-16 left-0 right-0 z-[100] border-t border-border bg-background px-4 py-3"
+            style={{ boxShadow: '0 -4px 12px rgba(0,0,0,0.08)' }}
+          >
+            <p className="text-xs text-muted-foreground mb-2">
+              {((t as any).inventory?.selectedCount || 'Selected: {count} products').replace('{count}', String(selected.size))}
+            </p>
+            <button
+              onClick={handleAddAll}
+              disabled={saving}
+              className="w-full py-3.5 rounded-xl text-base font-semibold text-primary-foreground bg-primary disabled:opacity-50"
+            >
+              <Check className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
+              {((t as any).inventory?.saveProducts || 'Save {count} products').replace('{count}', String(selected.size))}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
