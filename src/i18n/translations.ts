@@ -1242,9 +1242,10 @@ export const translations = {
       caloriesRecalculated: 'Kalorijas pārrēķinātas', dayShort: 'diena',
     },
     nutritionAdvice: {
-      title: 'TYANA padoms', loading: 'Domāju...', noData: 'Ierakstiet ēdienreizes personalizētam padomam',
+      title: '💜 TYANA padoms', loading: 'Domāju...', noData: 'Ierakstiet ēdienreizes personalizētam padomam',
       basedOnData: 'Balstoties uz jūsu datiem šodien', fullAnalysis: 'Pilna analīze',
-      refreshAnalysis: 'Atjaunināt analīzi', analyzing: 'Analizēju jūsu datus...',
+      refreshAnalysis: 'Atjaunināt', analyzing: 'Analizēju jūsu datus...',
+      updatedAgo: 'atjaunināts pirms {min} min',
       errorLoading: 'Neizdevās ielādēt analīzi', todayMacros: 'Šodienas makroelementi',
       calories: 'Kalorijas', protein: 'Olbaltumvielas', fat: 'Tauki', carbs: 'Ogļhidrāti',
     },
