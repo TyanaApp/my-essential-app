@@ -29,6 +29,7 @@ import Achievements from "./pages/Achievements";
 import NutritionAnalysis from "./pages/NutritionAnalysis";
 import Reminders from "./pages/Reminders";
 import MealPlan from "./pages/MealPlan";
+import NutritionCalculator from "./pages/NutritionCalculator";
 
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
@@ -84,6 +85,7 @@ const App = () => {
                     <Route path="/achievements" element={<Achievements />} />
                     <Route path="/nutrition-analysis" element={<NutritionAnalysis />} />
                     <Route path="/meal-plan" element={<MealPlan />} />
+                    <Route path="/nutrition-calculator" element={<NutritionCalculator />} />
                     <Route path="/reminders" element={<Reminders />} />
                   </Route>
                   <Route path="/privacy" element={<PrivacyPage />} />
