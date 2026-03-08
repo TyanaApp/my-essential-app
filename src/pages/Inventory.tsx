@@ -217,11 +217,10 @@ const Inventory = () => {
           <button
             key={tabItem.id}
             onClick={() => setTab(tabItem.id)}
-            className="px-1 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition-all text-center"
-            style={{
-              backgroundColor: tab === tabItem.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
-              color: tab === tabItem.id ? 'white' : '#6B7280',
-            }}
+            className={`px-1 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition-all text-center ${
+              tab === tabItem.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
+            }`}
+          >
           >
             {tabItem.label}
             {tabItem.id === 'expiring' && (
