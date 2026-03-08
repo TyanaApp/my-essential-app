@@ -15,14 +15,19 @@ import { useReminders } from '@/hooks/useReminders';
 
 const Layout = () => {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { alerts, unreadCount, markAllRead, deleteAlert, clearAll } = useNotifications();
+  const { todayCount } = useReminders();
+  useMealReminders(language);
+
+  const rm = (t as any).reminders || {};
 
   const navItems = [
     { path: "/dashboard", label: t.nav.home, icon: Home },
     { path: "/inventory", label: t.nav.inventory, icon: Package },
     { path: "/recipes", label: t.nav.recipes, icon: ChefHat },
     { path: "/shopping", label: t.nav.shopping, icon: ShoppingCart },
+    { path: "/reminders", label: rm.title || 'Reminders', icon: BellIcon, badge: todayCount },
     { path: "/diary", label: t.nav.diary, icon: BookOpen },
     { path: "/profile", label: t.nav.settings, icon: Settings },
   ];
