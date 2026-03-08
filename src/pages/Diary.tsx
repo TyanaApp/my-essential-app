@@ -57,6 +57,7 @@ const Diary = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { updateStreak } = useStreak();
+  const { validateFood } = useFoodValidation();
   const [streakReward, setStreakReward] = useState<{ badge: string; message: string; bonusScans?: number; grantLite?: boolean; grantPro?: boolean } | null>(null);
   usePageTitle(t.diary.title);
 
