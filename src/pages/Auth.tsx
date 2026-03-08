@@ -181,7 +181,7 @@ const Auth = () => {
         <button
           onClick={handleGoogleSignIn}
           disabled={isGoogleLoading}
-          className="w-full flex items-center justify-center gap-3 h-[52px] rounded-xl bg-white border-[1.5px] hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-center gap-3 h-[52px] rounded-xl bg-card border-[1.5px] border-border hover:bg-secondary transition-colors"
           style={{ borderColor: '#DDD6FE' }}
         >
           <GoogleIcon />
