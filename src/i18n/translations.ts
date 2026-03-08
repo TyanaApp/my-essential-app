@@ -1479,7 +1479,7 @@ export const translations = {
     dayLabels: ['P', 'O', 'T', 'C', 'Pk', 'S', 'Sv'],
     notifications: {
       bannerTitle: '🔔 Saņemiet brīdinājumus par derīguma termiņiem', enable: 'Ieslēgt paziņojumus', maybeLater: 'Varbūt vēlāk',
-      title: 'Paziņojumi', markRead: 'Atzīmēt visus kā lasītus', empty: 'Paziņojumu vēl nav', justNow: 'Tikko',
+      title: 'Paziņojumi', markRead: 'Atzīmēt visus kā lasītus', clearAll: 'Notīrīt visu', empty: 'Paziņojumu vēl nav', justNow: 'Tikko', minAgo: 'min atpakaļ', hAgo: 'h atpakaļ', yesterday: 'vakar',
       expiryAlerts: 'Termiņu brīdinājumi', expiryAlertsDesc: 'Uzziniet kad produktiem beidzas derīguma termiņš',
       weeklySummary: 'Iknedēļas kopsavilkums', weeklySummaryDesc: 'Pirmdienas rīta ietaupījumu pārskats',
       recipeSuggestions: 'Recepšu ieteikumi', recipeSuggestionsDesc: 'Gudras "izmanto pirms beidzas" receptes',
