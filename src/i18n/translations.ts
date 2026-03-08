@@ -1422,9 +1422,9 @@ export const translations = {
       all: 'Visi', mine: 'Mani', shared: 'Kopīgie', addedBy: 'pievienoja',
     },
     support: {
-      writeSupport: '💬 Rakstīt atbalstam',
-      ideas: '💡 Idejas un priekšlikumi',
-      rateApp: '⭐️ Novērtēt lietotni',
+      writeSupport: 'Rakstīt atbalstam',
+      ideas: 'Idejas un priekšlikumi',
+      rateApp: 'Novērtēt lietotni',
     },
     receipt: {
       title: '🧾 Pievienot čeku',
