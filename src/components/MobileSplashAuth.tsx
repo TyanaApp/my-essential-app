@@ -28,6 +28,7 @@ const langs = [
   { code: 'en' as const, label: 'EN' },
   { code: 'ru' as const, label: 'RU' },
   { code: 'lv' as const, label: 'LV' },
+  { code: 'uk' as const, label: 'UA' },
 ];
 
 type AuthView = 'main' | 'email';

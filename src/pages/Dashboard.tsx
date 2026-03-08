@@ -76,7 +76,7 @@ const Dashboard = () => {
   };
 
   const formatDate = () => {
-    const locale = language === 'ru' ? 'ru-RU' : language === 'lv' ? 'lv-LV' : 'en-US';
+    const locale = language === 'ru' ? 'ru-RU' : language === 'lv' ? 'lv-LV' : language === 'uk' ? 'uk-UA' : 'en-US';
     return new Date().toLocaleDateString(locale, {
       weekday: 'long',
       month: 'long',
@@ -202,7 +202,7 @@ const Dashboard = () => {
       if (!caloriesTarget) caloriesTarget = 2000;
 
       setData({
-        displayName: profileData?.display_name || user?.email?.split('@')[0] || 'there',
+        displayName: profileData?.display_name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'there',
         caloriesConsumed,
         caloriesTarget,
         protein: Math.round(protein),
@@ -336,7 +336,7 @@ const Dashboard = () => {
     await supabase.from('user_goals').update({ monthly_budget: val } as any).eq('user_id', user.id);
     setData(prev => prev ? { ...prev, monthlyBudget: val } : prev);
     setEditingBudget(false);
-    toast.success(language === 'ru' ? 'Бюджет обновлён ✓' : language === 'lv' ? 'Budžets atjaunināts ✓' : 'Budget updated ✓');
+    toast.success(language === 'ru' ? 'Бюджет обновлён ✓' : language === 'uk' ? 'Бюджет оновлено ✓' : language === 'lv' ? 'Budžets atjaunināts ✓' : 'Budget updated ✓');
   };
 
   const saveCurrency = async (code: string) => {
@@ -499,9 +499,7 @@ const Dashboard = () => {
             >
               <span className="text-lg">⚙️</span>
               <span className="text-xs font-medium flex-1" style={{ color: '#92400E' }}>
-                {language === 'ru' ? 'Укажи свои данные для точного расчёта калорий →'
-                  : language === 'lv' ? 'Norādi savus datus precīzam kaloriju aprēķinam →'
-                  : 'Enter your body data for accurate calorie calculation →'}
+                {(t.dashboard as any).missingBodyData || 'Enter your body data for accurate calorie calculation →'}
               </span>
               <ChevronRight className="w-4 h-4" style={{ color: '#92400E' }} />
             </button>
@@ -538,9 +536,10 @@ const Dashboard = () => {
               {data.expiringItems.length > 0
                 ? (() => {
                     const n = data.expiringItems.length;
-                    if (language === 'ru') return `${n} ${pluralizeRu(n, 'продукт истекает', 'продукта истекают', 'продуктов истекают')}`;
-                    if (language === 'lv') return `${n} ${n === 1 ? 'produkts beidzas' : 'produkti beidzas'}`;
-                    return `${n} ${n === 1 ? 'item expiring soon' : 'items expiring soon'}`;
+               if (language === 'ru') return `${n} ${pluralizeRu(n, 'продукт истекает', 'продукта истекают', 'продуктов истекают')}`;
+                     if (language === 'uk') return `${n} ${n === 1 ? 'продукт закінчується' : 'продуктів закінчується'}`;
+                     if (language === 'lv') return `${n} ${n === 1 ? 'produkts beidzas' : 'produkti beidzas'}`;
+                     return `${n} ${n === 1 ? 'item expiring soon' : 'items expiring soon'}`;
                   })()
                 : t.dashboard.nothingExpiring}
             </h3>
@@ -678,7 +677,7 @@ const Dashboard = () => {
               style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', border: '1px dashed #DDD6FE' }}
             >
               <Sparkles className="w-4 h-4" />
-              {language === 'ru' ? '✨ Сгенерировать рецепты из холодильника →' : language === 'lv' ? '✨ Ģenerēt receptes no ledusskapja →' : '✨ Generate recipes from your fridge →'}
+              {(t.dashboard as any).generateFromFridge || '✨ Generate recipes from your fridge →'}
             </button>
           ) : (
             <button
