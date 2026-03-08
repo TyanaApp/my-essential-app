@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
+import { useFoodValidation } from '@/hooks/useFoodValidation';
 import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import FridgePickerModal from '@/components/diary/FridgePickerModal';
@@ -56,6 +57,7 @@ const Diary = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { updateStreak } = useStreak();
+  const { validateFood } = useFoodValidation();
   const [streakReward, setStreakReward] = useState<{ badge: string; message: string; bonusScans?: number; grantLite?: boolean; grantPro?: boolean } | null>(null);
   usePageTitle(t.diary.title);
 
@@ -182,6 +184,14 @@ const Diary = () => {
 
   const handleAddManual = async () => {
     if (!user || !manualName.trim()) return;
+
+    // Validate food item
+    const isFood = await validateFood(manualName.trim());
+    if (!isFood) {
+      setManualName('');
+      return;
+    }
+
     try {
       const { data, error } = await supabase.from('meal_entries').insert({
         user_id: user.id, date: dateStr, meal_type: modalMealType,

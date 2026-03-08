@@ -44,9 +44,10 @@ serve(async (req) => {
       type: "text",
       text: `Analyze this fridge photo.
 
-ONLY list actual food products and ingredients you can clearly identify.
+IMPORTANT: Only return actual food items, drinks, and cooking ingredients.
+If you see non-food items (dishes, utensils, cleaning products, containers, pots, pans, bowls, plates, cookware) → skip them entirely. Never include non-food items in the response.
 
-SKIP entirely: pots, pans, dishes, bowls, plates, containers, utensils, cookware.
+SKIP entirely: pots, pans, dishes, bowls, plates, containers, utensils, cookware, cleaning products, packaging materials.
 
 If you see a covered pot or bowl with unknown contents - add ONE item: 'Covered dish (unknown contents)' with unknown=true.
 

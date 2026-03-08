@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFamily } from '@/hooks/useFamily';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
+import { useFoodValidation } from '@/hooks/useFoodValidation';
 import {
   Dialog,
   DialogContent,
@@ -31,6 +32,7 @@ const Shopping = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   usePageTitle(t.shopping.title);
+  const { validateFood } = useFoodValidation();
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [budget, setBudget] = useState<number>(0);
@@ -68,10 +70,17 @@ const Shopping = () => {
           // Fallback: split by comma/and
           const voiceItems = transcript.split(/,|and|и|un/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
           if (!user || voiceItems.length === 0) return;
-          const inserts = voiceItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
+          // Validate each item
+          const validItems: string[] = [];
+          for (const item of voiceItems) {
+            const ok = await validateFood(item);
+            if (ok) validItems.push(item);
+          }
+          if (validItems.length === 0) return;
+          const inserts = validItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
           await supabase.from('shopping_items').insert(inserts as any);
           await fetchItems();
-          toast.success(`${(t.shopping as any).adding || 'Adding'}: ${voiceItems.join(', ')} ✓`);
+          toast.success(`${(t.shopping as any).adding || 'Adding'}: ${validItems.join(', ')} ✓`);
           return;
         }
         
@@ -224,15 +233,11 @@ const Shopping = () => {
     if (!user || !formName.trim()) return;
 
     // Validate food item
-    try {
-      const { data: validation } = await supabase.functions.invoke('validate-food-item', {
-        body: { itemName: formName.trim(), language },
-      });
-      if (validation && !validation.isFood) {
-        toast.error(validation.reason || `"${formName}" is not a food item`);
-        return;
-      }
-    } catch { /* allow on error */ }
+    const isFood = await validateFood(formName.trim());
+    if (!isFood) {
+      setFormName('');
+      return;
+    }
 
     const payload = { user_id: user.id, name: formName.trim(), quantity: Number(formQty) || 1, unit: formUnit, category: formCategory, estimated_price: formPrice ? Number(formPrice) : null };
     if (editItem) {

@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 import type { InventoryItem } from '@/pages/Inventory';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useFoodValidation } from '@/hooks/useFoodValidation';
 
 const AUTOCOMPLETE = [
   'Milk', 'Eggs', 'Bread', 'Chicken', 'Rice', 'Pasta', 'Tomatoes', 'Onion',
@@ -83,21 +84,19 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
     }
   }, [name, editItem]);
 
+  const { validateFood } = useFoodValidation();
+
   const handleSave = async () => {
     if (!user || !name.trim()) { toast.error(t.inventory.nameRequired); return; }
     setSaving(true);
 
     // Validate food item
-    try {
-      const { data: validation } = await supabase.functions.invoke('validate-food-item', {
-        body: { itemName: name.trim(), language: 'en' },
-      });
-      if (validation && !validation.isFood) {
-        toast.error(validation.reason || `"${name}" is not a food item`);
-        setSaving(false);
-        return;
-      }
-    } catch { /* allow on error */ }
+    const isFood = await validateFood(name.trim());
+    if (!isFood) {
+      setSaving(false);
+      setName('');
+      return;
+    }
 
     const payload: any = {
       user_id: user.id,
