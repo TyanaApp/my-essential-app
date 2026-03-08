@@ -300,7 +300,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
               {scannedItems.length === 0 ? (
                 <p className="text-sm text-center py-6" style={{ color: '#9CA3AF' }}>{t.inventory.noItemsDetected}</p>
               ) : (
-                <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1">
+                <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1 pb-28">
                   {groupedItems.map(group => (
                     <div key={group.id}>
                       <div className="flex items-center gap-1.5 mb-2">

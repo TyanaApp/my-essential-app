@@ -420,7 +420,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 pb-2" style={{ maxHeight: 'calc(92vh - 200px)' }}>
+          <div className="flex-1 overflow-y-auto px-4 pb-36" style={{ maxHeight: 'calc(92vh - 200px)' }}>
             {filteredItems ? (
               <div className="flex flex-wrap gap-2 py-2">
                 {filteredItems.length === 0 ? (
