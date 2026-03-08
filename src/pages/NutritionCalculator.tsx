@@ -403,7 +403,14 @@ const NutritionCalculator = () => {
             transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
             className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent"
           />
-          <p className="text-sm text-muted-foreground">{nc.calculating || 'Calculating...'}</p>
+          <motion.p
+            key={loadingTipIdx}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-muted-foreground"
+          >
+            {loadingTips[loadingTipIdx]}
+          </motion.p>
         </div>
       )}
 
