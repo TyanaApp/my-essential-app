@@ -422,26 +422,35 @@ const Dashboard = () => {
   const fetchZeroWasteTip = useCallback(async (force = false) => {
     if (!user) return;
     const cacheKey = `tyana_zwt_${user.id}`;
+
     if (!force) {
       try {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
           const { date, data: tipData } = JSON.parse(cached);
-          if (date === new Date().toISOString().split('T')[0]) {
+          if (date === new Date().toISOString().split('T')[0] && tipData?.tip) {
             setZeroWasteTip(tipData);
             return;
           }
         }
       } catch {}
     }
+
+    // Force: clear old state immediately
+    if (force) {
+      localStorage.removeItem(cacheKey);
+      setZeroWasteTip(null);
+    }
+
     setTipLoading(true);
     try {
+      const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
       const [invRes, mealsRes] = await Promise.all([
-        supabase.from('inventory_items').select('name, expires_at, quantity, unit, storage_location').eq('user_id', user.id).limit(30),
-        supabase.from('meal_entries').select('custom_name').eq('user_id', user.id).eq('date', new Date().toISOString().split('T')[0]),
+        supabase.from('inventory_items').select('name, expires_at, quantity, unit, storage_location').eq('user_id', user.id).order('expires_at', { ascending: true }).limit(30),
+        supabase.from('meal_entries').select('custom_name').eq('user_id', user.id).gte('created_at', threeDaysAgo),
       ]);
       const { data: tipData } = await supabase.functions.invoke('zero-waste-tip', {
-        body: { inventory: invRes.data || [], recentMeals: mealsRes.data || [], language },
+        body: { inventory: invRes.data || [], recentMeals: mealsRes.data || [], language, timestamp: Date.now() },
       });
       if (tipData && tipData.tip && tipData.confidence !== 'low') {
         setZeroWasteTip(tipData);
@@ -451,6 +460,7 @@ const Dashboard = () => {
       }
     } catch (e) {
       console.error('Zero waste tip error:', e);
+      setZeroWasteTip(null);
     }
     setTipLoading(false);
   }, [user, language]);
