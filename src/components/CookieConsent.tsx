@@ -31,7 +31,7 @@ const CookieConsent = () => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-[9999] bg-white border-t px-4 py-4"
+      className="fixed bottom-0 left-0 right-0 z-[9999] bg-card border-t border-border px-4 py-4"
       style={{ borderColor: '#EDE9FE', boxShadow: '0 -4px 20px rgba(0,0,0,0.08)' }}
     >
       <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-3">
