@@ -125,25 +125,6 @@ const Diary = () => {
     }
   };
 
-  const handleAddFromRecipe = async (recipe: SavedRecipe) => {
-    if (!user) return;
-    try {
-      const { data, error } = await supabase.from('meal_entries').insert({
-        user_id: user.id, date: dateStr, meal_type: modalMealType,
-        recipe_id: recipe.id, custom_name: recipe.title,
-        total_calories: recipe.nutrition?.calories || 0,
-        total_protein: recipe.nutrition?.protein || 0,
-        total_fat: recipe.nutrition?.fat || 0,
-        total_carbs: recipe.nutrition?.carbs || 0,
-      } as any).select().single();
-      if (error) throw error;
-      if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
-      toast.success(`${recipe.title} ${t.diary.logged}`);
-      setModalOpen(false);
-      const reward = await updateStreak();
-      if (reward) setStreakReward(reward);
-    } catch { toast.error(t.common.error); }
-  };
 
   const handleDelete = async (id: string) => {
     await supabase.from('meal_entries').delete().eq('id', id);
