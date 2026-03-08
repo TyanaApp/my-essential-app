@@ -532,7 +532,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col items-center gap-6 mb-8">
             <div className="text-center">
-              <span className="font-tyana text-lg" style={{ color: '#7C3AED' }}>TYANA</span>
+              <TyanaLogo size="md" />
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <LegalFooterPill />
