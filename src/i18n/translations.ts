@@ -1501,8 +1501,7 @@ export const translations = {
       subtitle: 'Savienosim veikalus jūsu valstī — aktuālie piedāvājumi tieši lietotnē',
       notify: '🔔 Paziņot kad būs pieejams',
       alreadyJoined: 'Jūs tiksiet informēts',
-      joined: 'Lieliski! Paziņosim kad būs gatavs ✓',
-      waitlistCount: '{count} lietotāji gaida šo funkciju',
+      joined: 'Paziņosim, kad būs pieejams ✓',
       profileLabel: '🏪 Veikalu integrācija',
     },
     reminders: {
