@@ -581,22 +581,46 @@ const Dashboard = () => {
         )}
 
         {/* AI Nutrition Advice Card */}
-        <motion.div {...fadeUp(1.8)} className="bg-card rounded-2xl p-4 shadow-[0_2px_16px_rgba(124,58,237,0.08)] border-l-4 border-primary">
-          <p className="text-xs font-medium mb-1.5 flex items-center gap-1.5 text-muted-foreground">
-            🧠 {(t as any).nutritionAdvice?.title || "TYANA's advice"}
-          </p>
+        <motion.div
+          {...fadeUp(1.8)}
+          className="bg-card rounded-2xl p-5 shadow-[0_2px_16px_rgba(124,58,237,0.08)] border-l-4 border-primary"
+          style={{ opacity: adviceFading ? 0.4 : 1, transition: 'opacity 0.3s ease' }}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-semibold text-muted-foreground">
+              {(t as any).nutritionAdvice?.title || "💜 TYANA's advice for you"}
+            </p>
+            {adviceGeneratedAt && !adviceLoading && (
+              <span className="text-[10px] text-muted-foreground/50">
+                {(() => {
+                  const mins = Math.round((Date.now() - new Date(adviceGeneratedAt).getTime()) / 60000);
+                  const template = (t as any).nutritionAdvice?.updatedAgo || 'updated {min} min ago';
+                  return template.replace('{min}', mins < 1 ? '<1' : String(mins));
+                })()}
+              </span>
+            )}
+          </div>
+
           {adviceLoading ? (
-            <div className="flex items-center gap-2 py-2">
+            <div className="flex items-center gap-2 py-3">
               <div className="w-4 h-4 border-2 rounded-full animate-spin border-accent border-t-primary" />
               <span className="text-xs text-muted-foreground">{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
             </div>
           ) : advice ? (
-            <p className="text-sm leading-relaxed mb-2 text-foreground">{advice}</p>
+            <p className="text-[15px] leading-[1.7] text-foreground/90">{advice}</p>
           ) : (
             <p className="text-sm text-muted-foreground">{(t as any).nutritionAdvice?.noData || 'Log meals to get personalized advice'}</p>
           )}
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-[10px] text-muted-foreground/60">{(t as any).nutritionAdvice?.basedOnData || 'Based on your data today'}</span>
+
+          <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
+            <button
+              onClick={() => fetchAdvice(true)}
+              disabled={adviceLoading}
+              className="text-xs font-medium flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+            >
+              <RefreshCw className={`w-3 h-3 ${adviceLoading ? 'animate-spin' : ''}`} />
+              {(t as any).nutritionAdvice?.refreshAnalysis || 'Refresh'}
+            </button>
             <button onClick={() => navigate('/nutrition-analysis')} className="text-xs font-semibold flex items-center gap-1 text-primary">
               📊 {(t as any).nutritionAdvice?.fullAnalysis || 'Full analysis'} →
             </button>
