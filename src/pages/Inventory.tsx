@@ -292,11 +292,11 @@ const Inventory = () => {
       ) : filteredItems.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">{tab === 'expiring' ? '🎉' : '📦'}</div>
-          <p className="text-base font-medium" style={{ color: '#1E1B4B' }}>
+          <p className="text-base font-medium text-foreground">
             {tab === 'expiring' ? t.inventory.nothingExpiring : t.inventory.empty}
           </p>
           {tab !== 'expiring' && (
-            <p className="text-sm mt-1" style={{ color: '#6B7280' }}>
+            <p className="text-sm mt-1 text-muted-foreground">
               {t.inventory.emptyHint}
             </p>
           )}
