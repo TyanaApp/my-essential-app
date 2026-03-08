@@ -173,7 +173,7 @@ const Recipes = () => {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl overflow-hidden cursor-pointer"
+        className="bg-card rounded-2xl overflow-hidden cursor-pointer"
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
