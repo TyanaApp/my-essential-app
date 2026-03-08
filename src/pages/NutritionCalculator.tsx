@@ -11,6 +11,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from '@/hooks/useTranslation';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { toast } from 'sonner';
+import OFFProductSuggestions from '@/components/OFFProductSuggestions';
+import { OFFProduct, scaleNutrition } from '@/lib/openFoodFacts';
 
 interface NutritionResult {
   food_name?: string;
