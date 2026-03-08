@@ -69,6 +69,9 @@ const Dashboard = () => {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [advice, setAdvice] = useState<string>('');
   const [adviceLoading, setAdviceLoading] = useState(false);
+  const [adviceGeneratedAt, setAdviceGeneratedAt] = useState<string | null>(null);
+  const [adviceFading, setAdviceFading] = useState(false);
+  const [lastCaloriesForAdvice, setLastCaloriesForAdvice] = useState<number>(0);
   const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
 
