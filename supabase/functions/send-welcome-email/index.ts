@@ -70,7 +70,7 @@ P.S. Є питання? Пиши нам у додатку!`,
 
       lv: `Sveiki, ${name}! 👋
 
-Laipni lūdzam TYANA — tavs personīgais AI uztura asistents.
+Laipni lūdzam TYANA — tavs personīgais AI uztura speciālists.
 
 Tavs 7 dienu Pro izmēģinājums ir aktivizēts! 🚀
 
