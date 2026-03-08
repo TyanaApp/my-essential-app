@@ -1721,6 +1721,13 @@ export const translations = {
       cat_dishes: 'Gatavie ēdieni', cat_sweets: 'Saldumi', cat_drinks: 'Dzērieni',
       dashboardBtn: '🧮 OLUT kalkulators',
     },
+    openFoodFacts: {
+      scanBarcode: 'Skenēt svītrkodu', productFound: 'Produkts atrasts!', notInDatabase: 'Nav datubāzē',
+      dataFromLabel: 'Dati no etiķetes', aiEstimate: 'MI novērtējums', foundInDatabase: 'Atrasts datubāzē',
+      per100g: 'Uz 100g', pointCamera: 'Pavērs kameru uz svītrkodu', lookingUp: 'Meklējam produktu...',
+      scanError: 'Neizdevās nolasīt svītrkodu', notThis: 'Nav tas', searching: 'Meklē...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 MI novērtējums',
+    },
   },
   uk: {
     nav: { home: 'Головна', inventory: 'Продукти', recipes: 'Рецепти', shopping: 'Покупки', diary: 'Щоденник', settings: 'Налаштування', profile: 'Профіль' },
