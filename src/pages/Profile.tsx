@@ -25,6 +25,7 @@ import { SupportModal, IdeasModal, RatingModal } from '@/components/profile/Supp
 import FamilySettingsModal from '@/components/profile/FamilySettingsModal';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
+import LegalFooterPill from '@/components/LegalFooterPill';
 
 const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge: string }) => {
   const [notify, setNotify] = useState(() => localStorage.getItem(`notify_device_${name}`) === '1');
@@ -363,6 +364,11 @@ const Profile = () => {
           {t.profile.deleteAccount}
         </Button>
       </motion.div>
+
+      {/* Legal footer */}
+      <div className="mt-6 mb-4">
+        <LegalFooterPill />
+      </div>
 
       {/* Modals */}
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />

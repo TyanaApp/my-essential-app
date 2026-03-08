@@ -12,6 +12,7 @@ import tyanaLogoText from '@/assets/tyana-logo-text.png';
 import { z } from 'zod';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileSplashAuth from '@/components/MobileSplashAuth';
+import LegalFooterPill from '@/components/LegalFooterPill';
 import QRInstallModal from '@/components/install/QRInstallModal';
 import { useIsStandalone } from '@/hooks/useStandalone';
 
@@ -311,12 +312,8 @@ const Auth = () => {
           </>
         )}
 
-        <div className="mt-6 flex items-center justify-center gap-3 text-[12px]" style={{ color: '#9CA3AF' }}>
-          <Link to="/privacy" className="hover:underline">Privacy</Link>
-          <span>·</span>
-          <Link to="/terms" className="hover:underline">Terms</Link>
-          <span>·</span>
-          <Link to="/cookies" className="hover:underline">Cookies</Link>
+        <div className="mt-6">
+          <LegalFooterPill />
         </div>
       </motion.div>
 

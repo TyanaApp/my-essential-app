@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
+import RecipePhoto from '@/components/RecipePhoto';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -112,11 +113,17 @@ const Recipes = () => {
   };
 
   const handleDeleteRecipe = async (id: string) => {
-    await supabase.from('recipes').delete().eq('id', id);
-    setSavedRecipes((prev) => prev.filter((r) => r.id !== id));
-    setDeleteConfirmId(null);
-    setDetailRecipe(null);
-    toast.success((t.recipes as any).recipeDeleted || 'Recipe removed');
+    if (!user) return;
+    try {
+      const { error } = await supabase.from('recipes').delete().eq('id', id).eq('user_id', user.id);
+      if (error) throw error;
+      setSavedRecipes((prev) => prev.filter((r) => r.id !== id));
+      setDeleteConfirmId(null);
+      setDetailRecipe(null);
+      toast.success((t.recipes as any).recipeDeleted || 'Recipe removed');
+    } catch {
+      toast.error(t.common.error);
+    }
   };
 
   const addMissingToShopping = async (ingredients: Ingredient[]) => {
@@ -170,12 +177,7 @@ const Recipes = () => {
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
-        <img
-          src={`https://source.unsplash.com/400x300/?${encodeURIComponent(n.title + ' food')}`}
-          alt={n.title}
-          className="h-40 w-full object-cover"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-        />
+        <RecipePhoto title={n.title} size="sm" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
@@ -342,13 +344,8 @@ const Recipes = () => {
                 return (
                   <>
                     <div className="h-44 relative">
-                      <img
-                        src={`https://source.unsplash.com/600x400/?${encodeURIComponent(r.title + ' food dish')}`}
-                        alt={r.title}
-                        className="h-full w-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.background = 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #C4B5FD 100%)'; }}
-                      />
-                      <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm">
+                      <RecipePhoto title={r.title} size="lg" />
+                      <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm z-10">
                         <X className="w-5 h-5 text-white" />
                       </button>
                     </div>
@@ -459,11 +456,11 @@ const Recipes = () => {
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirmId(null)}
                   className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
-                  {(t.recipes as any).deleteNo || 'No'}
+                  {t.common.cancel}
                 </button>
                 <button onClick={() => handleDeleteRecipe(deleteConfirmId)}
                   className="flex-1 h-10 rounded-xl font-semibold text-sm text-white" style={{ backgroundColor: '#DC2626' }}>
-                  {(t.recipes as any).deleteYes || 'Yes'}
+                  {t.common.delete}
                 </button>
               </div>
             </motion.div>
