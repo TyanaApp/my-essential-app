@@ -113,11 +113,17 @@ const Recipes = () => {
   };
 
   const handleDeleteRecipe = async (id: string) => {
-    await supabase.from('recipes').delete().eq('id', id);
-    setSavedRecipes((prev) => prev.filter((r) => r.id !== id));
-    setDeleteConfirmId(null);
-    setDetailRecipe(null);
-    toast.success((t.recipes as any).recipeDeleted || 'Recipe removed');
+    if (!user) return;
+    try {
+      const { error } = await supabase.from('recipes').delete().eq('id', id).eq('user_id', user.id);
+      if (error) throw error;
+      setSavedRecipes((prev) => prev.filter((r) => r.id !== id));
+      setDeleteConfirmId(null);
+      setDetailRecipe(null);
+      toast.success((t.recipes as any).recipeDeleted || 'Recipe removed');
+    } catch {
+      toast.error(t.common.error);
+    }
   };
 
   const addMissingToShopping = async (ingredients: Ingredient[]) => {
