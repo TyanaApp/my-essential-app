@@ -34,7 +34,7 @@ const TRANSLATIONS = {
   },
   lv: {
     title: '7 dienas Pro bez maksas!',
-    foundingBadge: '🏆 Jūs esat viens no pirmajiem 1000! Cena €6.49 fiksēta mūžīgi',
+    earlyBirdBadge: '🎉 Jūsu īpašā cena €6.49/mēn — uz visiem laikiem',
     feat1: '✨ Neierobežota skenēšana',
     feat2: '🤖 AI receptes jūsu produktiem',
     feat3: '📊 Personalizēta uztura analīze',
