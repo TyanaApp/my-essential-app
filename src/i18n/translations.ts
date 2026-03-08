@@ -1185,6 +1185,13 @@ export const translations = {
       cat_dishes: 'Готовые блюда', cat_sweets: 'Сладкое', cat_drinks: 'Напитки',
       dashboardBtn: '🧮 Калькулятор КБЖУ',
     },
+    openFoodFacts: {
+      scanBarcode: 'Сканировать штрихкод', productFound: 'Продукт найден!', notInDatabase: 'Нет в базе данных',
+      dataFromLabel: 'Данные с этикетки', aiEstimate: 'ИИ-оценка', foundInDatabase: 'Найдено в базе продуктов',
+      per100g: 'На 100г', pointCamera: 'Наведи камеру на штрихкод', lookingUp: 'Ищем продукт...',
+      scanError: 'Не удалось считать штрихкод', notThis: 'Не то', searching: 'Поиск...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ИИ-оценка',
+    },
   },
   lv: {
     nav: { home: 'Sākums', inventory: 'Produkti', recipes: 'Receptes', shopping: 'Iepirkumi', diary: 'Dienasgrāmata', settings: 'Iestatījumi', profile: 'Profils' },
