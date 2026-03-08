@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
+import { getUnits } from '@/lib/units';
 
 interface ScannedItem {
   name: string;
@@ -15,8 +16,6 @@ interface ScannedItem {
   storage_location: string;
   unknown?: boolean;
 }
-
-const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'packs'];
 const STORAGE_OPTIONS = [
   { id: 'fridge', emoji: '🧊', label: 'Fridge' },
   { id: 'pantry', emoji: '🏠', label: 'Pantry' },
@@ -47,7 +46,8 @@ interface ScanModalProps {
 
 const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const units = getUnits(language);
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [photos, setPhotos] = useState<(string | null)[]>([null, null, null, null]);
@@ -98,7 +98,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
       const items: ScannedItem[] = (data?.items || []).map((i: any) => ({
         name: String(i.name || ''),
         quantity: Number(i.quantity) || 1,
-        unit: UNITS.includes(i.unit) ? i.unit : 'pcs',
+        unit: units.some(u => u.value === i.unit) ? i.unit : 'pcs',
         category: CATEGORIES.some(c => c.id === i.category) ? i.category : 'other',
         storage_location: 'fridge',
         unknown: Boolean(i.unknown),
@@ -351,7 +351,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                               className="text-[11px] bg-white rounded-lg px-1 py-1.5 border outline-none"
                               style={{ borderColor: '#DDD6FE', color: '#6B7280' }}
                             >
-                              {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+                              {units.map(u => <option key={u.value} value={u.value}>{u.label}</option>)}
                             </select>
                             {/* Storage location chip */}
                             <select

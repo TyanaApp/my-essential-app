@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
+import { getUnitLabel } from '@/lib/units';
 
 interface FridgePickerModalProps {
   open: boolean;
@@ -139,7 +140,7 @@ const FridgePickerModal = ({ open, onClose, mealType, dateStr, onSaved }: Fridge
                       color: selected.has(item.id) ? '#7C3AED' : '#374151',
                     }}
                   >
-                    {item.name} {item.quantity || 1}{item.unit || ''}
+                    {item.name} {item.quantity || 1}{getUnitLabel(language, item.unit || 'pcs')}
                   </button>
                 ))}
               </div>

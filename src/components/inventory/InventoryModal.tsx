@@ -8,13 +8,12 @@ import { toast } from 'sonner';
 import type { InventoryItem } from '@/pages/Inventory';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useFoodValidation } from '@/hooks/useFoodValidation';
+import { getUnits } from '@/lib/units';
 
 const AUTOCOMPLETE = [
   'Milk', 'Eggs', 'Bread', 'Chicken', 'Rice', 'Pasta', 'Tomatoes', 'Onion',
   'Garlic', 'Butter', 'Cheese', 'Yogurt', 'Apples', 'Potatoes', 'Carrots', 'Olive oil',
 ];
-
-const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'packs'];
 
 interface Props {
   open: boolean;
@@ -26,7 +25,8 @@ interface Props {
 
 const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'fridge' }: Props) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const units = getUnits(language);
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [unit, setUnit] = useState('pcs');
@@ -220,7 +220,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
                   className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED] appearance-none"
                   style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
                 >
-                  {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
+                  {units.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
                 </select>
               </div>
             </div>
