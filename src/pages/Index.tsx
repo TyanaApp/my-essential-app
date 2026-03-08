@@ -275,6 +275,64 @@ const Index = () => {
         </div>
       </section>
 
+      {/* WHY TYANA */}
+      <section className="py-24 px-6" style={{ backgroundColor: '#F5F3FF' }}>
+        <div className="max-w-5xl mx-auto">
+          <motion.h2
+            className="text-3xl lg:text-4xl font-bold text-center mb-14"
+            style={{ color: '#1E1B4B' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            {(t.landing as any).whyTitle || 'Why TYANA works'}
+          </motion.h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { emoji: '🧠', title: (t.landing as any).why1Title || 'Deeper than any app', desc: (t.landing as any).why1Desc || 'Analyzes your nutrition as deeply as a professional nutritionist — but available 24/7' },
+              { emoji: '⚡️', title: (t.landing as any).why2Title || 'Saves time and money', desc: (t.landing as any).why2Desc || 'The average family throws away €80 of food per month. TYANA helps you use everything you buy.' },
+              { emoji: '🎯', title: (t.landing as any).why3Title || 'Personalized for you', desc: (t.landing as any).why3Desc || 'Takes into account your goals, tastes, allergies and what you have at home right now.' },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+              >
+                <div className="text-5xl mb-4">{item.emoji}</div>
+                <h3 className="text-lg font-bold mb-2" style={{ color: '#1E1B4B' }}>{item.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA BANNER */}
+      <section className="py-16 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.h2
+            className="text-2xl md:text-3xl font-bold mb-6"
+            style={{ color: '#1E1B4B' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            {(t.landing as any).ctaBannerTitle || 'Your nutrition, finally under control. Start today.'}
+          </motion.h2>
+          <Link
+            to="/auth?mode=signup"
+            className="inline-flex items-center gap-2 text-white text-base font-semibold rounded-2xl transition-opacity hover:opacity-90 px-8 py-3"
+            style={{ backgroundColor: '#7C3AED' }}
+          >
+            {t.landing.ctaButton} <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
+
       {/* PRICING */}
       <section id="pricing" className="py-24 px-6" style={{ backgroundColor: '#F5F3FF' }}>
         <div className="max-w-5xl mx-auto">
