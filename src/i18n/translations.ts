@@ -36,7 +36,7 @@ export const translations = {
         quickAddBtn: '⚡️ Quick Add', searchPlaceholder: 'Start typing or pick from list...',
         selectedCount: 'Selected: {count} items', addAll: 'Add all', addAllCount: 'Add all {count} items', done: 'Done ✓',
         adjustQty: 'Adjust quantities', backToSelect: '← Back', addedSuccess: '{count} items added',
-        noResults: 'Nothing found', homeTab: '🏡 Home',
+        noResults: 'Nothing found',
         howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel', backToPresets: 'Back to presets',
       },
       quickAddCategories: {
