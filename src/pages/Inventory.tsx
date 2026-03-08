@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { translateUnit } from '@/lib/units';
-import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap } from 'lucide-react';
+import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap, ScanBarcode } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -9,6 +9,7 @@ import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import QuickAddModal from '@/components/inventory/QuickAddModal';
+import BarcodeScannerModal from '@/components/inventory/BarcodeScannerModal';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
@@ -55,6 +56,7 @@ const Inventory = () => {
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [barcodeOpen, setBarcodeOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
   const [familyFilter, setFamilyFilter] = useState<'all' | 'mine' | 'shared'>('all');
 
@@ -274,13 +276,20 @@ const Inventory = () => {
       </button>
 
       {/* Action buttons */}
-      <div className="grid grid-cols-2 gap-2 mb-5">
+      <div className="grid grid-cols-3 gap-2 mb-5">
         <button
           className="flex items-center justify-center gap-1.5 h-12 rounded-xl border-[1.5px] text-sm font-medium"
           style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
           onClick={handleScanClick}
         >
           <Camera className="w-4 h-4" /> {t.inventory.scan}
+        </button>
+        <button
+          className="flex items-center justify-center gap-1.5 h-12 rounded-xl border-[1.5px] text-sm font-medium"
+          style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
+          onClick={() => setBarcodeOpen(true)}
+        >
+          <ScanBarcode className="w-4 h-4" /> {(t as any).openFoodFacts?.scanBarcode || '📷 Barcode'}
         </button>
         <button
           className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium border-[1.5px]"
@@ -440,6 +449,11 @@ const Inventory = () => {
         open={scanOpen}
         onClose={() => setScanOpen(false)}
         onSaved={() => { fetchItems(); handleScanCompleted(); }}
+      />
+      <BarcodeScannerModal
+        open={barcodeOpen}
+        onClose={() => setBarcodeOpen(false)}
+        onProductAdded={fetchItems}
       />
       <UpgradeModal
         open={upgradeOpen}

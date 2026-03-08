@@ -627,6 +627,13 @@ export const translations = {
       cat_dishes: 'Dishes', cat_sweets: 'Sweets', cat_drinks: 'Drinks',
       dashboardBtn: '🧮 Nutrition calculator',
     },
+    openFoodFacts: {
+      scanBarcode: 'Scan barcode', productFound: 'Product found!', notInDatabase: 'Product not found in database',
+      dataFromLabel: 'Data from label', aiEstimate: 'AI estimate', foundInDatabase: 'Found in product database',
+      per100g: 'Per 100g', pointCamera: 'Point camera at barcode', lookingUp: 'Looking up product...',
+      scanError: 'Could not read barcode', notThis: 'Not this', searching: 'Searching...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 AI estimate',
+    },
   },
   ru: {
     nav: { home: 'Главная', inventory: 'Продукты', recipes: 'Рецепты', shopping: 'Покупки', diary: 'Дневник', settings: 'Настройки', profile: 'Профиль' },
@@ -1178,6 +1185,13 @@ export const translations = {
       cat_dishes: 'Готовые блюда', cat_sweets: 'Сладкое', cat_drinks: 'Напитки',
       dashboardBtn: '🧮 Калькулятор КБЖУ',
     },
+    openFoodFacts: {
+      scanBarcode: 'Сканировать штрихкод', productFound: 'Продукт найден!', notInDatabase: 'Нет в базе данных',
+      dataFromLabel: 'Данные с этикетки', aiEstimate: 'ИИ-оценка', foundInDatabase: 'Найдено в базе продуктов',
+      per100g: 'На 100г', pointCamera: 'Наведи камеру на штрихкод', lookingUp: 'Ищем продукт...',
+      scanError: 'Не удалось считать штрихкод', notThis: 'Не то', searching: 'Поиск...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ИИ-оценка',
+    },
   },
   lv: {
     nav: { home: 'Sākums', inventory: 'Produkti', recipes: 'Receptes', shopping: 'Iepirkumi', diary: 'Dienasgrāmata', settings: 'Iestatījumi', profile: 'Profils' },
@@ -1706,6 +1720,13 @@ export const translations = {
       cat_vegetables: 'Dārzeņi', cat_fruits: 'Augļi', cat_grains: 'Graudaugi',
       cat_dishes: 'Gatavie ēdieni', cat_sweets: 'Saldumi', cat_drinks: 'Dzērieni',
       dashboardBtn: '🧮 OLUT kalkulators',
+    },
+    openFoodFacts: {
+      scanBarcode: 'Skenēt svītrkodu', productFound: 'Produkts atrasts!', notInDatabase: 'Nav datubāzē',
+      dataFromLabel: 'Dati no etiķetes', aiEstimate: 'MI novērtējums', foundInDatabase: 'Atrasts datubāzē',
+      per100g: 'Uz 100g', pointCamera: 'Pavērs kameru uz svītrkodu', lookingUp: 'Meklējam produktu...',
+      scanError: 'Neizdevās nolasīt svītrkodu', notThis: 'Nav tas', searching: 'Meklē...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 MI novērtējums',
     },
   },
   uk: {
@@ -2236,6 +2257,13 @@ export const translations = {
       cat_vegetables: 'Овочі', cat_fruits: 'Фрукти', cat_grains: 'Крупи',
       cat_dishes: 'Готові страви', cat_sweets: 'Солодке', cat_drinks: 'Напої',
       dashboardBtn: '🧮 Калькулятор КБЖУ',
+    },
+    openFoodFacts: {
+      scanBarcode: 'Сканувати штрихкод', productFound: 'Продукт знайдено!', notInDatabase: 'Немає в базі',
+      dataFromLabel: 'Дані з етикетки', aiEstimate: 'ІІ-оцінка', foundInDatabase: 'Знайдено в базі продуктів',
+      per100g: 'На 100г', pointCamera: 'Наведіть камеру на штрихкод', lookingUp: 'Шукаємо продукт...',
+      scanError: 'Не вдалося зчитати штрихкод', notThis: 'Не те', searching: 'Пошук...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ІІ-оцінка',
     },
   },
 } as const;

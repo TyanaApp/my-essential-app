@@ -11,6 +11,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from '@/hooks/useTranslation';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { toast } from 'sonner';
+import OFFProductSuggestions from '@/components/OFFProductSuggestions';
+import { OFFProduct, scaleNutrition } from '@/lib/openFoodFacts';
 
 interface NutritionResult {
   food_name?: string;
@@ -66,6 +68,7 @@ const NutritionCalculator = () => {
   const { user } = useAuth();
   const { t, language } = useTranslation();
   const nc = (t as any).nutritionCalc || {};
+  const off = (t as any).openFoodFacts || {};
   usePageTitle(nc.title || 'Nutrition Calculator');
 
   const [mode, setMode] = useState<'food' | 'recipe'>('food');
@@ -269,12 +272,40 @@ const NutritionCalculator = () => {
 
           {/* MODE 1: Single food */}
           <TabsContent value="food" className="space-y-4 mt-4">
-            <textarea
-              value={foodInput}
-              onChange={e => setFoodInput(e.target.value)}
-              placeholder={placeholders[placeholderIdx]}
-              className="w-full min-h-[80px] p-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            />
+            <div className="relative">
+              <textarea
+                value={foodInput}
+                onChange={e => setFoodInput(e.target.value)}
+                placeholder={placeholders[placeholderIdx]}
+                className="w-full min-h-[80px] p-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+
+              {/* Open Food Facts suggestions */}
+              <OFFProductSuggestions
+                query={foodInput}
+                onSelect={(product: OFFProduct) => {
+                  // Use OFF data directly — set result without calling AI
+                  const offResult: NutritionResult = {
+                    food_name: product.brand ? `${product.name} (${product.brand})` : product.name,
+                    identified_amount: '100g',
+                    calories: product.calories,
+                    protein: product.protein,
+                    fat: product.fat,
+                    carbs: product.carbs,
+                    fiber: product.fiber,
+                    sugar: product.sugar,
+                    per_100g: { calories: product.calories, protein: product.protein, fat: product.fat, carbs: product.carbs },
+                    confidence: 'high',
+                    data_source: 'Open Food Facts',
+                    note: product.barcode ? `Barcode: ${product.barcode}` : undefined,
+                  };
+                  setResult(offResult);
+                  saveToHistory(offResult, 'food');
+                  setFoodInput(product.name);
+                }}
+                className="absolute z-10 left-0 right-0 top-full mt-1"
+              />
+            </div>
 
             {/* Category chips */}
             <div className="flex flex-wrap gap-1.5">
@@ -427,7 +458,19 @@ const NutritionCalculator = () => {
                 {result.identified_amount || (mode === 'recipe' ? `${result.portions} ${nc.portionsWord || 'portions'} • ~${result.per_portion_weight}${nc.unitG || 'g'}` : '')}
               </p>
               {result.data_source && (
-                <Badge variant="secondary" className="mt-2 text-[10px]">📊 {result.data_source}</Badge>
+                <Badge 
+                  variant="secondary" 
+                  className={`mt-2 text-[10px] ${
+                    result.data_source === 'Open Food Facts'
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+                  }`}
+                >
+                  {result.data_source === 'Open Food Facts'
+                    ? `✅ ${off.dataFromLabel || 'Data from label'}`
+                    : `🤖 ${off.aiEstimate || 'AI estimate'}`
+                  }
+                </Badge>
               )}
             </CardContent>
           </Card>
