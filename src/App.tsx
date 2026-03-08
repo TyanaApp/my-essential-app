@@ -25,6 +25,10 @@ import Savings from "./pages/Savings";
 import Achievements from "./pages/Achievements";
 import NutritionAnalysis from "./pages/NutritionAnalysis";
 import NotFound from "./pages/NotFound";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
+import CookiesPage from "./pages/CookiesPage";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +41,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <OfflineBanner />
+            <CookieConsent />
             <BrowserRouter>
               <AuthProvider>
                 <TrialManager />
@@ -61,6 +66,9 @@ const App = () => {
                     <Route path="/achievements" element={<Achievements />} />
                     <Route path="/nutrition-analysis" element={<NutritionAnalysis />} />
                   </Route>
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/cookies" element={<CookiesPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AuthProvider>

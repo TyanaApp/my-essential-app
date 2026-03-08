@@ -437,9 +437,10 @@ const Index = () => {
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <div className="flex gap-6">
-              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerTerms}</a>
-              <a href="#" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerPrivacy}</a>
-              <a href="mailto:support@tyana.app" className="text-sm hover:underline" style={{ color: '#6B7280' }}>support@tyana.app</a>
+              <Link to="/terms" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerTerms}</Link>
+              <Link to="/privacy" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerPrivacy}</Link>
+              <Link to="/cookies" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Cookies</Link>
+              <a href="mailto:supporttyana@gmail.com" className="text-sm hover:underline" style={{ color: '#6B7280' }}>supporttyana@gmail.com</a>
             </div>
           </div>
           <p className="text-[12px] leading-relaxed" style={{ color: '#9CA3AF' }}>

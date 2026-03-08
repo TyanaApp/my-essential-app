@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import LanguageSelector from '@/components/LanguageSelector';
-import { Globe, Moon, Sun, HelpCircle, MessageCircle, ChevronRight } from 'lucide-react';
+import { Globe, Moon, Sun, HelpCircle, MessageCircle, ChevronRight, Scale } from 'lucide-react';
 
 interface SystemSettingsModalProps {
   open: boolean;
@@ -105,6 +106,19 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
                 </Button>
               </div>
             )}
+          </div>
+
+          {/* Legal */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Scale className="w-5 h-5 text-primary" />
+              <span className="font-exo text-foreground">{t('legal') || 'Legal'}</span>
+            </div>
+            <div className="space-y-2">
+              <Link to="/privacy" className="block text-sm font-exo text-primary hover:underline">{t('privacyPolicy') || 'Privacy Policy'}</Link>
+              <Link to="/terms" className="block text-sm font-exo text-primary hover:underline">{t('termsOfService') || 'Terms of Service'}</Link>
+              <Link to="/cookies" className="block text-sm font-exo text-primary hover:underline">{t('cookiePolicy') || 'Cookie Policy'}</Link>
+            </div>
           </div>
         </div>
       </DialogContent>

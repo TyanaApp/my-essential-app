@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -27,7 +27,7 @@ const GoogleIcon = () => (
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
   const isMobile = useIsMobile();
   const isStandalone = useIsStandalone();
@@ -42,6 +42,8 @@ const Auth = () => {
   const [displayName, setDisplayName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsError, setTermsError] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -100,6 +102,17 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    if (isSignUp && !termsAccepted) {
+      const termsMessages: Record<string, string> = {
+        en: 'Please accept the terms to continue',
+        ru: 'Необходимо принять условия использования',
+        uk: 'Необхідно прийняти умови використання',
+        lv: 'Lūdzu apstipriniet noteikumus, lai turpinātu',
+      };
+      setTermsError(termsMessages[language] || termsMessages.en);
+      return;
+    }
+    setTermsError('');
     setIsSubmitting(true);
     try {
       if (isSignUp) {
@@ -240,7 +253,31 @@ const Auth = () => {
             {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
           </div>
 
-          <Button type="submit" disabled={isSubmitting}
+          {isSignUp && (
+            <div className="space-y-1">
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => { setTermsAccepted(e.target.checked); setTermsError(''); }}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 accent-[#7C3AED]"
+                />
+                <span className="text-xs" style={{ color: '#6B7280' }}>
+                  {language === 'ru' ? 'Я принимаю ' : language === 'uk' ? 'Я приймаю ' : language === 'lv' ? 'Es piekrītu ' : 'I accept the '}
+                  <Link to="/terms" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                    {language === 'ru' ? 'Условия использования' : language === 'uk' ? 'Умови використання' : language === 'lv' ? 'Lietošanas noteikumiem' : 'Terms of Service'}
+                  </Link>
+                  {language === 'ru' ? ' и ' : language === 'uk' ? ' та ' : language === 'lv' ? ' un ' : ' and '}
+                  <Link to="/privacy" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                    {language === 'ru' ? 'Политику конфиденциальности' : language === 'uk' ? 'Політику конфіденційності' : language === 'lv' ? 'Privātuma politiku' : 'Privacy Policy'}
+                  </Link>
+                </span>
+              </label>
+              {termsError && <p className="text-red-500 text-xs">{termsError}</p>}
+            </div>
+          )}
+
+          <Button type="submit" disabled={isSubmitting || (isSignUp && !termsAccepted)}
             className="w-full h-[52px] rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#7C3AED' }}>
             {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
@@ -274,9 +311,13 @@ const Auth = () => {
           </>
         )}
 
-        <p className="mt-6 text-center text-[13px]" style={{ color: '#6B7280' }}>
-          {t.auth.terms}
-        </p>
+        <div className="mt-6 flex items-center justify-center gap-3 text-[12px]" style={{ color: '#9CA3AF' }}>
+          <Link to="/privacy" className="hover:underline">Privacy</Link>
+          <span>·</span>
+          <Link to="/terms" className="hover:underline">Terms</Link>
+          <span>·</span>
+          <Link to="/cookies" className="hover:underline">Cookies</Link>
+        </div>
       </motion.div>
 
       <QRInstallModal open={showQRModal} onClose={() => setShowQRModal(false)} />
