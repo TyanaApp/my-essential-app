@@ -170,7 +170,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
           </div>
 
           {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto px-4 pb-2">
+          <div className="flex-1 overflow-y-auto px-4 pb-20">
             <div className="space-y-4">
               {/* Name with autocomplete */}
               <div className="space-y-1.5 relative">
