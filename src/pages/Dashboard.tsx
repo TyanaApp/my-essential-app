@@ -850,7 +850,7 @@ const Dashboard = () => {
                   <div className="p-2.5">
                     <p className="text-xs font-semibold truncate text-foreground">{r.title}</p>
                     <p className="text-[10px] mt-0.5 text-muted-foreground">
-                      {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · ${formatMoney(r.estimatedCost, data.currency)}` : ''}
+                      {r.prepTime ? `⏱ ${r.prepTime} ${(t.recipes as any)?.minUnit || 'min'}` : ''}{r.estimatedCost ? ` · ${formatMoney(r.estimatedCost, data.currency)}` : ''}
                     </p>
                   </div>
                 </div>
