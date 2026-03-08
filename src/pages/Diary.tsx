@@ -69,10 +69,6 @@ const Diary = () => {
   const [dailyTarget, setDailyTarget] = useState(2000);
   const [macroTargets, setMacroTargets] = useState({ protein: 120, fat: 60, carbs: 250 });
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMealType, setModalMealType] = useState('breakfast');
-  const [recipes, setRecipes] = useState<SavedRecipe[]>([]);
-  const [recipeSearch, setRecipeSearch] = useState('');
 
   // Scan modal state
   const [scanOpen, setScanOpen] = useState(false);
