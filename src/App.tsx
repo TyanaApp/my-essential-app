@@ -66,6 +66,9 @@ const App = () => {
                     <Route path="/achievements" element={<Achievements />} />
                     <Route path="/nutrition-analysis" element={<NutritionAnalysis />} />
                   </Route>
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/cookies" element={<CookiesPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AuthProvider>
