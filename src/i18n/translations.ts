@@ -662,7 +662,7 @@ export const translations = {
     },
     landing: {
       signIn: 'Войти', startFree: 'Начать бесплатно', navFeatures: 'Функции', navPricing: 'Цены', navFaq: 'Вопросы',
-      badge: '✦ ИИ-помощник для кухни', heroTitle: 'Перестаньте выбрасывать деньги вместе с едой',
+      badge: '✦ Твой персональный ИИ-нутрициолог', heroTitle: 'Перестаньте выбрасывать деньги вместе с едой',
       heroSubtitle: 'TYANA знает, что в вашем холодильнике, считает калории, находит скидки и экономит вам',
       heroSavings: '€80+ в месяц', ctaButton: 'Начать бесплатно — €0', ctaHint: '7 дней все функции бесплатно. Карта не нужна.',
       statSaved: 'экономия/мес', statPayoff: 'до окупаемости', statScan: 'скан холодильника', statPayoffValue: '5 дней', statScanValue: '10 сек',
