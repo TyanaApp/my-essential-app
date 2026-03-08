@@ -220,7 +220,7 @@ const PrivacyPage = () => {
       title: 'Privātuma politika',
       lastUpdated: 'Pēdējoreiz atjaunināts: 2026. gada marts',
       s1Title: '1. Kas mēs esam',
-      s1: 'TYANA ir AI virtuves un uztura palīgs. tyana.lovable.app. ES jurisdikcija, Latvija.',
+      s1: 'TYANA ir personīgais AI uztura speciālists. tyana.lovable.app. ES jurisdikcija, Latvija.',
       s2Title: '2. Kādus datus mēs vācam',
       s2Items: [
         'Konts: vārds, e-pasts, profila foto (Google OAuth)',
