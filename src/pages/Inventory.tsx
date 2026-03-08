@@ -431,6 +431,11 @@ const Inventory = () => {
         onSaved={fetchItems}
         defaultLocation={activeLocation}
       />
+      <QuickAddModal
+        open={quickAddOpen}
+        onClose={() => setQuickAddOpen(false)}
+        onSaved={fetchItems}
+      />
       <ScanModal
         open={scanOpen}
         onClose={() => setScanOpen(false)}
