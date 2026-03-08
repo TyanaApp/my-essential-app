@@ -42,7 +42,7 @@ type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
 
 const Inventory = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   usePageTitle(t.inventory.title);
   useAutoReduce();
   const { plan } = useSubscription();
