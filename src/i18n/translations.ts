@@ -376,6 +376,9 @@ export const translations = {
       getTheApp: '📱 Get the App',
       iosTooltipLine1: 'Tap Share ↗ → Add to Home Screen',
       iosTooltipLine2: 'Use Safari for this to work',
+      installed: 'TYANA installed! 🎉',
+      openInSafari: 'Open this page in Safari to install',
+      safariRequired: 'Safari → Share → Add to Home Screen',
     },
     landing: {
       signIn: 'Sign In', startFree: 'Start Free',
