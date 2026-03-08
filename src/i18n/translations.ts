@@ -1531,7 +1531,7 @@ export const translations = {
       portionSmall: 'Maza', portionMedium: 'Vidēja', portionLarge: 'Liela', portionXLarge: 'Ļoti liela',
       portionSmallHint: 'Pusporcija', portionMediumHint: 'Parasta', portionLargeHint: 'Papildporcija', portionXLargeHint: 'Pieēdies',
       calculate: '🧮 Aprēķināt', analyzingHint: 'Aprēķinam uzturvērtību...',
-      approximate: 'aptuveni', logIt: '✓ Pierakstīt', changePortion: 'Mainīt porciju',
+      approximate: 'aptuveni', logIt: '✓ Pierakstīt', logToDiary: '✓ Ierakstīt dienasgrāmatā', changePortion: 'Mainīt porciju', loggedToDiary: 'Ierakstīts dienasgrāmatā ✓', calculatingBtn: '⏳ Aprēķinam...',
       calcFailed: 'Neizdevās aprēķināt. Mēģiniet vēlreiz.',
       confHigh: 'Augsta precizitāte', confMedium: 'Aptuveni', confLow: 'Ļoti aptuveni',
       forgotPhoto: 'Aizmirsi nofotografēt? Vienkārši uzraksti ko ēdi 📝',
