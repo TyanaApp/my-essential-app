@@ -325,6 +325,9 @@ const Profile = () => {
               {/* Weekly email report toggle */}
               <WeeklyReportToggle />
             </div>
+
+            {/* Meal Reminders Section */}
+            <MealRemindersSection />
           </CardContent>
         </Card>
       </motion.div>
