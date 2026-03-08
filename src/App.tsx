@@ -28,6 +28,7 @@ import Receipts from "./pages/Receipts";
 import Achievements from "./pages/Achievements";
 import NutritionAnalysis from "./pages/NutritionAnalysis";
 import Reminders from "./pages/Reminders";
+import MealPlan from "./pages/MealPlan";
 
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
