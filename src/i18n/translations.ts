@@ -522,8 +522,7 @@ export const translations = {
       subtitle: "We'll connect stores in your country — current deals right in the app",
       notify: '🔔 Notify me when ready',
       alreadyJoined: "You'll be notified",
-      joined: "Great! We'll notify you when ready ✓",
-      waitlistCount: '{count} users are waiting for this feature',
+      joined: "We'll notify you when it's ready ✓",
       profileLabel: '🏪 Store integrations',
     },
     reminders: {
@@ -1025,8 +1024,7 @@ export const translations = {
       subtitle: 'Подключим магазины вашей страны — актуальные скидки прямо в приложении',
       notify: '🔔 Уведомить когда появится',
       alreadyJoined: 'Вы будете уведомлены',
-      joined: 'Отлично! Уведомим как только появится ✓',
-      waitlistCount: '{count} пользователей уже ждут эту функцию',
+      joined: 'Уведомим как только появится ✓',
       profileLabel: '🏪 Интеграция с магазинами',
     },
     reminders: {
@@ -1503,8 +1501,7 @@ export const translations = {
       subtitle: 'Savienosim veikalus jūsu valstī — aktuālie piedāvājumi tieši lietotnē',
       notify: '🔔 Paziņot kad būs pieejams',
       alreadyJoined: 'Jūs tiksiet informēts',
-      joined: 'Lieliski! Paziņosim kad būs gatavs ✓',
-      waitlistCount: '{count} lietotāji gaida šo funkciju',
+      joined: 'Paziņosim, kad būs pieejams ✓',
       profileLabel: '🏪 Veikalu integrācija',
     },
     reminders: {
@@ -1982,8 +1979,7 @@ export const translations = {
       subtitle: "Під'єднаємо магазини вашої країни — актуальні знижки прямо в додатку",
       notify: '🔔 Повідомити коли з\'явиться',
       alreadyJoined: 'Ви будете повідомлені',
-      joined: 'Чудово! Повідомимо як тільки з\'явиться ✓',
-      waitlistCount: '{count} користувачів вже чекають цю функцію',
+      joined: 'Повідомимо як тільки з\'явиться ✓',
       profileLabel: '🏪 Інтеграція з магазинами',
     },
     reminders: {
