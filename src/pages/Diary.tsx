@@ -274,7 +274,7 @@ const Diary = () => {
               const color = ratio > 1.15 ? '#DC2626' : ratio >= 0.7 ? '#059669' : '#EA580C';
               return (
                 <span key={m.label} style={{ color }}>
-                  {m.label}: {m.value}/{m.target}g
+                  {m.label}: {m.value}/{m.target}{(t.nutritionCalc as any)?.unitG || 'g'}
                 </span>
               );
             })}
