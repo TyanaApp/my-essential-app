@@ -330,7 +330,7 @@ const Inventory = () => {
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <p className="text-sm font-semibold truncate" style={{ color: '#1E1B4B' }}>{item.name}</p>
+                        <p className="text-sm font-semibold truncate text-foreground">{item.name}</p>
                         {item.is_opened && (
                           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED', color: '#EA580C' }}>
                             <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#EA580C' }} />
