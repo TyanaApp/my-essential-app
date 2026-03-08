@@ -35,7 +35,6 @@ const Index = () => {
     { q: t.landing.faq3Q, a: t.landing.faq3A },
     { q: t.landing.faq4Q, a: t.landing.faq4A },
     { q: t.landing.faq5Q, a: t.landing.faq5A },
-    { q: t.landing.faq6Q, a: t.landing.faq6A },
   ];
 
   return (
