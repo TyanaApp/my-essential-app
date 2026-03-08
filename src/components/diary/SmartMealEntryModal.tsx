@@ -649,8 +649,8 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 </div>
               )}
 
-              {/* Text input */}
-              <div>
+              {/* Text input with OFF suggestions */}
+              <div className="relative">
                 <p className="text-xs font-medium text-muted-foreground mb-2">{sm.orDescribe || 'Or describe your meal'}</p>
                 <textarea
                   value={mealText}
@@ -658,6 +658,29 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                   placeholder={sm.inputPlaceholder || 'e.g. bowl of borscht with sour cream'}
                   className="w-full h-20 px-4 py-3 rounded-xl border border-border bg-muted/20 text-sm outline-none focus:border-primary resize-none text-foreground placeholder:text-muted-foreground"
                   autoFocus
+                />
+                <OFFProductSuggestions
+                  query={mealText}
+                  onSelect={(product: OFFProduct) => {
+                    // Pre-fill with OFF data and go straight to result
+                    const offResult: MealResult = {
+                      meal_name: product.brand ? `${product.name} (${product.brand})` : product.name,
+                      portion_description: '100g',
+                      total_calories: product.calories,
+                      protein: product.protein,
+                      fat: product.fat,
+                      carbs: product.carbs,
+                      sugar: product.sugar,
+                      fiber: product.fiber,
+                      data_source: 'Open Food Facts',
+                      confidence: 'high',
+                      note: '',
+                    };
+                    setMealText(product.name);
+                    setResult(offResult);
+                    setStep('result');
+                  }}
+                  className="absolute z-10 left-0 right-0 top-full mt-1"
                 />
               </div>
             </div>
