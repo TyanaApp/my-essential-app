@@ -341,7 +341,7 @@ export const translations = {
       pricingTitle: 'Simple, transparent pricing',
       pricingSubtitle: 'Start free, upgrade when you\'re ready.',
       free: 'Free', freeTrial: '7-day Pro trial included',
-      freeFeatures: ['5 scans/month', '3 recipes/month', '1 family member', 'Basic calorie counter'],
+      freeFeatures: ['5 scans/month', '3 recipes/day', 'Shopping list', 'Meal diary (today only — 1 day history)', 'Calorie tracking (today only, no history)', 'No weekly analytics'],
       forFamilies: 'For Families', lite: 'Lite', month: '/month',
       liteFeatures: ['15 scans/month', 'Unlimited recipes', '5 receipts/month', '4 family members', 'Allergy profiles', 'Live discounts', 'Weekly savings report'],
       getLite: 'Get Lite',
