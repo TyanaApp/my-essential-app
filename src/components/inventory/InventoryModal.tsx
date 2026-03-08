@@ -25,7 +25,8 @@ interface Props {
 
 const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'fridge' }: Props) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const units = getUnits(language);
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [unit, setUnit] = useState('pcs');
