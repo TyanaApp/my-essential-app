@@ -266,9 +266,9 @@ const Diary = () => {
           </span>
           <div className="flex gap-3 text-xs font-medium">
             {[
-              { label: 'P', value: Math.round(totals.protein), target: macroTargets.protein },
-              { label: 'F', value: Math.round(totals.fat), target: macroTargets.fat },
-              { label: 'C', value: Math.round(totals.carbs), target: macroTargets.carbs },
+              { label: (t.mealPlan as any)?.proteinShort || 'P', value: Math.round(totals.protein), target: macroTargets.protein },
+              { label: (t.mealPlan as any)?.fatShort || 'F', value: Math.round(totals.fat), target: macroTargets.fat },
+              { label: (t.mealPlan as any)?.carbsShort || 'C', value: Math.round(totals.carbs), target: macroTargets.carbs },
             ].map(m => {
               const ratio = m.target > 0 ? m.value / m.target : 0;
               const color = ratio > 1.15 ? '#DC2626' : ratio >= 0.7 ? '#059669' : '#EA580C';
