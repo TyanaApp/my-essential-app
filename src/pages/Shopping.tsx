@@ -127,6 +127,17 @@ const Shopping = () => {
 
   useEffect(() => { fetchItems(); fetchSuggestions(); }, [user]);
 
+  // Realtime subscription for family shared shopping
+  useEffect(() => {
+    const channel = supabase
+      .channel('shopping-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping_items' }, () => {
+        fetchItems();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
+
   const activeItems = useMemo(() => items.filter((i) => !i.is_purchased), [items]);
   const purchasedItems = useMemo(() => items.filter((i) => i.is_purchased), [items]);
 
