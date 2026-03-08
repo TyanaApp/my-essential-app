@@ -160,9 +160,8 @@ export const translations = {
       theme: 'Theme', datePlaceholder: 'dd.mm.yyyy',
     },
     update: {
-      title: '✨ TYANA update available!',
-      now: 'Update now',
-      later: 'Later',
+      title: '✨ New TYANA version ready!',
+      now: 'Update — 2 sec',
     },
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
