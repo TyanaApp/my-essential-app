@@ -56,3 +56,6 @@ verify_jwt = false
 
 [functions.eating-insights]
 verify_jwt = false
+
+[functions.scan-receipt]
+verify_jwt = false

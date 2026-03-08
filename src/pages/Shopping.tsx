@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, PackagePlus, AlertTriangle, X, Check } from 'lucide-react';
 import StoragePickerModal from '@/components/StoragePickerModal';
+import ReceiptScanModal from '@/components/shopping/ReceiptScanModal';
+import StoreDealsCard from '@/components/shopping/StoreDealsCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -44,6 +46,7 @@ const Shopping = () => {
   const [suggestions, setSuggestions] = useState<LowStockItem[]>([]);
   const [suggestDismissed, setSuggestDismissed] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [receiptModalOpen, setReceiptModalOpen] = useState(false);
 
   const handleVoiceInput = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -273,6 +276,11 @@ const Shopping = () => {
         <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: '#7C3AED' }}>
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
+        <button onClick={() => setReceiptModalOpen(true)}
+          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px]"
+          style={{ borderColor: '#DDD6FE', color: '#7C3AED', backgroundColor: '#F5F3FF' }}>
+          🧾 {(t as any).receipt?.scanBtn || 'Scan receipt'}
+        </button>
         <button onClick={handleVoiceInput}
           className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] transition-all"
           style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}>
@@ -378,6 +386,11 @@ const Shopping = () => {
         </div>
       )}
 
+      {/* Store Deals Coming Soon */}
+      <motion.div {...fadeUp(5)} className="mt-4">
+        <StoreDealsCard />
+      </motion.div>
+
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
@@ -452,6 +465,11 @@ const Shopping = () => {
         onClose={() => setStoragePickerItem(null)}
         itemName={storagePickerItem?.name || ''}
         onSelect={handleStorageSelect}
+      />
+      <ReceiptScanModal
+        open={receiptModalOpen}
+        onClose={() => setReceiptModalOpen(false)}
+        onSaved={fetchItems}
       />
     </div>
   );

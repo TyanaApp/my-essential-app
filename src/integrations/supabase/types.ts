@@ -239,6 +239,7 @@ export type Database = {
           id: string
           is_founding_member: boolean | null
           onboarding_completed: boolean | null
+          store_integration_waitlist: boolean | null
           streak_badges: string[] | null
           streak_current: number | null
           streak_last_activity: string | null
@@ -267,6 +268,7 @@ export type Database = {
           id?: string
           is_founding_member?: boolean | null
           onboarding_completed?: boolean | null
+          store_integration_waitlist?: boolean | null
           streak_badges?: string[] | null
           streak_current?: number | null
           streak_last_activity?: string | null
@@ -295,6 +297,7 @@ export type Database = {
           id?: string
           is_founding_member?: boolean | null
           onboarding_completed?: boolean | null
+          store_integration_waitlist?: boolean | null
           streak_badges?: string[] | null
           streak_current?: number | null
           streak_last_activity?: string | null
@@ -540,6 +543,7 @@ export type Database = {
     }
     Functions: {
       assign_user_number: { Args: { p_user_id: string }; Returns: Json }
+      count_store_waitlist: { Args: never; Returns: number }
       get_family_id_for_user: { Args: { p_user_id: string }; Returns: string }
     }
     Enums: {

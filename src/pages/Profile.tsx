@@ -26,6 +26,7 @@ import FamilySettingsModal from '@/components/profile/FamilySettingsModal';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 import LegalFooterPill from '@/components/LegalFooterPill';
+import StoreDealsCard from '@/components/shopping/StoreDealsCard';
 
 const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge: string }) => {
   const [notify, setNotify] = useState(() => localStorage.getItem(`notify_device_${name}`) === '1');
@@ -80,6 +81,43 @@ const WeeklyReportToggle = () => {
         <p className="text-xs text-muted-foreground">{(t.notifications as any).weeklyReportDesc || 'Every Sunday by email'}</p>
       </div>
       <Switch checked={enabled} onCheckedChange={toggle} />
+    </div>
+  );
+};
+
+const StoreDealsProfileRow = () => {
+  const { user } = useAuth();
+  const { t } = useTranslation();
+  const stores = (t as any).storeDeals || {};
+  const [joined, setJoined] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      if (data && (data as any).store_integration_waitlist) setJoined(true);
+    });
+  }, [user]);
+
+  const handleJoin = async () => {
+    if (!user) return;
+    await supabase.from('profiles').update({ store_integration_waitlist: true } as any).eq('user_id', user.id);
+    setJoined(true);
+    toast.success(stores.joined || "Great! We'll notify you when ready ✓");
+  };
+
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium text-foreground">{stores.profileLabel || '🏪 Store integrations'}</p>
+        <p className="text-xs text-muted-foreground">{stores.title || 'Coming soon'}</p>
+      </div>
+      {!joined ? (
+        <Button variant="outline" size="sm" onClick={handleJoin} className="text-xs">
+          🔔
+        </Button>
+      ) : (
+        <Badge className="bg-green-100 text-green-600 border-green-200 text-[10px]">✅</Badge>
+      )}
     </div>
   );
 };
@@ -336,6 +374,19 @@ const Profile = () => {
               <DeviceRow emoji="💪" name="Fitbit" badge={(t.profile as any).soon || 'Soon'} />
               <DeviceRow emoji="⌚" name="Garmin" badge={(t.profile as any).soon || 'Soon'} />
             </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Coming Soon - Store Integration */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.24 }}
+      >
+        <Card className="bg-card border-border mb-4">
+          <CardContent className="p-4">
+            <StoreDealsProfileRow />
           </CardContent>
         </Card>
       </motion.div>
