@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import LanguageSelector from '@/components/LanguageSelector';
-import { Globe, Moon, Sun, HelpCircle, MessageCircle, ChevronRight } from 'lucide-react';
+import { Globe, Moon, Sun, HelpCircle, MessageCircle, ChevronRight, Scale } from 'lucide-react';
 
 interface SystemSettingsModalProps {
   open: boolean;
