@@ -113,7 +113,7 @@ const NutritionAnalysis = () => {
       </div>
 
       {/* Macro progress bars */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)' }}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)' }}>
         <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
           📊 {tr.todayMacros || "Today's macros"}
         </h3>
