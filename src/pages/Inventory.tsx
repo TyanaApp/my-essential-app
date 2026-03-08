@@ -183,16 +183,6 @@ const Inventory = () => {
     toast.success(newOpened ? t.inventory.markedOpened : t.inventory.markedSealed);
   };
 
-  const handleToggleTrackingMode = async (item: InventoryItem) => {
-    const newMode = item.tracking_mode === 'date_only' ? 'tracked' : 'date_only';
-    await supabase
-      .from('inventory_items')
-      .update({ tracking_mode: newMode } as any)
-      .eq('id', item.id);
-    setItems((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, tracking_mode: newMode } : i))
-    );
-  };
 
   const openAdd = () => { setEditItem(null); setModalOpen(true); };
   const activeLocation = tab === 'expiring' ? 'fridge' : tab;
