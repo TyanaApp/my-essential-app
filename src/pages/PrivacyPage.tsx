@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
+import TyanaLogo from '@/components/TyanaLogo';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-10">
@@ -294,7 +295,7 @@ const PrivacyPage = () => {
         </button>
 
         <div className="text-center mb-12">
-          <h1 className="font-tyana text-2xl mb-2" style={{ color: '#7C3AED' }}>TYANA</h1>
+          <TyanaLogo size="lg" className="mx-auto mb-2" />
           <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>

@@ -6,7 +6,7 @@ import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useFoundingCounter } from '@/hooks/useFoundingCounter';
 import { Progress } from '@/components/ui/progress';
-import tyanaLogoText from '@/assets/tyana-logo-text.png';
+import TyanaLogo from '@/components/TyanaLogo';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -50,7 +50,7 @@ const Index = () => {
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
-          <span className="font-tyana text-xl" style={{ color: '#7C3AED' }}>TYANA</span>
+          <TyanaLogo size="md" />
 
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item, i) => (
@@ -532,7 +532,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col items-center gap-6 mb-8">
             <div className="text-center">
-              <span className="font-tyana text-lg" style={{ color: '#7C3AED' }}>TYANA</span>
+              <TyanaLogo size="md" />
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <LegalFooterPill />

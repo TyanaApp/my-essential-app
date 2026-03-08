@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import MobileInstallBanner from '@/components/install/MobileInstallBanner';
 import PWAInstallGuide from '@/components/install/PWAInstallGuide';
+import TyanaLogo from '@/components/TyanaLogo';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -113,9 +114,7 @@ const MobileSplashAuth: React.FC = () => {
       {showInstallGuide && <PWAInstallGuide onDismiss={() => setShowInstallGuide(false)} />}
       {/* Top branding */}
       <div className="text-center" style={{ marginTop: 60 }}>
-        <h1 className="text-white font-bold" style={{ fontSize: 32, fontFamily: "'Playfair Display', serif", letterSpacing: '0.15em', textTransform: 'uppercase' as const }}>
-          TYANA
-        </h1>
+        <TyanaLogo size="xl" variant="white" />
         <p className="text-white mt-1" style={{ fontSize: 16, opacity: 0.85 }}>
           {t.auth.title}
         </p>

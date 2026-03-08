@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import tyanaLogoText from '@/assets/tyana-logo-text.png';
+import TyanaLogo from '@/components/TyanaLogo';
 import { z } from 'zod';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileSplashAuth from '@/components/MobileSplashAuth';
@@ -174,7 +174,7 @@ const Auth = () => {
         transition={{ duration: 0.4 }}
       >
         <div className="text-center mb-8">
-          <h1 className="font-tyana text-3xl" style={{ color: '#7C3AED' }}>TYANA</h1>
+          <TyanaLogo size="lg" />
           <p className="text-base mt-1" style={{ color: '#A78BFA' }}>{t.auth.title}</p>
         </div>
 
