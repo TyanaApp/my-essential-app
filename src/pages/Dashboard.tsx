@@ -610,7 +610,7 @@ const Dashboard = () => {
                   <div key={m.label}>
                     <div className="flex justify-between text-xs mb-0.5">
                       <span className="text-muted-foreground">{m.label}</span>
-                      <span className="font-medium" style={{ color: m.color }}>{m.value}g</span>
+                      <span className="font-medium" style={{ color: m.color }}>{m.value}{(t.nutritionCalc as any)?.unitG || 'g'}</span>
                     </div>
                     <div className="h-1.5 rounded-full bg-muted">
                       <div
