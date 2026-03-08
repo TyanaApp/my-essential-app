@@ -349,10 +349,6 @@ const Recipes = () => {
                         <X className="w-5 h-5 text-white" />
                       </button>
                     </div>
-                      <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm">
-                        <X className="w-5 h-5 text-white" />
-                      </button>
-                    </div>
                     <div className="p-5">
                       <h2 className="text-xl font-bold mb-3" style={{ color: '#1E1B4B' }}>{r.title}</h2>
                       <div className="grid grid-cols-4 gap-2 mb-4">
