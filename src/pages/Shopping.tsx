@@ -32,6 +32,7 @@ const Shopping = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   usePageTitle(t.shopping.title);
+  const { validateFood } = useFoodValidation();
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [budget, setBudget] = useState<number>(0);
