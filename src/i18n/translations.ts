@@ -1593,9 +1593,10 @@ export const translations = {
       quickAddFlow: {
         title: 'Що є вдома?', subtitle: 'Просто відмічай — місце зберігання не важливо',
         quickAddBtn: '⚡️ Швидке додавання', searchPlaceholder: 'Почни писати або обери зі списку...',
-        selectedCount: 'Вибрано: {count} продуктів', addAll: 'Додати все', done: 'Готово ✓',
+        selectedCount: 'Вибрано: {count} продуктів', addAll: 'Додати все', addAllCount: 'Додати всі {count} продуктів', done: 'Готово ✓',
         adjustQty: 'Уточни кількість', backToSelect: '← Назад', addedSuccess: '{count} продуктів додано',
         noResults: 'Нічого не знайдено', homeTab: '🏡 Вдома',
+        howMuch: 'Скільки?', custom: 'Своє', enterQty: 'Введіть кількість', addItem: 'Додати', cancelBtn: 'Скасувати',
       },
       quickAddCategories: {
         dairy: 'Яйця і молочне', meat: 'М\'ясо і риба', vegetables: 'Овочі', fruits: 'Фрукти',
