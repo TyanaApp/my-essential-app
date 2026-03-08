@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useFoundingCounter } from '@/hooks/useFoundingCounter';
-import { Progress } from '@/components/ui/progress';
 import TyanaLogo from '@/components/TyanaLogo';
 import LanguageSelector from '@/components/LanguageSelector';
 
