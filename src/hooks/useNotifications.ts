@@ -1,6 +1,54 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+
+const NOTIF_I18N: Record<string, {
+  expiringTitle: string;
+  expiresToday: (n: string) => string;
+  expiresTomorrow: (n: string) => string;
+  expiresInDays: (n: string, d: number) => string;
+  browserTitle: string;
+  browserTomorrow: (n: string) => string;
+  browserInDays: (n: string, d: number) => string;
+}> = {
+  en: {
+    expiringTitle: '⚠️ Food expiring soon',
+    expiresToday: (n) => `${n} expires today!`,
+    expiresTomorrow: (n) => `${n} expires tomorrow!`,
+    expiresInDays: (n, d) => `${n} expires in ${d} days`,
+    browserTitle: '⚠️ TYANA — Food expiring soon',
+    browserTomorrow: (n) => `${n} expires tomorrow! Open app to see recipe ideas.`,
+    browserInDays: (n, d) => `${n} expires in ${d} days.`,
+  },
+  ru: {
+    expiringTitle: '⚠️ Продукт скоро испортится',
+    expiresToday: (n) => `${n} — истекает сегодня!`,
+    expiresTomorrow: (n) => `${n} — истекает завтра!`,
+    expiresInDays: (n, d) => `${n} — истекает через ${d} дн.`,
+    browserTitle: '⚠️ TYANA — Продукт скоро испортится',
+    browserTomorrow: (n) => `${n} истекает завтра! Откройте приложение для идей рецептов.`,
+    browserInDays: (n, d) => `${n} истекает через ${d} дн.`,
+  },
+  uk: {
+    expiringTitle: '⚠️ Продукт скоро зіпсується',
+    expiresToday: (n) => `${n} — спливає сьогодні!`,
+    expiresTomorrow: (n) => `${n} — спливає завтра!`,
+    expiresInDays: (n, d) => `${n} — спливає через ${d} дн.`,
+    browserTitle: '⚠️ TYANA — Продукт скоро зіпсується',
+    browserTomorrow: (n) => `${n} спливає завтра! Відкрийте додаток для ідей рецептів.`,
+    browserInDays: (n, d) => `${n} спливає через ${d} дн.`,
+  },
+  lv: {
+    expiringTitle: '⚠️ Produktam drīz beigsies derīguma termiņš',
+    expiresToday: (n) => `${n} — derīguma termiņš beidzas šodien!`,
+    expiresTomorrow: (n) => `${n} — derīguma termiņš beidzas rīt!`,
+    expiresInDays: (n, d) => `${n} — derīguma termiņš beidzas pēc ${d} dienām`,
+    browserTitle: '⚠️ TYANA — Produktam beidzas derīguma termiņš',
+    browserTomorrow: (n) => `${n} derīguma termiņš beidzas rīt! Atveriet lietotni recepšu idejām.`,
+    browserInDays: (n, d) => `${n} derīguma termiņš beidzas pēc ${d} dienām.`,
+  },
+};
 
 export interface AppAlert {
   id: string;
