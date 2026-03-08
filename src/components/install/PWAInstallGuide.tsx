@@ -39,7 +39,7 @@ const iosSteps: Record<string, IOSStep[]> = {
   en: [
     {
       icon: '🌐', title: 'Open in Safari',
-      text: 'Important! Only Safari works — Chrome and other browsers won\'t work.\n\nIf you\'re in Chrome or another browser — copy the link tyana.app and open it in Safari.',
+      text: 'Open in Safari specifically — only Safari has the install button on iPhone.\n\nChrome and other browsers don\'t have this option on iPhone.',
       illustration: '🧭',
     },
     {
@@ -71,7 +71,7 @@ const iosSteps: Record<string, IOSStep[]> = {
   ru: [
     {
       icon: '🌐', title: 'Открой Safari',
-      text: 'Важно! Только через Safari — другие браузеры не подойдут.\n\nЕсли ты сейчас в Chrome или другом браузере — скопируй ссылку tyana.app и открой в Safari.',
+      text: 'Открой именно Safari — только в нём есть кнопка установки на iPhone.\n\nВ Chrome и других браузерах эта функция на iPhone недоступна.',
       illustration: '🧭',
     },
     {
@@ -103,7 +103,7 @@ const iosSteps: Record<string, IOSStep[]> = {
   lv: [
     {
       icon: '🌐', title: 'Atver Safari',
-      text: 'Svarīgi! Tikai Safari darbojas — ne Chrome vai citi pārlūki.\n\nJa tu esi Chrome vai citā pārlūkā — nokopē saiti tyana.app un atver Safari.',
+      text: 'Atver tieši Safari — tikai tajā ir instalācijas poga iPhone.',
       illustration: '🧭',
     },
     {
@@ -135,7 +135,7 @@ const iosSteps: Record<string, IOSStep[]> = {
   uk: [
     {
       icon: '🌐', title: 'Відкрий Safari',
-      text: 'Важливо! Тільки Safari — інші браузери не підійдуть.\n\nЯкщо ти зараз у Chrome або іншому браузері — скопіюй посилання tyana.app і відкрий у Safari.',
+      text: 'Відкрий саме Safari — тільки в ньому є кнопка встановлення на iPhone.',
       illustration: '🧭',
     },
     {
