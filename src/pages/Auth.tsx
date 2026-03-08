@@ -312,12 +312,8 @@ const Auth = () => {
           </>
         )}
 
-        <div className="mt-6 flex items-center justify-center gap-3 text-[12px]" style={{ color: '#9CA3AF' }}>
-          <Link to="/privacy" className="hover:underline">Privacy</Link>
-          <span>·</span>
-          <Link to="/terms" className="hover:underline">Terms</Link>
-          <span>·</span>
-          <Link to="/cookies" className="hover:underline">Cookies</Link>
+        <div className="mt-6">
+          <LegalFooterPill />
         </div>
       </motion.div>
 

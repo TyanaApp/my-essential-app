@@ -432,22 +432,18 @@ const Index = () => {
       {/* FOOTER */}
       <footer className="py-12 px-6 border-t" style={{ borderColor: '#EDE9FE' }}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
-            <div>
+          <div className="flex flex-col items-center gap-6 mb-8">
+            <div className="text-center">
               <span className="font-tyana text-lg" style={{ color: '#7C3AED' }}>TYANA</span>
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
-            <div className="flex gap-6">
-              <Link to="/terms" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerTerms}</Link>
-              <Link to="/privacy" className="text-sm hover:underline" style={{ color: '#6B7280' }}>{t.landing.footerPrivacy}</Link>
-              <Link to="/cookies" className="text-sm hover:underline" style={{ color: '#6B7280' }}>Cookies</Link>
-              <a href="mailto:supporttyana@gmail.com" className="text-sm hover:underline" style={{ color: '#6B7280' }}>supporttyana@gmail.com</a>
-            </div>
+            <LegalFooterPill />
+            <a href="mailto:supporttyana@gmail.com" className="text-sm hover:underline" style={{ color: '#6B7280' }}>supporttyana@gmail.com</a>
           </div>
-          <p className="text-[12px] leading-relaxed" style={{ color: '#9CA3AF' }}>
+          <p className="text-[12px] leading-relaxed text-center" style={{ color: '#9CA3AF' }}>
             {t.landing.footerDisclaimer}
           </p>
-          <p className="text-[12px] mt-2" style={{ color: '#9CA3AF' }}>
+          <p className="text-[12px] mt-2 text-center" style={{ color: '#9CA3AF' }}>
             {t.landing.footerCopyright}
           </p>
         </div>
