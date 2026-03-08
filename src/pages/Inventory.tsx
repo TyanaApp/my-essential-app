@@ -102,10 +102,10 @@ const Inventory = () => {
 
   const fetchItems = async () => {
     if (!user) return;
+    // When in family mode, RLS already returns family members' items
     const { data, error } = await supabase
       .from('inventory_items')
       .select('*')
-      .eq('user_id', user.id)
       .order('added_at', { ascending: false });
     if (!error && data) setItems(data as unknown as InventoryItem[]);
     setLoading(false);
