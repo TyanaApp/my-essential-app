@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useIsStandalone } from '@/hooks/useStandalone';
 import { motion } from 'framer-motion';
 import PWAInstallGuide from '@/components/install/PWAInstallGuide';
 import { 
