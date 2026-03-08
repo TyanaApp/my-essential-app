@@ -159,8 +159,8 @@ const NutritionAnalysis = () => {
               if (!trimmed) return null;
               const isHeader = /^(📊|✅|⚠️|🍽|📈)/.test(trimmed);
               if (isHeader) {
-                return (
-                  <h3 key={i} className="text-base font-bold mt-3" style={{ color: '#1E1B4B' }}>
+                  return (
+                    <h3 key={i} className="text-base font-bold mt-3 text-foreground">
                     {trimmed}
                   </h3>
                 );
