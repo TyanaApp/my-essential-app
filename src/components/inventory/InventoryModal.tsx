@@ -8,13 +8,12 @@ import { toast } from 'sonner';
 import type { InventoryItem } from '@/pages/Inventory';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useFoodValidation } from '@/hooks/useFoodValidation';
+import { getUnits } from '@/lib/units';
 
 const AUTOCOMPLETE = [
   'Milk', 'Eggs', 'Bread', 'Chicken', 'Rice', 'Pasta', 'Tomatoes', 'Onion',
   'Garlic', 'Butter', 'Cheese', 'Yogurt', 'Apples', 'Potatoes', 'Carrots', 'Olive oil',
 ];
-
-const UNITS = ['g', 'kg', 'ml', 'L', 'pcs', 'packs'];
 
 interface Props {
   open: boolean;
