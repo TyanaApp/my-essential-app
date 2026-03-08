@@ -107,7 +107,7 @@ const NutritionAnalysis = () => {
         <button onClick={() => navigate(-1)} className="p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
           <ArrowLeft className="w-5 h-5" style={{ color: '#7C3AED' }} />
         </button>
-        <h1 className="text-xl font-bold" style={{ color: '#1E1B4B' }}>
+        <h1 className="text-xl font-bold text-foreground">
           🧠 {tr.fullAnalysis || 'Nutrition Analysis'}
         </h1>
       </div>
