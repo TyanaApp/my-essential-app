@@ -69,6 +69,8 @@ const Dashboard = () => {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [advice, setAdvice] = useState<string>('');
   const [adviceLoading, setAdviceLoading] = useState(false);
+  const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string } | null>(null);
+  const [tipLoading, setTipLoading] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
