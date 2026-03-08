@@ -77,6 +77,12 @@ export const translations = {
       addAllMissing: 'Add all missing →',
       deleteFromSaved: 'Remove from saved?', deleteYes: 'Yes', deleteNo: 'No', recipeDeleted: 'Recipe removed',
       minUnit: 'min', estCost: 'est.',
+      tabSuggested: '✨ Suggested', tabSaved: '♥️ Saved',
+      savedToFavorites: 'Saved to favorites ♥️', removeFromSaved: 'Remove from saved?',
+      removeBtn: 'Remove', emptyFavTitle: 'Your favorite recipes will appear here',
+      emptyFavHint: 'Tap ♡ on any recipe to save it', loadMore: '+ Show more recipes',
+      newRecipes: '🔄 New recipes', cook: '👨‍🍳 Cook',
+      matchPercent: '{pct}% from inventory',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
