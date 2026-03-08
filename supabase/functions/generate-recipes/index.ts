@@ -96,17 +96,29 @@ Use only available ingredients: ${useOnlyInventory ? "yes" : "no"}
 Primary goals: ${(userGoals?.goals || []).join(", ") || "balanced eating"}
 Household size: ${userGoals?.household_size || 1} people (adjust portions accordingly)
 
+${(familyMembers && familyMembers.length > 0) ? `
+FAMILY MEMBERS AND THEIR RESTRICTIONS:
+${familyMembers.map((m: any) => 
+  `- ${m.name}: age ${m.age || 'unknown'}, allergies: ${(m.allergies || []).join(', ') || 'none'}, diet: ${m.diet_type || 'omnivore'}`
+).join('\n')}
+Generate recipe for ${familyMembers.length} people.
+MUST be safe for ALL family members - no allergens for anyone.
+Adjust portions for ${familyMembers.length} servings.
+If child under 12 in family → avoid very spicy food.
+` : ''}
+
 CRITICAL FOOD RESTRICTIONS - NEVER VIOLATE:
 - NEVER suggest recipes containing these DISLIKED foods: ${dislikedFoods || "none"}
 - NEVER suggest recipes containing these FAMILY DISLIKES: ${familyDislikes || "none"}  
 - NEVER suggest recipes containing these ALLERGENS: ${(userGoals?.allergies || []).join(", ") || "none"}
+${(familyMembers && familyMembers.length > 0) ? `- NEVER include allergens from ANY family member: ${familyMembers.flatMap((m: any) => m.allergies || []).join(', ') || 'none'}` : ''}
 - CRITICAL: These items are EXPIRED (past expiry date): ${expiredItems || "none"}
   NEVER include expired items in recipes. NEVER suggest cooking expired food.
   Only use items that are fresh or within expiry date.
 Violating food preferences destroys user trust. Double-check every ingredient.
 
 Return ONLY a valid JSON array of 3 recipes, no markdown or code fences:
-[{"title":"string","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50}]`;
+[{"title":"string","ingredients":[{"name":"string","amount":"string","inFridge":true}],"instructions":["step1","step2"],"nutrition":{"calories":400,"protein":25,"fat":12,"carbs":45},"prepTime":20,"estimatedCost":3.50,"familySafe":true,"familyWarnings":[]}]`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
