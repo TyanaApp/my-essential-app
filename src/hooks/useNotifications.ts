@@ -101,7 +101,7 @@ export const dismissBanner = () => localStorage.setItem('tyana_notif_banner_dism
 
 export const useNotifications = () => {
   const { user } = useAuth();
-  const { currentLanguage } = useLanguage();
+  const { language: currentLanguage } = useLanguage();
   const ni = NOTIF_I18N[currentLanguage] || NOTIF_I18N.en;
   const [alerts, setAlerts] = useState<AppAlert[]>(getStoredAlerts());
   const [settings, setSettings] = useState<NotificationSettings>(() => {
