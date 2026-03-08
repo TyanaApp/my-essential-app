@@ -118,6 +118,11 @@ const Profile = () => {
       onClick: () => setEditProfileOpen(true),
     },
     {
+      icon: Users,
+      label: (t as any).family?.title || 'Family',
+      onClick: () => setFamilyOpen(true),
+    },
+    {
       icon: Activity,
       label: (t as any).streak?.achievements || 'Achievements',
       onClick: () => navigate('/achievements'),
