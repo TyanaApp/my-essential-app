@@ -94,12 +94,6 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[13px] font-medium mb-6"
-              style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}
-            >
-              {t.landing.badge}
-            </span>
 
             <h1
               className="text-[28px] md:text-[44px] lg:text-[52px] font-bold leading-[1.1] mb-5"
