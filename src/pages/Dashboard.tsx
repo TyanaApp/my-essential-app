@@ -53,6 +53,71 @@ interface DashboardData {
   missingBodyData: boolean;
 }
 
+const MealPlanWidget = ({ t, language, navigate, fadeUp, cardClass }: any) => {
+  const mp = (t as any).mealPlan || {};
+  const { user } = useAuth();
+  const [todayMeals, setTodayMeals] = useState<any[] | null>(null);
+  const [hasPlan, setHasPlan] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const loadTodayPlan = async () => {
+      const { data } = await supabase
+        .from('meal_plans')
+        .select('plan_data')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data?.plan_data) {
+        setHasPlan(true);
+        const today = new Date().toISOString().split('T')[0];
+        const dayPlan = (data.plan_data as any)?.days?.find((d: any) => d.date === today);
+        if (dayPlan?.meals) {
+          const meals = ['breakfast', 'lunch', 'dinner', 'snack']
+            .map(type => dayPlan.meals[type] ? { type, ...dayPlan.meals[type] } : null)
+            .filter(Boolean);
+          setTodayMeals(meals);
+        }
+      }
+    };
+    loadTodayPlan();
+  }, [user]);
+
+  return (
+    <motion.div {...fadeUp(3.5)} className={`${cardClass} p-5`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
+          📅 {hasPlan ? (mp.dashboardTitle || "Today's plan") : (mp.dashboardEmpty || 'Create your weekly meal plan')}
+        </h3>
+        <button
+          onClick={() => navigate('/meal-plan')}
+          className="text-xs font-medium flex items-center gap-0.5 text-primary"
+        >
+          {hasPlan ? (mp.dashboardOpen || 'Open plan →') : (mp.dashboardBtn || 'Create →')}
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+      {todayMeals && todayMeals.length > 0 ? (
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {todayMeals.map((meal: any, i: number) => (
+            <div key={i} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-secondary rounded-lg text-xs font-medium text-foreground shrink-0">
+              <span>{meal.emoji || '🍽'}</span>
+              <span className="max-w-[100px] truncate">{meal.name}</span>
+            </div>
+          ))}
+        </div>
+      ) : hasPlan ? (
+        <p className="text-xs text-muted-foreground">{mp.dashboardOpen || 'Open plan →'}</p>
+      ) : (
+        <p className="text-xs text-muted-foreground">{mp.emptySubtitle || 'TYANA will pick meals based on your goals'}</p>
+      )}
+    </motion.div>
+  );
+};
+
 const Dashboard = () => {
   const { user } = useAuth();
   const { t, language } = useTranslation();
