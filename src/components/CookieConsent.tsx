@@ -40,8 +40,7 @@ const CookieConsent = () => {
           <Link to="/cookies" className="text-sm underline text-primary">{t.learn}</Link>
           <Button
             onClick={handleAccept}
-            className="text-white text-sm font-semibold px-6 rounded-xl"
-            style={{ backgroundColor: '#7C3AED' }}
+            className="text-primary-foreground text-sm font-semibold px-6 rounded-xl bg-primary"
           >
             {t.accept}
           </Button>
