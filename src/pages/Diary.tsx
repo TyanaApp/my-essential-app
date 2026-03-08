@@ -238,9 +238,9 @@ const Diary = () => {
                           <p className="text-sm font-medium truncate text-foreground">{entry.custom_name || t.diary.meal}</p>
                           <p className="text-[10px] text-muted-foreground">
                             {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
-                            {(entry.total_protein ?? 0) > 0 && ` · P:${entry.total_protein}g`}
-                            {(entry.total_fat ?? 0) > 0 && ` · F:${entry.total_fat}g`}
-                            {(entry.total_carbs ?? 0) > 0 && ` · C:${entry.total_carbs}g`}
+                            {(entry.total_protein ?? 0) > 0 && ` · ${(t.mealPlan as any)?.proteinShort || 'P'}:${entry.total_protein}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                            {(entry.total_fat ?? 0) > 0 && ` · ${(t.mealPlan as any)?.fatShort || 'F'}:${entry.total_fat}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                            {(entry.total_carbs ?? 0) > 0 && ` · ${(t.mealPlan as any)?.carbsShort || 'C'}:${entry.total_carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`}
                           </p>
                         </div>
                         <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-red-50 shrink-0">
