@@ -288,6 +288,36 @@ export type Database = {
           },
         ]
       }
+      meal_plans: {
+        Row: {
+          created_at: string
+          generated_at: string
+          id: string
+          plan_data: Json
+          status: string
+          user_id: string
+          week_start_date: string
+        }
+        Insert: {
+          created_at?: string
+          generated_at?: string
+          id?: string
+          plan_data?: Json
+          status?: string
+          user_id: string
+          week_start_date: string
+        }
+        Update: {
+          created_at?: string
+          generated_at?: string
+          id?: string
+          plan_data?: Json
+          status?: string
+          user_id?: string
+          week_start_date?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
