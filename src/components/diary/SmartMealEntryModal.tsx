@@ -160,7 +160,7 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
 
       if (error) throw error;
       if (data) onSaved(data);
-      toast.success(`${result.meal_name} ${t.diary.logged}`);
+      toast.success(sm.loggedToDiary || 'Logged to diary ✓');
       handleClose();
       const reward = await updateStreak();
       if (reward) {
