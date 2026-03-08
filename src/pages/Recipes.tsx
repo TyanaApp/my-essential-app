@@ -213,7 +213,7 @@ const Recipes = () => {
           <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2" style={{ backgroundColor: cc.bg, color: cc.text }}>
             {n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}
           </span>
-          <div className="flex items-center gap-3 text-xs mb-2" style={{ color: '#6B7280' }}>
+          <div className="flex items-center gap-3 text-xs mb-2 text-muted-foreground">
             <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {n.prepTime} {(t.recipes as any)?.minUnit || 'min'}</span>
             <span className="flex items-center gap-1">💰 {(t.recipes as any)?.estCost || 'est.'} €{n.estimatedCost?.toFixed(2)}</span>
           </div>
@@ -282,14 +282,13 @@ const Recipes = () => {
         <AnimatePresence>
           {showSettings && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="rounded-2xl p-4 space-y-4" style={{ backgroundColor: '#F5F3FF', border: '1px solid #DDD6FE' }}>
+              <div className="rounded-2xl p-4 space-y-4 bg-secondary border border-border">
                 <div>
                   <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.cookingFor}</label>
                   <div className="flex gap-2">
                     {SERVING_OPTIONS.map((n) => (
                       <button key={n} onClick={() => setCookingFor(n)}
-                        className="w-10 h-10 rounded-xl text-sm font-bold border-[1.5px] transition-all"
-                        style={{ borderColor: cookingFor === n ? '#7C3AED' : '#DDD6FE', backgroundColor: cookingFor === n ? '#EDE9FE' : 'white', color: cookingFor === n ? '#7C3AED' : '#6B7280' }}>
+                        className={`w-10 h-10 rounded-xl text-sm font-bold border-[1.5px] transition-all ${cookingFor === n ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {n}{n === 5 ? '+' : ''}
                       </button>
                     ))}
@@ -300,8 +299,7 @@ const Recipes = () => {
                   <div className="flex flex-wrap gap-2">
                     {MEAL_TYPE_KEYS.map((key) => (
                       <button key={key} onClick={() => toggleMeal(key)}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
-                        style={{ borderColor: selectedMeals.includes(key) ? '#7C3AED' : '#DDD6FE', backgroundColor: selectedMeals.includes(key) ? '#EDE9FE' : 'white', color: selectedMeals.includes(key) ? '#7C3AED' : '#6B7280' }}>
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all ${selectedMeals.includes(key) ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {t.recipes[key]}
                       </button>
                     ))}
@@ -312,8 +310,7 @@ const Recipes = () => {
                   <div className="flex flex-wrap gap-2">
                     {TIME_OPTION_KEYS.map((key, i) => (
                       <button key={key} onClick={() => setTimeAvailable(TIME_VALUES[i])}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
-                        style={{ borderColor: timeAvailable === TIME_VALUES[i] ? '#7C3AED' : '#DDD6FE', backgroundColor: timeAvailable === TIME_VALUES[i] ? '#EDE9FE' : 'white', color: timeAvailable === TIME_VALUES[i] ? '#7C3AED' : '#6B7280' }}>
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all ${timeAvailable === TIME_VALUES[i] ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {t.recipes[key]}
                       </button>
                     ))}
@@ -329,7 +326,7 @@ const Recipes = () => {
                 </div>
 
                 {!loading && inventory.length === 0 ? (
-                  <div className="text-center py-4 rounded-xl" style={{ backgroundColor: 'white' }}>
+                  <div className="text-center py-4 rounded-xl bg-card">
                     <div className="text-4xl mb-2">🧊</div>
                     <p className="text-sm font-bold mb-1 text-foreground">{t.recipes.noInventory}</p>
                     <p className="text-xs mb-3 text-muted-foreground">{t.recipes.noInventoryHint}</p>
@@ -405,13 +402,13 @@ const Recipes = () => {
         {deleteConfirmId && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setDeleteConfirmId(null)}>
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
-              <p className="text-base font-semibold mb-4" style={{ color: '#1E1B4B' }}>
+              className="bg-card rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
+              <p className="text-base font-semibold mb-4 text-foreground">
                 {(t.recipes as any).deleteFromSaved || 'Remove from saved?'}
               </p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirmId(null)}
-                  className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
+                  className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px] border-border text-muted-foreground">
                   {t.common.cancel}
                 </button>
                 <button onClick={() => handleDeleteRecipe(deleteConfirmId)}

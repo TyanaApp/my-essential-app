@@ -160,11 +160,9 @@ const Diary = () => {
             <button
               key={ds}
               onClick={() => setSelectedDate(d)}
-              className="flex flex-col items-center min-w-[44px] py-2 px-1.5 rounded-xl transition-all"
-              style={{
-                backgroundColor: isSelected ? '#7C3AED' : isToday ? '#EDE9FE' : 'white',
-                border: `1.5px solid ${isSelected ? '#7C3AED' : '#DDD6FE'}`,
-              }}
+              className={`flex flex-col items-center min-w-[44px] py-2 px-1.5 rounded-xl transition-all ${
+                isSelected ? 'bg-primary border-primary' : isToday ? 'bg-primary/10 border-border' : 'bg-card border-border'
+              } border-[1.5px]`}
             >
               <span className={`text-[10px] font-semibold mb-0.5 ${isSelected ? 'text-white' : 'text-muted-foreground'}`}>
                 {DAY_LABELS[i]}
@@ -199,24 +197,21 @@ const Diary = () => {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => { setFridgeMealType(section.type); setFridgeOpen(true); }}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg"
-                      style={{ color: '#059669', backgroundColor: '#F0FDF4' }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400"
                       aria-label="From fridge"
                     >
                       <span className="text-sm">🧊</span>
                     </button>
                     <button
                       onClick={() => openScanModal(section.type)}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg"
-                      style={{ color: '#7C3AED', backgroundColor: '#F5F3FF' }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary"
                       aria-label="Scan meal"
                     >
                       <Camera className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => openAddModal(section.type)}
-                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg"
-                      style={{ color: '#7C3AED', backgroundColor: '#EDE9FE' }}
+                      className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-primary/15 text-primary"
                     >
                       <Plus className="w-3.5 h-3.5" /> {t.diary.addMeal}
                     </button>
@@ -280,7 +275,7 @@ const Diary = () => {
             })}
           </div>
         </div>
-        <div className="mt-1.5 h-1.5 rounded-full max-w-lg mx-auto" style={{ backgroundColor: '#F3F4F6' }}>
+        <div className="mt-1.5 h-1.5 rounded-full max-w-lg mx-auto bg-muted">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{ backgroundColor: totalsColor, width: `${Math.min(caloriePct * 100, 100)}%` }}

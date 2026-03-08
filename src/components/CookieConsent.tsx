@@ -31,17 +31,16 @@ const CookieConsent = () => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-[9999] bg-white border-t px-4 py-4"
-      style={{ borderColor: '#EDE9FE', boxShadow: '0 -4px 20px rgba(0,0,0,0.08)' }}
+      className="fixed bottom-0 left-0 right-0 z-[9999] bg-card border-t border-border px-4 py-4"
+      style={{ boxShadow: '0 -4px 20px rgba(0,0,0,0.08)' }}
     >
       <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-3">
-        <p className="text-sm flex-1" style={{ color: '#374151' }}>{t.msg}</p>
+        <p className="text-sm flex-1 text-foreground">{t.msg}</p>
         <div className="flex items-center gap-3 shrink-0">
-          <Link to="/cookies" className="text-sm underline" style={{ color: '#7C3AED' }}>{t.learn}</Link>
+          <Link to="/cookies" className="text-sm underline text-primary">{t.learn}</Link>
           <Button
             onClick={handleAccept}
-            className="text-white text-sm font-semibold px-6 rounded-xl"
-            style={{ backgroundColor: '#7C3AED' }}
+            className="text-primary-foreground text-sm font-semibold px-6 rounded-xl bg-primary"
           >
             {t.accept}
           </Button>

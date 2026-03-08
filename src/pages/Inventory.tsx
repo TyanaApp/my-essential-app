@@ -217,11 +217,9 @@ const Inventory = () => {
           <button
             key={tabItem.id}
             onClick={() => setTab(tabItem.id)}
-            className="px-1 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition-all text-center"
-            style={{
-              backgroundColor: tab === tabItem.id ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
-              color: tab === tabItem.id ? 'white' : '#6B7280',
-            }}
+            className={`px-1 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition-all text-center ${
+              tab === tabItem.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
+            }`}
           >
             {tabItem.label}
             {tabItem.id === 'expiring' && (
@@ -243,11 +241,9 @@ const Inventory = () => {
             <button
               key={filt}
               onClick={() => setFamilyFilter(filt)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-              style={{
-                backgroundColor: familyFilter === filt ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
-                color: familyFilter === filt ? 'white' : '#6B7280',
-              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                familyFilter === filt ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
+              }`}
             >
               {filt === 'all' ? (f.all || 'All') : filt === 'mine' ? (f.mine || 'Mine') : (f.shared || 'Shared')}
             </button>
@@ -262,8 +258,7 @@ const Inventory = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t.inventory.search}
-          className="w-full h-12 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-          style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
+          className="w-full h-12 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-primary bg-secondary border-border text-foreground placeholder:text-muted-foreground"
         />
       </div>
 

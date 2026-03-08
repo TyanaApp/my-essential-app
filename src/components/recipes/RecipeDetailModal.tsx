@@ -440,7 +440,7 @@ const RecipeDetailModal = ({
               <div className="space-y-1.5">
                 {ingredientAvailability.map((ing, idx) => (
                   <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl text-sm"
-                    style={{ backgroundColor: ing.inInventory ? '#F0FDF4' : '#FFFBEB', border: `1px solid ${ing.inInventory ? '#BBF7D0' : '#FDE68A'}` }}>
+                    style={{ backgroundColor: ing.inInventory ? 'hsl(var(--secondary))' : 'hsl(var(--secondary))', border: `1px solid hsl(var(--border))` }}>
                     <div className="flex items-center gap-2">
                       <span>{ing.inInventory ? '✅' : '🛒'}</span>
                       <span className="font-medium text-foreground">{ing.name}</span>
@@ -514,10 +514,9 @@ const RecipeDetailModal = ({
             <div className="flex-1 px-5 py-4 space-y-2 overflow-y-auto">
               {ingredientAvailability.map((ing, idx) => (
                 <button key={idx} onClick={() => toggleCheck(idx)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl text-sm text-left transition-colors"
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-sm text-left transition-colors bg-secondary border border-border"
                   style={{
-                    backgroundColor: checkedIngredients.has(idx) ? '#F0FDF4' : '#F9FAFB',
-                    border: `1.5px solid ${checkedIngredients.has(idx) ? '#86EFAC' : '#E5E7EB'}`,
+                    borderColor: checkedIngredients.has(idx) ? '#86EFAC' : undefined,
                   }}>
                   <div className="w-6 h-6 rounded-md border-2 flex items-center justify-center shrink-0"
                     style={{
@@ -563,8 +562,7 @@ const RecipeDetailModal = ({
                 { key: 'snack', label: ct.snack },
               ].map(m => (
                 <button key={m.key} onClick={() => handleLogMeal(m.key)} disabled={processing}
-                  className="py-4 rounded-2xl font-bold text-sm border-2 transition-all hover:border-primary active:scale-95"
-                  style={{ borderColor: '#DDD6FE', color: '#1E1B4B' }}>
+                  className="py-4 rounded-2xl font-bold text-sm border-2 transition-all hover:border-primary active:scale-95 border-border text-foreground">
                   {m.label}
                 </button>
               ))}

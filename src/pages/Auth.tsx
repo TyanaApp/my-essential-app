@@ -146,7 +146,7 @@ const Auth = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#F5F3FF' }}>
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
       </div>
     );
@@ -157,7 +157,7 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F5F3FF' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 bg-background">
       <button
         onClick={() => navigate('/')}
         className="absolute top-6 left-6 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -167,7 +167,7 @@ const Auth = () => {
       </button>
 
       <motion.div
-        className="w-full max-w-[420px] bg-white rounded-3xl p-10"
+        className="w-full max-w-[420px] bg-card rounded-3xl p-10"
         style={{ boxShadow: '0 4px 32px rgba(124,58,237,0.12)' }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -181,8 +181,7 @@ const Auth = () => {
         <button
           onClick={handleGoogleSignIn}
           disabled={isGoogleLoading}
-          className="w-full flex items-center justify-center gap-3 h-[52px] rounded-xl bg-white border-[1.5px] hover:bg-gray-50 transition-colors"
-          style={{ borderColor: '#DDD6FE' }}
+          className="w-full flex items-center justify-center gap-3 h-[52px] rounded-xl bg-card border-[1.5px] border-border hover:bg-secondary transition-colors"
         >
           <GoogleIcon />
           <span className="text-sm font-medium text-foreground">
@@ -195,8 +194,7 @@ const Auth = () => {
             type="button"
             onClick={handleMagicLinkSignIn}
             disabled={isMagicLinkLoading}
-            className="w-full flex items-center justify-center gap-3 h-[52px] mt-3 rounded-xl bg-white border-[1.5px] hover:bg-gray-50 transition-colors"
-            style={{ borderColor: '#DDD6FE' }}
+            className="w-full flex items-center justify-center gap-3 h-[52px] mt-3 rounded-xl bg-card border-[1.5px] border-border hover:bg-secondary transition-colors"
           >
             <Mail className="w-5 h-5 text-muted-foreground" />
             <span className="text-sm font-medium text-foreground">
@@ -218,8 +216,7 @@ const Auth = () => {
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input id="displayName" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}
-                  className="pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0"
-                  style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
+                  className="pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground"
                   placeholder={t.auth.yourName} />
               </div>
             </div>
@@ -231,8 +228,7 @@ const Auth = () => {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input id="email" type="email" value={email}
                 onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors(prev => ({ ...prev, email: undefined })); }}
-                className={`pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 ${errors.email ? 'border-red-500' : ''}`}
-                style={{ backgroundColor: '#F5F3FF', borderColor: errors.email ? undefined : '#DDD6FE' }}
+                className={`pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground ${errors.email ? 'border-red-500' : ''}`}
                 placeholder="your@email.com" required />
             </div>
             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
@@ -244,8 +240,7 @@ const Auth = () => {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input id="password" type={showPassword ? 'text' : 'password'} value={password}
                 onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors(prev => ({ ...prev, password: undefined })); }}
-                className={`pl-10 pr-10 h-[52px] rounded-xl border-[1px] focus:ring-0 ${errors.password ? 'border-red-500' : ''}`}
-                style={{ backgroundColor: '#F5F3FF', borderColor: errors.password ? undefined : '#DDD6FE' }}
+                className={`pl-10 pr-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground ${errors.password ? 'border-red-500' : ''}`}
                 placeholder="••••••••" required />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -261,15 +256,15 @@ const Auth = () => {
                   type="checkbox"
                   checked={termsAccepted}
                   onChange={(e) => { setTermsAccepted(e.target.checked); setTermsError(''); }}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 accent-[#7C3AED]"
+                  className="mt-1 h-4 w-4 rounded border-border accent-primary"
                 />
-                <span className="text-xs" style={{ color: '#6B7280' }}>
+                <span className="text-xs text-muted-foreground">
                   {language === 'ru' ? 'Я принимаю ' : language === 'uk' ? 'Я приймаю ' : language === 'lv' ? 'Es piekrītu ' : 'I accept the '}
-                  <Link to="/terms" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                  <Link to="/terms" target="_blank" className="underline text-primary">
                     {language === 'ru' ? 'Условия использования' : language === 'uk' ? 'Умови використання' : language === 'lv' ? 'Lietošanas noteikumiem' : 'Terms of Service'}
                   </Link>
                   {language === 'ru' ? ' и ' : language === 'uk' ? ' та ' : language === 'lv' ? ' un ' : ' and '}
-                  <Link to="/privacy" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                  <Link to="/privacy" target="_blank" className="underline text-primary">
                     {language === 'ru' ? 'Политику конфиденциальности' : language === 'uk' ? 'Політику конфіденційності' : language === 'lv' ? 'Privātuma politiku' : 'Privacy Policy'}
                   </Link>
                 </span>
@@ -279,8 +274,7 @@ const Auth = () => {
           )}
 
           <Button type="submit" disabled={isSubmitting || (isSignUp && !termsAccepted)}
-            className="w-full h-[52px] rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#7C3AED' }}>
+            className="w-full h-[52px] rounded-xl text-primary-foreground font-semibold text-base hover:opacity-90 transition-opacity bg-primary">
             {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
           </Button>
         </form>
@@ -304,7 +298,7 @@ const Auth = () => {
             </div>
             <button
               onClick={() => setShowQRModal(true)}
-              className="w-full flex items-center justify-center gap-2 h-[52px] mt-4 rounded-xl border-[1.5px] transition-colors hover:bg-gray-50"
+              className="w-full flex items-center justify-center gap-2 h-[52px] mt-4 rounded-xl border-[1.5px] transition-colors hover:bg-secondary border-border text-primary"
               style={{ color: '#7C3AED', borderColor: '#DDD6FE' }}
             >
               <span className="text-sm font-semibold">{t.install.getTheApp}</span>
