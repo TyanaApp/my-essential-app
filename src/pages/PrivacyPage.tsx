@@ -96,7 +96,7 @@ const PrivacyPage = () => {
       title: 'Политика конфиденциальности',
       lastUpdated: 'Последнее обновление: март 2026',
       s1Title: '1. Кто мы',
-      s1: 'TYANA — ИИ-помощник для кухни и питания. Контакт: supporttyana@gmail.com | tyana.lovable.app. Юрисдикция ЕС, Латвия.',
+      s1: 'TYANA — ИИ-помощник для кухни и питания. tyana.lovable.app. Юрисдикция ЕС, Латвия.',
       s2Title: '2. Какие данные мы собираем',
       s2Items: [
         'Аккаунт: имя, email, фото профиля (Google OAuth)',
