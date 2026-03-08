@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { translateUnit } from '@/lib/units';
-import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap } from 'lucide-react';
+import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap, ScanBarcode } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -9,6 +9,7 @@ import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import QuickAddModal from '@/components/inventory/QuickAddModal';
+import BarcodeScannerModal from '@/components/inventory/BarcodeScannerModal';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
