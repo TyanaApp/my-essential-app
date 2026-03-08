@@ -1412,6 +1412,18 @@ export const translations = {
       title: '🍽 Ēdienreižu atgādinājumi',
       breakfast: '🌅 Brokastis', lunch: '☀️ Pusdienas', dinner: '🌙 Vakariņas',
     },
+    familyMembers: {
+      addMember: 'Pievienot ģimenes locekli', editMember: 'Rediģēt', whatName: 'Kā sauc?',
+      namePlaceholder: 'piem. Miša', avatar: 'Avatārs', gender: 'Dzimums',
+      boy: 'Zēns', girl: 'Meitene', age: 'Vecums', weight: 'Svars (kg)', height: 'Augums (cm)',
+      activity: 'Aktivitāte', allergies: 'Alerģijas', allergiesPlaceholder: 'rieksti, piens',
+      calculatedTarget: 'Aprēķinātais mērķis', kcal: 'kcal', years: 'g.v.',
+      calorieTarget: 'Kaloriju mērķis', todayMeals: 'Šodienas ēdieni', noMealsYet: 'Vēl nav ierakstu',
+      goals: 'Mērķi', done: 'Gatavs', addAnother: 'Pievienot ģimenes locekli',
+      memberAdded: 'Pievienots ✓', memberUpdated: 'Atjaunināts ✓', memberDeleted: 'Dzēsts ✓',
+      saveFailed: 'Neizdevās saglabāt', familySafe: 'Piemērots visai ģimenei ✅',
+      familyWarning: '⚠️ Satur {allergen} — nav piemērots {name}',
+    },
   },
   uk: {
     nav: { home: 'Головна', inventory: 'Продукти', recipes: 'Рецепти', shopping: 'Покупки', diary: 'Щоденник', settings: 'Налаштування', profile: 'Профіль' },
