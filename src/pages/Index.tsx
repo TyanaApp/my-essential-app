@@ -7,6 +7,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useFoundingCounter } from '@/hooks/useFoundingCounter';
 import { Progress } from '@/components/ui/progress';
 import TyanaLogo from '@/components/TyanaLogo';
+import LanguageSelector from '@/components/LanguageSelector';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
