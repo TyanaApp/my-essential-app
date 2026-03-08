@@ -384,6 +384,7 @@ const Dashboard = () => {
 
       {/* Family widget */}
       <FamilyWidget />
+      <WeeklySummaryCard currency={data.currency} />
 
       {/* Streak card */}
       {data.streakCurrent > 0 && (
