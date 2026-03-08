@@ -365,6 +365,11 @@ const Profile = () => {
         </Button>
       </motion.div>
 
+      {/* Legal footer */}
+      <div className="mt-6 mb-4">
+        <LegalFooterPill />
+      </div>
+
       {/* Modals */}
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
       <FamilySettingsModal open={familyOpen} onOpenChange={setFamilyOpen} />
