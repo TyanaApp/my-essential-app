@@ -136,7 +136,7 @@ const TermsPage = () => {
   const c = content[language] || content.en;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="max-w-[680px] mx-auto px-6 py-12">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm mb-8 hover:opacity-70 transition-opacity" style={{ color: '#6B7280' }}>
           <ArrowLeft className="w-4 h-4" />{t.common.back}
