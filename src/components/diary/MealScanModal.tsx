@@ -28,6 +28,7 @@ interface MealScanModalProps {
 }
 
 const PORTION_OPTIONS = [
+  { id: 'extra', multiplier: 1.5, labelKey: 'portionExtra' },
   { id: 'full', multiplier: 1, labelKey: 'portionFull' },
   { id: 'three_quarters', multiplier: 0.75, labelKey: 'portionThreeQuarters' },
   { id: 'half', multiplier: 0.5, labelKey: 'portionHalf' },
