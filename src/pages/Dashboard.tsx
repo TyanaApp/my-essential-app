@@ -799,6 +799,9 @@ const Dashboard = () => {
           )}
         </motion.div>
 
+        {/* Card — Meal Plan Widget */}
+        <MealPlanWidget t={t} language={language} navigate={navigate} fadeUp={fadeUp} cardClass={cardClass} />
+
         {/* Card 4 — Budget & Savings */}
         <motion.div {...fadeUp(4)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
