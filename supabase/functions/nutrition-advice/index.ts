@@ -22,7 +22,7 @@ serve(async (req) => {
       });
     }
 
-    const langMap: Record<string, string> = { ru: "Russian", lv: "Latvian", en: "English" };
+    const langMap: Record<string, string> = { ru: "Russian", uk: "Ukrainian", lv: "Latvian", en: "English" };
     const lang = langMap[language] || "English";
 
     const dislikedFoods = (userGoals?.disliked_foods || []).join(', ');
@@ -37,31 +37,29 @@ CRITICAL FOOD RESTRICTIONS - user trust depends on this:
 - Diet type: ${userGoals?.diet_type || 'omnivore'}
 If suggesting foods, only suggest things compatible with these restrictions.`;
 
-    const userDataPrompt = `User profile:
-- Goal: ${userGoals?.goals?.join(', ') || 'not set'}
-- Daily calorie target: ${userGoals?.daily_calories_target || 2000} kcal
-- Diet type: ${userGoals?.diet_type || 'omnivore'}
-- Allergies: ${allergies || 'none'}
-- Disliked foods: ${dislikedFoods || 'none'}
-- Family dislikes: ${familyDislikes || 'none'}
-- Weight: ${userProfile?.weight_kg || '?'}kg, Height: ${userProfile?.height_cm || '?'}cm
-- Age: ${userProfile?.age || '?'}, Activity: ${userProfile?.activity_level || 'normal'}
-- Household size: ${userGoals?.household_size || 1} people
+    // Compute macro targets from body data
+    const weight = Number(userGoals?.weight_kg) || 70;
+    const goals: string[] = userGoals?.goals || [];
+    const proteinTarget = goals.includes('gain_muscle') ? Math.round(weight * 2) : Math.round(weight * 1.6);
+    const calorieTarget = Number(userGoals?.daily_calories_target) || 2000;
+    const fatTarget = Math.round(calorieTarget * 0.25 / 9);
+    const carbsTarget = Math.round((calorieTarget - proteinTarget * 4 - fatTarget * 9) / 4);
 
-Today's meals and nutrition:
-${JSON.stringify(todayMeals || [])}
+    // Format today's meals for prompt
+    const todayMealsList = (todayMeals || []).map((m: any) =>
+      `${m.meal_type || 'meal'}: ${m.name || m.custom_name || 'unnamed'} (${m.calories || m.total_calories || 0}kcal, P:${m.protein || m.total_protein || 0}g F:${m.fat || m.total_fat || 0}g C:${m.carbs || m.total_carbs || 0}g)`
+    ).join(', ') || 'nothing logged yet';
 
-This week's average:
-- Avg calories: ${weekMeals?.avgCalories || 0} kcal
-- Avg protein: ${weekMeals?.avgProtein || 0}g
-- Avg fat: ${weekMeals?.avgFat || 0}g
-- Avg carbs: ${weekMeals?.avgCarbs || 0}g
+    const totalCalToday = (todayMeals || []).reduce((s: number, m: any) => s + Number(m.calories || m.total_calories || 0), 0);
+    const totalProtToday = (todayMeals || []).reduce((s: number, m: any) => s + Number(m.protein || m.total_protein || 0), 0);
+    const totalFatToday = (todayMeals || []).reduce((s: number, m: any) => s + Number(m.fat || m.total_fat || 0), 0);
+    const totalCarbsToday = (todayMeals || []).reduce((s: number, m: any) => s + Number(m.carbs || m.total_carbs || 0), 0);
 
-What's in their fridge now:
-${(inventory || []).slice(0, 10).map((i: any) => i.name).join(', ') || 'unknown'}`;
+    const fridgeItems = (inventory || []).slice(0, 15).map((i: any) => i.name).join(', ') || 'unknown';
 
     let systemPrompt: string;
-    
+    let userDataPrompt: string;
+
     if (mode === 'full') {
       systemPrompt = `You are an expert nutritionist and health coach. Give a detailed nutrition analysis in ${lang}. Structure your response EXACTLY like this with these emoji headers on separate lines:
 
@@ -69,10 +67,10 @@ ${(inventory || []).slice(0, 10).map((i: any) => i.name).join(', ') || 'unknown'
 (2-3 sentences)
 
 ✅ What's going well
-(2-3 bullet points)
+(2-3 points, each on new line starting with a dash)
 
 ⚠️ What to improve
-(2-3 bullet points with specific actions)
+(2-3 points with specific actions, each on new line starting with a dash)
 
 🍽 Today's recommendations
 (what to eat for remaining meals, be specific)
@@ -82,18 +80,83 @@ ${(inventory || []).slice(0, 10).map((i: any) => i.name).join(', ') || 'unknown'
 
 ${restrictionsBlock}
 
-YOU MUST respond ENTIRELY in ${lang}. Be specific, use their actual numbers. Be warm and motivating.`;
+CRITICAL RULES:
+- Write ONLY in ${lang}. Never mix languages. Never use other languages.
+- NO asterisks. NO markdown bold/italic. NO hashtags. NO bullet symbols like • or *.
+- Use plain dashes (-) for lists. Use plain text only.
+- Be specific, use their actual numbers. Be warm and motivating.`;
+
+      userDataPrompt = `User profile:
+- Goal: ${goals.join(', ') || 'not set'}
+- Daily calorie target: ${calorieTarget} kcal
+- Protein target: ${proteinTarget}g, Fat target: ${fatTarget}g, Carbs target: ${carbsTarget}g
+- Diet type: ${userGoals?.diet_type || 'omnivore'}
+- Weight: ${weight}kg, Height: ${userGoals?.height_cm || '?'}cm
+- Age: ${userGoals?.age || '?'}, Gender: ${userProfile?.gender || '?'}
+- Activity: ${userGoals?.activity_level || 'moderate'}
+
+Today's meals: ${todayMealsList}
+Total today: ${totalCalToday}/${calorieTarget} kcal, P:${totalProtToday}/${proteinTarget}g, F:${totalFatToday}/${fatTarget}g, C:${totalCarbsToday}/${carbsTarget}g
+
+This week average: Calories ${weekMeals?.avgCalories || 0}kcal, Protein ${weekMeals?.avgProtein || 0}g, Fat ${weekMeals?.avgFat || 0}g, Carbs ${weekMeals?.avgCarbs || 0}g
+
+In their fridge: ${fridgeItems}`;
     } else {
-      systemPrompt = `You are an expert nutritionist and health coach. Analyze the user's data deeply and give ONE specific, actionable advice today. Be like a personal nutritionist who knows everything about this person. Respond in ${lang}. Be warm, specific, and motivating. Max 3 sentences.
+      systemPrompt = `You are the world's best personal nutritionist - better than any human nutritionist because you have complete data about this specific person and analyze it deeply every single day.
 
-${restrictionsBlock}
+You write ONLY in ${lang}. Never mix languages. Never use any other language.
 
-Examples of good advice:
-- "You only had 45g protein today with a target of 120g. Add chicken breast or eggs for dinner — you have them in your fridge!"
-- "This week you're exceeding fat intake by 30%. Try replacing cheese in salads with avocado"
-- "Great! You've maintained a calorie deficit for 3 days straight 🔥 At this rate, minus 0.3kg per week"
+CRITICAL FORMAT RULES:
+- NO asterisks ever. NO markdown. NO bold. NO italic markers. NO hashtags. NO bullet symbols.
+- Write in plain prose paragraphs only.
+- Write in warm, personal, direct tone - like a brilliant friend who happens to be a top nutritionist.
+- Be SPECIFIC with numbers. Be PERSONAL. Make the person feel truly seen and understood.
+- Maximum 5 sentences total.
 
-Be this specific and personal. Use their actual food data. YOU MUST respond ENTIRELY in ${lang}.`;
+${restrictionsBlock}`;
+
+      userDataPrompt = `Analyze this person deeply and give personalized nutrition advice.
+
+PERSONAL DATA:
+Weight: ${weight}kg, Height: ${userGoals?.height_cm || '?'}cm
+Age: ${userGoals?.age || '?'}, Gender: ${userProfile?.gender || '?'}
+Activity: ${userGoals?.activity_level || 'moderate'}
+Goals: ${goals.join(', ') || 'not set'}
+Diet type: ${userGoals?.diet_type || 'omnivore'}
+Allergies: ${allergies || 'none'}
+Daily calorie target: ${calorieTarget} kcal
+Protein target: ${proteinTarget}g, Fat target: ${fatTarget}g, Carbs target: ${carbsTarget}g
+
+TODAY SO FAR:
+Meals logged: ${todayMealsList}
+Total calories today: ${totalCalToday} / ${calorieTarget}
+Total protein today: ${totalProtToday}g / ${proteinTarget}g
+Total fat today: ${totalFatToday}g / ${fatTarget}g
+Total carbs today: ${totalCarbsToday}g / ${carbsTarget}g
+
+LAST 7 DAYS AVERAGE:
+Avg calories: ${weekMeals?.avgCalories || 0}kcal, Avg protein: ${weekMeals?.avgProtein || 0}g
+
+WHAT'S IN THEIR FRIDGE RIGHT NOW:
+${fridgeItems}
+
+Now write ONE powerful personalized insight. Structure:
+
+1. OBSERVATION (1-2 sentences): Notice something SPECIFIC about their data today or this week. Reference actual numbers.
+
+2. WHY IT MATTERS (1 sentence): Explain why this is important FOR THEIR SPECIFIC GOAL.
+
+3. SPECIFIC ACTION (1-2 sentences): Tell them EXACTLY what to do using what they HAVE in fridge right now.
+
+4. MOTIVATIONAL CLOSER (1 sentence, warm and personal).
+
+RULES:
+- Write entirely in ${lang}
+- No asterisks, no bullet symbols, no markdown, no bold markers
+- No generic advice - every sentence must reference their actual numbers or actual food
+- Maximum 5 sentences total
+- Sound like a brilliant caring friend, not a robot
+- If they have no data today, focus on weekly pattern`;
     }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -135,7 +198,18 @@ Be this specific and personal. Use their actual food data. YOU MUST respond ENTI
     const data = await response.json();
     const advice = data.choices?.[0]?.message?.content || "";
 
-    return new Response(JSON.stringify({ advice }), {
+    // Clean any accidental asterisks, markdown, or formatting
+    const cleaned = advice
+      .replace(/\*+/g, '')
+      .replace(/#+\s?/g, '')
+      .replace(/_{2,}/g, '')
+      .replace(/`+/g, '')
+      .trim();
+
+    return new Response(JSON.stringify({
+      advice: cleaned,
+      generatedAt: new Date().toISOString(),
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

@@ -1723,9 +1723,10 @@ export const translations = {
       caloriesRecalculated: 'Калорії перераховано', dayShort: 'день',
     },
     nutritionAdvice: {
-      title: 'Порада від TYANA', loading: 'Думаю...', noData: 'Запишіть прийоми їжі для персональної поради',
+      title: '💜 Порада від TYANA', loading: 'Думаю...', noData: 'Запишіть прийоми їжі для персональної поради',
       basedOnData: 'На основі ваших даних сьогодні', fullAnalysis: 'Повний аналіз',
-      refreshAnalysis: 'Оновити аналіз', analyzing: 'Аналізую ваші дані...',
+      refreshAnalysis: 'Оновити', analyzing: 'Аналізую ваші дані...',
+      updatedAgo: 'оновлено {min} хв тому',
       errorLoading: 'Не вдалося завантажити аналіз', todayMacros: 'Макронутрієнти сьогодні',
       calories: 'Калорії', protein: 'Білок', fat: 'Жир', carbs: 'Вуглеводи',
     },
