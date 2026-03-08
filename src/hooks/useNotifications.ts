@@ -198,14 +198,14 @@ export const useNotifications = () => {
         const days = Math.ceil((new Date(item.expires_at).getTime() - Date.now()) / 86400000);
         const icon = days <= 1 ? '🔴' : '🟠';
         const bodyText = days <= 0
-          ? `${item.name} expires today!`
+          ? ni.expiresToday(item.name)
           : days === 1
-            ? `${item.name} expires tomorrow!`
-            : `${item.name} expires in ${days} days`;
+            ? ni.expiresTomorrow(item.name)
+            : ni.expiresInDays(item.name, days);
 
         addAlert({
           type: 'expiring',
-          title: `⚠️ Food expiring soon`,
+          title: ni.expiringTitle,
           body: bodyText,
           icon,
           link: '/inventory?tab=expiring',
@@ -216,11 +216,11 @@ export const useNotifications = () => {
       const urgent = data[0] as any;
       const urgentDays = Math.ceil((new Date(urgent.expires_at).getTime() - Date.now()) / 86400000);
       const urgentBody = urgentDays <= 1
-        ? `${urgent.name} expires tomorrow! Open app to see recipe ideas.`
-        : `${urgent.name} expires in ${urgentDays} days.`;
+        ? ni.browserTomorrow(urgent.name)
+        : ni.browserInDays(urgent.name, urgentDays);
 
       sendBrowserNotification(
-        '⚠️ TYANA — Food expiring soon',
+        ni.browserTitle,
         urgentBody,
         '/inventory?tab=expiring'
       );
