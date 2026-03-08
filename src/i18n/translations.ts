@@ -1277,8 +1277,6 @@ export const translations = {
       footerTerms: 'Noteikumi', footerPrivacy: 'Konfidencialitāte',
       footerDisclaimer: 'TYANA ir AI virtuves palīgs. Uztura ieteikumi nav medicīniski padomi.',
       footerCopyright: '© 2025 TYANA. Visas tiesības aizsargātas.',
-      foundingCounter: '{count} no 1000 dibinātāju vietām aizņemtas',
-      foundingFull: '🔒 Visas dibinātāju vietas aizņemtas. Pro tagad €12.99/mēn',
       whyTitle: 'Kāpēc TYANA darbojas',
       why1Title: 'Dziļāk nekā jebkura lietotne', why1Desc: 'Analizē jūsu uzturu tikpat dziļi kā profesionāls uztura speciālists — bet pieejams 24/7',
       why2Title: 'Ietaupa laiku un naudu', why2Desc: 'Vidējā ģimene izmet €80 ēdiena mēnesī. TYANA palīdz izmantot visu, ko nopirkāt.',
