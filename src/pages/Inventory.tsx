@@ -265,6 +265,14 @@ const Inventory = () => {
         />
       </div>
 
+      {/* Quick Add button */}
+      <button
+        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl text-sm font-bold text-primary-foreground bg-primary mb-3 active:scale-[0.98] transition-transform"
+        onClick={() => setQuickAddOpen(true)}
+      >
+        <Zap className="w-4 h-4" /> {qa.quickAddBtn || '⚡️ Quick Add'}
+      </button>
+
       {/* Action buttons */}
       <div className="grid grid-cols-2 gap-2 mb-5">
         <button
@@ -275,8 +283,8 @@ const Inventory = () => {
           <Camera className="w-4 h-4" /> {t.inventory.scan}
         </button>
         <button
-          className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium text-white"
-          style={{ backgroundColor: 'hsl(263, 84%, 58%)' }}
+          className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium border-[1.5px]"
+          style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
           onClick={openAdd}
         >
           <Plus className="w-4 h-4" /> {t.inventory.add}
