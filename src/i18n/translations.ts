@@ -937,7 +937,7 @@ export const translations = {
     dayLabels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
     notifications: {
       bannerTitle: '🔔 Получайте уведомления о сроке годности', enable: 'Включить уведомления', maybeLater: 'Позже',
-      title: 'Уведомления', markRead: 'Прочитать все', empty: 'Уведомлений пока нет', justNow: 'Только что',
+      title: 'Уведомления', markRead: 'Прочитать все', clearAll: 'Очистить все', empty: 'Уведомлений пока нет', justNow: 'Только что', minAgo: 'мин назад', hAgo: 'ч назад', yesterday: 'вчера',
       expiryAlerts: 'Уведомления о сроках', expiryAlertsDesc: 'Узнайте когда продукты скоро испортятся',
       weeklySummary: 'Еженедельный отчёт', weeklySummaryDesc: 'Утренний отчёт об экономии в понедельник',
       recipeSuggestions: 'Предложения рецептов', recipeSuggestionsDesc: 'Умные идеи "используй пока не испортилось"',
