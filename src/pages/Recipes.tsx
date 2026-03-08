@@ -302,7 +302,7 @@ const Recipes = () => {
       {/* Generated recipes */}
       {generatedRecipes.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>{t.recipes.justGenerated}</h2>
+          <h2 className="text-sm font-bold mb-3 text-foreground">{t.recipes.justGenerated}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {generatedRecipes.map((r, idx) => (<RecipeCard key={`gen-${idx}`} recipe={r} />))}
           </div>
