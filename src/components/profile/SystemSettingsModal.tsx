@@ -28,7 +28,7 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Globe className="w-5 h-5 text-primary shrink-0" />
-              <span className="font-exo text-foreground text-sm">{t('language')}</span>
+              <span className="font-exo text-foreground text-xs sm:text-sm">{t('language')}</span>
             </div>
             <LanguageSelector variant="pills" />
           </div>
@@ -41,13 +41,13 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
               ) : (
                 <Sun className="w-5 h-5 text-primary shrink-0" />
               )}
-              <span className="font-exo text-foreground text-sm">{t('theme')}</span>
+              <span className="font-exo text-foreground text-xs sm:text-sm">{t('theme')}</span>
             </div>
             <div className="flex gap-2">
               <Button
                 variant={theme === 'light' ? 'default' : 'outline'}
                 onClick={() => setTheme('light')}
-                className="flex-1 gap-2 font-exo text-xs sm:text-sm min-w-0"
+                className="flex-1 gap-1.5 font-exo text-xs min-w-0 px-2"
               >
                 <Sun className="w-4 h-4 shrink-0" />
                 <span className="truncate">{t('lightTheme')}</span>
@@ -55,7 +55,7 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
               <Button
                 variant={theme === 'dark' ? 'default' : 'outline'}
                 onClick={() => setTheme('dark')}
-                className="flex-1 gap-2 font-exo text-xs sm:text-sm min-w-0"
+                className="flex-1 gap-1.5 font-exo text-xs min-w-0 px-2"
               >
                 <Moon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{t('darkTheme')}</span>
@@ -68,16 +68,16 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Scale className="w-5 h-5 text-primary shrink-0" />
-              <span className="font-exo text-foreground text-sm">{t('legal')}</span>
+              <span className="font-exo text-foreground text-xs sm:text-sm">{t('legal')}</span>
             </div>
             <div className="space-y-2">
-              <Link to="/privacy" onClick={() => onOpenChange(false)} className="block text-sm font-exo text-primary hover:underline break-words">
+              <Link to="/privacy" onClick={() => onOpenChange(false)} className="block text-xs sm:text-sm font-exo text-primary hover:underline break-words">
                 {t('privacyPolicy')}
               </Link>
-              <Link to="/terms" onClick={() => onOpenChange(false)} className="block text-sm font-exo text-primary hover:underline break-words">
+              <Link to="/terms" onClick={() => onOpenChange(false)} className="block text-xs sm:text-sm font-exo text-primary hover:underline break-words">
                 {t('termsOfService')}
               </Link>
-              <Link to="/cookies" onClick={() => onOpenChange(false)} className="block text-sm font-exo text-primary hover:underline break-words">
+              <Link to="/cookies" onClick={() => onOpenChange(false)} className="block text-xs sm:text-sm font-exo text-primary hover:underline break-words">
                 {t('cookiePolicy')}
               </Link>
             </div>
