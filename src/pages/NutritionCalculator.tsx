@@ -457,7 +457,19 @@ const NutritionCalculator = () => {
                 {result.identified_amount || (mode === 'recipe' ? `${result.portions} ${nc.portionsWord || 'portions'} • ~${result.per_portion_weight}${nc.unitG || 'g'}` : '')}
               </p>
               {result.data_source && (
-                <Badge variant="secondary" className="mt-2 text-[10px]">📊 {result.data_source}</Badge>
+                <Badge 
+                  variant="secondary" 
+                  className={`mt-2 text-[10px] ${
+                    result.data_source === 'Open Food Facts'
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+                  }`}
+                >
+                  {result.data_source === 'Open Food Facts'
+                    ? `✅ ${off.dataFromLabel || 'Data from label'}`
+                    : `🤖 ${off.aiEstimate || 'AI estimate'}`
+                  }
+                </Badge>
               )}
             </CardContent>
           </Card>
