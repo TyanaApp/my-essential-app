@@ -240,6 +240,9 @@ export const translations = {
         'Check your fridge before grocery shopping',
       ],
     },
+    weeklyReport: {
+      lastWeekTitle: 'Last week summary', calDay: 'kcal/day', meals: 'meals', saved: 'saved', streakDays: 'days streak',
+    },
     dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     notifications: {
       bannerTitle: '🔔 Get alerts before food expires',
@@ -255,6 +258,8 @@ export const translations = {
       weeklySummaryDesc: 'Monday morning savings report',
       recipeSuggestions: 'Recipe suggestions',
       recipeSuggestionsDesc: 'Smart "use it up" recipe ideas',
+      weeklyReport: 'Weekly email report',
+      weeklyReportDesc: 'Every Sunday by email',
       useBeforeGone: '💡 Use before it\'s gone',
       cookNow: 'Cook this now →',
       noSuggestions: 'No expiring items to use up',
@@ -594,6 +599,9 @@ export const translations = {
       title: 'Совет дня: ноль отходов',
       daily: ['Используйте оставшийся рис для жареного риса завтра', 'Из овощных очисток получается отличный бульон', 'Заморозьте хлеб до того, как он зачерствеет', 'Вянущие травы? Сделайте масло с травами', 'Просроченный йогурт отлично подходит для смузи', 'Планируйте еду в воскресенье — выбросите на 40% меньше', 'Проверьте холодильник перед походом за продуктами'],
     },
+    weeklyReport: {
+      lastWeekTitle: 'Итоги прошлой недели', calDay: 'ккал/день', meals: 'приёмов', saved: 'сэкономлено', streakDays: 'дней подряд',
+    },
     dayLabels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
     notifications: {
       bannerTitle: '🔔 Получайте уведомления о сроке годности', enable: 'Включить уведомления', maybeLater: 'Позже',
@@ -601,6 +609,7 @@ export const translations = {
       expiryAlerts: 'Уведомления о сроках', expiryAlertsDesc: 'Узнайте когда продукты скоро испортятся',
       weeklySummary: 'Еженедельный отчёт', weeklySummaryDesc: 'Утренний отчёт об экономии в понедельник',
       recipeSuggestions: 'Предложения рецептов', recipeSuggestionsDesc: 'Умные идеи "используй пока не испортилось"',
+      weeklyReport: 'Еженедельный отчёт', weeklyReportDesc: 'Каждое воскресенье на email',
       useBeforeGone: '💡 Используйте пока не испортилось', cookNow: 'Приготовить сейчас →', noSuggestions: 'Нет продуктов с истекающим сроком',
     },
     scan: {
@@ -876,6 +885,9 @@ export const translations = {
       title: 'Nulles atkritumu padoms dienai',
       daily: ['Izmantojiet atlikušos rīsus ceptiem rīsiem rīt', 'No dārzeņu mizām sanāk lielisks buljons', 'Sasaldējiet maizi pirms tā kļūst novecojusi', 'Vīstošie garšaugi? Uztaisiet garšaugu eļļu', 'Gandrīz beigušies jogurts lieliski der smūtijiem', 'Plānojiet ēdienus svētdien — izmetīsiet par 40% mazāk', 'Pārbaudiet ledusskapi pirms iepirkšanās'],
     },
+    weeklyReport: {
+      lastWeekTitle: 'Pagājušās nedēļas kopsavilkums', calDay: 'kcal/dienā', meals: 'ēdienreizes', saved: 'ietaupīts', streakDays: 'dienas pēc kārtas',
+    },
     dayLabels: ['P', 'O', 'T', 'C', 'Pk', 'S', 'Sv'],
     notifications: {
       bannerTitle: '🔔 Saņemiet brīdinājumus par derīguma termiņiem', enable: 'Ieslēgt paziņojumus', maybeLater: 'Varbūt vēlāk',
@@ -883,6 +895,7 @@ export const translations = {
       expiryAlerts: 'Termiņu brīdinājumi', expiryAlertsDesc: 'Uzziniet kad produktiem beidzas derīguma termiņš',
       weeklySummary: 'Iknedēļas kopsavilkums', weeklySummaryDesc: 'Pirmdienas rīta ietaupījumu pārskats',
       recipeSuggestions: 'Recepšu ieteikumi', recipeSuggestionsDesc: 'Gudras "izmanto pirms beidzas" receptes',
+      weeklyReport: 'Iknedēļas pārskats', weeklyReportDesc: 'Katru svētdienu uz email',
       useBeforeGone: '💡 Izmantojiet pirms beidzas', cookNow: 'Gatavot tagad →', noSuggestions: 'Nav produktu ar beidzošos termiņu',
     },
     scan: {
@@ -1159,6 +1172,9 @@ export const translations = {
       title: 'Порада дня: нуль відходів',
       daily: ['Використайте залишок рису для смаженого рису завтра', 'З овочевих обрізків виходить чудовий бульйон', 'Заморозьте хліб до того, як він зачерствіє', 'В\'януть трави? Зробіть олію з травами', 'Прострочений йогурт чудово підходить для смузі', 'Плануйте їжу в неділю — викинете на 40% менше', 'Перевірте холодильник перед походом за продуктами'],
     },
+    weeklyReport: {
+      lastWeekTitle: 'Підсумки минулого тижня', calDay: 'ккал/день', meals: 'прийомів', saved: 'зекономлено', streakDays: 'днів поспіль',
+    },
     dayLabels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
     notifications: {
       bannerTitle: '🔔 Отримуйте сповіщення про терміни придатності', enable: 'Увімкнути сповіщення', maybeLater: 'Пізніше',
@@ -1166,6 +1182,7 @@ export const translations = {
       expiryAlerts: 'Сповіщення про терміни', expiryAlertsDesc: 'Дізнайтесь коли продукти скоро зіпсуються',
       weeklySummary: 'Щотижневий звіт', weeklySummaryDesc: 'Ранковий звіт про економію в понеділок',
       recipeSuggestions: 'Пропозиції рецептів', recipeSuggestionsDesc: 'Розумні ідеї "використай поки не зіпсувалось"',
+      weeklyReport: 'Щотижневий звіт', weeklyReportDesc: 'Щонеділі на email',
       useBeforeGone: '💡 Використайте поки не зіпсувалось', cookNow: 'Приготувати зараз →', noSuggestions: 'Немає продуктів з терміном що закінчується',
     },
     scan: {

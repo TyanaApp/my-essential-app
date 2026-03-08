@@ -10,6 +10,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
 import FamilyWidget from '@/components/dashboard/FamilyWidget';
+import WeeklySummaryCard from '@/components/dashboard/WeeklySummaryCard';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 import EditProfileModal from '@/components/profile/EditProfileModal';
@@ -383,6 +384,7 @@ const Dashboard = () => {
 
       {/* Family widget */}
       <FamilyWidget />
+      <WeeklySummaryCard currency={data.currency} />
 
       {/* Streak card */}
       {data.streakCurrent > 0 && (
