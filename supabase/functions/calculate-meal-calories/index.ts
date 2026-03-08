@@ -15,7 +15,9 @@ serve(async (req) => {
   }
 
   try {
-    const { mealDescription, portionSize, clarifications, language } = await req.json();
+    const { mealDescription, quantityDescription, foodCategory, clarifications, language,
+            // Legacy support
+            portionSize } = await req.json();
 
     if (!mealDescription?.trim()) {
       return new Response(JSON.stringify({ error: "No meal description" }), {
@@ -34,6 +36,9 @@ serve(async (req) => {
 
     const lang = langMap[language] || "English";
 
+    // Build quantity context
+    const qtyInfo = quantityDescription || (portionSize ? `${portionSize} portion` : "medium portion");
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -45,40 +50,53 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a professional nutritionist. User describes meal in natural language WITHOUT knowing exact grams. Calculate realistic nutrition based on:
-- Typical home/restaurant portion sizes
-- How meal was described (piece, bowl, plate, cup etc)
-- Portion size selected (small/medium/large/xlarge)
-- Any clarifications provided (homemade vs restaurant, with/without dressing, etc)
+            content: `You are a world-class nutritionist calculator. You receive a meal description with a SPECIFIC quantity indicator and must calculate precise nutrition.
 
-Be realistic, not perfect. Better to be slightly over than under.
-YOU MUST respond in ${lang}.
-Return ONLY valid JSON, no markdown or code fences.`,
+YOU MUST respond entirely in ${lang}. No exceptions.
+
+QUANTITY INTERPRETATION RULES:
+- "1 piece" of a named candy bar (Snickers, Nuts, KitKat, Mars, Twix, Bounty) → look up the EXACT standard weight and calories for that bar
+- "handful ~30g" of nuts → use 30g as base weight
+- "cup ~200ml" → 200ml of the described drink
+- "glass ~250ml" → 250ml
+- "small piece" / "medium piece" / "large piece" → estimate weight based on food type (cake slice small=80g, medium=120g, large=180g; pizza slice small=100g, medium=150g, large=200g)
+- "half bowl ~150g" / "normal bowl ~300g" / "full bowl ~400g" / "big bowl ~500g" → use those gram estimates for soups, porridge, salad, rice
+- "1 small fruit" / "1 medium fruit" / "1 large fruit" → apple small=120g, medium=180g, large=230g; banana small=90g, medium=120g, large=150g; etc.
+- "small handful ~15g" / "handful ~80g" for berries/grapes → use those gram estimates
+- "bowl ~150g" / "big bowl ~250g" for berries → use those
+- "half pack" / "1 pack" / "2 packs" → use standard package sizes (yogurt=125g, cottage cheese=200g, kefir=500ml, sour cream=200g)
+- "small portion" / "normal portion" / "large portion" / "very large portion" → estimate based on typical serving sizes
+- If quantity includes "g" or "kg" → use exact weight provided
+- If quantity includes number + "pieces" → multiply single item nutrition
+
+Be PRECISE with numbers. Use real nutritional data.
+
+Return ONLY valid JSON, no markdown, no code fences, no extra text.`,
           },
           {
             role: "user",
             content: `Meal: "${mealDescription}"
-Portion size: ${portionSize || "medium"} (small/medium/large/xlarge)
+Quantity: ${qtyInfo}
+Food category hint: ${foodCategory || "unknown"}
 Clarifications: ${clarifications || "none"}
 
-Calculate nutrition. Think step by step:
-1. What is this dish typically made of?
-2. What is a typical ${portionSize || "medium"} portion in grams?
-3. Calculate macros for that portion.
+Calculate nutrition step by step:
+1. Identify the exact food item(s)
+2. Determine weight in grams based on the quantity description
+3. Calculate macros for that exact weight
 
-Return ONLY JSON:
+Return ONLY this JSON:
 {
-  "meal_name": "Localized meal name",
-  "portion_description": "Medium piece ~250g",
-  "total_calories": 380,
-  "protein": 18,
-  "fat": 16,
-  "carbs": 42,
+  "meal_name": "Localized meal name with quantity (e.g. 'Snickers — 1 bar (50g)' or 'Nuts — handful (30g)')",
+  "portion_description": "Quantity description with estimated grams, e.g. '1 piece (50g)' or 'handful (~30g)' or 'normal bowl (~300g)'",
+  "total_calories": 250,
+  "protein": 3,
+  "fat": 12,
+  "carbs": 33,
   "confidence": "high",
-  "note": "Brief note about calculation basis"
+  "note": "Brief note about calculation"
 }
-confidence must be one of: "high", "medium", "low".
-"high" = common well-known dish, "medium" = somewhat vague, "low" = very unclear input.`,
+confidence: "high" = exact known product or clear quantity, "medium" = reasonable estimate, "low" = very vague input.`,
           },
         ],
         max_tokens: 400,
