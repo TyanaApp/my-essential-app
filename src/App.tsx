@@ -85,6 +85,7 @@ const App = () => {
                     <Route path="/achievements" element={<Achievements />} />
                     <Route path="/nutrition-analysis" element={<NutritionAnalysis />} />
                     <Route path="/meal-plan" element={<MealPlan />} />
+                    <Route path="/nutrition-calculator" element={<NutritionCalculator />} />
                     <Route path="/reminders" element={<Reminders />} />
                   </Route>
                   <Route path="/privacy" element={<PrivacyPage />} />
