@@ -2,7 +2,7 @@
   "name": "TYANA — Knows you better than you know yourself.",
   "short_name": "TYANA",
   "description": "Knows you better than you know yourself. AI-powered personal nutritionist and kitchen assistant.",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#F5F3FF",
   "theme_color": "#7C3AED",
