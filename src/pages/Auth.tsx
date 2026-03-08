@@ -102,6 +102,17 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+    if (isSignUp && !termsAccepted) {
+      const termsMessages: Record<string, string> = {
+        en: 'Please accept the terms to continue',
+        ru: 'Необходимо принять условия использования',
+        uk: 'Необхідно прийняти умови використання',
+        lv: 'Lūdzu apstipriniet noteikumus, lai turpinātu',
+      };
+      setTermsError(termsMessages[language] || termsMessages.en);
+      return;
+    }
+    setTermsError('');
     setIsSubmitting(true);
     try {
       if (isSignUp) {
