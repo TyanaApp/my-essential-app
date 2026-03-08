@@ -738,7 +738,7 @@ export const translations = {
       scanMeal: '📸 Fotografēt ēdienu', scanMealBtn: '📸', analyzing: '🤖 Analizē...', aiFound: '✅ AI atrada:',
       takePhoto: 'Nofotografējiet savu ēdienu', analyzingHint: 'Analizējam ēdienu... ~10 sekundes',
       scanFailed: 'Neizdevās atpazīt. Mēģiniet vēlreiz.', logThisMeal: 'Ierakstīt', editManually: 'Rediģēt manuāli', scanAgain: 'Vēlreiz',
-      portionEaten: 'Cik apēdāt:', portionFull: 'Visu', portionThreeQuarters: '¾', portionHalf: 'Pusi', portionQuarter: '¼',
+      portionEaten: 'Cik apēdāt:', portionExtra: '150%', portionFull: 'Visu', portionThreeQuarters: '¾', portionHalf: 'Pusi', portionQuarter: '¼',
       confHigh: 'Augsta precizitāte', confMedium: 'Aptuveni', confLow: 'Zema precizitāte',
       tapToEdit: 'Nospiediet nosaukumu lai rediģētu', recalculated: 'Pārrēķināts ✓', recalcFailed: 'Pārrēķins neizdevās',
     },
