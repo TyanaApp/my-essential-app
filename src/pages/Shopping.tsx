@@ -226,15 +226,11 @@ const Shopping = () => {
     if (!user || !formName.trim()) return;
 
     // Validate food item
-    try {
-      const { data: validation } = await supabase.functions.invoke('validate-food-item', {
-        body: { itemName: formName.trim(), language },
-      });
-      if (validation && !validation.isFood) {
-        toast.error(validation.reason || `"${formName}" is not a food item`);
-        return;
-      }
-    } catch { /* allow on error */ }
+    const isFood = await validateFood(formName.trim());
+    if (!isFood) {
+      setFormName('');
+      return;
+    }
 
     const payload = { user_id: user.id, name: formName.trim(), quantity: Number(formQty) || 1, unit: formUnit, category: formCategory, estimated_price: formPrice ? Number(formPrice) : null };
     if (editItem) {
