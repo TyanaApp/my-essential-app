@@ -253,7 +253,31 @@ const Auth = () => {
             {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
           </div>
 
-          <Button type="submit" disabled={isSubmitting}
+          {isSignUp && (
+            <div className="space-y-1">
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => { setTermsAccepted(e.target.checked); setTermsError(''); }}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 accent-[#7C3AED]"
+                />
+                <span className="text-xs" style={{ color: '#6B7280' }}>
+                  {language === 'ru' ? 'Я принимаю ' : language === 'uk' ? 'Я приймаю ' : language === 'lv' ? 'Es piekrītu ' : 'I accept the '}
+                  <Link to="/terms" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                    {language === 'ru' ? 'Условия использования' : language === 'uk' ? 'Умови використання' : language === 'lv' ? 'Lietošanas noteikumiem' : 'Terms of Service'}
+                  </Link>
+                  {language === 'ru' ? ' и ' : language === 'uk' ? ' та ' : language === 'lv' ? ' un ' : ' and '}
+                  <Link to="/privacy" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                    {language === 'ru' ? 'Политику конфиденциальности' : language === 'uk' ? 'Політику конфіденційності' : language === 'lv' ? 'Privātuma politiku' : 'Privacy Policy'}
+                  </Link>
+                </span>
+              </label>
+              {termsError && <p className="text-red-500 text-xs">{termsError}</p>}
+            </div>
+          )}
+
+          <Button type="submit" disabled={isSubmitting || (isSignUp && !termsAccepted)}
             className="w-full h-[52px] rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#7C3AED' }}>
             {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
