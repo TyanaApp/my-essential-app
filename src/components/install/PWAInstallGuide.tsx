@@ -103,7 +103,7 @@ const iosSteps: Record<string, IOSStep[]> = {
   lv: [
     {
       icon: '🌐', title: 'Atver Safari',
-      text: 'Svarīgi! Tikai Safari darbojas — ne Chrome vai citi pārlūki.\n\nJa tu esi Chrome vai citā pārlūkā — nokopē saiti tyana.app un atver Safari.',
+      text: 'Atver tieši Safari — tikai tajā ir instalācijas poga iPhone.',
       illustration: '🧭',
     },
     {
