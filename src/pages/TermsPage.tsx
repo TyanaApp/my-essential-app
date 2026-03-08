@@ -30,8 +30,8 @@ const TermsPage = () => {
       s4Items: [
         'Free plan: basic features, no time limit',
         'Lite €5.99/month: 15 scans/month, AI recipes, basic tracking',
-        'Pro Founder €6.49/month: first 1000 users only, price locked forever, unlimited',
-        'Pro €12.99/month: users after first 1000, unlimited',
+        'Pro Early Bird €6.49/month: eligible early users, price locked forever, unlimited',
+        'Pro €12.99/month: standard price, unlimited',
         '7-day trial: free for all new users, no card required, auto-switches to Free after',
         'Refunds: contact us within 7 days of payment',
       ],
