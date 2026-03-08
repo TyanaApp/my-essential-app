@@ -275,7 +275,7 @@ const Diary = () => {
                 className="bg-card rounded-2xl p-4 shadow-[0_2px_12px_rgba(124,58,237,0.06)]"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+                  <h3 className="text-sm font-bold flex items-center gap-1.5 text-foreground">
                     {section.emoji} {section.label}
                   </h3>
                   <div className="flex items-center gap-1">
