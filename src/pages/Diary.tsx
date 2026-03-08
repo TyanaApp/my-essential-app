@@ -137,19 +137,6 @@ const Diary = () => {
   };
 
   const handleScanSaved = (entry: any) => {
-    if (entry?._prefill) {
-      // Open manual modal with pre-filled values
-      setScanOpen(false);
-      setModalMealType(scanMealType);
-      setManualName(entry.custom_name || '');
-      setManualCalories(String(entry.total_calories || 0));
-      setManualProtein(String(entry.total_protein || 0));
-      setManualFat(String(entry.total_fat || 0));
-      setManualCarbs(String(entry.total_carbs || 0));
-      setAddMode('manual');
-      setModalOpen(true);
-      return;
-    }
     if (entry) {
       setEntries(prev => [...prev, entry as MealEntry]);
     }
@@ -169,35 +156,6 @@ const Diary = () => {
       if (error) throw error;
       if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
       toast.success(`${recipe.title} ${t.diary.logged}`);
-      setModalOpen(false);
-      // Update streak
-      const reward = await updateStreak();
-      if (reward) setStreakReward(reward);
-    } catch { toast.error(t.common.error); }
-  };
-
-  const handleAddManual = async () => {
-    if (!user || !manualName.trim()) return;
-
-    // Validate food item
-    const isFood = await validateFood(manualName.trim());
-    if (!isFood) {
-      setManualName('');
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase.from('meal_entries').insert({
-        user_id: user.id, date: dateStr, meal_type: modalMealType,
-        custom_name: manualName.trim(),
-        total_calories: Number(manualCalories) || 0,
-        total_protein: Number(manualProtein) || 0,
-        total_fat: Number(manualFat) || 0,
-        total_carbs: Number(manualCarbs) || 0,
-      } as any).select().single();
-      if (error) throw error;
-      if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
-      toast.success(`${manualName} ${t.diary.logged}`);
       setModalOpen(false);
       const reward = await updateStreak();
       if (reward) setStreakReward(reward);
