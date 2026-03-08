@@ -1656,7 +1656,7 @@ export const translations = {
     },
     diary: {
       title: 'Щоденник', breakfast: 'Сніданок', lunch: 'Обід', dinner: 'Вечеря', snack: 'Перекус',
-      addMeal: '+ Додати', todayTotal: 'Сьогодні:', noMeals: 'Немає записів',
+      addMeal: 'Додати', todayTotal: 'Сьогодні:', noMeals: 'Немає записів',
       addMealTitle: 'Додати {meal}', logWhatYouAte: 'Запишіть що ви їли',
       fromRecipes: 'З рецептів', manualEntry: 'Вручну',
       searchRecipes: 'Пошук збережених рецептів...', noSavedRecipes: 'Немає збережених рецептів',
