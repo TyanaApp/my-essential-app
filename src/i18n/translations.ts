@@ -343,7 +343,7 @@ export const translations = {
       free: 'Free', freeTrial: '7-day Pro trial included',
       freeFeatures: ['5 scans/month', '3 recipes/day', 'Shopping list', 'Meal diary (today only — 1 day history)', 'Calorie tracking (today only, no history)', 'No weekly analytics'],
       forFamilies: 'For Families', lite: 'Lite', month: '/month',
-      liteFeatures: ['15 scans/month', 'Unlimited recipes', '5 receipts/month', '4 family members', 'Allergy profiles', 'Live discounts', 'Weekly savings report'],
+      liteFeatures: ['15 scans/month', 'Unlimited recipes', 'Full meal history', 'Weekly & monthly analytics', '4 family members', 'Allergy profiles', 'Live discounts', 'Weekly savings report'],
       getLite: 'Get Lite',
       mostPopular: 'Most Popular', pro: 'Pro', mo: '/mo',
       founderPrice: '✦ Founder\'s Price — 50% off for life',
