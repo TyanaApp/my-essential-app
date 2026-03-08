@@ -57,7 +57,14 @@ const Layout = () => {
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <div className="relative">
+                  <Icon className="w-4 h-4" />
+                  {(item as any).badge > 0 && (
+                    <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 rounded-full bg-destructive text-[8px] font-bold flex items-center justify-center text-destructive-foreground">
+                      {(item as any).badge}
+                    </span>
+                  )}
+                </div>
                 <span>{item.label}</span>
               </NavLink>
             );
