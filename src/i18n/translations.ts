@@ -366,6 +366,12 @@ export const translations = {
       footerCopyright: '© 2025 TYANA. All rights reserved.',
       foundingCounter: '{count} of 1000 founder spots taken',
       foundingFull: 'All founder spots taken. Pro is now €12.99/mo',
+      whyTitle: 'Why TYANA works',
+      why1Title: 'Deeper than any app', why1Desc: 'Analyzes your nutrition as deeply as a professional nutritionist — but available 24/7',
+      why2Title: 'Saves time and money', why2Desc: 'The average family throws away €80 of food per month. TYANA helps you use everything you buy.',
+      why3Title: 'Personalized for you', why3Desc: 'Takes into account your goals, tastes, allergies and what you have at home right now.',
+      ctaBannerTitle: 'Your nutrition, finally under control. Start today.',
+      notFood: 'doesn\'t look like a food item',
     },
     family: {
       title: 'Family', members: 'members', familyLabel: 'Family',
