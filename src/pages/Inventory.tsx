@@ -203,7 +203,7 @@ const Inventory = () => {
 
   return (
     <div className="min-h-screen p-4 sm:p-6" style={{ paddingBottom: 90 }}>
-      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>{t.inventory.title}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-foreground">{t.inventory.title}</h1>
 
       {/* Tabs */}
       <div className="grid grid-cols-4 gap-1.5 mb-4">
