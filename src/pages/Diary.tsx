@@ -376,7 +376,15 @@ const Diary = () => {
         onSaved={handleScanSaved}
       />
 
-      {/* Add meal modal */}
+      {/* Fridge picker modal */}
+      <FridgePickerModal
+        open={fridgeOpen}
+        onClose={() => setFridgeOpen(false)}
+        mealType={fridgeMealType}
+        dateStr={dateStr}
+        onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
+      />
+
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
