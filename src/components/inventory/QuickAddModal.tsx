@@ -88,17 +88,10 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
   const categories = useMemo(() => getCategoriesForLocation(storageLocation), [storageLocation]);
   const allProducts = useMemo(() => getAllProducts(), []);
 
-  if (!open) return null;
-
-  const uLabels = UNIT_LABELS[language] || UNIT_LABELS.en;
-  const bLabels = BOTTOM_LABELS[language] || BOTTOM_LABELS.en;
-  const hLabels = HEADER_LABELS[language] || HEADER_LABELS.en;
-  const locLabels = LOCATION_LABELS[storageLocation] || LOCATION_LABELS.fridge;
-  const locEmoji = LOCATION_EMOJIS[storageLocation] || '🧊';
-  const smartTexts = SMART_SUGGESTION_TEXTS[language] || SMART_SUGGESTION_TEXTS.en;
-
-  const getName = (p: QuickProduct) => p.names[language as keyof typeof p.names] || p.names.en;
-  const getUnitLabel = (unit: string) => uLabels[unit] || unit;
+  const getName = (p: QuickProduct) => {
+    const lang = language as keyof typeof p.names;
+    return p.names[lang] || p.names.en;
+  };
 
   // Search across ALL products
   const filteredItems = useMemo(() => {
@@ -109,6 +102,16 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
       return name.includes(q);
     });
   }, [search, allProducts, language]);
+
+  if (!open) return null;
+
+  const uLabels = UNIT_LABELS[language] || UNIT_LABELS.en;
+  const bLabels = BOTTOM_LABELS[language] || BOTTOM_LABELS.en;
+  const hLabels = HEADER_LABELS[language] || HEADER_LABELS.en;
+  const locLabels = LOCATION_LABELS[storageLocation] || LOCATION_LABELS.fridge;
+  const locEmoji = LOCATION_EMOJIS[storageLocation] || '🧊';
+  const smartTexts = SMART_SUGGESTION_TEXTS[language] || SMART_SUGGESTION_TEXTS.en;
+  const getUnitLabel = (unit: string) => uLabels[unit] || unit;
 
   const toggleItem = (product: QuickProduct) => {
     if (selected.has(product.key)) {
