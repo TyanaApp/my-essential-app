@@ -32,6 +32,39 @@ export type Database = {
         }
         Relationships: []
       }
+      calorie_history: {
+        Row: {
+          adjustment: number
+          avg_last_7_days: number | null
+          base_tdee: number
+          created_at: string
+          date: string
+          id: string
+          target: number
+          user_id: string
+        }
+        Insert: {
+          adjustment?: number
+          avg_last_7_days?: number | null
+          base_tdee: number
+          created_at?: string
+          date: string
+          id?: string
+          target: number
+          user_id: string
+        }
+        Update: {
+          adjustment?: number
+          avg_last_7_days?: number | null
+          base_tdee?: number
+          created_at?: string
+          date?: string
+          id?: string
+          target?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       families: {
         Row: {
           created_at: string
@@ -430,6 +463,7 @@ export type Database = {
           height_cm: number | null
           household_size: number | null
           id: string
+          last_recalculated: string | null
           monthly_budget: number | null
           stores: string[] | null
           updated_at: string | null
@@ -448,6 +482,7 @@ export type Database = {
           height_cm?: number | null
           household_size?: number | null
           id?: string
+          last_recalculated?: string | null
           monthly_budget?: number | null
           stores?: string[] | null
           updated_at?: string | null
@@ -466,11 +501,36 @@ export type Database = {
           height_cm?: number | null
           household_size?: number | null
           id?: string
+          last_recalculated?: string | null
           monthly_budget?: number | null
           stores?: string[] | null
           updated_at?: string | null
           user_id?: string
           weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      weight_history: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          id?: string
+          user_id: string
+          weight: number
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          user_id?: string
+          weight?: number
         }
         Relationships: []
       }

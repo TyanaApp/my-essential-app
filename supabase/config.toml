@@ -50,3 +50,9 @@ verify_jwt = false
 
 [functions.weekly-report-scheduler]
 verify_jwt = false
+
+[functions.recalculate-daily-calories]
+verify_jwt = false
+
+[functions.eating-insights]
+verify_jwt = false

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, ChevronRight, AlertTriangle, Check, Sparkles, Brain, RefreshCw } from 'lucide-react';
+import CalorieTargetCard from '@/components/dashboard/CalorieTargetCard';
+import EatingInsightsCard from '@/components/dashboard/EatingInsightsCard';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -524,6 +526,7 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+          <CalorieTargetCard />
         </motion.div>
 
         {/* Missing body data banner */}
