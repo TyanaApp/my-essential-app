@@ -309,6 +309,9 @@ export const translations = {
       greatYesterday: '💪 Great job yesterday! Keep it up today.',
       logLunch: '📊 Log your lunch — it helps track calories accurately',
     },
+    weeklyReport: {
+      lastWeekTitle: 'Last week summary', calDay: 'kcal/day', meals: 'meals', saved: 'saved', streakDays: 'days in a row',
+    },
     dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     notifications: {
       bannerTitle: '🔔 Get alerts before food expires',
