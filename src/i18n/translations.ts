@@ -615,7 +615,7 @@ export const translations = {
         selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', addAllCount: 'Добавить все {count} продуктов', done: 'Готово ✓',
         adjustQty: 'Уточни количество', backToSelect: '← Назад', addedSuccess: '{count} продуктов добавлено',
         noResults: 'Ничего не найдено', homeTab: '🏡 Дома',
-        howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена',
+        howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена', backToPresets: 'Назад к вариантам',
       },
       quickAddCategories: {
         dairy: 'Яйца и молочное', meat: 'Мясо и рыба', vegetables: 'Овощи', fruits: 'Фрукты',
