@@ -76,6 +76,7 @@ export const translations = {
       time15: '<15 min', time30: '30 min', time1h: '1 hour', timeAny: 'Any',
       addAllMissing: 'Add all missing →',
       deleteFromSaved: 'Remove from saved?', deleteYes: 'Yes', deleteNo: 'No', recipeDeleted: 'Recipe removed',
+      minUnit: 'min', estCost: 'est.',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
@@ -307,6 +308,9 @@ export const translations = {
       breakfastReminder: "🍳 Don't forget to log breakfast!",
       greatYesterday: '💪 Great job yesterday! Keep it up today.',
       logLunch: '📊 Log your lunch — it helps track calories accurately',
+    },
+    weeklyReport: {
+      lastWeekTitle: 'Last week summary', calDay: 'kcal/day', meals: 'meals', saved: 'saved', streakDays: 'days in a row',
     },
     dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     notifications: {
@@ -701,6 +705,7 @@ export const translations = {
       time15: '<15 мин', time30: '30 мин', time1h: '1 час', timeAny: 'Любое',
       addAllMissing: 'Добавить всё →',
       deleteFromSaved: 'Удалить из сохранённых?', deleteYes: 'Да', deleteNo: 'Нет', recipeDeleted: 'Рецепт удалён',
+      minUnit: 'мин', estCost: 'прим.',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -1245,6 +1250,7 @@ export const translations = {
       time15: '<15 min', time30: '30 min', time1h: '1 stunda', timeAny: 'Jebkurš',
       addAllMissing: 'Pievienot visu →',
       deleteFromSaved: 'Noņemt no saglabātajiem?', deleteYes: 'Jā', deleteNo: 'Nē', recipeDeleted: 'Recepte noņemta',
+      minUnit: 'min', estCost: 'apm.',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
@@ -1430,6 +1436,9 @@ export const translations = {
       breakfastReminder: '🍳 Neaizmirsti reģistrēt brokastis!',
       greatYesterday: '💪 Vakar biji lieliska! Turpini šodien.',
       logLunch: '📊 Reģistrē pusdienas — tā kalorijas tiek skaitītas precīzāk',
+    },
+    weeklyReport: {
+      lastWeekTitle: 'Pagājušās nedēļas kopsavilkums', calDay: 'kcal/dienā', meals: 'ēdienreizes', saved: 'ietaupīts', streakDays: 'dienas pēc kārtas',
     },
     dayLabels: ['P', 'O', 'T', 'C', 'Pk', 'S', 'Sv'],
     notifications: {
@@ -1770,6 +1779,7 @@ export const translations = {
       time15: '<15 хв', time30: '30 хв', time1h: '1 година', timeAny: 'Будь-який',
       addAllMissing: 'Додати все →',
       deleteFromSaved: 'Видалити зі збережених?', deleteYes: 'Так', deleteNo: 'Ні', recipeDeleted: 'Рецепт видалено',
+      minUnit: 'хв', estCost: 'прибл.',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
@@ -1956,6 +1966,9 @@ export const translations = {
       breakfastReminder: '🍳 Не забудь записати сніданок!',
       greatYesterday: '💪 Вчора ти була молодець! Тримай темп сьогодні.',
       logLunch: '📊 Запиши обід — так точніше рахуються калорії',
+    },
+    weeklyReport: {
+      lastWeekTitle: 'Підсумки минулого тижня', calDay: 'ккал/день', meals: 'прийомів', saved: 'зекономлено', streakDays: 'днів поспіль',
     },
     dayLabels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
     notifications: {

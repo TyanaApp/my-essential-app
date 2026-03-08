@@ -238,9 +238,9 @@ const Diary = () => {
                           <p className="text-sm font-medium truncate text-foreground">{entry.custom_name || t.diary.meal}</p>
                           <p className="text-[10px] text-muted-foreground">
                             {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
-                            {(entry.total_protein ?? 0) > 0 && ` · P:${entry.total_protein}g`}
-                            {(entry.total_fat ?? 0) > 0 && ` · F:${entry.total_fat}g`}
-                            {(entry.total_carbs ?? 0) > 0 && ` · C:${entry.total_carbs}g`}
+                            {(entry.total_protein ?? 0) > 0 && ` · ${(t.mealPlan as any)?.proteinShort || 'P'}:${entry.total_protein}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                            {(entry.total_fat ?? 0) > 0 && ` · ${(t.mealPlan as any)?.fatShort || 'F'}:${entry.total_fat}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                            {(entry.total_carbs ?? 0) > 0 && ` · ${(t.mealPlan as any)?.carbsShort || 'C'}:${entry.total_carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`}
                           </p>
                         </div>
                         <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-red-50 shrink-0">
@@ -266,15 +266,15 @@ const Diary = () => {
           </span>
           <div className="flex gap-3 text-xs font-medium">
             {[
-              { label: 'P', value: Math.round(totals.protein), target: macroTargets.protein },
-              { label: 'F', value: Math.round(totals.fat), target: macroTargets.fat },
-              { label: 'C', value: Math.round(totals.carbs), target: macroTargets.carbs },
+              { label: (t.mealPlan as any)?.proteinShort || 'P', value: Math.round(totals.protein), target: macroTargets.protein },
+              { label: (t.mealPlan as any)?.fatShort || 'F', value: Math.round(totals.fat), target: macroTargets.fat },
+              { label: (t.mealPlan as any)?.carbsShort || 'C', value: Math.round(totals.carbs), target: macroTargets.carbs },
             ].map(m => {
               const ratio = m.target > 0 ? m.value / m.target : 0;
               const color = ratio > 1.15 ? '#DC2626' : ratio >= 0.7 ? '#059669' : '#EA580C';
               return (
                 <span key={m.label} style={{ color }}>
-                  {m.label}: {m.value}/{m.target}g
+                  {m.label}: {m.value}/{m.target}{(t.nutritionCalc as any)?.unitG || 'g'}
                 </span>
               );
             })}

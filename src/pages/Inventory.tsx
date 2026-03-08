@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { translateUnit } from '@/lib/units';
 import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,7 +42,7 @@ type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
 
 const Inventory = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   usePageTitle(t.inventory.title);
   useAutoReduce();
   const { plan } = useSubscription();
@@ -357,7 +358,7 @@ const Inventory = () => {
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {item.tracking_mode !== 'date_only' && (
                           <span className="text-xs font-medium text-muted-foreground">
-                            {item.quantity} {item.unit}
+                            {item.quantity} {translateUnit(item.unit, language)}
                           </span>
                         )}
                         <span

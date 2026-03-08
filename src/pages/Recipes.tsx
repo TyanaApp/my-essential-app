@@ -207,11 +207,11 @@ const Recipes = () => {
             </div>
           </div>
           <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2" style={{ backgroundColor: cc.bg, color: cc.text }}>
-            {n.nutrition.calories} kcal
+            {n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}
           </span>
           <div className="flex items-center gap-3 text-xs mb-2" style={{ color: '#6B7280' }}>
-            <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {n.prepTime} min</span>
-            <span className="flex items-center gap-1">💰 est. €{n.estimatedCost?.toFixed(2)}</span>
+            <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {n.prepTime} {(t.recipes as any)?.minUnit || 'min'}</span>
+            <span className="flex items-center gap-1">💰 {(t.recipes as any)?.estCost || 'est.'} €{n.estimatedCost?.toFixed(2)}</span>
           </div>
           <p className="text-xs font-medium" style={{ color: missingCount === 0 ? '#059669' : '#EA580C' }}>
             {missingCount === 0 ? t.recipes.allAvailable : t.recipes.needItems.replace('{count}', String(missingCount))}
@@ -361,10 +361,10 @@ const Recipes = () => {
                       <h2 className="text-xl font-bold mb-3" style={{ color: '#1E1B4B' }}>{r.title}</h2>
                       <div className="grid grid-cols-4 gap-2 mb-4">
                         {[
-                          { label: 'kcal', value: r.nutrition.calories, color: cc.text },
-                          { label: t.dashboard.protein, value: `${r.nutrition.protein}g`, color: '#059669' },
-                          { label: t.dashboard.fat, value: `${r.nutrition.fat}g`, color: '#EA580C' },
-                          { label: t.dashboard.carbs, value: `${r.nutrition.carbs}g`, color: '#2563EB' },
+                          { label: (t.diary as any)?.kcalUnit || 'kcal', value: r.nutrition.calories, color: cc.text },
+                          { label: t.dashboard.protein, value: `${r.nutrition.protein}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#059669' },
+                          { label: t.dashboard.fat, value: `${r.nutrition.fat}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#EA580C' },
+                          { label: t.dashboard.carbs, value: `${r.nutrition.carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#2563EB' },
                         ].map((n) => (
                           <div key={n.label} className="text-center p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
                             <p className="text-base font-bold" style={{ color: n.color }}>{n.value}</p>
