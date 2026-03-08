@@ -561,15 +561,6 @@ const Dashboard = () => {
         </motion.div>
       )}
 
-      {/* Quick action: Nutrition Calculator */}
-      <motion.div {...fadeUp(0.5)}>
-        <button
-          onClick={() => navigate('/recipes?tab=calc')}
-          className="px-4 py-2.5 rounded-xl bg-secondary text-primary text-xs font-medium hover:bg-accent transition-colors"
-        >
-          {(t as any).nutritionCalc?.dashboardBtn || '🧮 Nutrition calculator'}
-        </button>
-      </motion.div>
 
       <div className="space-y-4">
         {/* Card 1 — Calories */}
