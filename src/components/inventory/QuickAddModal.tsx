@@ -245,10 +245,14 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const [qtyPopupSelected, setQtyPopupSelected] = useState<number>(-1);
   const [customQty, setCustomQty] = useState('');
   const [showCustom, setShowCustom] = useState(false);
+  const [byWeight, setByWeight] = useState(false);
+  const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('g');
+  const [weightValue, setWeightValue] = useState('');
 
   if (!open) return null;
 
   const uLabels = UNIT_LABELS[language] || UNIT_LABELS.en;
+  const byWeightLabel = BY_WEIGHT_LABEL[language] || BY_WEIGHT_LABEL.en;
 
   const allItems = categories.flatMap(c => c.items);
   const filteredItems = search.trim()
@@ -257,7 +261,6 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
 
   const openQtyPopup = (item: QuickItem) => {
     if (selected.has(item.nameKey)) {
-      // Deselect
       setSelected(prev => {
         const next = new Map(prev);
         next.delete(item.nameKey);
@@ -270,6 +273,9 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
     setQtyPopupSelected(defaultIdx);
     setCustomQty('');
     setShowCustom(false);
+    setByWeight(false);
+    setWeightValue('');
+    setWeightUnit('g');
   };
 
   const confirmQtyPopup = () => {
@@ -280,7 +286,12 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
     let unit: string;
     let displayQty: string;
 
-    if (showCustom && customQty.trim()) {
+    if (byWeight && weightValue.trim()) {
+      const val = parseFloat(weightValue) || 0;
+      qty = val;
+      unit = weightUnit;
+      displayQty = `${val}${uLabels[weightUnit]}`;
+    } else if (showCustom && customQty.trim()) {
       qty = parseFloat(customQty) || 1;
       unit = 'pcs';
       displayQty = `${qty} ${uLabels.pcs}`;
