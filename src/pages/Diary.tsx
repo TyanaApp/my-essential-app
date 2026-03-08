@@ -230,7 +230,7 @@ const Diary = () => {
 
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
-      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>{t.diary.title}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-foreground">{t.diary.title}</h1>
 
       {/* Week strip */}
       <div className="flex gap-1.5 mb-6 overflow-x-auto pb-1">
@@ -248,10 +248,10 @@ const Diary = () => {
                 border: `1.5px solid ${isSelected ? '#7C3AED' : '#DDD6FE'}`,
               }}
             >
-              <span className="text-[10px] font-semibold mb-0.5" style={{ color: isSelected ? 'white' : '#6B7280' }}>
+              <span className={`text-[10px] font-semibold mb-0.5 ${isSelected ? 'text-white' : 'text-muted-foreground'}`}>
                 {DAY_LABELS[i]}
               </span>
-              <span className="text-sm font-bold" style={{ color: isSelected ? 'white' : '#1E1B4B' }}>
+              <span className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-foreground'}`}>
                 {d.getDate()}
               </span>
             </button>
@@ -272,11 +272,10 @@ const Diary = () => {
                 key={section.type}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl p-4"
-                style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
+                className="bg-card rounded-2xl p-4 shadow-[0_2px_12px_rgba(124,58,237,0.06)]"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+                  <h3 className="text-sm font-bold flex items-center gap-1.5 text-foreground">
                     {section.emoji} {section.label}
                   </h3>
                   <div className="flex items-center gap-1">
@@ -307,14 +306,14 @@ const Diary = () => {
                 </div>
 
                 {sectionEntries.length === 0 ? (
-                  <p className="text-xs py-2" style={{ color: '#9CA3AF' }}>{t.diary.noMeals}</p>
+                  <p className="text-xs py-2 text-muted-foreground">{t.diary.noMeals}</p>
                 ) : (
                   <div className="space-y-1.5">
                     {sectionEntries.map((entry) => (
-                      <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg" style={{ backgroundColor: '#FAFAFE' }}>
+                      <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-muted/30">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{entry.custom_name || t.diary.meal}</p>
-                          <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
+                          <p className="text-sm font-medium truncate text-foreground">{entry.custom_name || t.diary.meal}</p>
+                          <p className="text-[10px] text-muted-foreground">
                             {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
                             {(entry.total_protein ?? 0) > 0 && ` · P:${entry.total_protein}g`}
                             {(entry.total_fat ?? 0) > 0 && ` · F:${entry.total_fat}g`}
@@ -336,8 +335,7 @@ const Diary = () => {
 
       {/* Daily totals bar */}
       <div
-        className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40"
-        style={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', borderTop: '1px solid #EDE9FE' }}
+        className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40 bg-card/95 backdrop-blur-sm border-t border-border"
       >
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <span className="text-sm font-bold" style={{ color: totalsColor }}>
@@ -388,7 +386,7 @@ const Diary = () => {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
-            <DialogTitle style={{ color: '#1E1B4B' }}>
+            <DialogTitle className="text-foreground">
               {t.diary.addMealTitle.replace('{meal}', getMealLabel(modalMealType))}
             </DialogTitle>
             <DialogDescription>{t.diary.logWhatYouAte}</DialogDescription>

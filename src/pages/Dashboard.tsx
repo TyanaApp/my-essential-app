@@ -23,8 +23,6 @@ const pluralizeRu = (n: number, one: string, few: string, many: string) => {
   return many;
 };
 
-// No more CURRENCIES array - using formatMoney utility
-
 interface ExpiringItem {
   id: string;
   name: string;
@@ -142,7 +140,7 @@ const Dashboard = () => {
       const spentThisMonth = savingsLogs.filter((r: any) => r.type === 'purchase').reduce((s: number, r: any) => s + Math.abs(Number(r.amount || 0)), 0);
       const savedThisMonth = savingsLogs.filter((r: any) => r.type === 'saved' || r.type === 'waste_prevented').reduce((s: number, r: any) => s + Number(r.amount || 0), 0);
 
-      // Find "use it up" recipe — the saved recipe that uses the most expiring ingredients
+      // Find "use it up" recipe
       let useItUpRecipe: DashboardData['useItUpRecipe'] = null;
       if (expiringItems.length > 0 && recipesRes.data && recipesRes.data.length > 0) {
         const expiringNames = expiringItems.map(i => i.name.toLowerCase());
@@ -197,7 +195,6 @@ const Dashboard = () => {
         if (userGoals.includes('gain_muscle')) TDEE += 300;
         caloriesTarget = Math.round(TDEE);
 
-        // Save calculated target back
         if (goalsData) {
           supabase.from('user_goals').update({ daily_calories_target: caloriesTarget } as any).eq('user_id', user.id).then(() => {});
         }
@@ -398,11 +395,7 @@ const Dashboard = () => {
   const circumference = 2 * Math.PI * 72;
   const strokeDashoffset = circumference * (1 - pct);
 
-  const cardStyle = {
-    backgroundColor: 'white',
-    borderRadius: '20px',
-    boxShadow: '0 2px 16px rgba(124,58,237,0.08)',
-  };
+  const cardClass = "bg-card rounded-[20px] shadow-[0_2px_16px_rgba(124,58,237,0.08)]";
 
   const fadeUp = (i: number) => ({
     initial: { opacity: 0, y: 8 },
@@ -417,10 +410,10 @@ const Dashboard = () => {
 
       {/* Greeting */}
       <motion.div {...fadeUp(0)} className="mb-6">
-        <h2 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>
+        <h2 className="text-2xl font-bold text-foreground">
           {getGreeting()}, {data.displayName}! 👋
         </h2>
-        <p className="text-sm mt-0.5" style={{ color: '#9CA3AF' }}>{formatDate()}</p>
+        <p className="text-sm mt-0.5 text-muted-foreground">{formatDate()}</p>
       </motion.div>
 
       {/* Family widget */}
@@ -432,15 +425,14 @@ const Dashboard = () => {
         <motion.div {...fadeUp(0.5)} className="mb-4">
           <button
             onClick={() => navigate('/achievements')}
-            style={cardStyle}
-            className="w-full p-4 flex items-center gap-3 text-left"
+            className={`${cardClass} w-full p-4 flex items-center gap-3 text-left`}
           >
             <span className="text-2xl">🔥</span>
             <div className="flex-1">
-              <p className="text-base font-bold" style={{ color: '#1E1B4B' }}>
+              <p className="text-base font-bold text-foreground">
                 {data.streakCurrent} {(t as any).streak?.daysInRow || 'days in a row'}
               </p>
-              <p className="text-xs" style={{ color: '#9CA3AF' }}>
+              <p className="text-xs text-muted-foreground">
                 {(() => {
                   const milestones = [3, 7, 14, 30, 100];
                   const next = milestones.find(m => m > data.streakCurrent);
@@ -450,11 +442,10 @@ const Dashboard = () => {
                 })()}
               </p>
             </div>
-            <div className="w-16 h-1.5 rounded-full" style={{ backgroundColor: '#EDE9FE' }}>
+            <div className="w-16 h-1.5 rounded-full bg-accent">
               <div
-                className="h-full rounded-full"
+                className="h-full rounded-full bg-primary"
                 style={{
-                  backgroundColor: '#7C3AED',
                   width: `${Math.min(
                     (data.streakCurrent / ([3, 7, 14, 30, 100].find(m => m > data.streakCurrent) || 100)) * 100,
                     100
@@ -462,22 +453,22 @@ const Dashboard = () => {
                 }}
               />
             </div>
-            <ChevronRight className="w-4 h-4" style={{ color: '#9CA3AF' }} />
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         </motion.div>
       )}
 
       <div className="space-y-4">
         {/* Card 1 — Calories */}
-        <motion.div {...fadeUp(1)} style={cardStyle} className="p-5">
+        <motion.div {...fadeUp(1)} className={`${cardClass} p-5`}>
           <div className="flex flex-col sm:flex-row items-center gap-5">
             <div className="relative shrink-0" style={{ width: 180, height: 180 }}>
               <svg width="180" height="180" viewBox="0 0 180 180">
-                <circle cx="90" cy="90" r="72" fill="none" stroke="#EDE9FE" strokeWidth="12" />
+                <circle cx="90" cy="90" r="72" fill="none" className="stroke-accent" strokeWidth="12" />
                 <circle
                   cx="90" cy="90" r="72"
                   fill="none"
-                  stroke="#7C3AED"
+                  className="stroke-primary"
                   strokeWidth="12"
                   strokeLinecap="round"
                   strokeDasharray={circumference}
@@ -487,10 +478,10 @@ const Dashboard = () => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold" style={{ color: data.caloriesConsumed === 0 && caloriesConsumed === 0 ? '#1E1B4B' : '#1E1B4B' }}>
+                <span className="text-2xl font-bold text-foreground">
                   {data.caloriesConsumed}
                 </span>
-                <span className="text-xs" style={{ color: '#9CA3AF' }}>
+                <span className="text-xs text-muted-foreground">
                   / {data.caloriesTarget} {(t as any).diary?.kcalUnit || 'kcal'}
                 </span>
               </div>
@@ -505,10 +496,10 @@ const Dashboard = () => {
                 ].map((m) => (
                   <div key={m.label}>
                     <div className="flex justify-between text-xs mb-0.5">
-                      <span style={{ color: '#6B7280' }}>{m.label}</span>
+                      <span className="text-muted-foreground">{m.label}</span>
                       <span className="font-medium" style={{ color: m.color }}>{m.value}g</span>
                     </div>
-                    <div className="h-1.5 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+                    <div className="h-1.5 rounded-full bg-muted">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{
@@ -527,8 +518,7 @@ const Dashboard = () => {
 
               <button
                 onClick={() => navigate('/diary')}
-                className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px]"
-                style={{ borderColor: '#7C3AED', color: '#7C3AED' }}
+                className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px] border-primary text-primary"
               >
                 <Plus className="w-3.5 h-3.5" /> {t.dashboard.logMeal}
               </button>
@@ -554,31 +544,31 @@ const Dashboard = () => {
         )}
 
         {/* AI Nutrition Advice Card */}
-        <motion.div {...fadeUp(1.8)} className="bg-white rounded-2xl p-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)', borderLeft: '4px solid #7C3AED' }}>
-          <p className="text-xs font-medium mb-1.5 flex items-center gap-1.5" style={{ color: '#9CA3AF' }}>
+        <motion.div {...fadeUp(1.8)} className="bg-card rounded-2xl p-4 shadow-[0_2px_16px_rgba(124,58,237,0.08)] border-l-4 border-primary">
+          <p className="text-xs font-medium mb-1.5 flex items-center gap-1.5 text-muted-foreground">
             🧠 {(t as any).nutritionAdvice?.title || "TYANA's advice"}
           </p>
           {adviceLoading ? (
             <div className="flex items-center gap-2 py-2">
-              <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
-              <span className="text-xs" style={{ color: '#9CA3AF' }}>{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
+              <div className="w-4 h-4 border-2 rounded-full animate-spin border-accent border-t-primary" />
+              <span className="text-xs text-muted-foreground">{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
             </div>
           ) : advice ? (
-            <p className="text-sm leading-relaxed mb-2" style={{ color: '#1E1B4B' }}>{advice}</p>
+            <p className="text-sm leading-relaxed mb-2 text-foreground">{advice}</p>
           ) : (
-            <p className="text-sm" style={{ color: '#9CA3AF' }}>{(t as any).nutritionAdvice?.noData || 'Log meals to get personalized advice'}</p>
+            <p className="text-sm text-muted-foreground">{(t as any).nutritionAdvice?.noData || 'Log meals to get personalized advice'}</p>
           )}
           <div className="flex items-center justify-between mt-1">
-            <span className="text-[10px]" style={{ color: '#C4B5FD' }}>{(t as any).nutritionAdvice?.basedOnData || 'Based on your data today'}</span>
-            <button onClick={() => navigate('/nutrition-analysis')} className="text-xs font-semibold flex items-center gap-1" style={{ color: '#7C3AED' }}>
+            <span className="text-[10px] text-muted-foreground/60">{(t as any).nutritionAdvice?.basedOnData || 'Based on your data today'}</span>
+            <button onClick={() => navigate('/nutrition-analysis')} className="text-xs font-semibold flex items-center gap-1 text-primary">
               📊 {(t as any).nutritionAdvice?.fullAnalysis || 'Full analysis'} →
             </button>
           </div>
         </motion.div>
 
-        <motion.div {...fadeUp(2)} style={cardStyle} className="p-5">
+        <motion.div {...fadeUp(2)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: '#1E1B4B' }}>
+            <h3 className="text-sm font-bold flex items-center gap-2 text-foreground">
               <AlertTriangle className="w-4 h-4" style={{ color: '#EA580C' }} />
               {data.expiringItems.length > 0
                 ? (() => {
@@ -592,8 +582,7 @@ const Dashboard = () => {
             </h3>
             <button
               onClick={() => navigate('/inventory?tab=expiring')}
-              className="text-xs font-medium flex items-center gap-0.5"
-              style={{ color: '#7C3AED' }}
+              className="text-xs font-medium flex items-center gap-0.5 text-primary"
             >
               {t.dashboard.viewAll} <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -612,7 +601,7 @@ const Dashboard = () => {
                     style={{ backgroundColor: isExpired ? '#FEE2E2' : '#FEF3C7' }}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{item.name}</span>
+                      <span className="text-sm font-medium text-foreground">{item.name}</span>
                       <span
                         className="text-xs font-semibold px-2 py-0.5 rounded-full"
                         style={{
@@ -646,11 +635,11 @@ const Dashboard = () => {
                         {item.suggestion && (
                           <div className="flex items-center gap-1.5 mt-1">
                             <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
-                            <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                            <span className="text-[11px] text-muted-foreground">{item.suggestion}</span>
                           </div>
                         )}
                         {loadingSuggestions && !item.suggestion && (
-                          <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
+                          <span className="text-[11px] mt-1 block text-muted-foreground">
                             {(t.dashboard as any).loadingSuggestions || '...'}
                           </span>
                         )}
@@ -665,8 +654,8 @@ const Dashboard = () => {
 
         {/* Card 2.5 — Use It Up suggestion */}
         {data.useItUpRecipe && (
-          <motion.div {...fadeUp(2.5)} style={cardStyle} className="p-5">
-            <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
+          <motion.div {...fadeUp(2.5)} className={`${cardClass} p-5`}>
+            <h3 className="text-sm font-bold mb-3 text-foreground">
               {t.notifications.useBeforeGone}
             </h3>
             <div
@@ -676,7 +665,7 @@ const Dashboard = () => {
               <div className="flex items-center gap-3">
                 <span className="text-2xl">🍳</span>
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>{data.useItUpRecipe.title}</p>
+                  <p className="text-sm font-semibold text-foreground">{data.useItUpRecipe.title}</p>
                   <p className="text-[11px]" style={{ color: '#059669' }}>
                     {data.useItUpRecipe.matchCount} {language === 'ru' ? pluralizeRu(data.useItUpRecipe.matchCount, 'совпадающий продукт', 'совпадающих продукта', 'совпадающих продуктов') : language === 'lv' ? 'atbilstoši produkti' : 'matching ingredients'}
                   </p>
@@ -694,13 +683,12 @@ const Dashboard = () => {
         )}
 
         {/* Card 3 — Recipe Ideas */}
-        <motion.div {...fadeUp(3)} style={cardStyle} className="p-5">
+        <motion.div {...fadeUp(3)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>{t.dashboard.ideasToday}</h3>
+            <h3 className="text-sm font-bold text-foreground">{t.dashboard.ideasToday}</h3>
             <button
               onClick={() => navigate('/recipes')}
-              className="text-xs font-medium flex items-center gap-0.5"
-              style={{ color: '#7C3AED' }}
+              className="text-xs font-medium flex items-center gap-0.5 text-primary"
             >
               {t.recipes.allRecipes} <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -711,19 +699,19 @@ const Dashboard = () => {
               {data.recentRecipes.map((r) => (
                 <div
                   key={r.id}
-                  className="shrink-0 w-40 rounded-xl overflow-hidden cursor-pointer"
-                  style={{ backgroundColor: '#F5F3FF', border: '1px solid #EDE9FE' }}
+                  className="shrink-0 w-40 rounded-xl overflow-hidden cursor-pointer bg-secondary border border-border"
                   onClick={() => navigate('/recipes')}
                 >
                   <img
                     src={`https://source.unsplash.com/400x300/?${encodeURIComponent(r.title + ' food')}`}
                     alt={r.title}
                     className="w-full h-20 object-cover"
+                    loading="lazy"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                   <div className="p-2.5">
-                    <p className="text-xs font-semibold truncate" style={{ color: '#1E1B4B' }}>{r.title}</p>
-                    <p className="text-[10px] mt-0.5" style={{ color: '#9CA3AF' }}>
+                    <p className="text-xs font-semibold truncate text-foreground">{r.title}</p>
+                    <p className="text-[10px] mt-0.5 text-muted-foreground">
                       {r.prepTime ? `⏱ ${r.prepTime} min` : ''}{r.estimatedCost ? ` · ${formatMoney(r.estimatedCost, data.currency)}` : ''}
                     </p>
                   </div>
@@ -733,8 +721,7 @@ const Dashboard = () => {
           ) : data.inventoryCount > 0 ? (
             <button
               onClick={() => navigate('/recipes?useHome=true')}
-              className="w-full py-6 rounded-xl text-sm font-medium flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', border: '1px dashed #DDD6FE' }}
+              className="w-full py-6 rounded-xl text-sm font-medium flex items-center justify-center gap-2 bg-secondary text-primary border border-dashed border-border"
             >
               <Sparkles className="w-4 h-4" />
               {(t.dashboard as any).generateFromFridge || '✨ Generate recipes from your fridge →'}
@@ -742,8 +729,7 @@ const Dashboard = () => {
           ) : (
             <button
               onClick={() => navigate('/recipes')}
-              className="w-full py-6 rounded-xl text-sm font-medium"
-              style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', border: '1px dashed #DDD6FE' }}
+              className="w-full py-6 rounded-xl text-sm font-medium bg-secondary text-primary border border-dashed border-border"
             >
               {t.dashboard.generateRecipes}
             </button>
@@ -751,15 +737,14 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Card 4 — Budget & Savings */}
-        <motion.div {...fadeUp(4)} style={cardStyle} className="p-5">
+        <motion.div {...fadeUp(4)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
+            <h3 className="text-sm font-bold text-foreground">
               {t.savings.title}
             </h3>
             <button
               onClick={() => navigate('/savings')}
-              className="text-xs font-medium flex items-center gap-0.5"
-              style={{ color: '#7C3AED' }}
+              className="text-xs font-medium flex items-center gap-0.5 text-primary"
             >
               {t.dashboard.seeDetails} <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -767,10 +752,10 @@ const Dashboard = () => {
 
           {/* Spent this month */}
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs" style={{ color: '#6B7280' }}>💸 {t.savings.spent}</span>
+            <span className="text-xs text-muted-foreground">💸 {t.savings.spent}</span>
             <span className="text-sm font-bold" style={{ color: '#DC2626' }}>{formatMoney(data.spentThisMonth, data.currency)}</span>
           </div>
-          <div className="h-2 rounded-full mb-3" style={{ backgroundColor: '#F3F4F6' }}>
+          <div className="h-2 rounded-full bg-muted mb-3">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
@@ -782,19 +767,18 @@ const Dashboard = () => {
 
           {/* Saved from waste */}
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs" style={{ color: '#6B7280' }}>💚 {t.savings.saved}</span>
+            <span className="text-xs text-muted-foreground">💚 {t.savings.saved}</span>
             <span className="text-sm font-bold" style={{ color: '#059669' }}>{formatMoney(data.savedThisMonth, data.currency)}</span>
           </div>
 
           {/* Budget editing */}
-          <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: '1px solid #F3F4F6' }}>
+          <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
             <div className="flex items-center gap-1.5">
               {editingBudget ? (
                 <div className="flex items-center gap-1">
                     <button
                     onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
-                    className="text-xs font-bold px-1.5 py-0.5 rounded-md border"
-                    style={{ borderColor: '#DDD6FE', color: '#7C3AED' }}
+                    className="text-xs font-bold px-1.5 py-0.5 rounded-md border border-border text-primary"
                   >
                     {currSymbol}
                   </button>
@@ -802,8 +786,7 @@ const Dashboard = () => {
                     type="number"
                     value={budgetInput}
                     onChange={e => setBudgetInput(e.target.value)}
-                    className="w-20 h-7 px-2 rounded-lg border text-xs outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE' }}
+                    className="w-20 h-7 px-2 rounded-lg border border-border text-xs outline-none focus:border-primary bg-background text-foreground"
                     autoFocus
                     onKeyDown={e => { if (e.key === 'Enter') saveBudget(); }}
                   />
@@ -814,8 +797,7 @@ const Dashboard = () => {
               ) : (
                 <button
                   onClick={() => { setBudgetInput(String(data.monthlyBudget)); setEditingBudget(true); }}
-                  className="text-xs cursor-pointer hover:underline"
-                  style={{ color: '#9CA3AF' }}
+                  className="text-xs cursor-pointer hover:underline text-muted-foreground"
                 >
                   {t.dashboard.ofGoal.replace('{amount}', `${currSymbol}${data.monthlyBudget}`)}
                 </button>
@@ -824,8 +806,7 @@ const Dashboard = () => {
             {!editingBudget && (
               <button
                 onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}
-                className="text-[10px] font-medium px-1.5 py-0.5 rounded-md"
-                style={{ backgroundColor: '#F5F3FF', color: '#7C3AED' }}
+                className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-secondary text-primary"
               >
                 {data.currency}
               </button>
@@ -837,12 +818,11 @@ const Dashboard = () => {
                 <button
                   key={code}
                   onClick={() => saveCurrency(code)}
-                  className="text-xs px-2 py-1 rounded-lg border-[1.5px] font-medium transition-all"
-                  style={{
-                    borderColor: data.currency === code ? '#7C3AED' : '#E5E7EB',
-                    backgroundColor: data.currency === code ? '#EDE9FE' : 'white',
-                    color: data.currency === code ? '#7C3AED' : '#374151',
-                  }}
+                  className={`text-xs px-2 py-1 rounded-lg border-[1.5px] font-medium transition-all ${
+                    data.currency === code
+                      ? 'border-primary bg-accent text-primary'
+                      : 'border-border bg-card text-foreground'
+                  }`}
                 >
                   {getCurrencySymbol(code)} {code}
                 </button>
@@ -852,31 +832,30 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Card 5 — AI Zero Waste Tip */}
-        <motion.div {...fadeUp(5)} style={cardStyle} className="p-5">
+        <motion.div {...fadeUp(5)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+            <h3 className="text-sm font-bold flex items-center gap-1.5 text-foreground">
               {zeroWasteTip?.emoji || '♻️'} {zeroWasteTip?.title || ((t as any).tips?.title || 'Zero waste tip of the day')}
             </h3>
             <button
               onClick={() => fetchZeroWasteTip(true)}
               disabled={tipLoading}
-              className="p-1.5 rounded-lg hover:bg-accent transition-colors"
-              style={{ color: '#7C3AED' }}
+              className="p-1.5 rounded-lg hover:bg-accent transition-colors text-primary"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${tipLoading ? 'animate-spin' : ''}`} />
             </button>
           </div>
           {tipLoading ? (
             <div className="flex items-center gap-2 py-2">
-              <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
-              <span className="text-xs" style={{ color: '#9CA3AF' }}>{(t.common as any)?.loading || 'Loading...'}</span>
+              <div className="w-4 h-4 border-2 rounded-full animate-spin border-accent border-t-primary" />
+              <span className="text-xs text-muted-foreground">{(t.common as any)?.loading || 'Loading...'}</span>
             </div>
           ) : zeroWasteTip ? (
             <>
-              <p className="text-sm leading-relaxed mb-2" style={{ color: '#6B7280' }}>{zeroWasteTip.tip}</p>
+              <p className="text-sm leading-relaxed mb-2 text-muted-foreground">{zeroWasteTip.tip}</p>
               <div className="flex items-center gap-2 flex-wrap">
                 {zeroWasteTip.category && (
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}>
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent text-primary">
                     {zeroWasteTip.category === 'food' ? '🍽' : zeroWasteTip.category === 'beauty' ? '💄' : zeroWasteTip.category === 'cleaning' ? '🧹' : zeroWasteTip.category === 'garden' ? '🌱' : '🏠'} {zeroWasteTip.category}
                   </span>
                 )}
@@ -888,7 +867,7 @@ const Dashboard = () => {
               </div>
             </>
           ) : (
-            <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {((t as any).tips?.daily || ['Check your fridge before grocery shopping'])[0]}
             </p>
           )}

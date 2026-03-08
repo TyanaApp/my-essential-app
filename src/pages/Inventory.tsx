@@ -203,7 +203,7 @@ const Inventory = () => {
 
   return (
     <div className="min-h-screen p-4 sm:p-6" style={{ paddingBottom: 90 }}>
-      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>{t.inventory.title}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-foreground">{t.inventory.title}</h1>
 
       {/* Tabs */}
       <div className="grid grid-cols-4 gap-1.5 mb-4">
@@ -292,11 +292,11 @@ const Inventory = () => {
       ) : filteredItems.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">{tab === 'expiring' ? '🎉' : '📦'}</div>
-          <p className="text-base font-medium" style={{ color: '#1E1B4B' }}>
+          <p className="text-base font-medium text-foreground">
             {tab === 'expiring' ? t.inventory.nothingExpiring : t.inventory.empty}
           </p>
           {tab !== 'expiring' && (
-            <p className="text-sm mt-1" style={{ color: '#6B7280' }}>
+            <p className="text-sm mt-1 text-muted-foreground">
               {t.inventory.emptyHint}
             </p>
           )}
@@ -317,8 +317,7 @@ const Inventory = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -80 }}
-                  className="bg-white rounded-xl p-3 sm:p-4"
-                  style={{ boxShadow: '0 1px 6px rgba(124,58,237,0.04)' }}
+                  className="bg-card rounded-xl p-3 sm:p-4 shadow-[0_1px_6px_rgba(124,58,237,0.04)]"
                 >
                   <div className="flex items-center gap-3">
                     {/* Family member avatar */}
@@ -331,7 +330,7 @@ const Inventory = () => {
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <p className="text-sm font-semibold truncate" style={{ color: '#1E1B4B' }}>{item.name}</p>
+                        <p className="text-sm font-semibold truncate text-foreground">{item.name}</p>
                         {item.is_opened && (
                           <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED', color: '#EA580C' }}>
                             <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#EA580C' }} />
@@ -346,7 +345,7 @@ const Inventory = () => {
                       </div>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {item.tracking_mode !== 'date_only' && (
-                          <span className="text-xs font-medium" style={{ color: '#6B7280' }}>
+                          <span className="text-xs font-medium text-muted-foreground">
                             {item.quantity} {item.unit}
                           </span>
                         )}
