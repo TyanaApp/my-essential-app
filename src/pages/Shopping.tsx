@@ -413,7 +413,7 @@ const Shopping = () => {
                 <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.unit}</label>
                 <select value={formUnit} onChange={(e) => setFormUnit(e.target.value)}
                   className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED] appearance-none" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}>
-                  {['pcs', 'kg', 'g', 'L', 'ml', 'pack'].map((u) => <option key={u} value={u}>{(t.shopping as any).units?.[u] || u}</option>)}
+                  {getUnits(language).map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
                 </select>
               </div>
             </div>

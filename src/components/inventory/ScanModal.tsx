@@ -351,7 +351,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                               className="text-[11px] bg-white rounded-lg px-1 py-1.5 border outline-none"
                               style={{ borderColor: '#DDD6FE', color: '#6B7280' }}
                             >
-                              {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+                              {units.map(u => <option key={u.value} value={u.value}>{u.label}</option>)}
                             </select>
                             {/* Storage location chip */}
                             <select
