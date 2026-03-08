@@ -50,7 +50,7 @@ const Index = () => {
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
-          <span className="font-tyana text-xl" style={{ color: '#7C3AED' }}>TYANA</span>
+          <TyanaLogo size="md" />
 
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item, i) => (
