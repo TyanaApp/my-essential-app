@@ -282,7 +282,7 @@ const Recipes = () => {
         <AnimatePresence>
           {showSettings && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="rounded-2xl p-4 space-y-4" style={{ backgroundColor: '#F5F3FF', border: '1px solid #DDD6FE' }}>
+              <div className="rounded-2xl p-4 space-y-4 bg-secondary border border-border">
                 <div>
                   <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.cookingFor}</label>
                   <div className="flex gap-2">
