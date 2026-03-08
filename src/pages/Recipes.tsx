@@ -180,7 +180,7 @@ const Recipes = () => {
         <RecipePhoto title={n.title} size="sm" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
+            <h3 className="text-base font-bold leading-tight text-foreground">{n.title}</h3>
             <div className="flex items-center gap-0.5 shrink-0">
               {isSaved && savedId && (
                 <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(savedId); }} className="p-1">
