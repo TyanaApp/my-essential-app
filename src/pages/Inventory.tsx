@@ -245,7 +245,6 @@ const Inventory = () => {
                 familyFilter === filt ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
               }`}
             >
-            >
               {filt === 'all' ? (f.all || 'All') : filt === 'mine' ? (f.mine || 'Mine') : (f.shared || 'Shared')}
             </button>
           ))}
