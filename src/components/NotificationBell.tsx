@@ -19,6 +19,8 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  const n = t.notifications as any;
+
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -44,11 +46,13 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
   const formatTime = (iso: string) => {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return t.notifications.justNow;
-    if (mins < 60) return `${mins}m`;
+    if (mins < 1) return n.justNow || 'Just now';
+    if (mins < 60) return `${mins} ${n.minAgo || 'min ago'}`;
     const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h`;
-    return `${Math.floor(hours / 24)}d`;
+    if (hours < 24) return `${hours} ${n.hAgo || 'h ago'}`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return n.yesterday || 'yesterday';
+    return `${days}d`;
   };
 
   return (
@@ -60,8 +64,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
         <Bell className="w-5 h-5 text-muted-foreground" />
         {unreadCount > 0 && (
           <span
-            className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center text-white"
-            style={{ backgroundColor: '#DC2626' }}
+            className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center text-white bg-destructive"
           >
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
@@ -79,24 +82,22 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
             style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }}
           >
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <h4 className="text-sm font-bold text-foreground">{t.notifications.title}</h4>
+              <h4 className="text-sm font-bold text-foreground">{n.title}</h4>
               <div className="flex items-center gap-2">
                 {alerts.length > 0 && onClearAll && (
                   <button
                     onClick={onClearAll}
-                    className="text-xs font-medium"
-                    style={{ color: '#DC2626' }}
+                    className="text-xs font-medium text-destructive"
                   >
-                    {(t.notifications as any).clearAll || 'Clear all'}
+                    {n.clearAll || 'Clear all'}
                   </button>
                 )}
                 {alerts.length > 0 && (
                   <button
                     onClick={onMarkAllRead}
-                    className="text-xs font-medium"
-                    style={{ color: '#7C3AED' }}
+                    className="text-xs font-medium text-primary"
                   >
-                    {t.notifications.markRead}
+                    {n.markRead}
                   </button>
                 )}
               </div>
@@ -105,7 +106,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
             <div className="max-h-80 overflow-y-auto">
               {alerts.length === 0 ? (
                 <div className="py-8 text-center">
-                  <p className="text-sm text-muted-foreground">{t.notifications.empty}</p>
+                  <p className="text-sm text-muted-foreground">{n.empty}</p>
                 </div>
               ) : (
                 alerts.slice(0, 10).map(alert => (
@@ -124,14 +125,14 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
                     </button>
                     <div className="flex items-center gap-1 shrink-0 mt-1">
                       {!alert.read && (
-                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#7C3AED' }} />
+                        <span className="w-2 h-2 rounded-full bg-primary" />
                       )}
                       {onDeleteAlert && (
                         <button
                           onClick={(e) => { e.stopPropagation(); onDeleteAlert(alert.id); }}
                           className="p-1 rounded hover:bg-destructive/10 transition-colors"
                         >
-                          <Trash2 className="w-3 h-3" style={{ color: '#9CA3AF' }} />
+                          <Trash2 className="w-3 h-3 text-muted-foreground" />
                         </button>
                       )}
                     </div>
