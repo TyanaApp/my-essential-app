@@ -505,6 +505,20 @@ export const translations = {
       waitlistCount: '{count} users are waiting for this feature',
       profileLabel: '🏪 Store integrations',
     },
+    reminders: {
+      title: 'My Reminders', addReminder: 'Add reminder', whatToRemind: 'What to remind?',
+      placeholder: 'Go to the store for milk', voiceReminder: 'Voice reminder',
+      once: 'Once', daily: 'Daily', weekdays: 'Weekdays', weekends: 'Weekends',
+      dateLabel: 'Date', timeLabel: 'Time', repeatLabel: 'Repeat',
+      saved: 'Reminder saved ✓', saveFailed: 'Failed to save', voiceFailed: 'Could not parse voice',
+      processing: 'Processing voice...', confirmReminder: 'Confirm reminder',
+      willRemind: 'Will remind', empty: 'No reminders yet',
+      today: 'Today', tomorrow: 'Tomorrow', recurring: 'Recurring', completed: 'Completed',
+    },
+    mealReminders: {
+      title: '🍽 Meal reminders',
+      breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner',
+    },
   },
   ru: {
     nav: { home: 'Главная', inventory: 'Продукты', recipes: 'Рецепты', shopping: 'Покупки', diary: 'Дневник', settings: 'Настройки', profile: 'Профиль' },
@@ -938,6 +952,20 @@ export const translations = {
       waitlistCount: '{count} пользователей уже ждут эту функцию',
       profileLabel: '🏪 Интеграция с магазинами',
     },
+    reminders: {
+      title: 'Мои напоминания', addReminder: 'Добавить напоминание', whatToRemind: 'Что напомнить?',
+      placeholder: 'Зайти в магазин за молоком', voiceReminder: 'Голосовое напоминание',
+      once: 'Один раз', daily: 'Каждый день', weekdays: 'По будням', weekends: 'По выходным',
+      dateLabel: 'Дата', timeLabel: 'Время', repeatLabel: 'Повтор',
+      saved: 'Напоминание сохранено ✓', saveFailed: 'Не удалось сохранить', voiceFailed: 'Не удалось распознать голос',
+      processing: 'Обработка голоса...', confirmReminder: 'Подтвердить напоминание',
+      willRemind: 'Напомню', empty: 'Нет напоминаний',
+      today: 'Сегодня', tomorrow: 'Завтра', recurring: 'Повторяющиеся', completed: 'Выполненные',
+    },
+    mealReminders: {
+      title: '🍽 Напоминания о еде',
+      breakfast: '🌅 Завтрак', lunch: '☀️ Обед', dinner: '🌙 Ужин',
+    },
   },
   lv: {
     nav: { home: 'Sākums', inventory: 'Produkti', recipes: 'Receptes', shopping: 'Iepirkumi', diary: 'Dienasgrāmata', settings: 'Iestatījumi', profile: 'Profils' },
@@ -1345,6 +1373,20 @@ export const translations = {
       joined: 'Lieliski! Paziņosim kad būs gatavs ✓',
       waitlistCount: '{count} lietotāji gaida šo funkciju',
       profileLabel: '🏪 Veikalu integrācija',
+    },
+    reminders: {
+      title: 'Mani atgādinājumi', addReminder: 'Pievienot atgādinājumu', whatToRemind: 'Ko atgādināt?',
+      placeholder: 'Aiziet uz veikalu pēc piena', voiceReminder: 'Balss atgādinājums',
+      once: 'Vienreiz', daily: 'Katru dienu', weekdays: 'Darba dienās', weekends: 'Brīvdienās',
+      dateLabel: 'Datums', timeLabel: 'Laiks', repeatLabel: 'Atkārtot',
+      saved: 'Atgādinājums saglabāts ✓', saveFailed: 'Neizdevās saglabāt', voiceFailed: 'Neizdevās atpazīt balsi',
+      processing: 'Apstrādājam balsi...', confirmReminder: 'Apstiprināt atgādinājumu',
+      willRemind: 'Atgādināšu', empty: 'Nav atgādinājumu',
+      today: 'Šodien', tomorrow: 'Rīt', recurring: 'Atkārtojoši', completed: 'Izpildīti',
+    },
+    mealReminders: {
+      title: '🍽 Ēdienreižu atgādinājumi',
+      breakfast: '🌅 Brokastis', lunch: '☀️ Pusdienas', dinner: '🌙 Vakariņas',
     },
   },
   uk: {
@@ -1754,6 +1796,20 @@ export const translations = {
       joined: 'Чудово! Повідомимо як тільки з\'явиться ✓',
       waitlistCount: '{count} користувачів вже чекають цю функцію',
       profileLabel: '🏪 Інтеграція з магазинами',
+    },
+    reminders: {
+      title: 'Мої нагадування', addReminder: 'Додати нагадування', whatToRemind: 'Що нагадати?',
+      placeholder: 'Зайти в магазин за молоком', voiceReminder: 'Голосове нагадування',
+      once: 'Один раз', daily: 'Щодня', weekdays: 'По буднях', weekends: 'По вихідних',
+      dateLabel: 'Дата', timeLabel: 'Час', repeatLabel: 'Повтор',
+      saved: 'Нагадування збережено ✓', saveFailed: 'Не вдалося зберегти', voiceFailed: 'Не вдалося розпізнати голос',
+      processing: 'Обробка голосу...', confirmReminder: 'Підтвердити нагадування',
+      willRemind: 'Нагадаю', empty: 'Немає нагадувань',
+      today: 'Сьогодні', tomorrow: 'Завтра', recurring: 'Повторювані', completed: 'Виконані',
+    },
+    mealReminders: {
+      title: '🍽 Нагадування про їжу',
+      breakfast: '🌅 Сніданок', lunch: '☀️ Обід', dinner: '🌙 Вечеря',
     },
   },
 } as const;

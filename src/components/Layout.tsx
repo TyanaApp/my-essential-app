@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings } from "lucide-react";
+import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings, Bell as BellIcon } from "lucide-react";
 import tyanaLogo from '@/assets/tyana-logo-text.png';
 import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
@@ -10,17 +10,24 @@ import InstallBanner from './InstallBanner';
 import NotificationBell from './NotificationBell';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useMealReminders } from '@/hooks/useMealReminders';
+import { useReminders } from '@/hooks/useReminders';
 
 const Layout = () => {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { alerts, unreadCount, markAllRead, deleteAlert, clearAll } = useNotifications();
+  const { todayCount } = useReminders();
+  useMealReminders(language);
+
+  const rm = (t as any).reminders || {};
 
   const navItems = [
     { path: "/dashboard", label: t.nav.home, icon: Home },
     { path: "/inventory", label: t.nav.inventory, icon: Package },
     { path: "/recipes", label: t.nav.recipes, icon: ChefHat },
     { path: "/shopping", label: t.nav.shopping, icon: ShoppingCart },
+    { path: "/reminders", label: rm.title || 'Reminders', icon: BellIcon, badge: todayCount },
     { path: "/diary", label: t.nav.diary, icon: BookOpen },
     { path: "/profile", label: t.nav.settings, icon: Settings },
   ];
@@ -50,7 +57,14 @@ const Layout = () => {
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <div className="relative">
+                  <Icon className="w-4 h-4" />
+                  {(item as any).badge > 0 && (
+                    <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 rounded-full bg-destructive text-[8px] font-bold flex items-center justify-center text-destructive-foreground">
+                      {(item as any).badge}
+                    </span>
+                  )}
+                </div>
                 <span>{item.label}</span>
               </NavLink>
             );

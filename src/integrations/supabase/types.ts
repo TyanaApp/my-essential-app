@@ -396,6 +396,36 @@ export type Database = {
         }
         Relationships: []
       }
+      reminders: {
+        Row: {
+          created_at: string
+          id: string
+          is_completed: boolean
+          remind_at: string
+          repeat_type: string
+          text: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          remind_at: string
+          repeat_type?: string
+          text: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          remind_at?: string
+          repeat_type?: string
+          text?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       savings_log: {
         Row: {
           amount: number | null

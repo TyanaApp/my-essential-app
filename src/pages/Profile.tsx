@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
   Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity,
-  MessageCircle, Lightbulb, Star, Users
+  MessageCircle, Lightbulb, Star, Users, Clock
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -27,6 +27,8 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 import LegalFooterPill from '@/components/LegalFooterPill';
 import StoreDealsCard from '@/components/shopping/StoreDealsCard';
+import { Input } from '@/components/ui/input';
+import { getMealReminderSettings, setMealReminderSettings, type MealReminderSettings } from '@/hooks/useMealReminders';
 
 const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge: string }) => {
   const [notify, setNotify] = useState(() => localStorage.getItem(`notify_device_${name}`) === '1');
@@ -118,6 +120,51 @@ const StoreDealsProfileRow = () => {
       ) : (
         <Badge className="bg-green-100 text-green-600 border-green-200 text-[10px]">✅</Badge>
       )}
+    </div>
+  );
+};
+
+const MealRemindersSection = () => {
+  const { t } = useTranslation();
+  const mr = (t as any).mealReminders || {};
+  const [settings, setSettings] = useState<MealReminderSettings>(getMealReminderSettings);
+
+  const updateMeal = (meal: 'breakfast' | 'lunch' | 'dinner', field: 'enabled' | 'time', value: any) => {
+    const updated = { ...settings, [meal]: { ...settings[meal], [field]: value } };
+    setSettings(updated);
+    setMealReminderSettings(updated);
+  };
+
+  const meals = [
+    { key: 'breakfast' as const, label: mr.breakfast || '🌅 Breakfast' },
+    { key: 'lunch' as const, label: mr.lunch || '☀️ Lunch' },
+    { key: 'dinner' as const, label: mr.dinner || '🌙 Dinner' },
+  ];
+
+  return (
+    <div className="mt-6 pt-4 border-t border-border">
+      <h4 className="text-sm font-semibold text-foreground mb-3">{mr.title || '🍽 Meal reminders'}</h4>
+      <div className="space-y-3">
+        {meals.map(m => (
+          <div key={m.key} className="flex items-center justify-between">
+            <div className="flex items-center gap-2 flex-1">
+              <span className="text-sm font-medium text-foreground">{m.label}</span>
+              {settings[m.key].enabled && (
+                <Input
+                  type="time"
+                  value={settings[m.key].time}
+                  onChange={e => updateMeal(m.key, 'time', e.target.value)}
+                  className="w-24 h-8 text-xs"
+                />
+              )}
+            </div>
+            <Switch
+              checked={settings[m.key].enabled}
+              onCheckedChange={v => updateMeal(m.key, 'enabled', v)}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -323,6 +370,9 @@ const Profile = () => {
               {/* Weekly email report toggle */}
               <WeeklyReportToggle />
             </div>
+
+            {/* Meal Reminders Section */}
+            <MealRemindersSection />
           </CardContent>
         </Card>
       </motion.div>
