@@ -306,7 +306,7 @@ const Diary = () => {
                 </div>
 
                 {sectionEntries.length === 0 ? (
-                  <p className="text-xs py-2" style={{ color: '#9CA3AF' }}>{t.diary.noMeals}</p>
+                  <p className="text-xs py-2 text-muted-foreground">{t.diary.noMeals}</p>
                 ) : (
                   <div className="space-y-1.5">
                     {sectionEntries.map((entry) => (
