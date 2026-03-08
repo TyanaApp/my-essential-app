@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import LegalFooterPill from '@/components/LegalFooterPill';
 import { motion } from 'framer-motion';
 import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
