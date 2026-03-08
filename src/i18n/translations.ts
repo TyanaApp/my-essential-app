@@ -968,7 +968,7 @@ export const translations = {
       founderSpotsLeft: '🔥 Atlikušas {count} no 1000 vietām par šo cenu',
       founderForever: 'uz mūžu',
       founderYouAreFirst: 'Jūs esat starp pirmajiem 1000 — šī cena ir jūsu uz mūžu',
-      proFeatures: ['Neierobežotas skenēšanas un receptes', 'Neierobežoti čeki', '6 ģimenes locekļi', 'Pilna AI plānošana', 'Valkājamo ierīču integrācija', 'Prioritāra atbalsts'],
+      proFeatures: ['Neierobežotas skenēšanas un receptes', 'Pilna vēsture un analītika', '6 ģimenes locekļi', 'Pilna AI plānošana', 'Valkājamo ierīču integrācija', 'Prioritāra atbalsts'],
       getPro: 'Iegūt Pro — €6.49/mēn', faqTitle: 'Bieži uzdotie jautājumi',
       faq1Q: 'Kā darbojas skenēšana?', faq1A: 'Atveriet lietotni, nospiediet "Skenēt" un nofotografējiet ledusskapi.',
       faq2Q: 'Kā TYANA aprēķina ietaupījumus?', faq2A: 'Mēs izsekojam pārtikas vērtību, ko būtu izmetis.',
