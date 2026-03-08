@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
 interface NormalizedRecipe {
-  title: string; ingredients: Ingredient[]; instructions: string[];
+  title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
   nutrition: Nutrition; prepTime: number; estimatedCost: number;
 }
 
