@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 import type { InventoryItem } from '@/pages/Inventory';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useFoodValidation } from '@/hooks/useFoodValidation';
 
 const AUTOCOMPLETE = [
   'Milk', 'Eggs', 'Bread', 'Chicken', 'Rice', 'Pasta', 'Tomatoes', 'Onion',
