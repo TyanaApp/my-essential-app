@@ -460,11 +460,11 @@ const Recipes = () => {
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirmId(null)}
                   className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
-                  {(t.recipes as any).deleteNo || 'No'}
+                  {t.common.cancel}
                 </button>
                 <button onClick={() => handleDeleteRecipe(deleteConfirmId)}
                   className="flex-1 h-10 rounded-xl font-semibold text-sm text-white" style={{ backgroundColor: '#DC2626' }}>
-                  {(t.recipes as any).deleteYes || 'Yes'}
+                  {t.common.delete}
                 </button>
               </div>
             </motion.div>
