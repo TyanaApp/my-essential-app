@@ -13,7 +13,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 const Layout = () => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { alerts, unreadCount, markAllRead } = useNotifications();
+  const { alerts, unreadCount, markAllRead, deleteAlert, clearAll } = useNotifications();
 
   const navItems = [
     { path: "/dashboard", label: t.nav.home, icon: Home },
