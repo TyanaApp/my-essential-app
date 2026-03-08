@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2, ChefHat, CalendarDays } from 'lucide-react';
 import RecipePhoto from '@/components/RecipePhoto';
-import { useAuth } from '@/contexts/AuthContext';
+import { Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useFamily } from '@/hooks/useFamily';
 import { toast } from 'sonner';
