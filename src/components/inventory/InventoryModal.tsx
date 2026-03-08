@@ -86,6 +86,18 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
     if (!user || !name.trim()) { toast.error(t.inventory.nameRequired); return; }
     setSaving(true);
 
+    // Validate food item
+    try {
+      const { data: validation } = await supabase.functions.invoke('validate-food-item', {
+        body: { itemName: name.trim(), language: 'en' },
+      });
+      if (validation && !validation.isFood) {
+        toast.error(validation.reason || `"${name}" is not a food item`);
+        setSaving(false);
+        return;
+      }
+    } catch { /* allow on error */ }
+
     const payload: any = {
       user_id: user.id,
       name: name.trim(),
