@@ -1,146 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
-// Extensive Russian/Ukrainian → English keyword map for accurate food image search
-const SEARCH_TERMS: Record<string, string> = {
-  'рис с курицей': 'rice with chicken',
-  'куриная грудка': 'chicken breast',
-  'борщ': 'borscht soup',
-  'паста': 'pasta dish',
-  'омлет': 'omelette eggs',
-  'гречка': 'buckwheat porridge',
-  'овсянка': 'oatmeal breakfast',
-  'лазанья': 'lasagna',
-  'салат цезарь': 'caesar salad',
-  'плов': 'pilaf rice',
-  'котлеты': 'meat cutlets',
-  'пельмени': 'dumplings',
-  'блины': 'pancakes crepes',
-  'творог': 'cottage cheese',
-  'щи': 'cabbage soup',
-  'солянка': 'solyanka soup',
-  'окрошка': 'okroshka cold soup',
-  'вареники': 'varenyky dumplings',
-  'сырники': 'cottage cheese pancakes',
-  'запеканка': 'casserole baked',
-  'лосось': 'salmon dish',
-  'тунец': 'tuna dish',
-  'говядина': 'beef dish',
-  'свинина': 'pork dish',
-  'баранина': 'lamb dish',
-  'греческий салат': 'greek salad',
-  'оливье': 'olivier russian salad',
-  'винегрет': 'vinegret beet salad',
-  'роллы': 'sushi rolls',
-  'пицца': 'pizza',
-  'бургер': 'burger',
-  'стейк': 'steak',
-  'шашлык': 'shashlik kebab skewers',
-  'индейка': 'turkey dish',
-  'тост': 'toast breakfast',
-  'сэндвич': 'sandwich',
-  'суши': 'sushi',
-  'рататуй': 'ratatouille',
-  'ризотто': 'risotto',
-  'голубцы': 'cabbage rolls',
-  'фрикадельки': 'meatballs',
-  'тефтели': 'meatballs sauce',
-  'каша': 'porridge bowl',
-  'макароны': 'pasta noodles',
-  'спагетти': 'spaghetti',
-  'карбонара': 'carbonara pasta',
-  'болоньезе': 'bolognese pasta',
-  'жаркое': 'roast stew',
-  'гуляш': 'goulash stew',
-  'рагу': 'vegetable stew',
-  'крем-суп': 'cream soup',
-  'уха': 'fish soup',
-  'харчо': 'kharcho soup',
-  'лагман': 'lagman noodle soup',
-  'чахохбили': 'chicken stew',
-  'шаурма': 'shawarma wrap',
-  'хачапури': 'khachapuri cheese bread',
-  'манты': 'manti steamed dumplings',
-  'самса': 'samosa pastry',
-  'чебурек': 'cheburek fried pastry',
-  'оладьи': 'fluffy pancakes',
-  'драники': 'potato pancakes',
-  'деруни': 'potato pancakes',
-  'зразы': 'stuffed cutlets',
-  'биточки': 'patties',
-  'отбивная': 'schnitzel cutlet',
-  'шницель': 'schnitzel',
-  'бефстроганов': 'beef stroganoff',
-  'пирожки': 'pirozhki baked buns',
-  'ватрушка': 'vatrushka cheese pastry',
-  'сырная': 'cheese',
-  'грибной': 'mushroom',
-  'грибы': 'mushrooms',
-  'картофель': 'potato',
-  'картошка': 'potato dish',
-  'пюре': 'mashed potatoes',
-  'жареная картошка': 'fried potatoes',
-  'печень': 'liver dish',
-  'фаршированный': 'stuffed',
-  'тушеная': 'braised stew',
-  'жареная': 'fried',
-  'запеченная': 'baked roasted',
-  'вареная': 'boiled',
-  'на пару': 'steamed',
-  'гриль': 'grilled',
-  'смузи': 'smoothie',
-  'десерт': 'dessert',
-  'торт': 'cake',
-  'пирог': 'pie',
-  'кекс': 'cupcake muffin',
-  'печенье': 'cookies',
-  'мороженое': 'ice cream',
-};
-
-// Single-word fallback patterns for partial matches
-const WORD_PATTERNS: [RegExp, string][] = [
-  [/рис/i, 'rice dish'],
-  [/курин|куриц|курка|курятин/i, 'chicken dish'],
-  [/рыб|риба/i, 'fish dish'],
-  [/мяс|м'яс/i, 'meat dish'],
-  [/яйц|яєц/i, 'eggs dish'],
-  [/салат/i, 'fresh salad'],
-  [/суп/i, 'soup bowl'],
-  [/паст|макарон/i, 'pasta dish'],
-  [/блин|млинц/i, 'pancakes'],
-  [/пицц|піц/i, 'pizza'],
-  [/бургер/i, 'burger'],
-  [/стейк/i, 'steak'],
-  [/овощ|овоч/i, 'vegetables dish'],
-  [/фрукт/i, 'fruit bowl'],
-  [/каш[аеу]/i, 'porridge'],
-  [/творо[гж]/i, 'cottage cheese'],
-  [/сыр(?!ник)/i, 'cheese'],
-  [/хлеб|хліб/i, 'bread'],
-  [/грибн|гриб/i, 'mushroom dish'],
-  [/картош|картофел/i, 'potato dish'],
-  [/свинин/i, 'pork'],
-  [/говядин/i, 'beef'],
-  [/лосос/i, 'salmon'],
-  [/тунец|тунц/i, 'tuna'],
-  [/креветк/i, 'shrimp'],
-  [/десерт|торт|пирог|кекс/i, 'dessert cake'],
-  [/смузи|смузі/i, 'smoothie'],
-  [/запечен|запікан/i, 'baked casserole'],
-  [/тушен/i, 'stew braised'],
-  [/жарен/i, 'fried dish'],
-  [/печен/i, 'baked'],
-  [/гриль/i, 'grilled food'],
-  [/шашлык|шашлик/i, 'kebab skewers'],
-  [/пельмен/i, 'dumplings'],
-  [/вареник/i, 'dumplings'],
-  [/голубц/i, 'cabbage rolls'],
-  [/котлет/i, 'cutlets patties'],
-  [/тефтел|фрикадельк/i, 'meatballs'],
-  [/плов/i, 'pilaf rice'],
-  [/борщ/i, 'borscht'],
-  [/суші|ролл/i, 'sushi rolls'],
-  [/індичк|индейк/i, 'turkey'],
-];
+// In-memory cache for generated image URLs (persists across re-renders)
+const imageCache = new Map<string, string>();
+// Track in-flight requests to avoid duplicates
+const pendingRequests = new Map<string, Promise<string | null>>();
 
 const FOOD_EMOJI_MAP: [RegExp, string][] = [
   [/рис|rice/i, '🍚'],
@@ -177,56 +41,6 @@ const FOOD_EMOJI_MAP: [RegExp, string][] = [
   [/хачапур/i, '🫓'],
 ];
 
-function getSearchQuery(title: string): string {
-  const nameLower = title.toLowerCase().trim();
-
-  // 1. Try exact/substring match in full phrase map (longest match first)
-  const sortedKeys = Object.keys(SEARCH_TERMS).sort((a, b) => b.length - a.length);
-  for (const key of sortedKeys) {
-    if (nameLower.includes(key)) {
-      return SEARCH_TERMS[key];
-    }
-  }
-
-  // 2. Try regex word patterns
-  for (const [pattern, keyword] of WORD_PATTERNS) {
-    if (pattern.test(nameLower)) {
-      return keyword;
-    }
-  }
-
-  // 3. If Latin characters, use title directly
-  if (/^[a-zA-Z\s\-,]+$/.test(title.trim())) {
-    return title.trim();
-  }
-
-  // 4. Fallback
-  return 'delicious food dish';
-}
-
-function getFoodEmoji(title: string): string {
-  for (const [pattern, emoji] of FOOD_EMOJI_MAP) {
-    if (pattern.test(title)) return emoji;
-  }
-  return '🍽';
-}
-
-// Deterministic hash for consistent images per recipe
-function hashCode(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash) % 10000;
-}
-
-function getPhotoUrl(title: string, attempt: number = 0): string {
-  const query = getSearchQuery(title);
-  const lock = hashCode(title) + attempt;
-  return `https://loremflickr.com/400/300/food,${encodeURIComponent(query)}?lock=${lock}`;
-}
-
 const GRADIENT_COLORS: Record<string, string> = {
   'А': '#7C3AED', 'Б': '#2563EB', 'В': '#059669', 'Г': '#D97706',
   'Д': '#DC2626', 'Е': '#7C3AED', 'Ж': '#2563EB', 'З': '#059669',
@@ -243,59 +57,134 @@ const GRADIENT_COLORS: Record<string, string> = {
   'Y': '#7C3AED', 'Z': '#2563EB',
 };
 
+function getFoodEmoji(title: string): string {
+  for (const [pattern, emoji] of FOOD_EMOJI_MAP) {
+    if (pattern.test(title)) return emoji;
+  }
+  return '🍽';
+}
+
 function getGradient(title: string): string {
   const letter = (title[0] || 'A').toUpperCase();
   const base = GRADIENT_COLORS[letter] || '#7C3AED';
   return `linear-gradient(135deg, ${base}22 0%, ${base}44 100%)`;
 }
 
+function getCacheKey(title: string, imageQuery?: string): string {
+  return (imageQuery || title).toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 60);
+}
+
+async function fetchAIImage(title: string, imageQuery?: string): Promise<string | null> {
+  const key = getCacheKey(title, imageQuery);
+
+  // Check memory cache
+  if (imageCache.has(key)) return imageCache.get(key)!;
+
+  // Check localStorage cache
+  try {
+    const cached = localStorage.getItem(`rimg_${key}`);
+    if (cached) {
+      imageCache.set(key, cached);
+      return cached;
+    }
+  } catch {}
+
+  // Deduplicate in-flight requests
+  if (pendingRequests.has(key)) {
+    return pendingRequests.get(key)!;
+  }
+
+  const promise = (async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-recipe-image', {
+        body: { title, imageQuery: imageQuery || title },
+      });
+
+      if (error || !data?.imageUrl) return null;
+
+      const url = data.imageUrl;
+      imageCache.set(key, url);
+      // Cache URL in localStorage (not base64, just the URL string)
+      try {
+        localStorage.setItem(`rimg_${key}`, url);
+      } catch {}
+      return url;
+    } catch (e) {
+      console.error('Recipe image fetch error:', e);
+      return null;
+    } finally {
+      pendingRequests.delete(key);
+    }
+  })();
+
+  pendingRequests.set(key, promise);
+  return promise;
+}
+
 interface RecipePhotoProps {
   title: string;
   imageQuery?: string;
+  imageUrl?: string;
   className?: string;
   size?: 'sm' | 'lg';
 }
 
-const RecipePhoto = ({ title, imageQuery, className = '', size = 'sm' }: RecipePhotoProps) => {
+const RecipePhoto = ({ title, imageQuery, imageUrl, className = '', size = 'sm' }: RecipePhotoProps) => {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
-  const [imgSrc, setImgSrc] = useState('');
-  const [attempts, setAttempts] = useState(0);
+  const [imgSrc, setImgSrc] = useState<string | null>(imageUrl || null);
+  const mountedRef = useRef(true);
 
   const emoji = getFoodEmoji(title);
   const gradient = getGradient(title);
   const height = size === 'lg' ? 'h-44' : 'h-40';
 
   useEffect(() => {
-    setStatus('loading');
-    setAttempts(0);
-    // If we have imageQuery from AI, use it directly for much better matching
-    if (imageQuery) {
-      const lock = hashCode(title);
-      setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(imageQuery)}?lock=${lock}`);
-    } else {
-      setImgSrc(getPhotoUrl(title, 0));
-    }
-  }, [title, imageQuery]);
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
-  const handleError = () => {
-    if (attempts < 2) {
-      const next = attempts + 1;
-      setAttempts(next);
+  useEffect(() => {
+    // If we already have a direct URL (from DB), use it
+    if (imageUrl) {
+      setImgSrc(imageUrl);
       setStatus('loading');
-      if (next === 1) {
-        // Retry: if imageQuery available use simpler version, otherwise use keyword mapping
-        const fallbackQuery = imageQuery 
-          ? imageQuery.split(' ')[0] + ' food'
-          : getSearchQuery(title).split(' ')[0] + ' dish';
-        setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(fallbackQuery)}?lock=${hashCode(title) + 100}`);
-      } else {
-        // Give up, show emoji
-        setStatus('error');
-      }
-    } else {
-      setStatus('error');
+      return;
     }
-  };
+
+    // Check memory cache first
+    const key = getCacheKey(title, imageQuery);
+    const cached = imageCache.get(key);
+    if (cached) {
+      setImgSrc(cached);
+      setStatus('loading');
+      return;
+    }
+
+    // Check localStorage
+    try {
+      const lsCached = localStorage.getItem(`rimg_${key}`);
+      if (lsCached) {
+        imageCache.set(key, lsCached);
+        setImgSrc(lsCached);
+        setStatus('loading');
+        return;
+      }
+    } catch {}
+
+    // Generate AI image
+    setStatus('loading');
+    setImgSrc(null);
+
+    fetchAIImage(title, imageQuery).then(url => {
+      if (mountedRef.current) {
+        if (url) {
+          setImgSrc(url);
+        } else {
+          setStatus('error');
+        }
+      }
+    });
+  }, [title, imageQuery, imageUrl]);
 
   return (
     <div className={`${height} w-full relative overflow-hidden rounded-t-xl ${className}`} style={{ background: gradient }}>
@@ -303,19 +192,26 @@ const RecipePhoto = ({ title, imageQuery, className = '', size = 'sm' }: RecipeP
       <div className="absolute inset-0 flex items-center justify-center">
         <span className={size === 'lg' ? 'text-7xl' : 'text-5xl'} style={{ opacity: 0.85 }}>{emoji}</span>
       </div>
-      {status !== 'error' && imgSrc && (
+
+      {/* Loading shimmer */}
+      {status === 'loading' && !imgSrc && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" />
+      )}
+
+      {imgSrc && status !== 'error' && (
         <img
           src={imgSrc}
           alt={title}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
             status === 'loaded' ? 'opacity-100' : 'opacity-0'
           }`}
-          onLoad={() => setStatus('loaded')}
-          onError={handleError}
+          onLoad={() => { if (mountedRef.current) setStatus('loaded'); }}
+          onError={() => { if (mountedRef.current) setStatus('error'); }}
           loading="lazy"
           crossOrigin="anonymous"
         />
       )}
+
       {status === 'loaded' && (
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       )}
