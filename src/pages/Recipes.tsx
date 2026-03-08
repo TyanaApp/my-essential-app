@@ -361,10 +361,10 @@ const Recipes = () => {
                       <h2 className="text-xl font-bold mb-3" style={{ color: '#1E1B4B' }}>{r.title}</h2>
                       <div className="grid grid-cols-4 gap-2 mb-4">
                         {[
-                          { label: 'kcal', value: r.nutrition.calories, color: cc.text },
-                          { label: t.dashboard.protein, value: `${r.nutrition.protein}g`, color: '#059669' },
-                          { label: t.dashboard.fat, value: `${r.nutrition.fat}g`, color: '#EA580C' },
-                          { label: t.dashboard.carbs, value: `${r.nutrition.carbs}g`, color: '#2563EB' },
+                          { label: (t.diary as any)?.kcalUnit || 'kcal', value: r.nutrition.calories, color: cc.text },
+                          { label: t.dashboard.protein, value: `${r.nutrition.protein}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#059669' },
+                          { label: t.dashboard.fat, value: `${r.nutrition.fat}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#EA580C' },
+                          { label: t.dashboard.carbs, value: `${r.nutrition.carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#2563EB' },
                         ].map((n) => (
                           <div key={n.label} className="text-center p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
                             <p className="text-base font-bold" style={{ color: n.color }}>{n.value}</p>
