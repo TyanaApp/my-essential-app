@@ -459,7 +459,7 @@ export const translations = {
       editManually: 'Изменить вручную',
       scanAgain: 'Снова',
       portionEaten: 'Сколько съели:',
-      portionFull: 'Всё', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
+      portionExtra: '150%', portionFull: 'Всё', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
       confHigh: 'Высокая точность', confMedium: 'Приблизительно', confLow: 'Низкая точность',
       tapToEdit: 'Нажмите на название чтобы изменить',
       recalculated: 'Пересчитано ✓', recalcFailed: 'Ошибка пересчёта',
