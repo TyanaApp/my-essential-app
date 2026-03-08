@@ -2,75 +2,116 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { toast } from 'sonner';
-import { Star } from 'lucide-react';
+import { Star, CheckCircle2, ArrowLeft, Send } from 'lucide-react';
 
 const T = {
   en: {
-    supportTitle: 'Write to support',
-    subjectTech: 'Technical issue', subjectBilling: 'Billing question', subjectOther: 'Other',
-    messagePlaceholder: 'Describe your issue... (min 20 characters)',
-    send: 'Send', sent: 'Message sent! We\'ll reply within 24 hours ✓',
+    supportTitle: 'Contact us',
+    placeholder: 'Describe in detail — we read every message',
+    send: '📨 Send',
+    successTitle: 'Got it! Thank you',
+    successText: 'We usually respond within 24 hours',
+    back: '← Back',
     minChars: 'Minimum 20 characters',
+    topicBug: '🐛 Bug',
+    topicIdea: '💡 Idea',
+    topicQuestion: '❓ Question',
+    topicBilling: '💳 Billing',
+    topicOther: '🔧 Other',
     ideasTitle: 'Ideas & Suggestions',
-    ideasPlaceholder: 'What should we improve in TYANA?',
+    ideasPlaceholder: 'What feature is missing? What can be improved?',
+    ideaSuccessTitle: 'Got it! Thank you',
+    ideaSuccessText: 'We read every suggestion 💜',
     importance: 'Importance',
-    ideaSent: 'Thank you! We read every suggestion 💜',
     ratingTitle: 'Rate the app',
     ratingPlaceholder: 'Any comments? (optional)',
     ratingSent: 'Thank you for your feedback! 💜',
-    subject: 'Subject',
   },
   ru: {
-    supportTitle: 'Написать в поддержку',
-    subjectTech: 'Технический вопрос', subjectBilling: 'Вопрос об оплате', subjectOther: 'Другое',
-    messagePlaceholder: 'Опишите проблему... (мин. 20 символов)',
-    send: 'Отправить', sent: 'Сообщение отправлено! Ответим в течение 24 часов ✓',
+    supportTitle: 'Напиши нам',
+    placeholder: 'Опиши подробно — мы читаем каждое сообщение',
+    send: '📨 Отправить',
+    successTitle: 'Получили! Спасибо',
+    successText: 'Обычно отвечаем в течение 24 часов',
+    back: '← Назад',
     minChars: 'Минимум 20 символов',
+    topicBug: '🐛 Баг / ошибка',
+    topicIdea: '💡 Идея',
+    topicQuestion: '❓ Вопрос',
+    topicBilling: '💳 Оплата',
+    topicOther: '🔧 Другое',
     ideasTitle: 'Идеи и предложения',
-    ideasPlaceholder: 'Что улучшить в TYANA?',
+    ideasPlaceholder: 'Какой функции не хватает? Что можно улучшить?',
+    ideaSuccessTitle: 'Получили! Спасибо',
+    ideaSuccessText: 'Мы читаем каждое предложение 💜',
     importance: 'Важность',
-    ideaSent: 'Спасибо! Мы читаем каждое предложение 💜',
     ratingTitle: 'Оценить приложение',
     ratingPlaceholder: 'Комментарий (необязательно)',
     ratingSent: 'Спасибо за отзыв! 💜',
-    subject: 'Тема',
   },
   lv: {
-    supportTitle: 'Rakstīt atbalstam',
-    subjectTech: 'Tehnisks jautājums', subjectBilling: 'Maksājumu jautājums', subjectOther: 'Cits',
-    messagePlaceholder: 'Aprakstiet problēmu... (min 20 rakstzīmes)',
-    send: 'Nosūtīt', sent: 'Ziņa nosūtīta! Atbildēsim 24 stundu laikā ✓',
+    supportTitle: 'Raksti mums',
+    placeholder: 'Apraksti detalizēti — mēs lasām katru ziņu',
+    send: '📨 Nosūtīt',
+    successTitle: 'Saņēmām! Paldies',
+    successText: 'Parasti atbildam 24 stundu laikā',
+    back: '← Atpakaļ',
     minChars: 'Minimums 20 rakstzīmes',
+    topicBug: '🐛 Kļūda',
+    topicIdea: '💡 Ideja',
+    topicQuestion: '❓ Jautājums',
+    topicBilling: '💳 Maksājums',
+    topicOther: '🔧 Cits',
     ideasTitle: 'Idejas un priekšlikumi',
-    ideasPlaceholder: 'Ko uzlabot TYANA?',
+    ideasPlaceholder: 'Kādas funkcijas trūkst? Ko var uzlabot?',
+    ideaSuccessTitle: 'Saņēmām! Paldies',
+    ideaSuccessText: 'Mēs lasām katru priekšlikumu 💜',
     importance: 'Svarīgums',
-    ideaSent: 'Paldies! Mēs lasām katru priekšlikumu 💜',
     ratingTitle: 'Novērtēt lietotni',
     ratingPlaceholder: 'Komentārs (neobligāti)',
     ratingSent: 'Paldies par atsauksmi! 💜',
-    subject: 'Temats',
   },
   uk: {
-    supportTitle: 'Написати в підтримку',
-    subjectTech: 'Технічне питання', subjectBilling: 'Питання оплати', subjectOther: 'Інше',
-    messagePlaceholder: 'Опишіть проблему... (мін. 20 символів)',
-    send: 'Надіслати', sent: 'Повідомлення надіслано! Відповімо протягом 24 годин ✓',
+    supportTitle: 'Напиши нам',
+    placeholder: 'Опиши детально — ми читаємо кожне повідомлення',
+    send: '📨 Надіслати',
+    successTitle: 'Отримали! Дякуємо',
+    successText: 'Зазвичай відповідаємо протягом 24 годин',
+    back: '← Назад',
     minChars: 'Мінімум 20 символів',
+    topicBug: '🐛 Баг / помилка',
+    topicIdea: '💡 Ідея',
+    topicQuestion: '❓ Питання',
+    topicBilling: '💳 Оплата',
+    topicOther: '🔧 Інше',
     ideasTitle: 'Ідеї та пропозиції',
-    ideasPlaceholder: 'Що покращити в TYANA?',
+    ideasPlaceholder: 'Якої функції не вистачає? Що можна покращити?',
+    ideaSuccessTitle: 'Отримали! Дякуємо',
+    ideaSuccessText: 'Ми читаємо кожну пропозицію 💜',
     importance: 'Важливість',
-    ideaSent: 'Дякуємо! Ми читаємо кожну пропозицію 💜',
     ratingTitle: 'Оцінити додаток',
     ratingPlaceholder: 'Коментар (необов\'язково)',
     ratingSent: 'Дякуємо за відгук! 💜',
-    subject: 'Тема',
   },
 };
+
+const TOPICS = [
+  { value: 'bug', key: 'topicBug' },
+  { value: 'idea', key: 'topicIdea' },
+  { value: 'question', key: 'topicQuestion' },
+  { value: 'billing', key: 'topicBilling' },
+  { value: 'other', key: 'topicOther' },
+] as const;
+
+function getDeviceType() {
+  const ua = navigator.userAgent;
+  if (/iPad|iPhone|iPod/.test(ua)) return 'iOS';
+  if (/Android/.test(ua)) return 'Android';
+  return 'Desktop';
+}
 
 interface ModalProps {
   open: boolean;
@@ -81,9 +122,10 @@ export const SupportModal: React.FC<ModalProps> = ({ open, onOpenChange }) => {
   const { user } = useAuth();
   const { language } = useLanguage();
   const t = T[language as keyof typeof T] || T.en;
-  const [subject, setSubject] = useState('');
+  const [topic, setTopic] = useState('other');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const handleSend = async () => {
     if (!user || message.length < 20) return;
@@ -91,47 +133,77 @@ export const SupportModal: React.FC<ModalProps> = ({ open, onOpenChange }) => {
     await supabase.from('support_tickets' as any).insert({
       user_id: user.id,
       email: user.email,
-      subject: subject || 'Other',
+      subject: topic,
       message,
+      language,
+      device: getDeviceType(),
+      app_version: '1.0.0',
     } as any);
     setSending(false);
-    toast.success(t.sent);
-    setMessage('');
-    setSubject('');
-    onOpenChange(false);
+    setSent(true);
+  };
+
+  const handleClose = (val: boolean) => {
+    if (!val) {
+      setSent(false);
+      setMessage('');
+      setTopic('other');
+    }
+    onOpenChange(val);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-card border-border max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-bold text-foreground">💬 {t.supportTitle}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 py-2">
-          <div>
-            <label className="text-sm text-muted-foreground mb-1 block">{t.subject}</label>
-            <Select value={subject} onValueChange={setSubject}>
-              <SelectTrigger><SelectValue placeholder={t.subjectOther} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="technical">{t.subjectTech}</SelectItem>
-                <SelectItem value="billing">{t.subjectBilling}</SelectItem>
-                <SelectItem value="other">{t.subjectOther}</SelectItem>
-              </SelectContent>
-            </Select>
+        {sent ? (
+          <div className="flex flex-col items-center py-8 gap-3">
+            <CheckCircle2 className="w-16 h-16 text-green-500" />
+            <h2 className="text-lg font-bold text-foreground">{t.successTitle}</h2>
+            <p className="text-sm text-muted-foreground text-center">{t.successText}</p>
+            <Button variant="ghost" onClick={() => handleClose(false)} className="mt-4 gap-2">
+              <ArrowLeft className="w-4 h-4" /> {t.back}
+            </Button>
           </div>
-          <Textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={t.messagePlaceholder}
-            className="min-h-[120px]"
-          />
-          {message.length > 0 && message.length < 20 && (
-            <p className="text-xs text-destructive">{t.minChars}</p>
-          )}
-          <Button onClick={handleSend} disabled={sending || message.length < 20} className="w-full" style={{ backgroundColor: '#7C3AED' }}>
-            {t.send}
-          </Button>
-        </div>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle className="font-bold text-foreground">💬 {t.supportTitle}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
+              <div className="flex flex-wrap gap-2">
+                {TOPICS.map(tp => (
+                  <button
+                    key={tp.value}
+                    onClick={() => setTopic(tp.value)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                      topic === tp.value
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-secondary text-secondary-foreground border-border hover:bg-accent'
+                    }`}
+                  >
+                    {t[tp.key as keyof typeof t]}
+                  </button>
+                ))}
+              </div>
+              <Textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={t.placeholder}
+                className="min-h-[120px]"
+              />
+              {message.length > 0 && message.length < 20 && (
+                <p className="text-xs text-destructive">{t.minChars}</p>
+              )}
+              <Button
+                onClick={handleSend}
+                disabled={sending || message.length < 20}
+                className="w-full gap-2 bg-primary hover:bg-primary/90"
+              >
+                <Send className="w-4 h-4" /> {t.send}
+              </Button>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -144,10 +216,22 @@ export const IdeasModal: React.FC<ModalProps> = ({ open, onOpenChange }) => {
   const [suggestion, setSuggestion] = useState('');
   const [importance, setImportance] = useState(3);
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const handleSend = async () => {
     if (!user || suggestion.length < 5) return;
     setSending(true);
+    // Save to support_tickets with topic='idea'
+    await supabase.from('support_tickets' as any).insert({
+      user_id: user.id,
+      email: user.email,
+      subject: 'idea',
+      message: suggestion,
+      language,
+      device: getDeviceType(),
+      app_version: '1.0.0',
+    } as any);
+    // Also save to feedback for backwards compat
     await supabase.from('feedback' as any).insert({
       user_id: user.id,
       type: 'suggestion',
@@ -155,38 +239,62 @@ export const IdeasModal: React.FC<ModalProps> = ({ open, onOpenChange }) => {
       importance_rating: importance,
     } as any);
     setSending(false);
-    toast.success(t.ideaSent);
-    setSuggestion('');
-    onOpenChange(false);
+    setSent(true);
+  };
+
+  const handleClose = (val: boolean) => {
+    if (!val) {
+      setSent(false);
+      setSuggestion('');
+      setImportance(3);
+    }
+    onOpenChange(val);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-card border-border max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-bold text-foreground">💡 {t.ideasTitle}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 py-2">
-          <Textarea
-            value={suggestion}
-            onChange={(e) => setSuggestion(e.target.value)}
-            placeholder={t.ideasPlaceholder}
-            className="min-h-[120px]"
-          />
-          <div>
-            <label className="text-sm text-muted-foreground mb-2 block">{t.importance}</label>
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map(n => (
-                <button key={n} onClick={() => setImportance(n)} className="transition-transform hover:scale-110">
-                  <Star className={`w-6 h-6 ${n <= importance ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
-                </button>
-              ))}
-            </div>
+        {sent ? (
+          <div className="flex flex-col items-center py-8 gap-3">
+            <CheckCircle2 className="w-16 h-16 text-green-500" />
+            <h2 className="text-lg font-bold text-foreground">{t.ideaSuccessTitle}</h2>
+            <p className="text-sm text-muted-foreground text-center">{t.ideaSuccessText}</p>
+            <Button variant="ghost" onClick={() => handleClose(false)} className="mt-4 gap-2">
+              <ArrowLeft className="w-4 h-4" /> {t.back}
+            </Button>
           </div>
-          <Button onClick={handleSend} disabled={sending || suggestion.length < 5} className="w-full" style={{ backgroundColor: '#7C3AED' }}>
-            {t.send}
-          </Button>
-        </div>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle className="font-bold text-foreground">💡 {t.ideasTitle}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
+              <Textarea
+                value={suggestion}
+                onChange={(e) => setSuggestion(e.target.value)}
+                placeholder={t.ideasPlaceholder}
+                className="min-h-[120px]"
+              />
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">{t.importance}</label>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map(n => (
+                    <button key={n} onClick={() => setImportance(n)} className="transition-transform hover:scale-110">
+                      <Star className={`w-6 h-6 ${n <= importance ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <Button
+                onClick={handleSend}
+                disabled={sending || suggestion.length < 5}
+                className="w-full gap-2 bg-primary hover:bg-primary/90"
+              >
+                <Send className="w-4 h-4" /> {t.send}
+              </Button>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -199,6 +307,7 @@ export const RatingModal: React.FC<ModalProps> = ({ open, onOpenChange }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const handleSend = async () => {
     if (!user || rating === 0) return;
@@ -210,36 +319,58 @@ export const RatingModal: React.FC<ModalProps> = ({ open, onOpenChange }) => {
       suggestion: comment || null,
     } as any);
     setSending(false);
-    toast.success(t.ratingSent);
-    setRating(0);
-    setComment('');
-    onOpenChange(false);
+    setSent(true);
+  };
+
+  const handleClose = (val: boolean) => {
+    if (!val) {
+      setSent(false);
+      setRating(0);
+      setComment('');
+    }
+    onOpenChange(val);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-card border-border max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-bold text-foreground">⭐️ {t.ratingTitle}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4 py-2">
-          <div className="flex justify-center gap-3">
-            {[1, 2, 3, 4, 5].map(n => (
-              <button key={n} onClick={() => setRating(n)} className="transition-transform hover:scale-125">
-                <Star className={`w-10 h-10 ${n <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
-              </button>
-            ))}
+        {sent ? (
+          <div className="flex flex-col items-center py-8 gap-3">
+            <CheckCircle2 className="w-16 h-16 text-green-500" />
+            <h2 className="text-lg font-bold text-foreground">{t.ratingSent}</h2>
+            <Button variant="ghost" onClick={() => handleClose(false)} className="mt-4 gap-2">
+              <ArrowLeft className="w-4 h-4" /> {t.back}
+            </Button>
           </div>
-          <Textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder={t.ratingPlaceholder}
-            className="min-h-[80px]"
-          />
-          <Button onClick={handleSend} disabled={sending || rating === 0} className="w-full" style={{ backgroundColor: '#7C3AED' }}>
-            {t.send}
-          </Button>
-        </div>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle className="font-bold text-foreground">⭐️ {t.ratingTitle}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
+              <div className="flex justify-center gap-3">
+                {[1, 2, 3, 4, 5].map(n => (
+                  <button key={n} onClick={() => setRating(n)} className="transition-transform hover:scale-125">
+                    <Star className={`w-10 h-10 ${n <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
+                  </button>
+                ))}
+              </div>
+              <Textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder={t.ratingPlaceholder}
+                className="min-h-[80px]"
+              />
+              <Button
+                onClick={handleSend}
+                disabled={sending || rating === 0}
+                className="w-full gap-2 bg-primary hover:bg-primary/90"
+              >
+                <Send className="w-4 h-4" /> {t.send}
+              </Button>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

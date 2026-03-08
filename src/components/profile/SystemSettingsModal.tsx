@@ -96,14 +96,7 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
                   ))}
                 </div>
 
-                <Button
-                  variant="outline"
-                  className="w-full gap-2 font-exo"
-                  onClick={() => window.open('mailto:support@tyana.app', '_blank')}
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  {t('contactSupport')}
-                </Button>
+                {/* Contact support link removed - use in-app form instead */}
               </div>
             )}
           </div>
