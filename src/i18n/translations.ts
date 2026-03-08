@@ -1900,9 +1900,9 @@ export const translations = {
       all: 'Всі', mine: 'Мої', shared: 'Спільні', addedBy: 'додав(ла)',
     },
     support: {
-      writeSupport: '💬 Написати в підтримку',
-      ideas: '💡 Ідеї та пропозиції',
-      rateApp: '⭐️ Оцінити додаток',
+      writeSupport: 'Написати в підтримку',
+      ideas: 'Ідеї та пропозиції',
+      rateApp: 'Оцінити додаток',
     },
     receipt: {
       title: '🧾 Додати чек',
