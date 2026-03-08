@@ -79,14 +79,8 @@ const Diary = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMealType, setModalMealType] = useState('breakfast');
-  const [addMode, setAddMode] = useState<'recipe' | 'manual'>('manual');
   const [recipes, setRecipes] = useState<SavedRecipe[]>([]);
   const [recipeSearch, setRecipeSearch] = useState('');
-  const [manualName, setManualName] = useState('');
-  const [manualCalories, setManualCalories] = useState('');
-  const [manualProtein, setManualProtein] = useState('');
-  const [manualFat, setManualFat] = useState('');
-  const [manualCarbs, setManualCarbs] = useState('');
 
   // Scan modal state
   const [scanOpen, setScanOpen] = useState(false);
