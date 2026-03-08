@@ -321,6 +321,42 @@ export type Database = {
           },
         ]
       }
+      receipts: {
+        Row: {
+          created_at: string
+          currency: string | null
+          id: string
+          image_url: string | null
+          items: Json | null
+          receipt_date: string | null
+          store_name: string | null
+          total_amount: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          id?: string
+          image_url?: string | null
+          items?: Json | null
+          receipt_date?: string | null
+          store_name?: string | null
+          total_amount?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          id?: string
+          image_url?: string | null
+          items?: Json | null
+          receipt_date?: string | null
+          store_name?: string | null
+          total_amount?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       recipes: {
         Row: {
           created_at: string | null
