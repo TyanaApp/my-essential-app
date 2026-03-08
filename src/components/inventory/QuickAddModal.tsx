@@ -473,34 +473,36 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
           </div>
 
           {/* Bottom bar */}
-          {selected.size > 0 && (
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="p-4 border-t border-border"
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="bottom-action-bar"
+          >
+            <button
+              onClick={handleSaveAll}
+              disabled={saving || selected.size === 0}
+              className="w-full rounded-xl bg-primary px-4 py-4 text-base font-bold text-primary-foreground disabled:opacity-50"
+              style={{ minHeight: '52px' }}
             >
-              {/* Selected items preview */}
-              <div className="flex flex-wrap gap-1 mb-2 max-h-16 overflow-y-auto">
-                {Array.from(selected.entries()).map(([key, val]) => (
-                  <span key={key} className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                    {val.emoji} {val.name} — {val.displayQty}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-muted-foreground">
-                  {(qa.selectedCount || 'Selected: {count} items').replace('{count}', String(selected.size))}
-                </span>
-              </div>
-              <button
-                onClick={handleSaveAll}
-                disabled={saving}
-                className="w-full py-3 rounded-xl text-primary-foreground font-bold text-sm bg-primary active:scale-[0.98] transition-transform disabled:opacity-50"
-              >
-                {saving ? t.inventory.saving : `✓ ${(qa.addAllCount || 'Add all {count} items').replace('{count}', String(selected.size))}`}
-              </button>
-            </motion.div>
-          )}
+              {saving
+                ? t.inventory.saving
+                : selected.size === 0
+                  ? (language === 'ru'
+                      ? 'Выбери продукты выше'
+                      : language === 'uk'
+                        ? 'Оберіть продукти вище'
+                        : language === 'lv'
+                          ? 'Izvēlies produktus augstāk'
+                          : 'Select products above')
+                  : (language === 'ru'
+                      ? `Сохранить — ${selected.size} продуктов`
+                      : language === 'uk'
+                        ? `Зберегти — ${selected.size} продуктів`
+                        : language === 'lv'
+                          ? `Saglabāt — ${selected.size} produktus`
+                          : `Save — ${selected.size} products`)}
+            </button>
+          </motion.div>
         </motion.div>
 
         {/* Quantity Popup */}

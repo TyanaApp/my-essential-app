@@ -154,7 +154,7 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
 
         <motion.div
           className="relative bg-card w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl flex flex-col"
-          style={{ boxShadow: '0 -4px 40px rgba(124,58,237,0.12)', maxHeight: '90vh' }}
+          style={{ boxShadow: '0 -4px 40px rgba(124,58,237,0.12)', maxHeight: 'calc(100vh - 80px)' }}
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           exit={{ y: 100 }}

@@ -382,15 +382,12 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
               <p className="text-xs mt-2" style={{ color: '#9CA3AF' }}>{t.scan.skipHint}</p>
 
               {/* Confirm area */}
-              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
-                <p className="text-sm font-medium mb-3" style={{ color: '#1E1B4B' }}>
-                  {t.scan.foundXItems.replace('{count}', String(validCount))}
-                </p>
+              <div className="bottom-action-bar">
                 <button
                   onClick={handleSaveAll}
                   disabled={saving || validCount === 0}
-                  className="w-full h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
-                  style={{ backgroundColor: '#7C3AED' }}
+                  className="w-full rounded-xl bg-primary px-4 py-4 text-base font-bold text-primary-foreground disabled:opacity-50"
+                  style={{ minHeight: '52px' }}
                 >
                   {saving ? t.common.loading : t.scan.saveToInventory}
                 </button>
