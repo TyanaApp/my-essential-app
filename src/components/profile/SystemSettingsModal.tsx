@@ -63,34 +63,6 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
             </div>
           </div>
 
-          {/* Help */}
-          <div className="space-y-3">
-            <Button
-              variant="outline"
-              className="w-full justify-between font-exo text-sm"
-              onClick={() => setShowHelp(!showHelp)}
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <HelpCircle className="w-5 h-5 shrink-0" />
-                <span className="truncate">{t('help')}</span>
-              </div>
-              <ChevronRight className={`w-5 h-5 shrink-0 transition-transform ${showHelp ? 'rotate-90' : ''}`} />
-            </Button>
-
-            {showHelp && (
-              <div className="space-y-4 p-3 sm:p-4 bg-secondary/20 rounded-xl">
-                <h4 className="font-nasa text-foreground text-sm">{t('faq')}</h4>
-                <div className="space-y-3">
-                  {faqs.map((faq, index) => (
-                    <div key={index} className="space-y-1">
-                      <p className="font-exo text-foreground text-xs sm:text-sm break-words">{t(faq.q)}</p>
-                      <p className="text-muted-foreground text-xs sm:text-sm break-words">{t(faq.a)}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Legal */}
           <div className="space-y-3">
