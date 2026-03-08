@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package } from 'lucide-react';
+import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
