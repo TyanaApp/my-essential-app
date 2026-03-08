@@ -886,6 +886,7 @@ export const translations = {
       expiryAlerts: 'Termiņu brīdinājumi', expiryAlertsDesc: 'Uzziniet kad produktiem beidzas derīguma termiņš',
       weeklySummary: 'Iknedēļas kopsavilkums', weeklySummaryDesc: 'Pirmdienas rīta ietaupījumu pārskats',
       recipeSuggestions: 'Recepšu ieteikumi', recipeSuggestionsDesc: 'Gudras "izmanto pirms beidzas" receptes',
+      weeklyReport: 'Iknedēļas pārskats', weeklyReportDesc: 'Katru svētdienu uz email',
       useBeforeGone: '💡 Izmantojiet pirms beidzas', cookNow: 'Gatavot tagad →', noSuggestions: 'Nav produktu ar beidzošos termiņu',
     },
     scan: {
