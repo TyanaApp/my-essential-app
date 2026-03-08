@@ -272,10 +272,7 @@ const NutritionCalculator = () => {
             <textarea
               value={foodInput}
               onChange={e => setFoodInput(e.target.value)}
-              placeholder={nc.foodPlaceholder || (useRu
-                ? 'Например: куриная грудка 200г, тарелка борща, пицца маргарита 2 куска...'
-                : 'e.g. chicken breast 200g, bowl of borscht, margherita pizza 2 slices...'
-              )}
+              placeholder={placeholders[placeholderIdx]}
               className="w-full min-h-[80px] p-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
             />
 
