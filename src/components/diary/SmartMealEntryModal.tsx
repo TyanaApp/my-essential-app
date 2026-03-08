@@ -8,6 +8,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useStreak } from '@/hooks/useStreak';
 import { useFoodValidation } from '@/hooks/useFoodValidation';
+import OFFProductSuggestions from '@/components/OFFProductSuggestions';
+import { OFFProduct } from '@/lib/openFoodFacts';
 
 interface SmartMealEntryModalProps {
   open: boolean;
