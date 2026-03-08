@@ -230,6 +230,25 @@ const Inventory = () => {
         ))}
       </div>
 
+      {/* Family filter chips */}
+      {familyMode && (
+        <div className="flex gap-2 mb-3">
+          {(['all', 'mine', 'shared'] as const).map((filt) => (
+            <button
+              key={filt}
+              onClick={() => setFamilyFilter(filt)}
+              className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+              style={{
+                backgroundColor: familyFilter === filt ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
+                color: familyFilter === filt ? 'white' : '#6B7280',
+              }}
+            >
+              {filt === 'all' ? (f.all || 'All') : filt === 'mine' ? (f.mine || 'Mine') : (f.shared || 'Shared')}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Search */}
       <div className="relative mb-3">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
