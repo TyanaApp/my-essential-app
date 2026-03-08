@@ -132,7 +132,29 @@ const Index = () => {
               {t.landing.ctaHint}
             </p>
 
-            <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-6 mt-8">
+            {/* Founding Members Counter */}
+            <motion.div
+              className="mt-6 rounded-2xl p-4"
+              style={{ backgroundColor: '#EDE9FE' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              {isFull ? (
+                <p className="text-sm font-medium text-center" style={{ color: '#7C3AED' }}>
+                  🔒 {(t.landing as any).foundingFull || 'All founder spots taken. Pro is now €12.99/mo'}
+                </p>
+              ) : (
+                <>
+                  <p className="text-sm font-medium mb-2 text-center" style={{ color: '#7C3AED' }}>
+                    🏆 {(t.landing as any).foundingCounter?.replace('{count}', String(foundingCount)) || `${foundingCount} of 1000 founder spots taken`}
+                  </p>
+                  <Progress value={(foundingCount / 1000) * 100} className="h-2" />
+                </>
+              )}
+            </motion.div>
+
+            <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-6 mt-6">
               {[
                 { value: '€80', label: t.landing.statSaved },
                 { value: t.landing.statPayoffValue, label: t.landing.statPayoff },
