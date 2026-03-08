@@ -65,6 +65,19 @@ serve(async (req) => {
     const dislikedFoods = (userGoals?.disliked_foods || []).join(", ");
     const familyDislikes = (userGoals?.family_dislikes || []).join(", ");
 
+    const today = new Date().toISOString().split('T')[0];
+    const expiredItems = (inventory || [])
+      .filter((i: any) => i.expires_at && i.expires_at < today)
+      .map((i: any) => i.name)
+      .join(", ");
+
+    const freshInventory = (inventory || [])
+      .filter((i: any) => !i.expires_at || i.expires_at >= today);
+
+    const inventoryList = freshInventory
+      .map((i: any) => `${i.name} ${i.quantity}${i.unit}`)
+      .join(", ");
+
     const prompt = `YOU MUST respond ENTIRELY in ${lang}. 
 ALL fields must be in ${lang}: title, ingredients names, instructions, units.
 DO NOT use English if language is not English.
@@ -86,6 +99,9 @@ CRITICAL FOOD RESTRICTIONS - NEVER VIOLATE:
 - NEVER suggest recipes containing these DISLIKED foods: ${dislikedFoods || "none"}
 - NEVER suggest recipes containing these FAMILY DISLIKES: ${familyDislikes || "none"}  
 - NEVER suggest recipes containing these ALLERGENS: ${(userGoals?.allergies || []).join(", ") || "none"}
+- CRITICAL: These items are EXPIRED (past expiry date): ${expiredItems || "none"}
+  NEVER include expired items in recipes. NEVER suggest cooking expired food.
+  Only use items that are fresh or within expiry date.
 Violating food preferences destroys user trust. Double-check every ingredient.
 
 Return ONLY a valid JSON array of 3 recipes, no markdown or code fences:

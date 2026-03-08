@@ -88,6 +88,19 @@ export const useNotifications = () => {
     });
   }, []);
 
+  const deleteAlert = useCallback((id: string) => {
+    setAlerts(prev => {
+      const updated = prev.filter(a => a.id !== id);
+      storeAlerts(updated);
+      return updated;
+    });
+  }, []);
+
+  const clearAll = useCallback(() => {
+    setAlerts([]);
+    storeAlerts([]);
+  }, []);
+
   const updateSettings = useCallback((newSettings: NotificationSettings) => {
     setSettings(newSettings);
     setNotificationSettings(newSettings);
@@ -215,6 +228,8 @@ export const useNotifications = () => {
     settings,
     updateSettings,
     markAllRead,
+    deleteAlert,
+    clearAll,
     addAlert,
   };
 };

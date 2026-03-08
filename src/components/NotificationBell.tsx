@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -9,9 +9,11 @@ interface NotificationBellProps {
   alerts: AppAlert[];
   unreadCount: number;
   onMarkAllRead: () => void;
+  onDeleteAlert?: (id: string) => void;
+  onClearAll?: () => void;
 }
 
-const NotificationBell = ({ alerts, unreadCount, onMarkAllRead }: NotificationBellProps) => {
+const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, onClearAll }: NotificationBellProps) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -78,15 +80,26 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead }: NotificationBe
           >
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
               <h4 className="text-sm font-bold text-foreground">{t.notifications.title}</h4>
-              {alerts.length > 0 && (
-                <button
-                  onClick={onMarkAllRead}
-                  className="text-xs font-medium"
-                  style={{ color: '#7C3AED' }}
-                >
-                  {t.notifications.markRead}
-                </button>
-              )}
+              <div className="flex items-center gap-2">
+                {alerts.length > 0 && onClearAll && (
+                  <button
+                    onClick={onClearAll}
+                    className="text-xs font-medium"
+                    style={{ color: '#DC2626' }}
+                  >
+                    {(t.notifications as any).clearAll || 'Clear all'}
+                  </button>
+                )}
+                {alerts.length > 0 && (
+                  <button
+                    onClick={onMarkAllRead}
+                    className="text-xs font-medium"
+                    style={{ color: '#7C3AED' }}
+                  >
+                    {t.notifications.markRead}
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="max-h-80 overflow-y-auto">
@@ -96,22 +109,33 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead }: NotificationBe
                 </div>
               ) : (
                 alerts.slice(0, 10).map(alert => (
-                  <button
+                  <div
                     key={alert.id}
-                    onClick={() => handleAlertClick(alert)}
                     className={`w-full px-4 py-3 text-left flex items-start gap-3 hover:bg-accent/50 transition-colors border-b border-border/50 last:border-b-0 ${
                       !alert.read ? 'bg-primary/5' : ''
                     }`}
                   >
-                    <span className="text-lg shrink-0 mt-0.5">{alert.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-foreground truncate">{alert.body}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">{formatTime(alert.createdAt)}</p>
+                    <button onClick={() => handleAlertClick(alert)} className="flex items-start gap-3 flex-1 min-w-0">
+                      <span className="text-lg shrink-0 mt-0.5">{alert.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-foreground truncate">{alert.body}</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">{formatTime(alert.createdAt)}</p>
+                      </div>
+                    </button>
+                    <div className="flex items-center gap-1 shrink-0 mt-1">
+                      {!alert.read && (
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#7C3AED' }} />
+                      )}
+                      {onDeleteAlert && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onDeleteAlert(alert.id); }}
+                          className="p-1 rounded hover:bg-destructive/10 transition-colors"
+                        >
+                          <Trash2 className="w-3 h-3" style={{ color: '#9CA3AF' }} />
+                        </button>
+                      )}
                     </div>
-                    {!alert.read && (
-                      <span className="w-2 h-2 rounded-full shrink-0 mt-2" style={{ backgroundColor: '#7C3AED' }} />
-                    )}
-                  </button>
+                  </div>
                 ))
               )}
             </div>

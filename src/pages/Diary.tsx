@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { calcMacroTargets } from '@/pages/NutritionAnalysis';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Search, Camera } from 'lucide-react';
+import { Plus, X, Search, Camera, Refrigerator } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
 import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
+import FridgePickerModal from '@/components/diary/FridgePickerModal';
 import {
   Dialog,
   DialogContent,
@@ -87,6 +88,8 @@ const Diary = () => {
   // Scan modal state
   const [scanOpen, setScanOpen] = useState(false);
   const [scanMealType, setScanMealType] = useState('breakfast');
+  const [fridgeOpen, setFridgeOpen] = useState(false);
+  const [fridgeMealType, setFridgeMealType] = useState('breakfast');
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
@@ -278,6 +281,14 @@ const Diary = () => {
                   </h3>
                   <div className="flex items-center gap-1">
                     <button
+                      onClick={() => { setFridgeMealType(section.type); setFridgeOpen(true); }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg"
+                      style={{ color: '#059669', backgroundColor: '#F0FDF4' }}
+                      aria-label="From fridge"
+                    >
+                      <span className="text-sm">🧊</span>
+                    </button>
+                    <button
                       onClick={() => openScanModal(section.type)}
                       className="flex items-center justify-center w-8 h-8 rounded-lg"
                       style={{ color: '#7C3AED', backgroundColor: '#F5F3FF' }}
@@ -365,7 +376,15 @@ const Diary = () => {
         onSaved={handleScanSaved}
       />
 
-      {/* Add meal modal */}
+      {/* Fridge picker modal */}
+      <FridgePickerModal
+        open={fridgeOpen}
+        onClose={() => setFridgeOpen(false)}
+        mealType={fridgeMealType}
+        dateStr={dateStr}
+        onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
+      />
+
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>

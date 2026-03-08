@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, PackagePlus, AlertTriangle, X, Check } from 'lucide-react';
+import StoragePickerModal from '@/components/StoragePickerModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -37,6 +38,7 @@ const Shopping = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<ShoppingItem | null>(null);
   const [confirmItem, setConfirmItem] = useState<ShoppingItem | null>(null);
+  const [storagePickerItem, setStoragePickerItem] = useState<ShoppingItem | null>(null);
   const [suggestions, setSuggestions] = useState<LowStockItem[]>([]);
   const [suggestDismissed, setSuggestDismissed] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -175,21 +177,30 @@ const Shopping = () => {
     if (!confirmItem || !user) return;
     await supabase.from('shopping_items').update({ is_purchased: true } as any).eq('id', confirmItem.id);
     setItems((prev) => prev.map((i) => (i.id === confirmItem.id ? { ...i, is_purchased: true } : i)));
-    // Log spending to savings_log
     const itemTotal = (confirmItem.estimated_price || 0) * (confirmItem.quantity || 1);
     if (itemTotal > 0) {
       await supabase.from('savings_log').insert({
-        user_id: user.id,
-        type: 'purchase',
-        amount: itemTotal,
-        description: confirmItem.name,
+        user_id: user.id, type: 'purchase', amount: itemTotal, description: confirmItem.name,
       } as any);
     }
     if (addToInventory) {
-      await supabase.from('inventory_items').insert({ user_id: user.id, name: confirmItem.name, quantity: confirmItem.quantity || 1, unit: confirmItem.unit || 'pcs', category: confirmItem.category, storage_location: 'fridge' } as any);
-      toast.success(`${confirmItem.name} ${t.shopping.addedToInventory}`);
-    } else { toast.success(t.shopping.markedPurchased); }
-    setConfirmItem(null);
+      setConfirmItem(null);
+      setStoragePickerItem(confirmItem);
+    } else {
+      toast.success(t.shopping.markedPurchased);
+      setConfirmItem(null);
+    }
+  };
+
+  const handleStorageSelect = async (location: string) => {
+    if (!storagePickerItem || !user) return;
+    await supabase.from('inventory_items').insert({
+      user_id: user.id, name: storagePickerItem.name,
+      quantity: storagePickerItem.quantity || 1, unit: storagePickerItem.unit || 'pcs',
+      category: storagePickerItem.category, storage_location: location,
+    } as any);
+    toast.success(`${storagePickerItem.name} → ${location === 'fridge' ? '🧊' : location === 'freezer' ? '❄️' : '🏠'} ✓`);
+    setStoragePickerItem(null);
   };
 
   const handleDelete = async (id: string) => {
@@ -420,6 +431,12 @@ const Shopping = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <StoragePickerModal
+        open={!!storagePickerItem}
+        onClose={() => setStoragePickerItem(null)}
+        itemName={storagePickerItem?.name || ''}
+        onSelect={handleStorageSelect}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, ChevronRight, AlertTriangle, Check, Sparkles, Brain } from 'lucide-react';
+import { Plus, ChevronRight, AlertTriangle, Check, Sparkles, Brain, RefreshCw } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -69,6 +69,8 @@ const Dashboard = () => {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [advice, setAdvice] = useState<string>('');
   const [adviceLoading, setAdviceLoading] = useState(false);
+  const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string } | null>(null);
+  const [tipLoading, setTipLoading] = useState(false);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -317,6 +319,45 @@ const Dashboard = () => {
     };
     fetchAdvice();
   }, [user, data]);
+
+  // Zero waste tip with daily cache
+  const fetchZeroWasteTip = useCallback(async (force = false) => {
+    if (!user) return;
+    const cacheKey = `tyana_zwt_${user.id}`;
+    if (!force) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const { date, data: tipData } = JSON.parse(cached);
+          if (date === new Date().toISOString().split('T')[0]) {
+            setZeroWasteTip(tipData);
+            return;
+          }
+        }
+      } catch {}
+    }
+    setTipLoading(true);
+    try {
+      const [invRes, mealsRes] = await Promise.all([
+        supabase.from('inventory_items').select('name, expires_at, quantity, unit').eq('user_id', user.id).limit(20),
+        supabase.from('meal_entries').select('custom_name').eq('user_id', user.id).eq('date', new Date().toISOString().split('T')[0]),
+      ]);
+      const { data: tipData } = await supabase.functions.invoke('zero-waste-tip', {
+        body: { inventory: invRes.data || [], recentMeals: mealsRes.data || [], language },
+      });
+      if (tipData && tipData.tip) {
+        setZeroWasteTip(tipData);
+        localStorage.setItem(cacheKey, JSON.stringify({ date: new Date().toISOString().split('T')[0], data: tipData }));
+      }
+    } catch (e) {
+      console.error('Zero waste tip error:', e);
+    }
+    setTipLoading(false);
+  }, [user, language]);
+
+  useEffect(() => {
+    if (user && data) fetchZeroWasteTip();
+  }, [user, data, fetchZeroWasteTip]);
 
   if (loading) {
     return (
@@ -591,16 +632,29 @@ const Dashboard = () => {
                             })()}
                       </span>
                     </div>
-                    {item.suggestion && (
+                    {isExpired ? (
                       <div className="flex items-center gap-1.5 mt-1">
-                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
-                        <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                        <span className="text-[11px] font-medium" style={{ color: '#DC2626' }}>
+                          ⚠️ {language === 'ru' ? `${item.name} просрочен — не рекомендуется употреблять` :
+                               language === 'uk' ? `${item.name} прострочено — не рекомендується вживати` :
+                               language === 'lv' ? `${item.name} beidzies — nav ieteicams lietot` :
+                               `${item.name} is expired — not recommended to consume`}
+                        </span>
                       </div>
-                    )}
-                    {loadingSuggestions && !item.suggestion && (
-                      <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
-                        {(t.dashboard as any).loadingSuggestions || '...'}
-                      </span>
+                    ) : (
+                      <>
+                        {item.suggestion && (
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
+                            <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                          </div>
+                        )}
+                        {loadingSuggestions && !item.suggestion && (
+                          <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
+                            {(t.dashboard as any).loadingSuggestions || '...'}
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
                 );
@@ -797,25 +851,47 @@ const Dashboard = () => {
           )}
         </motion.div>
 
-        {/* Card 5 — Zero Waste Tip */}
+        {/* Card 5 — AI Zero Waste Tip */}
         <motion.div {...fadeUp(5)} style={cardStyle} className="p-5">
-          <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>
-            ♻️ {(t as any).tips?.title || 'Zero waste tip of the day'}
-          </h3>
-          <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
-            {(() => {
-              const tips = (t as any).tips?.daily || [
-                'Use leftover rice for fried rice tomorrow',
-                'Vegetable peels make great broth',
-                'Freeze bread before it goes stale',
-                'Wilting herbs? Make herb oil',
-                'Almost-expired yogurt works great in smoothies',
-                'Plan meals Sunday to waste 40% less',
-                'Check your fridge before grocery shopping',
-              ];
-              return tips[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
-            })()}
-          </p>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+              {zeroWasteTip?.emoji || '♻️'} {zeroWasteTip?.title || ((t as any).tips?.title || 'Zero waste tip of the day')}
+            </h3>
+            <button
+              onClick={() => fetchZeroWasteTip(true)}
+              disabled={tipLoading}
+              className="p-1.5 rounded-lg hover:bg-accent transition-colors"
+              style={{ color: '#7C3AED' }}
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${tipLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+          {tipLoading ? (
+            <div className="flex items-center gap-2 py-2">
+              <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>{(t.common as any)?.loading || 'Loading...'}</span>
+            </div>
+          ) : zeroWasteTip ? (
+            <>
+              <p className="text-sm leading-relaxed mb-2" style={{ color: '#6B7280' }}>{zeroWasteTip.tip}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                {zeroWasteTip.category && (
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}>
+                    {zeroWasteTip.category === 'food' ? '🍽' : zeroWasteTip.category === 'beauty' ? '💄' : zeroWasteTip.category === 'cleaning' ? '🧹' : zeroWasteTip.category === 'garden' ? '🌱' : '🏠'} {zeroWasteTip.category}
+                  </span>
+                )}
+                {zeroWasteTip.product && (
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0FDF4', color: '#059669' }}>
+                    {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.product}
+                  </span>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+              {((t as any).tips?.daily || ['Check your fridge before grocery shopping'])[0]}
+            </p>
+          )}
         </motion.div>
       </div>
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />

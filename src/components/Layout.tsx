@@ -13,7 +13,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 const Layout = () => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { alerts, unreadCount, markAllRead } = useNotifications();
+  const { alerts, unreadCount, markAllRead, deleteAlert, clearAll } = useNotifications();
 
   const navItems = [
     { path: "/dashboard", label: t.nav.home, icon: Home },
@@ -31,7 +31,7 @@ const Layout = () => {
         {/* Logo */}
         <div className="flex items-center justify-between h-14 px-5 border-b border-border">
           <span className="font-tyana text-base" style={{ color: '#7C3AED' }}>TYANA</span>
-          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} />
+          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} onDeleteAlert={deleteAlert} onClearAll={clearAll} />
         </div>
 
         {/* Nav */}
@@ -70,7 +70,7 @@ const Layout = () => {
       <main className="flex-1 md:ml-60 overflow-x-hidden">
         {/* Mobile top bar with bell */}
         <div className="md:hidden flex items-center justify-end px-4 pt-3">
-          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} />
+          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} onDeleteAlert={deleteAlert} onClearAll={clearAll} />
         </div>
         <Outlet />
       </main>
