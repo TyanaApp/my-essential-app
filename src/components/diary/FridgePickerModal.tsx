@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
+import { getUnitLabel } from '@/lib/units';
 
 interface FridgePickerModalProps {
   open: boolean;
