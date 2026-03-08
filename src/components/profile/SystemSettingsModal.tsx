@@ -107,6 +107,19 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
               </div>
             )}
           </div>
+
+          {/* Legal */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Scale className="w-5 h-5 text-primary" />
+              <span className="font-exo text-foreground">{t('legal') || 'Legal'}</span>
+            </div>
+            <div className="space-y-2">
+              <Link to="/privacy" className="block text-sm font-exo text-primary hover:underline">{t('privacyPolicy') || 'Privacy Policy'}</Link>
+              <Link to="/terms" className="block text-sm font-exo text-primary hover:underline">{t('termsOfService') || 'Terms of Service'}</Link>
+              <Link to="/cookies" className="block text-sm font-exo text-primary hover:underline">{t('cookiePolicy') || 'Cookie Policy'}</Link>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
