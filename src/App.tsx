@@ -73,7 +73,7 @@ const App = () => {
                   <Route path="/privacy" element={<PrivacyPage />} />
                   <Route path="/terms" element={<TermsPage />} />
                   <Route path="/cookies" element={<CookiesPage />} />
-                  <Route path="*" element={<NotFound />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </AuthProvider>
             </BrowserRouter>
