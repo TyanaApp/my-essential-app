@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
+import { useFoodValidation } from '@/hooks/useFoodValidation';
 import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import FridgePickerModal from '@/components/diary/FridgePickerModal';
