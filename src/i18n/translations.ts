@@ -125,7 +125,7 @@ export const translations = {
     dashboard: {
       morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
       remaining: 'kcal remaining today', overTarget: 'kcal over target',
-      logMeal: '+ Log a meal', nothingExpiring: 'Nothing expiring soon ✅',
+      logMeal: 'Log a meal', nothingExpiring: 'Nothing expiring soon ✅',
       expiringTitle: '{count} items expiring soon', ideasToday: '🍳 Ideas for today',
       savedMonth: 'saved this month', generateRecipes: 'Generate your first recipes →',
       viewAll: 'View all', seeDetails: 'See details',
