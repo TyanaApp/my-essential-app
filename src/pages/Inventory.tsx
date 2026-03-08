@@ -16,7 +16,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
 import { useFamily } from '@/hooks/useFamily';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { toast as sonnerToast } from 'sonner';
+
 
 export interface InventoryItem {
   id: string;
