@@ -227,6 +227,21 @@ interface Props {
   onSaved: () => void;
 }
 
+const STORAGE_TABS: Record<string, { id: string; emoji: string; labels: Record<string, string> }[]> = {
+  default: [
+    { id: 'fridge', emoji: '🧊', labels: { en: 'Fridge', ru: 'Холодильник', uk: 'Холодильник', lv: 'Ledusskapis' } },
+    { id: 'freezer', emoji: '❄️', labels: { en: 'Freezer', ru: 'Морозилка', uk: 'Морозилка', lv: 'Saldētava' } },
+    { id: 'pantry', emoji: '🏠', labels: { en: 'Pantry', ru: 'Кладовая', uk: 'Комора', lv: 'Pieliekamais' } },
+  ],
+};
+
+const BOTTOM_LABELS: Record<string, { add: string; cancel: string; addCount: string }> = {
+  en: { add: 'Add', cancel: 'Cancel', addCount: 'Add — {count} products' },
+  ru: { add: 'Добавить', cancel: 'Отменить', addCount: 'Добавить — {count} продуктов' },
+  uk: { add: 'Додати', cancel: 'Скасувати', addCount: 'Додати — {count} продуктів' },
+  lv: { add: 'Pievienot', cancel: 'Atcelt', addCount: 'Pievienot — {count} produktus' },
+};
+
 const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -239,6 +254,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const [selected, setSelected] = useState<Map<string, SelectedItem>>(new Map());
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
+  const [storageTab, setStorageTab] = useState('fridge');
 
   // Quantity popup state
   const [qtyPopupItem, setQtyPopupItem] = useState<QuickItem | null>(null);
