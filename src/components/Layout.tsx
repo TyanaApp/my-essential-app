@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings } from "lucide-react";
+import { Home, Package, ChefHat, ShoppingCart, BookOpen, Settings, Bell as BellIcon } from "lucide-react";
 import tyanaLogo from '@/assets/tyana-logo-text.png';
 import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
@@ -10,6 +10,8 @@ import InstallBanner from './InstallBanner';
 import NotificationBell from './NotificationBell';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useMealReminders } from '@/hooks/useMealReminders';
+import { useReminders } from '@/hooks/useReminders';
 
 const Layout = () => {
   const location = useLocation();
