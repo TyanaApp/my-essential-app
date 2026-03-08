@@ -296,6 +296,42 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 </div>
               </div>
 
+              {/* Favorite recipes */}
+              {favoriteRecipes.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">{sm.fromRecipes || '🍽 From your recipes:'}</p>
+                  <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+                    {favoriteRecipes.map((r) => (
+                      <button
+                        key={r.id}
+                        onClick={() => handleQuickLog(r.title)}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors shrink-0"
+                      >
+                        🍽 {r.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Recent meals */}
+              {recentMeals.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">{sm.recentlyEaten || '🕐 Recently eaten:'}</p>
+                  <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+                    {recentMeals.map((name, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleQuickLog(name)}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap border border-border bg-muted/30 hover:bg-muted/50 transition-colors shrink-0"
+                      >
+                        🔄 {name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Text input */}
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-2">{sm.orDescribe || 'Or describe your meal'}</p>
