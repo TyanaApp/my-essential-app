@@ -952,6 +952,20 @@ export const translations = {
       waitlistCount: '{count} пользователей уже ждут эту функцию',
       profileLabel: '🏪 Интеграция с магазинами',
     },
+    reminders: {
+      title: 'Мои напоминания', addReminder: 'Добавить напоминание', whatToRemind: 'Что напомнить?',
+      placeholder: 'Зайти в магазин за молоком', voiceReminder: 'Голосовое напоминание',
+      once: 'Один раз', daily: 'Каждый день', weekdays: 'По будням', weekends: 'По выходным',
+      dateLabel: 'Дата', timeLabel: 'Время', repeatLabel: 'Повтор',
+      saved: 'Напоминание сохранено ✓', saveFailed: 'Не удалось сохранить', voiceFailed: 'Не удалось распознать голос',
+      processing: 'Обработка голоса...', confirmReminder: 'Подтвердить напоминание',
+      willRemind: 'Напомню', empty: 'Нет напоминаний',
+      today: 'Сегодня', tomorrow: 'Завтра', recurring: 'Повторяющиеся', completed: 'Выполненные',
+    },
+    mealReminders: {
+      title: '🍽 Напоминания о еде',
+      breakfast: '🌅 Завтрак', lunch: '☀️ Обед', dinner: '🌙 Ужин',
+    },
   },
   lv: {
     nav: { home: 'Sākums', inventory: 'Produkti', recipes: 'Receptes', shopping: 'Iepirkumi', diary: 'Dienasgrāmata', settings: 'Iestatījumi', profile: 'Profils' },
