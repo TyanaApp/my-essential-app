@@ -340,6 +340,19 @@ const Profile = () => {
         </Card>
       </motion.div>
 
+      {/* Coming Soon - Store Integration */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.24 }}
+      >
+        <Card className="bg-card border-border mb-4">
+          <CardContent className="p-4">
+            <StoreDealsProfileRow />
+          </CardContent>
+        </Card>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
