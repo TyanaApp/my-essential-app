@@ -26,7 +26,7 @@ import Savings from "./pages/Savings";
 import Receipts from "./pages/Receipts";
 import Achievements from "./pages/Achievements";
 import NutritionAnalysis from "./pages/NutritionAnalysis";
-import NotFound from "./pages/NotFound";
+
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import CookiesPage from "./pages/CookiesPage";
