@@ -95,7 +95,7 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
       onClose();
     } catch (e) {
       console.error('Error adding product:', e);
-      toast.error('Error');
+      toast.error(t.inventory.errorSaving || 'Error');
     } finally {
       setAdding(false);
     }
