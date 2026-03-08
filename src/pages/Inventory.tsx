@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { translateUnit } from '@/lib/units';
-import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap, ScanBarcode } from 'lucide-react';
+import { Search, Camera, Plus, Pencil, Trash2, Zap, ScanBarcode } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -154,45 +154,7 @@ const Inventory = () => {
     toast.success(t.inventory.deleted);
   };
 
-  const handleAddToShopping = async (item: InventoryItem) => {
-    if (!user) return;
-    await supabase.from('shopping_items').insert({
-      user_id: user.id,
-      name: item.name,
-      quantity: item.quantity,
-      unit: item.unit,
-      category: item.category,
-    } as any);
-    toast.success(`${item.name} ${t.inventory.addedToShopping}`);
-  };
 
-  const handleToggleOpened = async (item: InventoryItem) => {
-    const newOpened = !item.is_opened;
-    await supabase
-      .from('inventory_items')
-      .update({
-        is_opened: newOpened,
-        opened_at: newOpened ? new Date().toISOString() : null,
-      } as any)
-      .eq('id', item.id);
-    setItems((prev) =>
-      prev.map((i) =>
-        i.id === item.id ? { ...i, is_opened: newOpened, opened_at: newOpened ? new Date().toISOString() : null } : i
-      )
-    );
-    toast.success(newOpened ? t.inventory.markedOpened : t.inventory.markedSealed);
-  };
-
-  const handleToggleTrackingMode = async (item: InventoryItem) => {
-    const newMode = item.tracking_mode === 'date_only' ? 'tracked' : 'date_only';
-    await supabase
-      .from('inventory_items')
-      .update({ tracking_mode: newMode } as any)
-      .eq('id', item.id);
-    setItems((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, tracking_mode: newMode } : i))
-    );
-  };
 
   const openAdd = () => { setEditItem(null); setModalOpen(true); };
   const activeLocation = tab === 'expiring' ? 'fridge' : tab;
@@ -322,7 +284,7 @@ const Inventory = () => {
           <AnimatePresence>
             {filteredItems.map((item) => {
               const exp = expiryColor(item.expires_at);
-              const lowQty = item.tracking_mode !== 'date_only' && item.quantity <= 0.2;
+              const hasExpiry = item.expires_at !== null;
               const memberInfo = familyMode && item.user_id !== user?.id
                 ? members.find(m => m.user_id === item.user_id)
                 : null;
@@ -345,78 +307,33 @@ const Inventory = () => {
                       </Avatar>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <p className="text-sm font-semibold truncate text-foreground">{item.name}</p>
-                        {item.is_opened && (
-                          <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED', color: '#EA580C' }}>
-                            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#EA580C' }} />
-                            {t.inventory.opened}
-                          </span>
-                        )}
-                        {lowQty && (
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
-                            {t.inventory.low}
-                          </span>
-                        )}
-                      </div>
+                      <p className="text-sm font-semibold truncate text-foreground">{item.name}</p>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        {item.tracking_mode !== 'date_only' && (
-                          <span className="text-xs font-medium text-muted-foreground">
-                            {item.quantity} {translateUnit(item.unit, language)}
+                        <span className="text-xs font-medium text-muted-foreground">
+                          {item.quantity} {translateUnit(item.unit, language)}
+                        </span>
+                        {hasExpiry && (
+                          <span
+                            className="text-[11px] font-medium px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: exp.bg, color: exp.text }}
+                          >
+                            {exp.label}
                           </span>
                         )}
-                        <span
-                          className="text-[11px] font-medium px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: exp.bg, color: exp.text }}
-                        >
-                          {exp.label}
-                        </span>
-                        {item.price_per_unit && (
-                          <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{getCurrencySymbol('EUR')}{item.price_per_unit}</span>
-                        )}
-                        <button
-                          onClick={() => handleToggleTrackingMode(item)}
-                          className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
-                          style={{ backgroundColor: item.tracking_mode === 'date_only' ? '#EFF6FF' : '#F0FDF4', color: item.tracking_mode === 'date_only' ? '#3B82F6' : '#059669' }}
-                        >
-                          {item.tracking_mode === 'date_only' ? t.inventory.dateOnly : t.inventory.tracked}
-                        </button>
                       </div>
                     </div>
                     <div className="flex items-center gap-0.5 shrink-0">
                       <button
-                        onClick={() => handleToggleOpened(item)}
-                        className="p-1.5 rounded-lg transition-colors text-[11px]"
-                        style={{ backgroundColor: item.is_opened ? '#FFF7ED' : 'transparent' }}
-                        title={item.is_opened ? t.inventory.markedSealed : t.inventory.markedOpened}
-                      >
-                        📦
-                      </button>
-                      {tab === 'expiring' && (
-                        <button
-                          onClick={() => toast.info(t.inventory.recipeFinder)}
-                          className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                        >
-                          <UtensilsCrossed className="w-4 h-4" style={{ color: '#7C3AED' }} />
-                        </button>
-                      )}
-                      <button
-                        onClick={() => handleAddToShopping(item)}
-                        className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
-                      >
-                        <ShoppingCart className="w-4 h-4" style={{ color: '#059669' }} />
-                      </button>
-                      <button
                         onClick={() => openEdit(item)}
-                        className="p-1.5 rounded-lg hover:bg-[#EDE9FE] transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-accent transition-colors"
                       >
-                        <Pencil className="w-4 h-4" style={{ color: '#7C3AED' }} />
+                        <Pencil className="w-4 h-4 text-primary" />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors"
                       >
-                        <Trash2 className="w-4 h-4" style={{ color: '#DC2626' }} />
+                        <Trash2 className="w-4 h-4 text-destructive" />
                       </button>
                     </div>
                   </div>
