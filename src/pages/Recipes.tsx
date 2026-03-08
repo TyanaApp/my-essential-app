@@ -207,11 +207,11 @@ const Recipes = () => {
             </div>
           </div>
           <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2" style={{ backgroundColor: cc.bg, color: cc.text }}>
-            {n.nutrition.calories} kcal
+            {n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}
           </span>
           <div className="flex items-center gap-3 text-xs mb-2" style={{ color: '#6B7280' }}>
-            <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {n.prepTime} min</span>
-            <span className="flex items-center gap-1">💰 est. €{n.estimatedCost?.toFixed(2)}</span>
+            <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {n.prepTime} {(t.recipes as any)?.minUnit || 'min'}</span>
+            <span className="flex items-center gap-1">💰 {(t.recipes as any)?.estCost || 'est.'} €{n.estimatedCost?.toFixed(2)}</span>
           </div>
           <p className="text-xs font-medium" style={{ color: missingCount === 0 ? '#059669' : '#EA580C' }}>
             {missingCount === 0 ? t.recipes.allAvailable : t.recipes.needItems.replace('{count}', String(missingCount))}
