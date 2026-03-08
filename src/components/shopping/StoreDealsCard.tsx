@@ -14,12 +14,12 @@ const StoreDealsCard = () => {
 
   useEffect(() => {
     if (!user) return;
-    // Check if user already joined waitlist
-    supabase.from('profiles').select('store_integration_waitlist').eq('user_id', user.id).maybeSingle().then(({ data }) => {
-      if ((data as any)?.store_integration_waitlist) setJoined(true);
+    // Check if user already joined waitlist - use raw query to avoid type issues
+    supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      if (data && (data as any).store_integration_waitlist) setJoined(true);
     });
     // Count waitlist users
-    supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('store_integration_waitlist' as any, true).then(({ count }) => {
+    supabase.rpc('count_store_waitlist' as any).then(({ data: count }) => {
       setWaitlistCount(count || 0);
     });
   }, [user]);
