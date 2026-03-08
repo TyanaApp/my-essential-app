@@ -23,7 +23,7 @@ import AccountSettingsModal from '@/components/profile/AccountSettingsModal';
 import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
-import { SupportModal, IdeasModal, RatingModal } from '@/components/profile/SupportFeedbackModals';
+import { SupportModal, RatingModal } from '@/components/profile/SupportFeedbackModals';
 import FamilySettingsModal from '@/components/profile/FamilySettingsModal';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
