@@ -221,7 +221,6 @@ const Inventory = () => {
               tab === tabItem.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
             }`}
           >
-          >
             {tabItem.label}
             {tabItem.id === 'expiring' && (
               <span
