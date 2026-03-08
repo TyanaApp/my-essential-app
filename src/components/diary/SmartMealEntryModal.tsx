@@ -160,7 +160,7 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
 
       if (error) throw error;
       if (data) onSaved(data);
-      toast.success(`${result.meal_name} ${t.diary.logged}`);
+      toast.success(sm.loggedToDiary || 'Logged to diary ✓');
       handleClose();
       const reward = await updateStreak();
       if (reward) {
@@ -195,11 +195,11 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 50 }}
-        className="bg-card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md max-h-[90vh] overflow-y-auto"
+        className="bg-card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md max-h-[90vh] flex flex-col"
         style={{ boxShadow: '0 -4px 40px rgba(0,0,0,0.15)' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
           <div className="flex items-center gap-2">
             {step !== 'input' && step !== 'analyzing' && (
               <button onClick={() => setStep(step === 'result' ? 'portion' : 'input')} className="p-1 rounded-lg hover:bg-muted">
@@ -218,7 +218,8 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
           </button>
         </div>
 
-        <div className="p-4">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto p-4">
           {/* INPUT STEP */}
           {step === 'input' && (
             <div className="space-y-4">
@@ -249,14 +250,6 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                   autoFocus
                 />
               </div>
-
-              <button
-                onClick={handleProceedToPortion}
-                disabled={!mealText.trim()}
-                className="w-full h-12 rounded-xl text-sm font-semibold text-primary-foreground disabled:opacity-40 bg-primary"
-              >
-                {sm.next || 'Next →'}
-              </button>
             </div>
           )}
 
@@ -314,13 +307,6 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                   ))}
                 </div>
               </div>
-
-              <button
-                onClick={handleAnalyze}
-                className="w-full h-12 rounded-xl text-sm font-semibold text-primary-foreground bg-primary"
-              >
-                {sm.calculate || '🧮 Calculate'}
-              </button>
             </div>
           )}
 
@@ -382,15 +368,55 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
               {result.note && (
                 <p className="text-xs text-center text-muted-foreground italic">~{sm.approximate || 'approximate'}</p>
               )}
+            </div>
+          )}
+        </div>
 
-              {/* Actions */}
-              <div className="space-y-2 pt-2">
+        {/* STICKY BOTTOM BUTTONS - always visible */}
+        {step !== 'analyzing' && (
+          <div className="shrink-0 border-t border-border p-4 space-y-2 bg-card rounded-b-2xl">
+            {step === 'input' && (
+              <>
+                <button
+                  onClick={handleProceedToPortion}
+                  disabled={!mealText.trim()}
+                  className="w-full h-12 rounded-xl text-sm font-semibold text-primary-foreground disabled:opacity-40 bg-primary"
+                >
+                  {sm.next || 'Next →'}
+                </button>
+                <button onClick={handleClose} className="w-full text-center text-sm text-muted-foreground py-2">
+                  {sm.cancel || t.common.cancel || 'Cancel'}
+                </button>
+              </>
+            )}
+
+            {step === 'portion' && (
+              <>
+                <button
+                  onClick={handleAnalyze}
+                  className="w-full h-12 rounded-xl text-sm font-semibold text-primary-foreground bg-primary"
+                >
+                  {sm.calculate || '🧮 Calculate'}
+                </button>
+                <button onClick={handleClose} className="w-full text-center text-sm text-muted-foreground py-2">
+                  {sm.cancel || t.common.cancel || 'Cancel'}
+                </button>
+              </>
+            )}
+
+            {step === 'result' && (
+              <>
                 <button
                   onClick={handleLog}
                   disabled={saving}
-                  className="w-full h-12 rounded-xl text-sm font-semibold text-primary-foreground bg-primary disabled:opacity-40"
+                  className="w-full h-14 rounded-xl text-base font-bold text-primary-foreground bg-primary disabled:opacity-40"
                 >
-                  {saving ? t.common.loading : (sm.logIt || '✓ Log it')}
+                  {saving ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {sm.calculatingBtn || '⏳ Calculating...'}
+                    </span>
+                  ) : (sm.logToDiary || '✓ Log to diary')}
                 </button>
                 <button
                   onClick={() => setStep('portion')}
@@ -398,10 +424,13 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 >
                   {sm.changePortion || 'Change portion'}
                 </button>
-              </div>
-            </div>
-          )}
-        </div>
+                <button onClick={handleClose} className="w-full text-center text-sm text-muted-foreground py-1">
+                  {sm.cancel || t.common.cancel || 'Cancel'}
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );
