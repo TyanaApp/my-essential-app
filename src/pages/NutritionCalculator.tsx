@@ -64,7 +64,7 @@ const CATEGORY_CHIPS = [
   { key: 'drinks', emoji: '🥤', items_en: ['Latte 300ml', 'Orange juice 250ml', 'Coca-Cola 330ml'], items_ru: ['Латте 300мл', 'Апельсиновый сок 250мл', 'Кока-кола 330мл'] },
 ];
 
-const NutritionCalculator = () => {
+const NutritionCalculator = ({ embedded }: { embedded?: boolean }) => {
   const { user } = useAuth();
   const { t, language } = useTranslation();
   const nc = (t as any).nutritionCalc || {};

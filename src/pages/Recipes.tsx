@@ -267,7 +267,6 @@ const Recipes = () => {
           <NutritionCalculator embedded />
         </Suspense>
       ) : (
-      ) : (
       <>
       <h1 className="text-2xl font-bold mb-5 text-foreground">{t.recipes.title}</h1>
 
