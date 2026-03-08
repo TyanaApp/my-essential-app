@@ -521,6 +521,8 @@ const Recipes = () => {
           </div>
         )}
       </AnimatePresence>
+      </>
+      )}
     </div>
   );
 };

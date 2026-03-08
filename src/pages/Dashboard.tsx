@@ -93,7 +93,7 @@ const MealPlanWidget = ({ t, language, navigate, fadeUp, cardClass }: any) => {
           📅 {hasPlan ? (mp.dashboardTitle || "Today's plan") : (mp.dashboardEmpty || 'Create your weekly meal plan')}
         </h3>
         <button
-          onClick={() => navigate('/meal-plan')}
+          onClick={() => navigate('/recipes?tab=plan')}
           className="text-xs font-medium flex items-center gap-0.5 text-primary"
         >
           {hasPlan ? (mp.dashboardOpen || 'Open plan →') : (mp.dashboardBtn || 'Create →')}
