@@ -260,7 +260,7 @@ const Auth = () => {
                 />
                 <span className="text-xs text-muted-foreground">
                   {language === 'ru' ? 'Я принимаю ' : language === 'uk' ? 'Я приймаю ' : language === 'lv' ? 'Es piekrītu ' : 'I accept the '}
-                  <Link to="/terms" target="_blank" className="underline" style={{ color: '#7C3AED' }}>
+                  <Link to="/terms" target="_blank" className="underline text-primary">
                     {language === 'ru' ? 'Условия использования' : language === 'uk' ? 'Умови використання' : language === 'lv' ? 'Lietošanas noteikumiem' : 'Terms of Service'}
                   </Link>
                   {language === 'ru' ? ' и ' : language === 'uk' ? ' та ' : language === 'lv' ? ' un ' : ' and '}
