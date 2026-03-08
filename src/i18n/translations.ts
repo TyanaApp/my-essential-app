@@ -76,6 +76,7 @@ export const translations = {
       time15: '<15 min', time30: '30 min', time1h: '1 hour', timeAny: 'Any',
       addAllMissing: 'Add all missing →',
       deleteFromSaved: 'Remove from saved?', deleteYes: 'Yes', deleteNo: 'No', recipeDeleted: 'Recipe removed',
+      minUnit: 'min', estCost: 'est.',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
