@@ -787,6 +787,13 @@ export const translations = {
       save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', close: 'Закрыть',
       loading: 'Загрузка...', error: 'Что-то пошло не так. Попробуйте снова.', or: 'или', back: 'Назад',
       theme: 'Тема', datePlaceholder: 'дд.мм.гггг',
+      confirm: 'Подтвердить', next: 'Далее', done: 'Готово', skip: 'Пропустить', update: 'Обновить',
+      submit: 'Отправить', continue: 'Продолжить', generate: 'Создать', refresh: 'Обновить',
+      calculate: 'Рассчитать', scan: 'Сканировать', upload: 'Загрузить', log: 'Записать',
+      addToDiary: 'В дневник', today: 'Сегодня', yesterday: 'Вчера',
+      none: 'Нет', optional: 'Необязательно', required: 'Обязательно',
+      success: 'Успешно', add: 'Добавить', per100g: 'на 100г',
+      selectedCount: 'Выбрано: {count} продуктов', saveProducts: 'Сохранить {count} продуктов',
     },
     profile: {
       title: 'Профиль', editProfile: 'Редактировать профиль', accountSettings: 'Настройки аккаунта',
