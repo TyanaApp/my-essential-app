@@ -327,7 +327,7 @@ export const translations = {
     landing: {
       signIn: 'Sign In', startFree: 'Start Free',
       navFeatures: 'Features', navPricing: 'Pricing', navFaq: 'FAQ',
-      badge: '✦ AI-Powered Kitchen Assistant',
+      badge: '✦ Your Personal AI Nutritionist',
       heroTitle: 'Stop throwing money away with your food',
       heroSubtitle: 'TYANA knows what\'s in your fridge, counts your calories, finds discounts and saves you',
       heroSavings: '€80+ per month',
