@@ -225,12 +225,13 @@ const Recipes = () => {
   };
 
   const [searchParams] = useSearchParams();
-  const initialTab = searchParams.get('tab') === 'plan' ? 'plan' : 'recipes';
+  const initialTab = searchParams.get('tab') === 'plan' ? 'plan' : searchParams.get('tab') === 'calc' ? 'calc' : 'recipes';
   const [activeMainTab, setActiveMainTab] = useState(initialTab);
 
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab === 'plan') setActiveMainTab('plan');
+    else if (tab === 'calc') setActiveMainTab('calc');
   }, [searchParams]);
 
   const TAB_LABELS: Record<string, { recipes: string; plan: string; calc: string }> = {
