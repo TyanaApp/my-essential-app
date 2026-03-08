@@ -265,7 +265,7 @@ const Recipes = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold" style={{ color: '#1E1B4B' }}>{t.recipes.onlyHome}</span>
+                  <span className="text-xs font-semibold text-foreground">{t.recipes.onlyHome}</span>
                   <button onClick={() => setUseOnlyInventory(!useOnlyInventory)}
                     className="w-11 h-6 rounded-full relative transition-colors"
                     style={{ backgroundColor: useOnlyInventory ? '#7C3AED' : '#D1D5DB' }}>
