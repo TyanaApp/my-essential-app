@@ -31,7 +31,7 @@ const Layout = () => {
         {/* Logo */}
         <div className="flex items-center justify-between h-14 px-5 border-b border-border">
           <span className="font-tyana text-base" style={{ color: '#7C3AED' }}>TYANA</span>
-          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} />
+          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} onDeleteAlert={deleteAlert} onClearAll={clearAll} />
         </div>
 
         {/* Nav */}
