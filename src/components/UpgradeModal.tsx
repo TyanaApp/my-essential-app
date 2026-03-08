@@ -152,7 +152,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
 
   // Determine which view to show
   const showTrialOffer = trialStatus === 'none';
-  const showFounderOffer = trialStatus === 'expired' && isFoundingMember;
+  const showEarlyBirdOffer = trialStatus === 'expired' && isFoundingMember;
   const showRegularOffer = trialStatus === 'expired' && !isFoundingMember;
 
   return (
