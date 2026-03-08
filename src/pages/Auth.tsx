@@ -244,8 +244,8 @@ const Auth = () => {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input id="password" type={showPassword ? 'text' : 'password'} value={password}
                 onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors(prev => ({ ...prev, password: undefined })); }}
-                className={`pl-10 pr-10 h-[52px] rounded-xl border-[1px] focus:ring-0 ${errors.password ? 'border-red-500' : ''}`}
-                style={{ backgroundColor: '#F5F3FF', borderColor: errors.password ? undefined : '#DDD6FE' }}
+                className={`pl-10 pr-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground ${errors.password ? 'border-red-500' : ''}`}
+                placeholder="••••••••" required />
                 placeholder="••••••••" required />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
