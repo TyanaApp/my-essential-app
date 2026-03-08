@@ -1001,7 +1001,7 @@ const Dashboard = () => {
                   </span>
                 )}
                 {zeroWasteTip.confidence === 'high' && zeroWasteTip.based_on && (
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0FDF4', color: '#059669' }}>
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent text-primary">
                     {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.based_on}
                   </span>
                 )}
