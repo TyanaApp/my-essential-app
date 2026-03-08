@@ -166,10 +166,10 @@ const MealPlan = ({ embedded }: { embedded?: boolean }) => {
     setTipIndex(0);
 
     try {
-      // Fetch user data in parallel
+      // Fetch user data in parallel - use maybeSingle to avoid errors on missing data
       const [profileRes, goalsRes, inventoryRes, familyRes] = await Promise.all([
-        supabase.from('profiles').select('*').eq('user_id', user.id).single(),
-        supabase.from('user_goals').select('*').eq('user_id', user.id).single(),
+        supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase.from('user_goals').select('*').eq('user_id', user.id).maybeSingle(),
         supabase.from('inventory_items').select('*').eq('user_id', user.id),
         supabase.from('family_members').select('*'),
       ]);
@@ -179,8 +179,8 @@ const MealPlan = ({ embedded }: { embedded?: boolean }) => {
 
       const { data: planResult, error } = await supabase.functions.invoke('generate-meal-plan', {
         body: {
-          profile: profileRes.data,
-          goals: goalsRes.data,
+          profile: profileRes.data || {},
+          goals: goalsRes.data || {},
           inventory: inventoryRes.data || [],
           familyMembers: familyRes.data || [],
           language,
@@ -189,7 +189,8 @@ const MealPlan = ({ embedded }: { embedded?: boolean }) => {
       });
 
       if (error) throw error;
-      if (planResult?.error) throw new Error(planResult.error);
+      if (planResult?.error) throw new Error(planResult.error || planResult.message || 'Generation failed');
+      if (!planResult?.days) throw new Error('Invalid plan data returned');
 
       // Archive old plans
       if (planId) {
@@ -216,7 +217,11 @@ const MealPlan = ({ embedded }: { embedded?: boolean }) => {
       toast.success(mp.planGenerated || 'Meal plan generated! ✨');
     } catch (e: any) {
       console.error('Error generating plan:', e);
-      toast.error(e.message || (t.common as any)?.error || 'Error');
+      const errMsg = language === 'ru' ? 'Ошибка генерации. Попробуй ещё раз.' :
+        language === 'uk' ? 'Помилка генерації. Спробуй ще раз.' :
+        language === 'lv' ? 'Ģenerēšanas kļūda. Mēģini vēlreiz.' :
+        'Generation error. Please try again.';
+      toast.error(errMsg);
     } finally {
       setGenerating(false);
     }
