@@ -163,6 +163,30 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* Dark background text visibility — force white text on dark containers */
+[class*="bg-violet-6"] *, [class*="bg-violet-7"] *, [class*="bg-violet-8"] *, [class*="bg-violet-9"] *,
+[class*="bg-purple-6"] *, [class*="bg-purple-7"] *, [class*="bg-purple-8"] *, [class*="bg-purple-9"] *,
+[class*="bg-gray-8"] *, [class*="bg-gray-9"] *,
+[class*="bg-zinc-8"] *, [class*="bg-zinc-9"] *,
+[class*="bg-slate-8"] *, [class*="bg-slate-9"] *,
+[class*="bg-neutral-8"] *, [class*="bg-neutral-9"] * {
+  color: white;
+}
+
+[style*="linear-gradient"][style*="#7C3AED"] *,
+[style*="linear-gradient"][style*="#6D28D9"] *,
+[style*="linear-gradient"][style*="#2E1065"] * {
+  color: white;
+}
+
+.dark-card, .dark-card * {
+  color: white;
+}
+
+.dark-card .text-muted, .dark-card .subtitle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .modal-actions {
   position: sticky;
   bottom: 0;
