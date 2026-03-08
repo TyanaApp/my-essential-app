@@ -157,7 +157,7 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F5F3FF' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 bg-background">
       <button
         onClick={() => navigate('/')}
         className="absolute top-6 left-6 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
