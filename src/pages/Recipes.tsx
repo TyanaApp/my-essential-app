@@ -405,7 +405,7 @@ const Recipes = () => {
         {deleteConfirmId && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setDeleteConfirmId(null)}>
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
+              className="bg-card rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
               <p className="text-base font-semibold mb-4" style={{ color: '#1E1B4B' }}>
                 {(t.recipes as any).deleteFromSaved || 'Remove from saved?'}
               </p>
