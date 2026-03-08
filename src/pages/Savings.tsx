@@ -96,8 +96,8 @@ const Savings = () => {
             </div>
 
             {/* History */}
-            <div style={cardStyle} className="p-5">
-              <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
+            <div style={cardStyle} className="p-5 bg-card">
+              <h3 className="text-sm font-bold mb-3 text-foreground">
                 {t.savings.history}
               </h3>
               {entries.length === 0 ? (
