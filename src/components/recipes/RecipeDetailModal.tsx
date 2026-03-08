@@ -494,7 +494,7 @@ const RecipeDetailModal = ({
             </div>
 
             {/* Fixed bottom cook button */}
-            <div className="fixed bottom-20 left-0 right-0 px-5 pb-2 z-50">
+            <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-3 z-50 bg-gradient-to-t from-background via-background to-transparent">
               <button onClick={handleCookStart}
                 className="w-full h-14 rounded-2xl text-white font-bold text-base shadow-lg"
                 style={{ backgroundColor: '#7C3AED', boxShadow: '0 8px 30px rgba(124,58,237,0.35)' }}>
