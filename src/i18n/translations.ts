@@ -627,6 +627,13 @@ export const translations = {
       cat_dishes: 'Dishes', cat_sweets: 'Sweets', cat_drinks: 'Drinks',
       dashboardBtn: '🧮 Nutrition calculator',
     },
+    openFoodFacts: {
+      scanBarcode: 'Scan barcode', productFound: 'Product found!', notInDatabase: 'Product not found in database',
+      dataFromLabel: 'Data from label', aiEstimate: 'AI estimate', foundInDatabase: 'Found in product database',
+      per100g: 'Per 100g', pointCamera: 'Point camera at barcode', lookingUp: 'Looking up product...',
+      scanError: 'Could not read barcode', notThis: 'Not this', searching: 'Searching...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 AI estimate',
+    },
   },
   ru: {
     nav: { home: 'Главная', inventory: 'Продукты', recipes: 'Рецепты', shopping: 'Покупки', diary: 'Дневник', settings: 'Настройки', profile: 'Профиль' },
