@@ -38,6 +38,7 @@ const Shopping = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<ShoppingItem | null>(null);
   const [confirmItem, setConfirmItem] = useState<ShoppingItem | null>(null);
+  const [storagePickerItem, setStoragePickerItem] = useState<ShoppingItem | null>(null);
   const [suggestions, setSuggestions] = useState<LowStockItem[]>([]);
   const [suggestDismissed, setSuggestDismissed] = useState(false);
   const [isListening, setIsListening] = useState(false);
