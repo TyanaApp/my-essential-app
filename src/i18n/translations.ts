@@ -1133,6 +1133,11 @@ export const translations = {
       invalidCredentials: 'Невірний email або пароль.', emailNotConfirmed: 'Підтвердіть email перед входом.',
       rateLimited: 'Забагато спроб. Зачекайте трохи.', checkEmail: 'Перевірте пошту для підтвердження акаунту ✉️',
     },
+    update: {
+      title: '✨ Доступне оновлення TYANA!',
+      now: 'Оновити зараз',
+      later: 'Пізніше',
+    },
     common: {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',
       loading: 'Завантаження...', error: 'Щось пішло не так. Спробуйте знову.', or: 'або', back: 'Назад',

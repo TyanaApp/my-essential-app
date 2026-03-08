@@ -42,6 +42,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <OfflineBanner />
+            <UpdateBanner />
             <BrowserRouter>
               <CookieConsent />
               <AuthProvider>
