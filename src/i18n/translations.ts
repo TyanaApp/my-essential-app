@@ -1773,6 +1773,7 @@ export const translations = {
       time15: '<15 хв', time30: '30 хв', time1h: '1 година', timeAny: 'Будь-який',
       addAllMissing: 'Додати все →',
       deleteFromSaved: 'Видалити зі збережених?', deleteYes: 'Так', deleteNo: 'Ні', recipeDeleted: 'Рецепт видалено',
+      minUnit: 'хв', estCost: 'прибл.',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
