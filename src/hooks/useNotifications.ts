@@ -225,7 +225,7 @@ export const useNotifications = () => {
         '/inventory?tab=expiring'
       );
     }
-  }, [user, settings.expiryAlerts, addAlert, sendBrowserNotification]);
+  }, [user, settings.expiryAlerts, addAlert, sendBrowserNotification, ni]);
 
   // Weekly summary check (Monday)
   const checkWeeklySummary = useCallback(async () => {
