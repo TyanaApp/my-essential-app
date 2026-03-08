@@ -356,53 +356,94 @@ const Index = () => {
             </motion.div>
 
             {/* PRO */}
-            <motion.div
-              className="bg-white rounded-2xl p-7 border-2 relative overflow-hidden"
-              style={{ borderColor: '#7C3AED', boxShadow: '0 4px 30px rgba(124,58,237,0.15)' }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <div
-                className="absolute top-4 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
-                style={{ backgroundColor: '#7C3AED' }}
+            {!isFull ? (
+              <motion.div
+                className="bg-white rounded-2xl border-2 relative overflow-hidden"
+                style={{ borderColor: '#7C3AED', boxShadow: '0 4px 30px rgba(124,58,237,0.15)' }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
               >
-                {t.landing.mostPopular}
-              </div>
+                {/* Urgency banner */}
+                <div className="px-5 py-2.5 text-center text-sm font-semibold text-white" style={{ backgroundColor: '#DC2626' }}>
+                  🔥 {(t.landing as any).founderSpotsLeft?.replace('{count}', String(1000 - foundingCount)) || `Only ${1000 - foundingCount} of 1,000 spots left at this price`}
+                </div>
 
-              <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.landing.pro}</h3>
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-lg line-through" style={{ color: '#9CA3AF' }}>€12.99</span>
-                <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>€6.49</span>
-                <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.mo}</span>
-              </div>
+                <div className="p-7">
+                  <div
+                    className="absolute top-14 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
+                    style={{ backgroundColor: '#7C3AED' }}
+                  >
+                    {t.landing.mostPopular}
+                  </div>
 
-              <div
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-semibold mt-2 mb-1"
-                style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}
+                  <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>TYANA Pro</h3>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-lg line-through" style={{ color: '#9CA3AF' }}>€12.99</span>
+                    <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>€6.49</span>
+                    <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.mo}</span>
+                  </div>
+
+                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[12px] font-semibold mt-1 mb-1" style={{ backgroundColor: '#DCFCE7', color: '#166534' }}>
+                    -50% {(t.landing as any).founderForever || 'forever'}
+                  </div>
+                  <p className="text-[13px] font-medium mb-5" style={{ color: '#16A34A' }}>
+                    ✅ {(t.landing as any).founderYouAreFirst || "You're among the first 1,000 — this price is yours forever"}
+                  </p>
+
+                  <ul className="space-y-3 mb-8">
+                    {t.landing.proFeatures.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
+                        <span style={{ color: '#7C3AED' }}>✓</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to="/auth?mode=signup"
+                    className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                    style={{ backgroundColor: '#7C3AED' }}
+                  >
+                    {t.landing.getPro} <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                className="bg-white rounded-2xl p-7 border-2 relative overflow-hidden"
+                style={{ borderColor: '#7C3AED', boxShadow: '0 4px 30px rgba(124,58,237,0.15)' }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
               >
-                {t.landing.founderPrice}
-              </div>
-              <p className="text-[13px] font-medium mb-5" style={{ color: '#EA580C' }}>
-                {t.landing.firstUsers}
-              </p>
-
-              <ul className="space-y-3 mb-8">
-                {t.landing.proFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
-                    <span style={{ color: '#7C3AED' }}>✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                to="/auth?mode=signup"
-                className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#7C3AED' }}
-              >
-                {t.landing.getPro} <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
+                <div
+                  className="absolute top-4 right-4 text-[11px] font-bold px-3 py-1 rounded-full text-white"
+                  style={{ backgroundColor: '#7C3AED' }}
+                >
+                  {t.landing.mostPopular}
+                </div>
+                <h3 className="text-lg font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.landing.pro}</h3>
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-4xl font-bold" style={{ color: '#1E1B4B' }}>€12.99</span>
+                  <span className="text-sm" style={{ color: '#6B7280' }}>{t.landing.mo}</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {t.landing.proFeatures.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm" style={{ color: '#6B7280' }}>
+                      <span style={{ color: '#7C3AED' }}>✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/auth?mode=signup"
+                  className="flex items-center justify-center gap-1 w-full py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: '#7C3AED' }}
+                >
+                  {t.landing.getPro} <ArrowRight className="w-4 h-4" />
+                </Link>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>
