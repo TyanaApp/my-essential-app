@@ -34,7 +34,7 @@ const TOTAL_STEPS = 5;
 const Onboarding = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
 
