@@ -1006,7 +1006,7 @@ export const translations = {
       scanMeal: '📸 Сфото страви', scanMealBtn: '📸', analyzing: '🤖 Аналізуємо...', aiFound: '✅ ШІ визначив:',
       takePhoto: 'Сфотографуйте вашу страву', analyzingHint: 'Аналізуємо страву... ~10 секунд',
       scanFailed: 'Не вдалося розпізнати. Спробуйте знову.', logThisMeal: 'Записати', editManually: 'Змінити вручну', scanAgain: 'Знову',
-      portionEaten: 'Скільки з\'їли:', portionFull: 'Все', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
+      portionEaten: 'Скільки з\'їли:', portionExtra: '150%', portionFull: 'Все', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
       confHigh: 'Висока точність', confMedium: 'Приблизно', confLow: 'Низька точність',
       tapToEdit: 'Натисніть на назву щоб змінити', recalculated: 'Перераховано ✓', recalcFailed: 'Помилка перерахунку',
     },
