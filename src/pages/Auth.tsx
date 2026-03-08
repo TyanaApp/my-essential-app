@@ -218,8 +218,7 @@ const Auth = () => {
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input id="displayName" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}
-                  className={`pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground`}
-                  style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
+                  className="pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground"
                   placeholder={t.auth.yourName} />
               </div>
             </div>
