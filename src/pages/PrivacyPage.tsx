@@ -72,7 +72,7 @@ const PrivacyPage = () => {
         '✅ Objection — opt out of processing',
         '✅ Complaint — contact EU supervisory authority',
       ],
-      s5Note: 'All requests: supporttyana@gmail.com | Response within 30 days.',
+      s5Note: 'Response within 30 days.',
       s6Title: '6. Data retention',
       s6Items: [
         'Account data: until account deletion',
