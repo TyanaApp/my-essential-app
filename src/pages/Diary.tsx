@@ -281,6 +281,14 @@ const Diary = () => {
                   </h3>
                   <div className="flex items-center gap-1">
                     <button
+                      onClick={() => { setFridgeMealType(section.type); setFridgeOpen(true); }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg"
+                      style={{ color: '#059669', backgroundColor: '#F0FDF4' }}
+                      aria-label="From fridge"
+                    >
+                      <span className="text-sm">🧊</span>
+                    </button>
+                    <button
                       onClick={() => openScanModal(section.type)}
                       className="flex items-center justify-center w-8 h-8 rounded-lg"
                       style={{ color: '#7C3AED', backgroundColor: '#F5F3FF' }}
