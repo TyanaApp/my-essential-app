@@ -1688,7 +1688,7 @@ export const translations = {
     },
     update: {
       title: '✨ Нова версія TYANA готова!',
-      now: 'Оновити — 2 сек',
+      now: '✨ Оновити',
     },
     common: {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',
