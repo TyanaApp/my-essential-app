@@ -53,6 +53,10 @@ const Inventory = () => {
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
+  const [familyFilter, setFamilyFilter] = useState<'all' | 'mine' | 'shared'>('all');
+
+  const { familyMode, members } = useFamily();
+  const f = (t as any).family || {};
 
   const TABS: { id: Tab; label: string }[] = [
     { id: 'fridge', label: t.inventory.fridge },
