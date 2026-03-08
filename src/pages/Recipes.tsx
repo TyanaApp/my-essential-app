@@ -253,7 +253,7 @@ const Recipes = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.time}</label>
+                  <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.time}</label>
                   <div className="flex flex-wrap gap-2">
                     {TIME_OPTION_KEYS.map((key, i) => (
                       <button key={key} onClick={() => setTimeAvailable(TIME_VALUES[i])}
