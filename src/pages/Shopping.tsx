@@ -46,6 +46,7 @@ const Shopping = () => {
   const [suggestions, setSuggestions] = useState<LowStockItem[]>([]);
   const [suggestDismissed, setSuggestDismissed] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [receiptModalOpen, setReceiptModalOpen] = useState(false);
 
   const handleVoiceInput = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
