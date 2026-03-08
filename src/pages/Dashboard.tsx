@@ -360,6 +360,7 @@ const Dashboard = () => {
   }, [user, data, fetchZeroWasteTip]);
 
   if (loading) {
+    return (
       <div className="min-h-screen p-6 pb-mobile-safe space-y-4">
         <SkeletonCard lines={2} />
         <SkeletonCard lines={5} />
