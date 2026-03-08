@@ -1967,6 +1967,9 @@ export const translations = {
       greatYesterday: '💪 Вчора ти була молодець! Тримай темп сьогодні.',
       logLunch: '📊 Запиши обід — так точніше рахуються калорії',
     },
+    weeklyReport: {
+      lastWeekTitle: 'Підсумки минулого тижня', calDay: 'ккал/день', meals: 'прийомів', saved: 'зекономлено', streakDays: 'днів поспіль',
+    },
     dayLabels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
     notifications: {
       bannerTitle: '🔔 Отримуйте сповіщення про терміни придатності', enable: 'Увімкнути сповіщення', maybeLater: 'Пізніше',
