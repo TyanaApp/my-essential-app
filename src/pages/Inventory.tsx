@@ -53,6 +53,7 @@ const Inventory = () => {
   const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
   const [familyFilter, setFamilyFilter] = useState<'all' | 'mine' | 'shared'>('all');
 
