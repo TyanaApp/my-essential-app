@@ -42,7 +42,9 @@ const FamilyWidget: React.FC = () => {
       setMemberCalories(cals);
     };
     fetchCalories();
-  }, [user, subMembers]);
+  }, [user, subMembers, familyMode]);
+
+  if (!familyMode || !family || subMembers.length === 0) return null;
 
   const getMemberCalories = (m: FamilySubMember) => {
     if (m.user_id) return memberCalories[m.user_id] || 0;
