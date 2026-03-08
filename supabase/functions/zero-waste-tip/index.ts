@@ -21,12 +21,20 @@ serve(async (req) => {
       });
     }
 
+    // Pre-filter: skip if inventory is empty or only trivial items
+    const items = inventory || [];
+    if (items.length === 0) {
+      return new Response(JSON.stringify({ confidence: "low", tip: null, title: null, reason: "Empty inventory" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const langMap: Record<string, string> = { ru: 'Russian', uk: 'Ukrainian', lv: 'Latvian', en: 'English' };
     const lang = langMap[language] || 'English';
 
-    const inventoryList = (inventory || []).map((i: any) =>
-      `${i.name} - ${i.quantity || '?'}${i.unit || 'pcs'}, expires: ${i.expires_at || 'no date'}, location: ${i.storage_location || '?'}`
-    ).join('\n') || 'empty inventory';
+    const inventoryList = items.map((i: any) =>
+      `${i.name} - qty: ${i.quantity || '?'} ${i.unit || 'pcs'}, expires: ${i.expires_at || 'no date'}, location: ${i.storage_location || '?'}`
+    ).join('\n');
 
     const recentItems = (recentMeals || []).map((m: any) => m.custom_name || m.name || '').filter(Boolean);
 
@@ -40,69 +48,84 @@ serve(async (req) => {
         model: "google/gemini-2.5-flash",
         messages: [{
           role: "system",
-          content: `You are a world-class zero waste expert and creative sustainability consultant.
+          content: `You are a world-class zero waste expert. You ONLY give tips that are genuinely surprising and valuable.
 
-Before giving ANY tip you must:
-STEP 1 - Deeply analyze what the user actually has
-STEP 2 - Find the single most valuable insight
-STEP 3 - Only then write the tip
+STRICT RULES - follow exactly:
 
-RULES:
-- Only give tips about products user ACTUALLY HAS in their inventory
-- Never give generic home tips not related to their products
-- Focus on: food scraps reuse, secondary use of packaging, smart storage to extend shelf life, creative use of wilting/leftover ingredients
-- Each tip must have specific actionable steps
-- If you cannot find a genuinely useful tip, say so honestly - don't invent something useless
-- Respond entirely in ${lang}
-- No asterisks, no markdown, clean prose only`
+1. ONLY give tips about products the user ACTUALLY HAS in their inventory
+2. Every tip must reference specific product names from inventory
+3. Respond entirely in ${lang}
+4. No asterisks, no markdown, no code blocks - clean prose only
+
+BANNED TIPS - NEVER suggest any of these:
+- Saving wrappers, packaging, candy wrappers, foil, plastic for "reuse"
+- "Store leftovers in a container" (obvious)
+- "Plan your meals" (generic advice)
+- "Make a shopping list" (generic advice)
+- "Eat leftovers tomorrow" (obvious)
+- "Don't throw away food" (obvious)
+- "Freeze it for later" without specific creative instructions
+- Any tip about saving trash, wrappers, or packaging materials
+- Tips about products user only has 1 small piece of (1 candy, 1 snack bar)
+- Any tip that is common sense or something most people already know
+
+ONLY WORTH A TIP when user has:
+- Vegetable/fruit scraps with proven secondary uses (peels, stems, cores)
+- Something genuinely expiring in 1-2 days with a creative solution
+- Coffee grounds, citrus peels, herb stems, stale bread, wilting greens
+- Overripe fruit that can be transformed
+- Items being stored in wrong location losing quality faster
+- Combinations of items that together prevent waste in non-obvious ways
+
+The tip must pass ALL 5 quality gates:
+Q1: Would a smart person think "I didn't know that, that's useful"? If NO → return null
+Q2: Is this tip specific to products they actually have? If NO → return null
+Q3: Am I suggesting saving trash or packaging? If YES → return null
+Q4: Is this obvious common sense? If YES → return null
+Q5: Does user have enough of this product to make the tip worthwhile? If NO → return null
+
+If ANY gate fails → you MUST return null. Better no tip than a useless one.`
         }, {
           role: "user",
-          content: `Analyze this user's inventory deeply and find ONE genuinely valuable zero waste insight.
+          content: `Analyze this inventory. Find ONE genuinely valuable zero waste insight - or return null if nothing qualifies.
 
 Current inventory:
 ${inventoryList}
 
-Recently used/bought:
+Recently cooked/used:
 ${recentItems.join(', ') || 'none'}
 
-Think step by step:
+STEP 1 - Scan for tip-worthy items:
+- Any items expiring in 1-2 days?
+- Any items with valuable scraps (citrus peels, coffee grounds, herb stems, stale bread, wilting produce)?
+- Any items stored in wrong location?
+- Any creative combinations?
 
-ANALYSIS:
-1. What is about to expire that could be used differently?
-2. What scraps from recent cooking could be reused?
-3. What is being stored wrong and losing quality faster?
-4. What combination of items could prevent waste?
+STEP 2 - If you found something, run quality gates:
+Q1: Non-obvious? Q2: Specific? Q3: Not trash-saving? Q4: Not common sense? Q5: Enough quantity?
 
-QUALITY CHECK before writing:
-- Is this tip specific to their actual products? YES/NO
-- Does this tip provide real value? YES/NO
-- Is this more useful than obvious advice? YES/NO
+STEP 3 - If ALL gates pass, return JSON (raw, no markdown):
+{"title":"Max 5 words","tip":"Specific steps referencing actual product names","product":"Main product","category":"food|beauty|cleaning|garden|home","emoji":"🍊","why_valuable":"One sentence","confidence":"high|medium","based_on":"What triggered this tip"}
 
-If any answer is NO, find a different tip.
-
-Only after passing quality check, return JSON (no markdown, no code blocks):
-{"title":"Short specific title max 5 words","tip":"Full tip with specific steps. Reference actual product names from inventory. Include exact instructions.","product":"Main product this tip is about","category":"food|beauty|cleaning|garden|home","emoji":"🍊","why_valuable":"One sentence why this saves money or reduces waste","confidence":"high|medium","based_on":"Exactly what in inventory triggered this tip"}
-
-If truly no good tip found:
-{"title":null,"tip":null,"confidence":"low"}`
+If no tip passes all gates, return:
+{"title":null,"tip":null,"confidence":"low","reason":"No genuinely valuable tip found for current inventory"}`
         }],
       }),
     });
 
     if (!response.ok) {
+      const body = await response.text();
+      console.error("AI error:", response.status, body);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited" }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "Payment required" }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      console.error("AI error:", response.status);
       return new Response(JSON.stringify({ confidence: "low", tip: null, title: null }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -118,7 +141,23 @@ If truly no good tip found:
       result = { confidence: "low", tip: null, title: null };
     }
 
-    // Clean any accidental markdown from tip text
+    // Server-side quality filter: reject trash/packaging tips
+    if (result.tip) {
+      const tipLower = result.tip.toLowerCase();
+      const bannedPatterns = [
+        'wrapper', 'обёртк', 'обертк', 'упаковк', 'фантик', 'фольг',
+        'пластик', 'пакет', 'packaging', 'foil', 'plastic bag',
+        'сохрани на потом', 'save for later', 'храни в контейнер',
+        'store in container', 'планируй', 'plan your', 'список покупок',
+        'shopping list', 'не выбрасывай', 'don\'t throw',
+      ];
+      const isBanned = bannedPatterns.some(p => tipLower.includes(p));
+      if (isBanned) {
+        result = { confidence: "low", tip: null, title: null, reason: "Filtered: banned pattern detected" };
+      }
+    }
+
+    // Clean any accidental markdown
     if (result.tip) {
       result.tip = result.tip.replace(/\*+/g, '').replace(/#+\s?/g, '').replace(/`+/g, '').trim();
     }
