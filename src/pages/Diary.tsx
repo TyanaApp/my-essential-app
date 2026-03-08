@@ -248,10 +248,10 @@ const Diary = () => {
                 border: `1.5px solid ${isSelected ? '#7C3AED' : '#DDD6FE'}`,
               }}
             >
-              <span className="text-[10px] font-semibold mb-0.5" style={{ color: isSelected ? 'white' : '#6B7280' }}>
+              <span className={`text-[10px] font-semibold mb-0.5 ${isSelected ? 'text-white' : 'text-muted-foreground'}`}>
                 {DAY_LABELS[i]}
               </span>
-              <span className="text-sm font-bold" style={{ color: isSelected ? 'white' : '#1E1B4B' }}>
+              <span className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-foreground'}`}>
                 {d.getDate()}
               </span>
             </button>
