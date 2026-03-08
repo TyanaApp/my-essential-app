@@ -27,80 +27,80 @@ const Achievements = () => {
   }, [user]);
 
   const badgeNames: Record<string, Record<string, string>> = {
-    '🌱': { en: 'First Steps', ru: 'Первые шаги', lv: 'Pirmie soļi' },
-    '🔥': { en: 'Week Unstoppable', ru: 'Неделя без остановок', lv: 'Nedēļa bez apstāšanās' },
-    '⚡️': { en: 'Two Weeks', ru: 'Две недели', lv: 'Divas nedēļas' },
-    '👑': { en: 'Kitchen Master', ru: 'Мастер кухни', lv: 'Virtuves meistars' },
-    '🏆': { en: 'TYANA Legend', ru: 'Легенда TYANA', lv: 'TYANA leģenda' },
-    '♻️': { en: 'Zero Waste', ru: 'Без отходов', lv: 'Nulles atkritumi' },
-    '🍽': { en: 'Home Chef', ru: 'Домашний шеф', lv: 'Mājas šefpavārs' },
-    '💰': { en: 'Economist', ru: 'Экономист', lv: 'Ekonomists' },
+    '🌱': { en: 'First Steps', ru: 'Первые шаги', lv: 'Pirmie soļi', uk: 'Перші кроки' },
+    '🔥': { en: 'Week Unstoppable', ru: 'Неделя без остановок', lv: 'Nedēļa bez apstāšanās', uk: 'Тиждень без зупинок' },
+    '⚡️': { en: 'Two Weeks', ru: 'Две недели', lv: 'Divas nedēļas', uk: 'Два тижні' },
+    '👑': { en: 'Kitchen Master', ru: 'Мастер кухни', lv: 'Virtuves meistars', uk: 'Майстер кухні' },
+    '🏆': { en: 'TYANA Legend', ru: 'Легенда TYANA', lv: 'TYANA leģenda', uk: 'Легенда TYANA' },
+    '♻️': { en: 'Zero Waste', ru: 'Без отходов', lv: 'Nulles atkritumi', uk: 'Без відходів' },
+    '🍽': { en: 'Home Chef', ru: 'Домашний шеф', lv: 'Mājas šefpavārs', uk: 'Домашній шеф' },
+    '💰': { en: 'Economist', ru: 'Экономист', lv: 'Ekonomists', uk: 'Економіст' },
   };
 
   const badgeDescs: Record<string, Record<string, string>> = {
-    '🌱': { en: '3 days streak', ru: '3 дня подряд', lv: '3 dienas pēc kārtas' },
-    '🔥': { en: '7 days streak', ru: '7 дней подряд', lv: '7 dienas pēc kārtas' },
-    '⚡️': { en: '14 days streak', ru: '14 дней подряд', lv: '14 dienas pēc kārtas' },
-    '👑': { en: '30 days streak', ru: '30 дней подряд', lv: '30 dienas pēc kārtas' },
-    '🏆': { en: '100 days streak', ru: '100 дней подряд', lv: '100 dienas pēc kārtas' },
-    '♻️': { en: '10 items used before expiry', ru: '10 продуктов использовано до срока', lv: '10 produkti izlietoti pirms termiņa' },
-    '🍽': { en: '50 meals logged', ru: '50 приёмов пищи записано', lv: '50 ēdienreizes ierakstītas' },
-    '💰': { en: '€50 saved total', ru: '€50 сэкономлено всего', lv: '€50 ietaupīts kopā' },
+    '🌱': { en: '3 days streak', ru: '3 дня подряд', lv: '3 dienas pēc kārtas', uk: '3 дні поспіль' },
+    '🔥': { en: '7 days streak', ru: '7 дней подряд', lv: '7 dienas pēc kārtas', uk: '7 днів поспіль' },
+    '⚡️': { en: '14 days streak', ru: '14 дней подряд', lv: '14 dienas pēc kārtas', uk: '14 днів поспіль' },
+    '👑': { en: '30 days streak', ru: '30 дней подряд', lv: '30 dienas pēc kārtas', uk: '30 днів поспіль' },
+    '🏆': { en: '100 days streak', ru: '100 дней подряд', lv: '100 dienas pēc kārtas', uk: '100 днів поспіль' },
+    '♻️': { en: '10 items used before expiry', ru: '10 продуктов использовано до срока', lv: '10 produkti izlietoti pirms termiņa', uk: '10 продуктів використано до терміну' },
+    '🍽': { en: '50 meals logged', ru: '50 приёмов пищи записано', lv: '50 ēdienreizes ierakstītas', uk: '50 прийомів їжі записано' },
+    '💰': { en: '€50 saved total', ru: '€50 сэкономлено всего', lv: '€50 ietaupīts kopā', uk: '€50 зекономлено загалом' },
   };
 
-  const daysLabel = language === 'ru' ? 'дней' : language === 'lv' ? 'dienas' : 'days';
-  const currentLabel = streakT.current || (language === 'ru' ? 'Текущая серия' : language === 'lv' ? 'Pašreizējā sērija' : 'Current streak');
-  const longestLabel = streakT.longest || (language === 'ru' ? 'Лучшая серия' : language === 'lv' ? 'Garākā sērija' : 'Longest streak');
-  const bonusLabel = language === 'ru' ? 'У тебя' : language === 'lv' ? 'Tev ir' : 'You have';
-  const bonusSuffix = language === 'ru' ? 'бонусных сканирований' : language === 'lv' ? 'bonusa skenēšanas' : 'bonus scans';
+  const currentLabel = streakT.current || (language === 'ru' ? 'Текущая серия' : language === 'lv' ? 'Pašreizējā sērija' : language === 'uk' ? 'Поточна серія' : 'Current streak');
+  const longestLabel = streakT.longest || (language === 'ru' ? 'Лучшая серия' : language === 'lv' ? 'Garākā sērija' : language === 'uk' ? 'Найдовша серія' : 'Longest streak');
+  const bonusLabel = language === 'ru' ? 'У тебя' : language === 'lv' ? 'Tev ir' : language === 'uk' ? 'У тебе' : 'You have';
+  const bonusSuffix = language === 'ru' ? 'бонусных сканирований' : language === 'lv' ? 'bonusa skenēšanas' : language === 'uk' ? 'бонусних сканувань' : 'bonus scans';
+  const badgesTitle = language === 'ru' ? 'Значки' : language === 'lv' ? 'Nozīmītes' : language === 'uk' ? 'Значки' : 'Badges';
 
-  const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
+  const cardClass = "bg-card rounded-[20px] shadow-[0_2px_16px_rgba(124,58,237,0.08)]";
 
   if (!data) return (
     <div className="min-h-screen p-6 flex justify-center items-center">
-      <div className="w-7 h-7 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
+      <div className="w-7 h-7 border-[3px] rounded-full animate-spin border-accent border-t-primary" />
     </div>
   );
 
   return (
     <div className="min-h-screen p-6 pb-24">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm font-medium mb-5" style={{ color: '#7C3AED' }}>
+      <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm font-medium mb-5 text-primary">
         <ArrowLeft className="w-4 h-4" /> {(t.common as any).back || 'Back'}
       </button>
 
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold mb-6" style={{ color: '#1E1B4B' }}>
+        <h1 className="text-2xl font-bold mb-6 text-foreground">
           {streakT.achievements || 'Achievements'}
         </h1>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <div style={cardStyle} className="p-4 text-center">
+          <div className={`${cardClass} p-4 text-center`}>
             <span className="text-3xl">🔥</span>
-            <p className="text-2xl font-bold mt-1" style={{ color: '#1E1B4B' }}>{data.streak_current}</p>
-            <p className="text-xs" style={{ color: '#9CA3AF' }}>{currentLabel}</p>
+            <p className="text-2xl font-bold mt-1 text-foreground">{data.streak_current}</p>
+            <p className="text-xs text-muted-foreground">{currentLabel}</p>
           </div>
-          <div style={cardStyle} className="p-4 text-center">
+          <div className={`${cardClass} p-4 text-center`}>
             <span className="text-3xl">⚡️</span>
-            <p className="text-2xl font-bold mt-1" style={{ color: '#1E1B4B' }}>{data.streak_longest}</p>
-            <p className="text-xs" style={{ color: '#9CA3AF' }}>{longestLabel}</p>
+            <p className="text-2xl font-bold mt-1 text-foreground">{data.streak_longest}</p>
+            <p className="text-xs text-muted-foreground">{longestLabel}</p>
           </div>
         </div>
 
         {/* Bonus scans */}
         {data.bonus_scans > 0 && (
-          <div style={cardStyle} className="p-4 mb-6 flex items-center gap-3">
+          <div className={`${cardClass} p-4 mb-6 flex items-center gap-3`}>
             <span className="text-2xl">🎁</span>
-            <p className="text-sm font-medium" style={{ color: '#1E1B4B' }}>
-              {bonusLabel} <span className="font-bold text-[#7C3AED]">{data.bonus_scans}</span> {bonusSuffix}
+            <p className="text-sm font-medium text-foreground">
+              {bonusLabel} <span className="font-bold text-primary">{data.bonus_scans}</span> {bonusSuffix}
             </p>
           </div>
         )}
 
         {/* Badges grid */}
-        <div style={cardStyle} className="p-5">
-          <h3 className="text-sm font-bold mb-4" style={{ color: '#1E1B4B' }}>
-            {language === 'ru' ? 'Значки' : language === 'lv' ? 'Nozīmītes' : 'Badges'}
+        <div className={`${cardClass} p-5`}>
+          <h3 className="text-sm font-bold mb-4 text-foreground">
+            {badgesTitle}
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {BADGE_DEFINITIONS.map(b => {
@@ -108,18 +108,15 @@ const Achievements = () => {
               return (
                 <div
                   key={b.key}
-                  className="flex items-center gap-3 p-3 rounded-xl"
-                  style={{
-                    backgroundColor: earned ? '#F5F3FF' : '#F9FAFB',
-                    opacity: earned ? 1 : 0.5,
-                  }}
+                  className={`flex items-center gap-3 p-3 rounded-xl ${earned ? 'bg-secondary' : 'bg-muted/50'}`}
+                  style={{ opacity: earned ? 1 : 0.5 }}
                 >
                   <span style={{ fontSize: 28, filter: earned ? 'none' : 'grayscale(1)' }}>{b.emoji}</span>
                   <div>
-                    <p className="text-xs font-semibold" style={{ color: '#1E1B4B' }}>
+                    <p className="text-xs font-semibold text-foreground">
                       {badgeNames[b.emoji]?.[language] || badgeNames[b.emoji]?.en || b.key}
                     </p>
-                    <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
+                    <p className="text-[10px] text-muted-foreground">
                       {badgeDescs[b.emoji]?.[language] || badgeDescs[b.emoji]?.en || ''}
                     </p>
                   </div>
