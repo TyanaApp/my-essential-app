@@ -307,6 +307,9 @@ const Inventory = () => {
             {filteredItems.map((item) => {
               const exp = expiryColor(item.expires_at);
               const lowQty = item.tracking_mode !== 'date_only' && item.quantity <= 0.2;
+              const memberInfo = familyMode && item.user_id !== user?.id
+                ? members.find(m => m.user_id === item.user_id)
+                : null;
               return (
                 <motion.div
                   key={item.id}
@@ -318,6 +321,14 @@ const Inventory = () => {
                   style={{ boxShadow: '0 1px 6px rgba(124,58,237,0.04)' }}
                 >
                   <div className="flex items-center gap-3">
+                    {/* Family member avatar */}
+                    {memberInfo && (
+                      <Avatar className="w-6 h-6 shrink-0">
+                        <AvatarFallback className="bg-primary/20 text-primary text-[9px]">
+                          {(memberInfo.display_name || '?').charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="text-sm font-semibold truncate" style={{ color: '#1E1B4B' }}>{item.name}</p>
