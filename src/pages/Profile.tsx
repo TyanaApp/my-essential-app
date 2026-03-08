@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import PWAInstallGuide from '@/components/install/PWAInstallGuide';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
   Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity,
@@ -187,6 +188,7 @@ const Profile = () => {
   const [ideasOpen, setIdeasOpen] = useState(false);
   const [ratingOpen, setRatingOpen] = useState(false);
   const [familyOpen, setFamilyOpen] = useState(false);
+  const [installGuideOpen, setInstallGuideOpen] = useState(false);
 
   // Listen for open-payments event
   useEffect(() => {
@@ -441,10 +443,32 @@ const Profile = () => {
         </Card>
       </motion.div>
 
+      {/* Install App Button */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25 }}
+      >
+        <Card className="bg-card border-border mb-4">
+          <CardContent className="p-0">
+            <button
+              onClick={() => setInstallGuideOpen(true)}
+              className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Smartphone className="w-5 h-5 text-primary" />
+                <span className="font-exo text-foreground">{(t.profile as any).installApp || '📲 Install App'}</span>
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+            </button>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.27 }}
         className="space-y-3"
       >
         <Button
@@ -481,6 +505,9 @@ const Profile = () => {
       <SupportModal open={supportOpen} onOpenChange={setSupportOpen} />
       <IdeasModal open={ideasOpen} onOpenChange={setIdeasOpen} />
       <RatingModal open={ratingOpen} onOpenChange={setRatingOpen} />
+      {installGuideOpen && (
+        <PWAInstallGuide onDismiss={() => setInstallGuideOpen(false)} forceOpen />
+      )}
     </div>
   );
 };
