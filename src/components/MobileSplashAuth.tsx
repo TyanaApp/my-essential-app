@@ -113,9 +113,7 @@ const MobileSplashAuth: React.FC = () => {
       {showInstallGuide && <PWAInstallGuide onDismiss={() => setShowInstallGuide(false)} />}
       {/* Top branding */}
       <div className="text-center" style={{ marginTop: 60 }}>
-        <h1 className="text-white font-bold" style={{ fontSize: 32, fontFamily: "'Playfair Display', serif", letterSpacing: '0.15em', textTransform: 'uppercase' as const }}>
-          TYANA
-        </h1>
+        <TyanaLogo size="xl" variant="white" />
         <p className="text-white mt-1" style={{ fontSize: 16, opacity: 0.85 }}>
           {t.auth.title}
         </p>
