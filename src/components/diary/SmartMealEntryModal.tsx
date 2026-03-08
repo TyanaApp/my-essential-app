@@ -293,6 +293,7 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
   const [mixedMode, setMixedMode] = useState<'count' | 'weight' | 'portion' | null>(null);
   const [mixedValue, setMixedValue] = useState('');
   const [mixedUnit, setMixedUnit] = useState<'g' | 'kg'>('g');
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   // Load favorite recipes and recent meals
   useEffect(() => {
