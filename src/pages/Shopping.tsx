@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Pencil, Trash2, PackagePlus, AlertTriangle, X, Check } from 'lucide-react';
+import StoragePickerModal from '@/components/StoragePickerModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
