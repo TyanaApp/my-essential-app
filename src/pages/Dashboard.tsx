@@ -9,6 +9,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
+import FamilyWidget from '@/components/dashboard/FamilyWidget';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 import EditProfileModal from '@/components/profile/EditProfileModal';
