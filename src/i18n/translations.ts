@@ -962,7 +962,7 @@ export const translations = {
     },
     landing: {
       signIn: 'Ieiet', startFree: 'Sākt bezmaksas', navFeatures: 'Funkcijas', navPricing: 'Cenas', navFaq: 'Jautājumi',
-      badge: '✦ AI virtuves palīgs', heroTitle: 'Pārtrauciet mest naudu kopā ar ēdienu',
+      badge: '✦ Tavs personīgais AI uztura speciālists', heroTitle: 'Pārtrauciet mest naudu kopā ar ēdienu',
       heroSubtitle: 'TYANA zina, kas ir jūsu ledusskapī, skaita kalorijas, atrod atlaides un ietaupa jums',
       heroSavings: '€80+ mēnesī', ctaButton: 'Sākt bezmaksas — €0', ctaHint: '7 dienas visas funkcijas bezmaksas.',
       statSaved: 'ietaupīts/mēn', statPayoff: 'līdz atmaksai', statScan: 'ledusskapja skens', statPayoffValue: '5 dienas', statScanValue: '10 sek',
