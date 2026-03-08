@@ -88,6 +88,8 @@ const Diary = () => {
   // Scan modal state
   const [scanOpen, setScanOpen] = useState(false);
   const [scanMealType, setScanMealType] = useState('breakfast');
+  const [fridgeOpen, setFridgeOpen] = useState(false);
+  const [fridgeMealType, setFridgeMealType] = useState('breakfast');
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
