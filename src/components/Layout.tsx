@@ -70,7 +70,7 @@ const Layout = () => {
       <main className="flex-1 md:ml-60 overflow-x-hidden">
         {/* Mobile top bar with bell */}
         <div className="md:hidden flex items-center justify-end px-4 pt-3">
-          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} />
+          <NotificationBell alerts={alerts} unreadCount={unreadCount} onMarkAllRead={markAllRead} onDeleteAlert={deleteAlert} onClearAll={clearAll} />
         </div>
         <Outlet />
       </main>
