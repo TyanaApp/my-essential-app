@@ -386,6 +386,11 @@ const Shopping = () => {
         </div>
       )}
 
+      {/* Store Deals Coming Soon */}
+      <motion.div {...fadeUp(5)} className="mt-4">
+        <StoreDealsCard />
+      </motion.div>
+
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
