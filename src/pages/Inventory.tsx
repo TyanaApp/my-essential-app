@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package } from 'lucide-react';
+import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import InventoryModal from '@/components/inventory/InventoryModal';
 import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
+import QuickAddModal from '@/components/inventory/QuickAddModal';
 import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
 import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
@@ -36,7 +37,7 @@ export interface InventoryItem {
   tracking_mode: string | null;
 }
 
-type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
+type Tab = 'fridge' | 'pantry' | 'freezer' | 'home' | 'expiring';
 
 const Inventory = () => {
   const { user } = useAuth();
@@ -52,16 +53,19 @@ const Inventory = () => {
   const [scanOpen, setScanOpen] = useState(false);
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
   const [familyFilter, setFamilyFilter] = useState<'all' | 'mine' | 'shared'>('all');
 
   const { familyMode, members } = useFamily();
   const f = (t as any).family || {};
 
+  const qa = (t.inventory as any)?.quickAddFlow || {};
   const TABS: { id: Tab; label: string }[] = [
     { id: 'fridge', label: t.inventory.fridge },
     { id: 'pantry', label: t.inventory.pantry },
     { id: 'freezer', label: t.inventory.freezer },
+    { id: 'home', label: qa.homeTab || '🏡 Home' },
     { id: 'expiring', label: t.inventory.expiring },
   ];
 
@@ -206,7 +210,7 @@ const Inventory = () => {
       <h1 className="text-2xl font-bold mb-4 text-foreground">{t.inventory.title}</h1>
 
       {/* Tabs */}
-      <div className="grid grid-cols-4 gap-1.5 mb-4">
+      <div className="grid grid-cols-5 gap-1.5 mb-4">
         {TABS.map((tabItem) => (
           <button
             key={tabItem.id}
@@ -261,6 +265,14 @@ const Inventory = () => {
         />
       </div>
 
+      {/* Quick Add button */}
+      <button
+        className="w-full flex items-center justify-center gap-2 h-12 rounded-xl text-sm font-bold text-primary-foreground bg-primary mb-3 active:scale-[0.98] transition-transform"
+        onClick={() => setQuickAddOpen(true)}
+      >
+        <Zap className="w-4 h-4" /> {qa.quickAddBtn || '⚡️ Quick Add'}
+      </button>
+
       {/* Action buttons */}
       <div className="grid grid-cols-2 gap-2 mb-5">
         <button
@@ -271,8 +283,8 @@ const Inventory = () => {
           <Camera className="w-4 h-4" /> {t.inventory.scan}
         </button>
         <button
-          className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium text-white"
-          style={{ backgroundColor: 'hsl(263, 84%, 58%)' }}
+          className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium border-[1.5px]"
+          style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
           onClick={openAdd}
         >
           <Plus className="w-4 h-4" /> {t.inventory.add}
@@ -418,6 +430,11 @@ const Inventory = () => {
         editItem={editItem}
         onSaved={fetchItems}
         defaultLocation={activeLocation}
+      />
+      <QuickAddModal
+        open={quickAddOpen}
+        onClose={() => setQuickAddOpen(false)}
+        onSaved={fetchItems}
       />
       <ScanModal
         open={scanOpen}
