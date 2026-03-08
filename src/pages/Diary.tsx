@@ -93,6 +93,9 @@ const Diary = () => {
   const [scanMealType, setScanMealType] = useState('breakfast');
   const [fridgeOpen, setFridgeOpen] = useState(false);
   const [fridgeMealType, setFridgeMealType] = useState('breakfast');
+  // Smart entry modal state
+  const [smartEntryOpen, setSmartEntryOpen] = useState(false);
+  const [smartEntryMealType, setSmartEntryMealType] = useState('breakfast');
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
