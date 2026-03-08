@@ -2022,7 +2022,7 @@ export const translations = {
     dayLabels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
     notifications: {
       bannerTitle: '🔔 Отримуйте сповіщення про терміни придатності', enable: 'Увімкнути сповіщення', maybeLater: 'Пізніше',
-      title: 'Сповіщення', markRead: 'Прочитати все', empty: 'Сповіщень поки немає', justNow: 'Щойно',
+      title: 'Сповіщення', markRead: 'Прочитати все', clearAll: 'Очистити все', empty: 'Сповіщень поки немає', justNow: 'Щойно', minAgo: 'хв тому', hAgo: 'год тому', yesterday: 'вчора',
       expiryAlerts: 'Сповіщення про терміни', expiryAlertsDesc: 'Дізнайтесь коли продукти скоро зіпсуються',
       weeklySummary: 'Щотижневий звіт', weeklySummaryDesc: 'Ранковий звіт про економію в понеділок',
       recipeSuggestions: 'Пропозиції рецептів', recipeSuggestionsDesc: 'Розумні ідеї "використай поки не зіпсувалось"',
