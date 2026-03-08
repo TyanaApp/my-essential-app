@@ -89,6 +89,71 @@ export type Database = {
         }
         Relationships: []
       }
+      family_members: {
+        Row: {
+          activity_level: string | null
+          age: number | null
+          allergies: string[] | null
+          avatar_emoji: string
+          created_at: string
+          daily_calories_target: number | null
+          diet_type: string | null
+          family_id: string
+          gender: string | null
+          goals: string[] | null
+          height_cm: number | null
+          id: string
+          is_owner: boolean
+          name: string
+          user_id: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          avatar_emoji?: string
+          created_at?: string
+          daily_calories_target?: number | null
+          diet_type?: string | null
+          family_id: string
+          gender?: string | null
+          goals?: string[] | null
+          height_cm?: number | null
+          id?: string
+          is_owner?: boolean
+          name: string
+          user_id?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          avatar_emoji?: string
+          created_at?: string
+          daily_calories_target?: number | null
+          diet_type?: string | null
+          family_id?: string
+          gender?: string | null
+          goals?: string[] | null
+          height_cm?: number | null
+          id?: string
+          is_owner?: boolean
+          name?: string
+          user_id?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback: {
         Row: {
           created_at: string | null
@@ -611,6 +676,7 @@ export type Database = {
       assign_user_number: { Args: { p_user_id: string }; Returns: Json }
       count_store_waitlist: { Args: never; Returns: number }
       get_family_id_for_user: { Args: { p_user_id: string }; Returns: string }
+      get_member_family_id: { Args: { p_user_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
