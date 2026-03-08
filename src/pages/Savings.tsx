@@ -76,7 +76,8 @@ const Savings = () => {
       ]);
       const logs = (logsRes.data || []) as any[];
       setEntries(logs.map((l: any) => ({ id: l.id, amount: Number(l.amount || 0), type: l.type || 'other', description: l.description || '', created_at: l.created_at })));
-      setSpent(logs.filter(l => l.type === 'purchase').reduce((s, l) => s + Math.abs(Number(l.amount || 0)), 0));
+      const foodPurchases = logs.filter(l => l.type === 'purchase');
+      setSpent(foodPurchases.reduce((s, l) => s + Math.abs(Number(l.amount || 0)), 0));
       setSaved(logs.filter(l => l.type === 'saved' || l.type === 'waste_prevented').reduce((s, l) => s + Number(l.amount || 0), 0));
       setCurrency(profileRes.data?.currency || 'EUR');
       setReceipts((receiptsRes.data || []) as any[]);
