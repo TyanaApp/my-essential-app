@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Search, Minus, Plus, Check } from 'lucide-react';
+import { X, Search, Check } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface QuickItem {
   emoji: string;
@@ -18,6 +19,93 @@ interface Category {
   label: string;
   items: QuickItem[];
 }
+
+interface SelectedItem {
+  name: string;
+  emoji: string;
+  qty: number;
+  unit: string;
+  displayQty: string;
+}
+
+interface QtyPreset {
+  label: string;
+  qty: number;
+  unit: string;
+}
+
+// Smart quantity presets per product type
+const getPresetsForItem = (nameKey: string, lang: string): { presets: QtyPreset[]; defaultIdx: number } => {
+  const u = UNIT_LABELS[lang] || UNIT_LABELS.en;
+
+  const map: Record<string, { presets: QtyPreset[]; defaultIdx: number }> = {
+    eggs: { presets: [{ label: '6', qty: 6, unit: 'pcs' }, { label: '10', qty: 10, unit: 'pcs' }, { label: '12', qty: 12, unit: 'pcs' }], defaultIdx: 1 },
+    milk: { presets: [{ label: `1${u.l}`, qty: 1, unit: 'l' }, { label: `2${u.l}`, qty: 2, unit: 'l' }, { label: `3${u.l}`, qty: 3, unit: 'l' }], defaultIdx: 0 },
+    cheese: { presets: [{ label: `100${u.g}`, qty: 100, unit: 'g' }, { label: `200${u.g}`, qty: 200, unit: 'g' }, { label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }], defaultIdx: 1 },
+    butter: { presets: [{ label: `100${u.g}`, qty: 100, unit: 'g' }, { label: `200${u.g}`, qty: 200, unit: 'g' }, { label: `400${u.g}`, qty: 400, unit: 'g' }], defaultIdx: 1 },
+    sourCream: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }, { label: `3 ${u.pack}`, qty: 3, unit: 'pack' }], defaultIdx: 0 },
+    yogurt: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }, { label: `3 ${u.pack}`, qty: 3, unit: 'pack' }], defaultIdx: 0 },
+    kefir: { presets: [{ label: `0.5${u.l}`, qty: 0.5, unit: 'l' }, { label: `1${u.l}`, qty: 1, unit: 'l' }, { label: `2${u.l}`, qty: 2, unit: 'l' }], defaultIdx: 1 },
+    cottageCheese: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+    beef: { presets: [{ label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    chicken: { presets: [{ label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    pork: { presets: [{ label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    fish: { presets: [{ label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    mince: { presets: [{ label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    sausage: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+    potato: { presets: [{ label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }, { label: `2${u.kg}`, qty: 2, unit: 'kg' }, { label: `3${u.kg}`, qty: 3, unit: 'kg' }], defaultIdx: 1 },
+    onion: { presets: [{ label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }, { label: `2${u.kg}`, qty: 2, unit: 'kg' }], defaultIdx: 1 },
+    garlic: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }], defaultIdx: 0 },
+    carrot: { presets: [{ label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }, { label: `2${u.kg}`, qty: 2, unit: 'kg' }], defaultIdx: 1 },
+    tomato: { presets: [{ label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    cucumber: { presets: [{ label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    pepper: { presets: [{ label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }], defaultIdx: 1 },
+    broccoli: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `500${u.g}`, qty: 500, unit: 'g' }], defaultIdx: 0 },
+    apple: { presets: [{ label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    banana: { presets: [{ label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }, { label: `7 ${u.pcs}`, qty: 7, unit: 'pcs' }], defaultIdx: 1 },
+    orange: { presets: [{ label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    lemon: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }], defaultIdx: 0 },
+    grapes: { presets: [{ label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    strawberry: { presets: [{ label: `200${u.g}`, qty: 200, unit: 'g' }, { label: `300${u.g}`, qty: 300, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }], defaultIdx: 1 },
+    mango: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }], defaultIdx: 0 },
+    pear: { presets: [{ label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }, { label: `5 ${u.pcs}`, qty: 5, unit: 'pcs' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    breadLoaf: { presets: [{ label: `1 ${u.loaf}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.loaf}`, qty: 2, unit: 'pcs' }], defaultIdx: 0 },
+    baguette: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }], defaultIdx: 0 },
+    lavash: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+    croissant: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }], defaultIdx: 0 },
+    rice: { presets: [{ label: `400${u.g}`, qty: 400, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }, { label: `2${u.kg}`, qty: 2, unit: 'kg' }], defaultIdx: 1 },
+    pasta: { presets: [{ label: `400${u.g}`, qty: 400, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    buckwheat: { presets: [{ label: `400${u.g}`, qty: 400, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    beans: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }], defaultIdx: 0 },
+    corn: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }], defaultIdx: 0 },
+    oatmeal: { presets: [{ label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 0 },
+    barley: { presets: [{ label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 0 },
+    lentils: { presets: [{ label: `400${u.g}`, qty: 400, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }, { label: `1${u.kg}`, qty: 1, unit: 'kg' }], defaultIdx: 1 },
+    salt: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+    pepperSpice: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+    oliveOil: { presets: [{ label: `500${u.ml}`, qty: 500, unit: 'ml' }, { label: `1${u.l}`, qty: 1, unit: 'l' }], defaultIdx: 1 },
+    ketchup: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }], defaultIdx: 0 },
+    honey: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `250${u.g}`, qty: 250, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }], defaultIdx: 0 },
+    mayo: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }], defaultIdx: 0 },
+    chocolate: { presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }], defaultIdx: 0 },
+    cookies: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+    nuts: { presets: [{ label: `100${u.g}`, qty: 100, unit: 'g' }, { label: `200${u.g}`, qty: 200, unit: 'g' }, { label: `500${u.g}`, qty: 500, unit: 'g' }], defaultIdx: 1 },
+    juice: { presets: [{ label: `1${u.l}`, qty: 1, unit: 'l' }, { label: `1.5${u.l}`, qty: 1.5, unit: 'l' }, { label: `2${u.l}`, qty: 2, unit: 'l' }], defaultIdx: 0 },
+    chips: { presets: [{ label: `1 ${u.pack}`, qty: 1, unit: 'pack' }, { label: `2 ${u.pack}`, qty: 2, unit: 'pack' }], defaultIdx: 0 },
+  };
+
+  return map[nameKey] || {
+    presets: [{ label: `1 ${u.pcs}`, qty: 1, unit: 'pcs' }, { label: `2 ${u.pcs}`, qty: 2, unit: 'pcs' }, { label: `3 ${u.pcs}`, qty: 3, unit: 'pcs' }],
+    defaultIdx: 0,
+  };
+};
+
+const UNIT_LABELS: Record<string, Record<string, string>> = {
+  en: { pcs: 'pcs', kg: 'kg', g: 'g', l: 'L', ml: 'ml', pack: 'pack', loaf: 'loaf' },
+  ru: { pcs: 'шт', kg: 'кг', g: 'г', l: 'л', ml: 'мл', pack: 'упак', loaf: 'буханка' },
+  uk: { pcs: 'шт', kg: 'кг', g: 'г', l: 'л', ml: 'мл', pack: 'упак', loaf: 'буханка' },
+  lv: { pcs: 'gab', kg: 'kg', g: 'g', l: 'L', ml: 'ml', pack: 'iepak', loaf: 'kukuļmaize' },
+};
 
 const buildCategories = (t: any): Category[] => {
   const qa = t.inventory?.quickAddCategories || {};
@@ -118,8 +206,6 @@ const buildCategories = (t: any): Category[] => {
   ];
 };
 
-type Step = 'select' | 'quantity';
-
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -129,45 +215,82 @@ interface Props {
 const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const qa = (t.inventory as any)?.quickAddFlow || {};
 
   const categories = useMemo(() => buildCategories(t), [t]);
 
-  const [step, setStep] = useState<Step>('select');
   const [expandedCat, setExpandedCat] = useState<string | null>(null);
-  const [selected, setSelected] = useState<Map<string, { name: string; emoji: string; qty: number }>>(new Map());
+  const [selected, setSelected] = useState<Map<string, SelectedItem>>(new Map());
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Quantity popup state
+  const [qtyPopupItem, setQtyPopupItem] = useState<QuickItem | null>(null);
+  const [qtyPopupSelected, setQtyPopupSelected] = useState<number>(-1);
+  const [customQty, setCustomQty] = useState('');
+  const [showCustom, setShowCustom] = useState(false);
+
   if (!open) return null;
+
+  const uLabels = UNIT_LABELS[language] || UNIT_LABELS.en;
 
   const allItems = categories.flatMap(c => c.items);
   const filteredItems = search.trim()
     ? allItems.filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
     : null;
 
-  const toggleItem = (item: QuickItem) => {
-    setSelected(prev => {
-      const next = new Map(prev);
-      if (next.has(item.nameKey)) {
+  const openQtyPopup = (item: QuickItem) => {
+    if (selected.has(item.nameKey)) {
+      // Deselect
+      setSelected(prev => {
+        const next = new Map(prev);
         next.delete(item.nameKey);
-      } else {
-        next.set(item.nameKey, { name: item.name, emoji: item.emoji, qty: 1 });
-      }
-      return next;
-    });
+        return next;
+      });
+      return;
+    }
+    const { defaultIdx } = getPresetsForItem(item.nameKey, language);
+    setQtyPopupItem(item);
+    setQtyPopupSelected(defaultIdx);
+    setCustomQty('');
+    setShowCustom(false);
   };
 
-  const updateQty = (key: string, delta: number) => {
+  const confirmQtyPopup = () => {
+    if (!qtyPopupItem) return;
+    const { presets } = getPresetsForItem(qtyPopupItem.nameKey, language);
+
+    let qty: number;
+    let unit: string;
+    let displayQty: string;
+
+    if (showCustom && customQty.trim()) {
+      qty = parseFloat(customQty) || 1;
+      unit = 'pcs';
+      displayQty = `${qty} ${uLabels.pcs}`;
+    } else if (qtyPopupSelected >= 0 && qtyPopupSelected < presets.length) {
+      const p = presets[qtyPopupSelected];
+      qty = p.qty;
+      unit = p.unit;
+      displayQty = p.label;
+    } else {
+      const p = presets[0];
+      qty = p.qty;
+      unit = p.unit;
+      displayQty = p.label;
+    }
+
     setSelected(prev => {
       const next = new Map(prev);
-      const item = next.get(key);
-      if (item) {
-        const newQty = Math.max(1, item.qty + delta);
-        next.set(key, { ...item, qty: newQty });
-      }
+      next.set(qtyPopupItem.nameKey, {
+        name: qtyPopupItem.name,
+        emoji: qtyPopupItem.emoji,
+        qty, unit, displayQty,
+      });
       return next;
     });
+    setQtyPopupItem(null);
   };
 
   const handleSaveAll = async () => {
@@ -178,7 +301,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
         user_id: user.id,
         name: val.name,
         quantity: val.qty,
-        unit: 'pcs',
+        unit: val.unit,
         storage_location: 'home',
         tracking_mode: 'date_only',
       }));
@@ -195,29 +318,35 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   };
 
   const handleClose = () => {
-    setStep('select');
     setSelected(new Map());
     setSearch('');
     setExpandedCat(null);
+    setQtyPopupItem(null);
     onClose();
   };
 
   const renderItemButton = (item: QuickItem) => {
-    const isSelected = selected.has(item.nameKey);
+    const sel = selected.get(item.nameKey);
+    const isSelected = !!sel;
     return (
       <button
         key={item.nameKey}
-        onClick={() => toggleItem(item)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all active:scale-95 border"
+        onClick={() => openQtyPopup(item)}
+        className="flex flex-col items-start gap-0.5 px-3 py-2 rounded-xl text-sm font-medium transition-all active:scale-95 border"
         style={{
           backgroundColor: isSelected ? 'hsl(var(--primary) / 0.15)' : 'hsl(var(--card))',
           borderColor: isSelected ? 'hsl(var(--primary))' : 'hsl(var(--border))',
           color: isSelected ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
         }}
       >
-        {isSelected && <Check className="w-3.5 h-3.5" />}
-        <span>{item.emoji}</span>
-        <span className="truncate">{item.name}</span>
+        <div className="flex items-center gap-1.5">
+          {isSelected && <Check className="w-3.5 h-3.5" />}
+          <span>{item.emoji}</span>
+          <span className="truncate">{item.name}</span>
+        </div>
+        {isSelected && sel && (
+          <span className="text-[10px] font-normal text-muted-foreground ml-5">{sel.displayQty}</span>
+        )}
       </button>
     );
   };
@@ -241,159 +370,201 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
           {/* Header */}
           <div className="flex items-center justify-between p-4 pb-2">
             <div>
-              <h2 className="text-lg font-bold text-foreground">
-                {step === 'select' ? (qa.title || 'What do you have at home?') : (qa.adjustQty || 'Adjust quantities')}
-              </h2>
-              {step === 'select' && (
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {qa.subtitle || 'Just check items — storage location doesn\'t matter'}
-                </p>
-              )}
+              <h2 className="text-lg font-bold text-foreground">{qa.title || 'What do you have at home?'}</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {qa.subtitle || "Just check items — storage location doesn't matter"}
+              </p>
             </div>
             <button onClick={handleClose} className="p-1.5 rounded-lg hover:bg-muted/50">
               <X className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
 
-          {step === 'select' ? (
-            <>
-              {/* Search */}
-              <div className="px-4 pb-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <input
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    placeholder={qa.searchPlaceholder || 'Start typing or pick from list...'}
-                    className="w-full h-11 pl-9 pr-3 rounded-xl border text-sm outline-none bg-secondary/50 border-border focus:border-primary"
-                  />
-                </div>
-              </div>
+          {/* Search */}
+          <div className="px-4 pb-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder={qa.searchPlaceholder || 'Start typing or pick from list...'}
+                className="w-full h-11 pl-9 pr-3 rounded-xl border text-sm outline-none bg-secondary/50 border-border focus:border-primary"
+              />
+            </div>
+          </div>
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto px-4 pb-2" style={{ maxHeight: 'calc(92vh - 200px)' }}>
-                {filteredItems ? (
-                  <div className="flex flex-wrap gap-2 py-2">
-                    {filteredItems.length === 0 ? (
-                      <p className="text-sm text-muted-foreground py-4 w-full text-center">
-                        {qa.noResults || 'Nothing found'}
-                      </p>
-                    ) : (
-                      filteredItems.map(item => renderItemButton(item))
-                    )}
-                  </div>
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto px-4 pb-2" style={{ maxHeight: 'calc(92vh - 200px)' }}>
+            {filteredItems ? (
+              <div className="flex flex-wrap gap-2 py-2">
+                {filteredItems.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-4 w-full text-center">
+                    {qa.noResults || 'Nothing found'}
+                  </p>
                 ) : (
-                  <div className="space-y-2 py-1">
-                    {categories.map(cat => (
-                      <div key={cat.labelKey}>
-                        <button
-                          onClick={() => setExpandedCat(expandedCat === cat.labelKey ? null : cat.labelKey)}
-                          className="w-full flex items-center gap-2.5 p-3 rounded-xl transition-colors hover:bg-muted/40 active:scale-[0.99]"
-                        >
-                          <span className="text-2xl">{cat.emoji}</span>
-                          <span className="text-sm font-semibold text-foreground flex-1 text-left">{cat.label}</span>
-                          <span className="text-xs text-muted-foreground">
-                            {cat.items.filter(i => selected.has(i.nameKey)).length > 0 &&
-                              `${cat.items.filter(i => selected.has(i.nameKey)).length} ✓`}
-                          </span>
-                          <motion.span
-                            animate={{ rotate: expandedCat === cat.labelKey ? 90 : 0 }}
-                            className="text-muted-foreground text-sm"
-                          >
-                            ›
-                          </motion.span>
-                        </button>
-                        <AnimatePresence>
-                          {expandedCat === cat.labelKey && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="flex flex-wrap gap-2 px-2 pb-3 pt-1">
-                                {cat.items.map(item => renderItemButton(item))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ))}
-                  </div>
+                  filteredItems.map(item => renderItemButton(item))
                 )}
               </div>
-
-              {/* Bottom bar */}
-              {selected.size > 0 && (
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  className="p-4 border-t border-border"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {(qa.selectedCount || 'Selected: {count} items').replace('{count}', String(selected.size))}
-                    </span>
+            ) : (
+              <div className="space-y-2 py-1">
+                {categories.map(cat => (
+                  <div key={cat.labelKey}>
+                    <button
+                      onClick={() => setExpandedCat(expandedCat === cat.labelKey ? null : cat.labelKey)}
+                      className="w-full flex items-center gap-2.5 p-3 rounded-xl transition-colors hover:bg-muted/40 active:scale-[0.99]"
+                    >
+                      <span className="text-2xl">{cat.emoji}</span>
+                      <span className="text-sm font-semibold text-foreground flex-1 text-left">{cat.label}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {cat.items.filter(i => selected.has(i.nameKey)).length > 0 &&
+                          `${cat.items.filter(i => selected.has(i.nameKey)).length} ✓`}
+                      </span>
+                      <motion.span
+                        animate={{ rotate: expandedCat === cat.labelKey ? 90 : 0 }}
+                        className="text-muted-foreground text-sm"
+                      >
+                        ›
+                      </motion.span>
+                    </button>
+                    <AnimatePresence>
+                      {expandedCat === cat.labelKey && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="flex flex-wrap gap-2 px-2 pb-3 pt-1">
+                            {cat.items.map(item => renderItemButton(item))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  <button
-                    onClick={() => setStep('quantity')}
-                    className="w-full py-3 rounded-xl text-primary-foreground font-bold text-sm bg-primary active:scale-[0.98] transition-transform"
-                  >
-                    ✓ {qa.addAll || 'Add all'}
-                  </button>
-                </motion.div>
-              )}
-            </>
-          ) : (
-            <>
-              {/* Quantity step */}
-              <div className="flex-1 overflow-y-auto px-4 pb-2" style={{ maxHeight: 'calc(92vh - 180px)' }}>
-                <div className="space-y-2 py-2">
-                  {Array.from(selected.entries()).map(([key, val]) => (
-                    <div key={key} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{val.emoji}</span>
-                        <span className="text-sm font-medium text-foreground">{val.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => updateQty(key, -1)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-card active:scale-95"
-                        >
-                          <Minus className="w-3.5 h-3.5 text-foreground" />
-                        </button>
-                        <span className="w-8 text-center text-sm font-bold text-foreground">{val.qty}</span>
-                        <button
-                          onClick={() => updateQty(key, 1)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-card active:scale-95"
-                        >
-                          <Plus className="w-3.5 h-3.5 text-foreground" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                ))}
               </div>
+            )}
+          </div>
 
-              {/* Save bar */}
-              <div className="p-4 border-t border-border space-y-2">
-                <button
-                  onClick={() => setStep('select')}
-                  className="w-full py-2.5 rounded-xl text-sm font-medium text-muted-foreground border border-border"
-                >
-                  {qa.backToSelect || '← Back'}
-                </button>
-                <button
-                  onClick={handleSaveAll}
-                  disabled={saving}
-                  className="w-full py-3 rounded-xl text-primary-foreground font-bold text-sm bg-primary active:scale-[0.98] transition-transform disabled:opacity-50"
-                >
-                  {saving ? t.inventory.saving : (qa.done || 'Done ✓')}
-                </button>
+          {/* Bottom bar */}
+          {selected.size > 0 && (
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="p-4 border-t border-border"
+            >
+              {/* Selected items preview */}
+              <div className="flex flex-wrap gap-1 mb-2 max-h-16 overflow-y-auto">
+                {Array.from(selected.entries()).map(([key, val]) => (
+                  <span key={key} className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                    {val.emoji} {val.name} — {val.displayQty}
+                  </span>
+                ))}
               </div>
-            </>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-muted-foreground">
+                  {(qa.selectedCount || 'Selected: {count} items').replace('{count}', String(selected.size))}
+                </span>
+              </div>
+              <button
+                onClick={handleSaveAll}
+                disabled={saving}
+                className="w-full py-3 rounded-xl text-primary-foreground font-bold text-sm bg-primary active:scale-[0.98] transition-transform disabled:opacity-50"
+              >
+                {saving ? t.inventory.saving : `✓ ${(qa.addAllCount || 'Add all {count} items').replace('{count}', String(selected.size))}`}
+              </button>
+            </motion.div>
           )}
         </motion.div>
+
+        {/* Quantity Popup */}
+        <AnimatePresence>
+          {qtyPopupItem && (
+            <motion.div
+              className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="absolute inset-0 bg-black/20" onClick={() => setQtyPopupItem(null)} />
+              <motion.div
+                className="relative bg-card w-full sm:max-w-sm sm:rounded-2xl rounded-t-2xl p-5 space-y-4"
+                style={{ boxShadow: '0 -4px 30px rgba(0,0,0,0.15)' }}
+                initial={{ y: 80 }}
+                animate={{ y: 0 }}
+                exit={{ y: 80 }}
+              >
+                {/* Item header */}
+                <div className="text-center">
+                  <span className="text-4xl">{qtyPopupItem.emoji}</span>
+                  <p className="text-base font-bold text-foreground mt-1">{qtyPopupItem.name}</p>
+                  <p className="text-xs text-muted-foreground">{qa.howMuch || 'How much?'}</p>
+                </div>
+
+                {/* Preset chips */}
+                {(() => {
+                  const { presets } = getPresetsForItem(qtyPopupItem.nameKey, language);
+                  return (
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {presets.map((p, i) => (
+                        <button
+                          key={i}
+                          onClick={() => { setQtyPopupSelected(i); setShowCustom(false); }}
+                          className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
+                          style={{
+                            borderColor: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                            backgroundColor: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                            color: !showCustom && qtyPopupSelected === i ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                          }}
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                      {/* Custom chip */}
+                      <button
+                        onClick={() => setShowCustom(true)}
+                        className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all border-2"
+                        style={{
+                          borderColor: showCustom ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                          backgroundColor: showCustom ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                          color: showCustom ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                        }}
+                      >
+                        ✏️ {qa.custom || 'Custom'}
+                      </button>
+                    </div>
+                  );
+                })()}
+
+                {/* Custom input */}
+                {showCustom && (
+                  <input
+                    type="number"
+                    value={customQty}
+                    onChange={e => setCustomQty(e.target.value)}
+                    placeholder={qa.enterQty || 'Enter quantity'}
+                    className="w-full h-11 px-4 rounded-xl border text-sm text-center font-semibold outline-none bg-secondary/50 border-border focus:border-primary"
+                    autoFocus
+                  />
+                )}
+
+                {/* Buttons */}
+                <button
+                  onClick={confirmQtyPopup}
+                  className="w-full py-3 rounded-xl text-primary-foreground font-bold text-sm bg-primary active:scale-[0.98] transition-transform"
+                >
+                  ✓ {qa.addItem || 'Add'}
+                </button>
+                <button
+                  onClick={() => setQtyPopupItem(null)}
+                  className="w-full text-center text-sm text-muted-foreground py-1"
+                >
+                  {qa.cancelBtn || 'Cancel'}
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </AnimatePresence>
   );
