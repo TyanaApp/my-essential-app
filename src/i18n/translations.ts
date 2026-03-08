@@ -98,7 +98,7 @@ export const translations = {
     },
     diary: {
       title: 'Diary', breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
-      addMeal: '+ Add', todayTotal: 'Today:', noMeals: 'No meals logged',
+      addMeal: 'Add', todayTotal: 'Today:', noMeals: 'No meals logged',
       addMealTitle: 'Add {meal}', logWhatYouAte: 'Log what you ate',
       fromRecipes: 'From Recipes', manualEntry: 'Manual Entry',
       searchRecipes: 'Search saved recipes...', noSavedRecipes: 'No saved recipes yet',
@@ -125,7 +125,7 @@ export const translations = {
     dashboard: {
       morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
       remaining: 'kcal remaining today', overTarget: 'kcal over target',
-      logMeal: '+ Log a meal', nothingExpiring: 'Nothing expiring soon ✅',
+      logMeal: 'Log a meal', nothingExpiring: 'Nothing expiring soon ✅',
       expiringTitle: '{count} items expiring soon', ideasToday: '🍳 Ideas for today',
       savedMonth: 'saved this month', generateRecipes: 'Generate your first recipes →',
       viewAll: 'View all', seeDetails: 'See details',
@@ -677,7 +677,7 @@ export const translations = {
     },
     diary: {
       title: 'Дневник', breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус',
-      addMeal: '+ Добавить', todayTotal: 'Сегодня:', noMeals: 'Нет записей',
+      addMeal: 'Добавить', todayTotal: 'Сегодня:', noMeals: 'Нет записей',
       addMealTitle: 'Добавить {meal}', logWhatYouAte: 'Запишите что вы ели',
       fromRecipes: 'Из рецептов', manualEntry: 'Вручную',
       searchRecipes: 'Поиск сохранённых рецептов...', noSavedRecipes: 'Нет сохранённых рецептов',
@@ -704,7 +704,7 @@ export const translations = {
     dashboard: {
       morning: 'Доброе утро', afternoon: 'Добрый день', evening: 'Добрый вечер',
       remaining: 'ккал осталось сегодня', overTarget: 'ккал сверх нормы',
-      logMeal: '+ Записать приём пищи', nothingExpiring: 'Ничего не истекает ✅',
+      logMeal: 'Записать приём пищи', nothingExpiring: 'Ничего не истекает ✅',
       expiringTitle: '{count} продуктов истекает', ideasToday: '🍳 Идеи на сегодня',
       savedMonth: 'сэкономлено в этом месяце', generateRecipes: 'Сгенерировать первые рецепты →',
       viewAll: 'Все', seeDetails: 'Подробнее',
@@ -1175,7 +1175,7 @@ export const translations = {
     },
     diary: {
       title: 'Dienasgrāmata', breakfast: 'Brokastis', lunch: 'Pusdienas', dinner: 'Vakariņas', snack: 'Uzkoda',
-      addMeal: '+ Pievienot', todayTotal: 'Šodien:', noMeals: 'Nav ierakstu',
+      addMeal: 'Pievienot', todayTotal: 'Šodien:', noMeals: 'Nav ierakstu',
       addMealTitle: 'Pievienot {meal}', logWhatYouAte: 'Ierakstiet ko ēdāt',
       fromRecipes: 'No receptēm', manualEntry: 'Manuāli',
       searchRecipes: 'Meklēt saglabātās receptes...', noSavedRecipes: 'Nav saglabātu recepšu',
@@ -1194,7 +1194,7 @@ export const translations = {
     dashboard: {
       morning: 'Labrīt', afternoon: 'Labdien', evening: 'Labvakar',
       remaining: 'kcal atlikušas šodien', overTarget: 'kcal pāri mērķim',
-      logMeal: '+ Ierakstīt ēdienreizi', nothingExpiring: 'Nekas drīz nebeidzas ✅',
+      logMeal: 'Ierakstīt ēdienreizi', nothingExpiring: 'Nekas drīz nebeidzas ✅',
       expiringTitle: '{count} produkti beidzas', ideasToday: '🍳 Idejas šodienai',
       savedMonth: 'ietaupīts šomēnes', generateRecipes: 'Ģenerēt pirmās receptes →',
       viewAll: 'Skatīt visu', seeDetails: 'Sīkāk',
@@ -1656,7 +1656,7 @@ export const translations = {
     },
     diary: {
       title: 'Щоденник', breakfast: 'Сніданок', lunch: 'Обід', dinner: 'Вечеря', snack: 'Перекус',
-      addMeal: '+ Додати', todayTotal: 'Сьогодні:', noMeals: 'Немає записів',
+      addMeal: 'Додати', todayTotal: 'Сьогодні:', noMeals: 'Немає записів',
       addMealTitle: 'Додати {meal}', logWhatYouAte: 'Запишіть що ви їли',
       fromRecipes: 'З рецептів', manualEntry: 'Вручну',
       searchRecipes: 'Пошук збережених рецептів...', noSavedRecipes: 'Немає збережених рецептів',
@@ -1675,7 +1675,7 @@ export const translations = {
     dashboard: {
       morning: 'Доброго ранку', afternoon: 'Добрий день', evening: 'Добрий вечір',
       remaining: 'ккал залишилось сьогодні', overTarget: 'ккал понад норму',
-      logMeal: '+ Записати прийом їжі', nothingExpiring: 'Нічого не закінчується ✅',
+      logMeal: 'Записати прийом їжі', nothingExpiring: 'Нічого не закінчується ✅',
       expiringTitle: '{count} продуктів закінчується', ideasToday: '🍳 Ідеї на сьогодні',
       savedMonth: 'зекономлено цього місяця', generateRecipes: 'Згенерувати перші рецепти →',
       viewAll: 'Усі', seeDetails: 'Детальніше',
