@@ -1368,6 +1368,7 @@ export const translations = {
       scanWithCamera: 'Skenējiet ar tālruņa kameru', iosInstructions: 'Atveriet Safari → Kopīgot → Pievienot sākuma ekrānam',
       androidInstructions: 'Atveriet Chrome → Izvēlne ⋮ → Pievienot sākuma ekrānam', bannerText: 'Pievienojiet sākuma ekrānam',
       getTheApp: '📱 Iegūt lietotni', iosTooltipLine1: 'Spiediet "Kopīgot" ↗ → Pievienot sākuma ekrānam', iosTooltipLine2: 'Izmantojiet Safari',
+      installed: 'TYANA instalēta! 🎉', openInSafari: 'Atver šo lapu Safari lai instalētu', safariRequired: 'Safari → Kopīgot → Pievienot sākuma ekrānam',
     },
     landing: {
       signIn: 'Ieiet', startFree: 'Sākt bezmaksas', navFeatures: 'Funkcijas', navPricing: 'Cenas', navFaq: 'Jautājumi',
