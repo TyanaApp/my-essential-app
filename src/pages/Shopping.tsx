@@ -330,7 +330,7 @@ const Shopping = () => {
             if (!catItems || catItems.length === 0) return null;
             return (
               <motion.div key={cat.id} {...fadeUp(3)} style={cardStyle} className="p-4 bg-card">
-                <h3 className="text-sm font-bold mb-3 flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+                <h3 className="text-sm font-bold mb-3 flex items-center gap-1.5 text-foreground">
                   <span>{cat.emoji}</span> {cat.label}
                 </h3>
                 <div className="space-y-1">
