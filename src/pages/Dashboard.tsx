@@ -320,7 +320,45 @@ const Dashboard = () => {
     fetchAdvice();
   }, [user, data]);
 
-  if (loading) {
+  // Zero waste tip with daily cache
+  const fetchZeroWasteTip = useCallback(async (force = false) => {
+    if (!user) return;
+    const cacheKey = `tyana_zwt_${user.id}`;
+    if (!force) {
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const { date, data: tipData } = JSON.parse(cached);
+          if (date === new Date().toISOString().split('T')[0]) {
+            setZeroWasteTip(tipData);
+            return;
+          }
+        }
+      } catch {}
+    }
+    setTipLoading(true);
+    try {
+      const [invRes, mealsRes] = await Promise.all([
+        supabase.from('inventory_items').select('name, expires_at, quantity, unit').eq('user_id', user.id).limit(20),
+        supabase.from('meal_entries').select('custom_name').eq('user_id', user.id).eq('date', new Date().toISOString().split('T')[0]),
+      ]);
+      const { data: tipData } = await supabase.functions.invoke('zero-waste-tip', {
+        body: { inventory: invRes.data || [], recentMeals: mealsRes.data || [], language },
+      });
+      if (tipData && tipData.tip) {
+        setZeroWasteTip(tipData);
+        localStorage.setItem(cacheKey, JSON.stringify({ date: new Date().toISOString().split('T')[0], data: tipData }));
+      }
+    } catch (e) {
+      console.error('Zero waste tip error:', e);
+    }
+    setTipLoading(false);
+  }, [user, language]);
+
+  useEffect(() => {
+    if (user && data) fetchZeroWasteTip();
+  }, [user, data, fetchZeroWasteTip]);
+
     return (
       <div className="min-h-screen p-6 pb-mobile-safe space-y-4">
         <SkeletonCard lines={2} />
