@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import LanguageSelector from '@/components/LanguageSelector';
-import { Globe, Moon, Sun, HelpCircle, ChevronRight, Scale } from 'lucide-react';
+import { Globe, Moon, Sun, Scale } from 'lucide-react';
 
 interface SystemSettingsModalProps {
   open: boolean;
