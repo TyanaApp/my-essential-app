@@ -12,6 +12,7 @@ import tyanaLogoText from '@/assets/tyana-logo-text.png';
 import { z } from 'zod';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileSplashAuth from '@/components/MobileSplashAuth';
+import LegalFooterPill from '@/components/LegalFooterPill';
 import QRInstallModal from '@/components/install/QRInstallModal';
 import { useIsStandalone } from '@/hooks/useStandalone';
 
