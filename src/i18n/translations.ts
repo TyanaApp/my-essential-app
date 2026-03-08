@@ -1185,6 +1185,7 @@ export const translations = {
       itemsAddedToInventory: '{count} produkti pievienoti ✓',
       saveFailed: 'Neizdevās saglabāt',
       receipt: 'Čeks',
+      receiptHistory: 'Čeku vēsture',
     },
     storeDeals: {
       title: 'Piedāvājumi no jūsu veikaliem — drīzumā!',
