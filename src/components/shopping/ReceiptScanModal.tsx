@@ -333,7 +333,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
           </button>
         </div>
 
-        <div className="p-4">
+        <div className="flex-1 overflow-y-auto p-4">
           {/* UPLOAD */}
           {step === 'upload' && (
             <div className="py-4">

@@ -90,7 +90,6 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
     if (!user || !name.trim()) { toast.error(t.inventory.nameRequired); return; }
     setSaving(true);
 
-    // Validate food item
     const isFood = await validateFood(name.trim());
     if (!isFood) {
       setSaving(false);
@@ -115,7 +114,6 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
         await supabase.from('inventory_items').update(payload).eq('id', editItem.id);
         toast.success(t.inventory.updated);
       } else {
-        // Check for duplicate (case-insensitive, same storage location)
         const { data: existing } = await supabase
           .from('inventory_items')
           .select('id, name, quantity, unit')
@@ -155,173 +153,171 @@ const InventoryModal = ({ open, onClose, editItem, onSaved, defaultLocation = 'f
         <div className="absolute inset-0 bg-black/30" onClick={onClose} />
 
         <motion.div
-          className="relative bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl p-6 max-h-[90vh] overflow-y-auto"
-          style={{ boxShadow: '0 -4px 40px rgba(124,58,237,0.12)' }}
+          className="relative bg-card w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl flex flex-col"
+          style={{ boxShadow: '0 -4px 40px rgba(124,58,237,0.12)', maxHeight: '90vh' }}
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           exit={{ y: 100 }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="text-lg font-bold" style={{ color: '#1E1B4B' }}>
+          <div className="flex items-center justify-between p-4 pb-2 shrink-0">
+            <h3 className="text-lg font-bold text-foreground">
               {editItem ? t.inventory.editItem : t.inventory.addItem}
             </h3>
-            <button onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100">
-              <X className="w-5 h-5" style={{ color: '#6B7280' }} />
+            <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted">
+              <X className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
 
-          <div className="space-y-4">
-            {/* Name with autocomplete */}
-            <div className="space-y-1.5 relative">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.productName}</label>
-              <input
-                ref={inputRef}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onFocus={() => name && setSuggestions((s) => s)}
-                placeholder={t.inventory.productPlaceholder}
-                className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-              />
-              {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 top-[76px] bg-white border rounded-xl shadow-lg z-10 max-h-40 overflow-y-auto" style={{ borderColor: '#DDD6FE' }}>
-                  {suggestions.map((s) => (
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto px-4 pb-2">
+            <div className="space-y-4">
+              {/* Name with autocomplete */}
+              <div className="space-y-1.5 relative">
+                <label className="text-sm font-medium text-foreground">{t.inventory.productName}</label>
+                <input
+                  ref={inputRef}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onFocus={() => name && setSuggestions((s) => s)}
+                  placeholder={t.inventory.productPlaceholder}
+                  className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-primary bg-secondary/50 border-border"
+                />
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute left-0 right-0 top-[76px] bg-card border rounded-xl shadow-lg z-10 max-h-40 overflow-y-auto border-border">
+                    {suggestions.map((s) => (
+                      <button
+                        key={s}
+                        className="w-full text-left px-4 py-2.5 text-sm hover:bg-accent transition-colors text-foreground"
+                        onClick={() => { setName(s); setShowSuggestions(false); }}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Quantity + Unit */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-foreground">{t.inventory.quantity}</label>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-primary bg-secondary/50 border-border"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-foreground">{t.inventory.unit}</label>
+                  <select
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                    className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-primary appearance-none bg-secondary/50 border-border"
+                  >
+                    {units.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {/* Storage location */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">{t.inventory.storageLocation}</label>
+                <div className="flex gap-2">
+                  {LOCATIONS.map((l) => (
                     <button
-                      key={s}
-                      className="w-full text-left px-4 py-2.5 text-sm hover:bg-[#F5F3FF] transition-colors"
-                      style={{ color: '#1E1B4B' }}
-                      onClick={() => { setName(s); setShowSuggestions(false); }}
+                      key={l.id}
+                      onClick={() => setLocation(l.id)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl border-[1.5px] text-sm font-medium transition-all"
+                      style={{
+                        borderColor: location === l.id ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                        backgroundColor: location === l.id ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                        color: location === l.id ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                      }}
                     >
-                      {s}
+                      {l.emoji} {l.label}
                     </button>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* Quantity + Unit */}
-            <div className="grid grid-cols-2 gap-3">
+              {/* Consumption rate */}
               <div className="space-y-1.5">
-                <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.quantity}</label>
+                <label className="text-sm font-medium text-foreground">{t.inventory.consumptionRate}</label>
+                <div className="flex gap-2">
+                  {CONSUMPTION_RATES.map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => setConsumptionRate(r.id)}
+                      className="flex-1 flex flex-col items-center gap-0.5 py-2.5 rounded-xl border-[1.5px] text-xs font-medium transition-all"
+                      style={{
+                        borderColor: consumptionRate === r.id ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                        backgroundColor: consumptionRate === r.id ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                        color: consumptionRate === r.id ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                      }}
+                    >
+                      <span className="text-base">{r.emoji}</span>
+                      <span>{r.label}</span>
+                      <span className="text-[10px] opacity-70">({r.desc})</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tracking mode */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">{t.inventory.trackingMode}</label>
+                <div className="flex gap-2">
+                  {TRACKING_MODES.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setTrackingMode(m.id)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl border-[1.5px] text-sm font-medium transition-all"
+                      style={{
+                        borderColor: trackingMode === m.id ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                        backgroundColor: trackingMode === m.id ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                        color: trackingMode === m.id ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                      }}
+                    >
+                      {m.emoji} {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Expiry date */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-foreground">{t.inventory.expiryDate}</label>
                 <input
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                  style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
+                  type="date"
+                  value={expiresAt}
+                  onChange={(e) => setExpiresAt(e.target.value)}
+                  className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-primary bg-secondary/50 border-border"
                 />
               </div>
+
+              {/* Price */}
               <div className="space-y-1.5">
-                <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.unit}</label>
-                <select
-                  value={unit}
-                  onChange={(e) => setUnit(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED] appearance-none"
-                  style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-                >
-                  {units.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
-                </select>
+                <label className="text-sm font-medium text-foreground">{t.inventory.pricePerUnit}</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.00"
+                  className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-primary bg-secondary/50 border-border"
+                />
               </div>
             </div>
+          </div>
 
-            {/* Storage location */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.storageLocation}</label>
-              <div className="flex gap-2">
-                {LOCATIONS.map((l) => (
-                  <button
-                    key={l.id}
-                    onClick={() => setLocation(l.id)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl border-[1.5px] text-sm font-medium transition-all"
-                    style={{
-                      borderColor: location === l.id ? '#7C3AED' : '#DDD6FE',
-                      backgroundColor: location === l.id ? '#EDE9FE' : 'white',
-                      color: location === l.id ? '#7C3AED' : '#6B7280',
-                    }}
-                  >
-                    {l.emoji} {l.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Consumption rate */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.consumptionRate}</label>
-              <div className="flex gap-2">
-                {CONSUMPTION_RATES.map((r) => (
-                  <button
-                    key={r.id}
-                    onClick={() => setConsumptionRate(r.id)}
-                    className="flex-1 flex flex-col items-center gap-0.5 py-2.5 rounded-xl border-[1.5px] text-xs font-medium transition-all"
-                    style={{
-                      borderColor: consumptionRate === r.id ? '#7C3AED' : '#DDD6FE',
-                      backgroundColor: consumptionRate === r.id ? '#EDE9FE' : 'white',
-                      color: consumptionRate === r.id ? '#7C3AED' : '#6B7280',
-                    }}
-                  >
-                    <span className="text-base">{r.emoji}</span>
-                    <span>{r.label}</span>
-                    <span className="text-[10px] opacity-70">({r.desc})</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Tracking mode */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.trackingMode}</label>
-              <div className="flex gap-2">
-                {TRACKING_MODES.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => setTrackingMode(m.id)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl border-[1.5px] text-sm font-medium transition-all"
-                    style={{
-                      borderColor: trackingMode === m.id ? '#7C3AED' : '#DDD6FE',
-                      backgroundColor: trackingMode === m.id ? '#EDE9FE' : 'white',
-                      color: trackingMode === m.id ? '#7C3AED' : '#6B7280',
-                    }}
-                  >
-                    {m.emoji} {m.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Expiry date */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.expiryDate}</label>
-              <input
-                type="date"
-                value={expiresAt}
-                onChange={(e) => setExpiresAt(e.target.value)}
-                className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-              />
-            </div>
-
-            {/* Price */}
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{t.inventory.pricePerUnit}</label>
-              <input
-                type="number"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="0.00"
-                className="w-full h-12 px-4 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                style={{ backgroundColor: '#F5F3FF', borderColor: '#DDD6FE' }}
-              />
-            </div>
-
-            {/* Save */}
+          {/* Fixed bottom button */}
+          <div className="modal-actions rounded-b-2xl">
             <button
               onClick={handleSave}
               disabled={saving}
-              className="w-full py-3.5 rounded-xl text-white text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ backgroundColor: '#7C3AED' }}
+              className="w-full py-3.5 rounded-xl text-primary-foreground text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-50 bg-primary"
             >
               {saving ? t.inventory.saving : editItem ? t.inventory.updateItem : t.inventory.addItem}
             </button>

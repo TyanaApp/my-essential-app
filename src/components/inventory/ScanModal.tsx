@@ -222,7 +222,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
           ))}
         </div>
 
-        <div className="p-4">
+        <div className="flex-1 overflow-y-auto p-4">
           {/* STEP 1: Multi-photo upload */}
           {step === 1 && (
             <div>

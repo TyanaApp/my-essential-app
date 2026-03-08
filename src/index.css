@@ -140,7 +140,7 @@
 
 /* Mobile bottom nav safe spacing */
 .pb-mobile-safe {
-  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (min-width: 768px) {
@@ -154,4 +154,22 @@
   button, a, [role="button"] {
     min-height: 44px;
   }
+}
+
+/* Modal scrollable pattern */
+.modal-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-actions {
+  position: sticky;
+  bottom: 0;
+  background: hsl(var(--card));
+  padding: 1rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid hsl(var(--border));
+  z-index: 10;
+  flex-shrink: 0;
 }
