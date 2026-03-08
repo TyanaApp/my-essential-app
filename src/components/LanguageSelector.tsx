@@ -12,6 +12,7 @@ const languages = [
   { code: 'en' as const, label: 'English', short: 'EN' },
   { code: 'ru' as const, label: 'Русский', short: 'RU' },
   { code: 'lv' as const, label: 'Latviešu', short: 'LV' },
+  { code: 'uk' as const, label: 'Українська', short: 'UA' },
 ];
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({ 

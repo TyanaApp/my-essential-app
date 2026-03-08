@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-type Language = 'en' | 'ru' | 'lv';
+type Language = 'en' | 'ru' | 'lv' | 'uk';
 
 interface Translations {
   [key: string]: {
@@ -410,11 +410,12 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('app-language');
-      if (saved && ['en', 'ru', 'lv'].includes(saved)) {
+      if (saved && ['en', 'ru', 'lv', 'uk'].includes(saved)) {
         return saved as Language;
       }
       // Auto-detect from browser language
       const browserLang = navigator.language || '';
+      if (browserLang.startsWith('uk')) return 'uk';
       if (browserLang.startsWith('ru')) return 'ru';
       if (browserLang.startsWith('lv')) return 'lv';
     }
