@@ -108,11 +108,6 @@ const Diary = () => {
     load();
   }, [user, dateStr]);
 
-  const loadRecipes = async () => {
-    if (!user) return;
-    const { data } = await supabase.from('recipes').select('id, title, nutrition').eq('user_id', user.id);
-    if (data) setRecipes(data as unknown as SavedRecipe[]);
-  };
 
   const openAddModal = (mealType: string) => {
     setSmartEntryMealType(mealType);
