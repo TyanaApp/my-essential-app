@@ -168,19 +168,19 @@
    Catches hardcoded inline styles
    ============================================ */
 
-/* Force white text on dark Tailwind utility backgrounds */
-[class*="bg-violet-6"] *, [class*="bg-violet-7"] *, [class*="bg-violet-8"] *, [class*="bg-violet-9"] *,
-[class*="bg-purple-6"] *, [class*="bg-purple-7"] *, [class*="bg-purple-8"] *, [class*="bg-purple-9"] *,
-[class*="bg-gray-8"] *, [class*="bg-gray-9"] *,
-[class*="bg-zinc-8"] *, [class*="bg-zinc-9"] *,
-[class*="bg-slate-8"] *, [class*="bg-slate-9"] *,
-[class*="bg-neutral-8"] *, [class*="bg-neutral-9"] * {
+/* Force white text only on clearly dark surfaces in dark mode */
+.dark [class*="bg-violet-6"] *, .dark [class*="bg-violet-7"] *, .dark [class*="bg-violet-8"] *, .dark [class*="bg-violet-9"] *,
+.dark [class*="bg-purple-6"] *, .dark [class*="bg-purple-7"] *, .dark [class*="bg-purple-8"] *, .dark [class*="bg-purple-9"] *,
+.dark [class*="bg-gray-8"] *, .dark [class*="bg-gray-9"] *,
+.dark [class*="bg-zinc-8"] *, .dark [class*="bg-zinc-9"] *,
+.dark [class*="bg-slate-8"] *, .dark [class*="bg-slate-9"] *,
+.dark [class*="bg-neutral-8"] *, .dark [class*="bg-neutral-9"] * {
   color: white;
 }
 
-[style*="linear-gradient"][style*="#7C3AED"] *,
-[style*="linear-gradient"][style*="#6D28D9"] *,
-[style*="linear-gradient"][style*="#2E1065"] * {
+.dark [style*="linear-gradient"][style*="#2E1065"] *,
+.dark [style*="linear-gradient"][style*="#6D28D9"] *,
+.dark [style*="linear-gradient"][style*="#7C3AED"] * {
   color: white;
 }
 
@@ -277,13 +277,31 @@
 .dark [style*="color: #2563EB"] {
   color: hsl(217, 91%, 68%) !important;
 }
+/* Keep inline white text support without hard lock (allows local contrast overrides) */
 .dark [style*="color: white"],
 .dark [style*="color: #FFFFFF"],
 .dark [style*="color: #fff"] {
-  color: white !important;
+  color: white;
 }
 
-/* ——— DARK: Fix hardcoded border colors ——— */
+/* If a gradient remains visually light in dark mode, force dark readable text */
+.dark [style*="linear-gradient"][style*="#F5F3FF"] *,
+.dark [style*="linear-gradient"][style*="#EDE9FE"] *,
+.dark [style*="linear-gradient"][style*="#DDD6FE"] *,
+.dark [style*="linear-gradient"][style*="rgba(255,255,255"] *,
+.dark [style*="linear-gradient"][style*="rgb(255, 255, 255"] * {
+  color: hsl(244 47% 20%) !important;
+}
+
+/* Light cards with explicit white backgrounds in dark mode need dark text */
+.dark [style*="background-color: white"] *,
+.dark [style*="background-color: #fff"] *,
+.dark [style*="background-color: #FFFFFF"] *,
+.dark [style*="background: white"] *,
+.dark [style*="background: #fff"] *,
+.dark [style*="background: #FFFFFF"] * {
+  color: hsl(244 47% 20%) !important;
+}
 .dark [style*="border-color: #DDD6FE"] {
   border-color: hsl(244, 20%, 28%) !important;
 }
