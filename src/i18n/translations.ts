@@ -166,7 +166,7 @@ export const translations = {
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
       systemSettings: 'System Settings', payments: 'Payments', logout: 'Log Out',
-      deleteAccount: 'Delete Account', installApp: '📲 Install App',
+      deleteAccount: 'Delete Account', installApp: '📲 Install App', alreadyInstalled: '✅ App installed',
       displayName: 'Display Name', bio: 'Bio', gender: 'Gender', dateOfBirth: 'Date of Birth',
       male: 'Male', female: 'Female', other: 'Other', preferNotToSay: 'Prefer not to say',
       connectDevices: 'Connect Devices', soon: 'Soon',
