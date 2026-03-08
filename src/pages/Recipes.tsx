@@ -310,7 +310,6 @@ const Recipes = () => {
                   <div className="flex flex-wrap gap-2">
                     {TIME_OPTION_KEYS.map((key, i) => (
                       <button key={key} onClick={() => setTimeAvailable(TIME_VALUES[i])}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
                         className={`px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all ${timeAvailable === TIME_VALUES[i] ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {t.recipes[key]}
                       </button>
