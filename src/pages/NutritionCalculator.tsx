@@ -68,6 +68,7 @@ const NutritionCalculator = () => {
   const { user } = useAuth();
   const { t, language } = useTranslation();
   const nc = (t as any).nutritionCalc || {};
+  const off = (t as any).openFoodFacts || {};
   usePageTitle(nc.title || 'Nutrition Calculator');
 
   const [mode, setMode] = useState<'food' | 'recipe'>('food');
