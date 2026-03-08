@@ -30,6 +30,7 @@ const Recipes = () => {
   usePageTitle(t.recipes.title);
   const { plan } = useSubscription();
   const { updateStreak } = useStreak();
+  const { subMembers, familyMode } = useFamily();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
