@@ -25,7 +25,7 @@ interface LowStockItem { name: string; quantity: number | null; unit: string | n
 const CATEGORY_IDS = ['meat', 'dairy', 'produce', 'dry_goods', 'other'] as const;
 const CATEGORY_EMOJIS: Record<string, string> = { meat: '🥩', dairy: '🥛', produce: '🥬', dry_goods: '🌾', other: '🧴' };
 
-const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
+const cardStyle = { borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 
 const Shopping = () => {
   const { user } = useAuth();
