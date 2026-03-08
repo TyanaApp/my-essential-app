@@ -1847,6 +1847,18 @@ export const translations = {
       title: '🍽 Нагадування про їжу',
       breakfast: '🌅 Сніданок', lunch: '☀️ Обід', dinner: '🌙 Вечеря',
     },
+    familyMembers: {
+      addMember: 'Додати члена сім\'ї', editMember: 'Редагувати', whatName: 'Як звати?',
+      namePlaceholder: 'напр. Міша', avatar: 'Аватар', gender: 'Стать',
+      boy: 'Хлопчик', girl: 'Дівчинка', age: 'Вік', weight: 'Вага (кг)', height: 'Зріст (см)',
+      activity: 'Активність', allergies: 'Алергії', allergiesPlaceholder: 'горіхи, молоко',
+      calculatedTarget: 'Розрахована ціль', kcal: 'ккал', years: 'р.',
+      calorieTarget: 'Ціль калорій', todayMeals: 'Харчування сьогодні', noMealsYet: 'Ще немає записів',
+      goals: 'Цілі', done: 'Готово', addAnother: 'Додати члена сім\'ї',
+      memberAdded: 'Додано ✓', memberUpdated: 'Оновлено ✓', memberDeleted: 'Видалено ✓',
+      saveFailed: 'Не вдалося зберегти', familySafe: 'Підходить всій сім\'ї ✅',
+      familyWarning: '⚠️ Містить {allergen} — не підходить для {name}',
+    },
   },
 } as const;
 
