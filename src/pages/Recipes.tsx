@@ -222,8 +222,53 @@ const Recipes = () => {
     );
   };
 
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') === 'plan' ? 'plan' : 'recipes';
+  const [activeMainTab, setActiveMainTab] = useState(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'plan') setActiveMainTab('plan');
+  }, [searchParams]);
+
+  const TAB_LABELS: Record<string, { recipes: string; plan: string }> = {
+    ru: { recipes: '🍽 Рецепты', plan: '📅 План на неделю' },
+    en: { recipes: '🍽 Recipes', plan: '📅 Weekly Plan' },
+    uk: { recipes: '🍽 Рецепти', plan: '📅 План на тиждень' },
+    lv: { recipes: '🍽 Receptes', plan: '📅 Nedēļas plāns' },
+  };
+  const tabLabels = TAB_LABELS[language] || TAB_LABELS.en;
+
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
+      {/* Tab bar */}
+      <div className="flex gap-1 mb-5 bg-secondary rounded-xl p-1">
+        <button
+          onClick={() => setActiveMainTab('recipes')}
+          className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+          style={{
+            backgroundColor: activeMainTab === 'recipes' ? 'hsl(var(--primary))' : 'transparent',
+            color: activeMainTab === 'recipes' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+          }}
+        >
+          {tabLabels.recipes}
+        </button>
+        <button
+          onClick={() => setActiveMainTab('plan')}
+          className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+          style={{
+            backgroundColor: activeMainTab === 'plan' ? 'hsl(var(--primary))' : 'transparent',
+            color: activeMainTab === 'plan' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+          }}
+        >
+          {tabLabels.plan}
+        </button>
+      </div>
+
+      {activeMainTab === 'plan' ? (
+        <MealPlan embedded />
+      ) : (
+      <>
       <h1 className="text-2xl font-bold mb-5 text-foreground">{t.recipes.title}</h1>
 
       {/* Generation settings */}
