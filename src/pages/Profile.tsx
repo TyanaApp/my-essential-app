@@ -397,8 +397,8 @@ const Profile = () => {
         <Card className="bg-card border-border mb-4">
           <CardContent className="p-0">
             {[
-              { icon: MessageCircle, label: (t as any).support?.writeSupport || '💬 Write to support', onClick: () => setSupportOpen(true) },
-              { icon: Star, label: (t as any).support?.rateApp || '⭐️ Rate the app', onClick: () => setRatingOpen(true) },
+              { icon: MessageCircle, label: (t as any).support?.writeSupport || 'Write to support', onClick: () => setSupportOpen(true) },
+              { icon: Star, label: (t as any).support?.rateApp || 'Rate the app', onClick: () => setRatingOpen(true) },
             ].map((item, index) => (
               <button
                 key={index}

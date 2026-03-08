@@ -443,9 +443,9 @@ export const translations = {
       all: 'All', mine: 'Mine', shared: 'Shared', addedBy: 'added by',
     },
     support: {
-      writeSupport: '💬 Write to support',
-      ideas: '💡 Ideas & Suggestions',
-      rateApp: '⭐️ Rate the app',
+      writeSupport: 'Write to support',
+      ideas: 'Ideas & Suggestions',
+      rateApp: 'Rate the app',
     },
     receipt: {
       title: '🧾 Add Receipt',
@@ -945,9 +945,9 @@ export const translations = {
       all: 'Все', mine: 'Мои', shared: 'Общие', addedBy: 'добавил(а)',
     },
     support: {
-      writeSupport: '💬 Написать в поддержку',
-      ideas: '💡 Идеи и предложения',
-      rateApp: '⭐️ Оценить приложение',
+      writeSupport: 'Написать в поддержку',
+      ideas: 'Идеи и предложения',
+      rateApp: 'Оценить приложение',
     },
     receipt: {
       title: '🧾 Добавить чек',
@@ -1422,9 +1422,9 @@ export const translations = {
       all: 'Visi', mine: 'Mani', shared: 'Kopīgie', addedBy: 'pievienoja',
     },
     support: {
-      writeSupport: '💬 Rakstīt atbalstam',
-      ideas: '💡 Idejas un priekšlikumi',
-      rateApp: '⭐️ Novērtēt lietotni',
+      writeSupport: 'Rakstīt atbalstam',
+      ideas: 'Idejas un priekšlikumi',
+      rateApp: 'Novērtēt lietotni',
     },
     receipt: {
       title: '🧾 Pievienot čeku',
@@ -1900,9 +1900,9 @@ export const translations = {
       all: 'Всі', mine: 'Мої', shared: 'Спільні', addedBy: 'додав(ла)',
     },
     support: {
-      writeSupport: '💬 Написати в підтримку',
-      ideas: '💡 Ідеї та пропозиції',
-      rateApp: '⭐️ Оцінити додаток',
+      writeSupport: 'Написати в підтримку',
+      ideas: 'Ідеї та пропозиції',
+      rateApp: 'Оцінити додаток',
     },
     receipt: {
       title: '🧾 Додати чек',
