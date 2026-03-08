@@ -305,7 +305,7 @@ const Shopping = () => {
         <motion.div {...fadeUp(2)} className="mb-5 p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}>
           <AlertTriangle className="w-5 h-5 shrink-0" style={{ color: '#EA580C' }} />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
+            <p className="text-sm font-semibold text-foreground">{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
             <p className="text-xs" style={{ color: '#6B7280' }}>{suggestions.slice(0, 3).map((s) => s.name).join(', ')}{suggestions.length > 3 ? '...' : ''}</p>
           </div>
           <button onClick={handleAddAllSuggestions} className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold text-white" style={{ backgroundColor: '#EA580C' }}>{t.shopping.addAll}</button>
