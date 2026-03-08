@@ -230,7 +230,7 @@ const Diary = () => {
 
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
-      <h1 className="text-2xl font-bold mb-4" style={{ color: '#1E1B4B' }}>{t.diary.title}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-foreground">{t.diary.title}</h1>
 
       {/* Week strip */}
       <div className="flex gap-1.5 mb-6 overflow-x-auto pb-1">
