@@ -121,20 +121,26 @@ const Inventory = () => {
 
   const filteredItems = useMemo(() => {
     let list = items;
+    // Family filter
+    if (familyMode && familyFilter === 'mine') {
+      list = list.filter((i) => i.user_id === user?.id);
+    } else if (familyMode && familyFilter === 'shared') {
+      list = list.filter((i) => i.user_id !== user?.id);
+    }
     if (tab === 'expiring') {
-      list = items.filter((i) => {
+      list = list.filter((i) => {
         const d = daysUntilExpiry(i.expires_at);
         return d !== null && d <= 3;
       });
     } else {
-      list = items.filter((i) => i.storage_location === tab);
+      list = list.filter((i) => i.storage_location === tab);
     }
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter((i) => i.name.toLowerCase().includes(q));
     }
     return list;
-  }, [items, tab, search]);
+  }, [items, tab, search, familyMode, familyFilter, user]);
 
   const handleDelete = async (id: string) => {
     await supabase.from('inventory_items').delete().eq('id', id);
