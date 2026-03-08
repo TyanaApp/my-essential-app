@@ -329,6 +329,7 @@ const Profile = () => {
 
       {/* Modals */}
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
+      <FamilySettingsModal open={familyOpen} onOpenChange={setFamilyOpen} />
       <AccountSettingsModal open={accountSettingsOpen} onOpenChange={setAccountSettingsOpen} />
       <SystemSettingsModal open={systemSettingsOpen} onOpenChange={setSystemSettingsOpen} />
       <PaymentsModal open={paymentsOpen} onOpenChange={setPaymentsOpen} />
