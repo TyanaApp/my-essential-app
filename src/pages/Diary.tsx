@@ -336,7 +336,7 @@ const Diary = () => {
       {/* Daily totals bar */}
       <div
         className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40"
-        style={{ backgroundColor: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', borderTop: '1px solid #EDE9FE' }}
+        className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40 bg-card/95 backdrop-blur-sm border-t border-border"
       >
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <span className="text-sm font-bold" style={{ color: totalsColor }}>
