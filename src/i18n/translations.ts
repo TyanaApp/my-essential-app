@@ -1109,7 +1109,7 @@ export const translations = {
         quickAddBtn: '⚡️ Ātrā pievienošana', searchPlaceholder: 'Sāc rakstīt vai izvēlies no saraksta...',
         selectedCount: 'Izvēlēts: {count} produkti', addAll: 'Pievienot visu', addAllCount: 'Pievienot visus {count} produktus', done: 'Gatavs ✓',
         adjustQty: 'Pielāgo daudzumu', backToSelect: '← Atpakaļ', addedSuccess: '{count} produkti pievienoti',
-        noResults: 'Nekas nav atrasts', homeTab: '🏡 Mājās',
+        noResults: 'Nekas nav atrasts',
         howMuch: 'Cik daudz?', custom: 'Cits', enterQty: 'Ievadiet daudzumu', addItem: 'Pievienot', cancelBtn: 'Atcelt', backToPresets: 'Atpakaļ pie variantiem',
       },
       quickAddCategories: {
