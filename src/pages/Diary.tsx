@@ -272,8 +272,7 @@ const Diary = () => {
                 key={section.type}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl p-4"
-                style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
+                className="bg-card rounded-2xl p-4 shadow-[0_2px_12px_rgba(124,58,237,0.06)]"
               >
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
