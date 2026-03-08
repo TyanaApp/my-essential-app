@@ -44,3 +44,9 @@ verify_jwt = false
 
 [functions.lunara-voice-chat]
 verify_jwt = false
+
+[functions.send-weekly-report]
+verify_jwt = false
+
+[functions.weekly-report-scheduler]
+verify_jwt = false

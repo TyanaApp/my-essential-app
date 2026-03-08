@@ -1170,6 +1170,7 @@ export const translations = {
       expiryAlerts: 'Сповіщення про терміни', expiryAlertsDesc: 'Дізнайтесь коли продукти скоро зіпсуються',
       weeklySummary: 'Щотижневий звіт', weeklySummaryDesc: 'Ранковий звіт про економію в понеділок',
       recipeSuggestions: 'Пропозиції рецептів', recipeSuggestionsDesc: 'Розумні ідеї "використай поки не зіпсувалось"',
+      weeklyReport: 'Щотижневий звіт', weeklyReportDesc: 'Щонеділі на email',
       useBeforeGone: '💡 Використайте поки не зіпсувалось', cookNow: 'Приготувати зараз →', noSuggestions: 'Немає продуктів з терміном що закінчується',
     },
     scan: {
