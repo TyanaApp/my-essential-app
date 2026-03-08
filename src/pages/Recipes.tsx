@@ -171,7 +171,7 @@ const Recipes = () => {
 
   const normalizeRecipe = (r: Recipe | SavedRecipe) => {
     if ('id' in r) {
-      return { title: r.title, ingredients: (r.ingredients || []) as Ingredient[], instructions: (r.instructions || []) as string[], nutrition: (r.nutrition || { calories: 0, protein: 0, fat: 0, carbs: 0 }) as Nutrition, prepTime: r.prep_time || 0, estimatedCost: r.estimated_cost || 0 };
+      return { title: r.title, imageQuery: undefined, ingredients: (r.ingredients || []) as Ingredient[], instructions: (r.instructions || []) as string[], nutrition: (r.nutrition || { calories: 0, protein: 0, fat: 0, carbs: 0 }) as Nutrition, prepTime: r.prep_time || 0, estimatedCost: r.estimated_cost || 0 };
     }
     return r;
   };
