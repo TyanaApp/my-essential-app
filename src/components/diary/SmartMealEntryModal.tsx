@@ -45,6 +45,29 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
   const [clarifications, setClarifications] = useState<string[]>([]);
   const [result, setResult] = useState<MealResult | null>(null);
   const [saving, setSaving] = useState(false);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<{ id: string; title: string }[]>([]);
+  const [recentMeals, setRecentMeals] = useState<string[]>([]);
+
+  // Load favorite recipes and recent meals
+  useEffect(() => {
+    if (!user || !open) return;
+    const loadSuggestions = async () => {
+      const [recipesRes, recentRes] = await Promise.all([
+        supabase.from('recipes').select('id, title').eq('user_id', user.id).eq('is_favorite', true).order('created_at', { ascending: false }).limit(5),
+        supabase.from('meal_entries').select('custom_name, created_at').eq('user_id', user.id).not('custom_name', 'is', null).order('created_at', { ascending: false }).limit(30),
+      ]);
+      if (recipesRes.data) setFavoriteRecipes(recipesRes.data);
+      if (recentRes.data) {
+        const unique: string[] = [];
+        for (const r of recentRes.data) {
+          if (r.custom_name && !unique.includes(r.custom_name)) unique.push(r.custom_name);
+          if (unique.length >= 5) break;
+        }
+        setRecentMeals(unique);
+      }
+    };
+    loadSuggestions();
+  }, [user, open]);
 
   // Clarification chips logic
   const getClarificationChips = (text: string): { label: string; value: string }[] => {
@@ -74,16 +97,50 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     return [];
   };
 
-  const quickLogItems = sm.quickItems || [
-    { emoji: '☕️', label: sm.qCoffee || 'Coffee with milk' },
-    { emoji: '🍳', label: sm.qEggs || '2 fried eggs' },
-    { emoji: '🥣', label: sm.qOatmeal || 'Oatmeal' },
-    { emoji: '🍞', label: sm.qToast || 'Toast with butter' },
-    { emoji: '🍌', label: sm.qBanana || 'Banana' },
-    { emoji: '🥗', label: sm.qSalad || 'Salad' },
-    { emoji: '🍗', label: sm.qChicken || 'Chicken breast' },
-    { emoji: '🍝', label: sm.qPasta || 'Pasta' },
-  ];
+  const mealTypeChips: Record<string, { emoji: string; label: string }[]> = {
+    breakfast: [
+      { emoji: '☕️', label: sm.qCoffee || 'Coffee with milk' },
+      { emoji: '🥣', label: sm.qOatmeal || 'Oatmeal' },
+      { emoji: '🍳', label: sm.qEggs || 'Fried eggs' },
+      { emoji: '🥞', label: sm.qPancakes || 'Pancakes' },
+      { emoji: '🍞', label: sm.qToast || 'Toast with butter' },
+      { emoji: '🧇', label: sm.qOmelette || 'Omelette' },
+      { emoji: '🥛', label: sm.qYogurt || 'Yogurt with fruit' },
+      { emoji: '🫐', label: sm.qCottage || 'Cottage cheese' },
+    ],
+    lunch: [
+      { emoji: '🍲', label: sm.qSoup || 'Soup' },
+      { emoji: '🍝', label: sm.qPasta || 'Pasta' },
+      { emoji: '🍗', label: sm.qChickenSide || 'Chicken with side' },
+      { emoji: '🥗', label: sm.qSalad || 'Salad' },
+      { emoji: '🍚', label: sm.qRiceVeg || 'Rice with vegetables' },
+      { emoji: '🥙', label: sm.qWrap || 'Wrap' },
+      { emoji: '🫕', label: sm.qStew || 'Stew' },
+      { emoji: '🥩', label: sm.qMeatSide || 'Meat with side' },
+    ],
+    dinner: [
+      { emoji: '🐟', label: sm.qFish || 'Fish' },
+      { emoji: '🥩', label: sm.qSteak || 'Steak' },
+      { emoji: '🍝', label: sm.qPasta || 'Pasta' },
+      { emoji: '🥗', label: sm.qLightSalad || 'Light salad' },
+      { emoji: '🍲', label: sm.qSoup || 'Soup' },
+      { emoji: '🫕', label: sm.qBraisedMeat || 'Braised meat' },
+      { emoji: '🥦', label: sm.qGrilledVeg || 'Grilled vegetables' },
+      { emoji: '🍗', label: sm.qBakedChicken || 'Baked chicken' },
+    ],
+    snack: [
+      { emoji: '🍎', label: sm.qFruit || 'Fruit' },
+      { emoji: '🥜', label: sm.qNuts || 'Nuts' },
+      { emoji: '🧃', label: sm.qJuice || 'Juice' },
+      { emoji: '☕️', label: sm.qCoffee || 'Coffee' },
+      { emoji: '🍫', label: sm.qChocolate || 'Chocolate' },
+      { emoji: '🥛', label: sm.qKefir || 'Kefir' },
+      { emoji: '🍌', label: sm.qBanana || 'Banana' },
+      { emoji: '🧆', label: sm.qHummus || 'Hummus with veggies' },
+    ],
+  };
+
+  const quickLogItems = mealTypeChips[mealType] || mealTypeChips.lunch;
 
   const portionOptions: { id: PortionSize; emoji: string; label: string; hint: string }[] = [
     { id: 'small', emoji: '🤏', label: sm.portionSmall || 'Small', hint: sm.portionSmallHint || 'Half portion' },
