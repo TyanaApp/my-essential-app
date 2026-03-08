@@ -702,6 +702,7 @@ export const translations = {
       time15: '<15 мин', time30: '30 мин', time1h: '1 час', timeAny: 'Любое',
       addAllMissing: 'Добавить всё →',
       deleteFromSaved: 'Удалить из сохранённых?', deleteYes: 'Да', deleteNo: 'Нет', recipeDeleted: 'Рецепт удалён',
+      minUnit: 'мин', estCost: 'прим.',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
