@@ -299,7 +299,6 @@ const Recipes = () => {
                   <div className="flex flex-wrap gap-2">
                     {MEAL_TYPE_KEYS.map((key) => (
                       <button key={key} onClick={() => toggleMeal(key)}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
                         className={`px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all ${selectedMeals.includes(key) ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {t.recipes[key]}
                       </button>
