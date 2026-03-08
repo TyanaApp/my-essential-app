@@ -210,7 +210,7 @@ const Inventory = () => {
       <h1 className="text-2xl font-bold mb-4 text-foreground">{t.inventory.title}</h1>
 
       {/* Tabs */}
-      <div className="grid grid-cols-4 gap-1.5 mb-4">
+      <div className="grid grid-cols-5 gap-1.5 mb-4">
         {TABS.map((tabItem) => (
           <button
             key={tabItem.id}
