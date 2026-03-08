@@ -2006,7 +2006,7 @@ export const translations = {
       portionSmall: 'Маленька', portionMedium: 'Середня', portionLarge: 'Велика', portionXLarge: 'Дуже велика',
       portionSmallHint: 'Пів порції', portionMediumHint: 'Звичайна', portionLargeHint: 'Добавка', portionXLargeHint: 'Наїлася',
       calculate: '🧮 Порахувати', analyzingHint: 'Рахуємо калорії...',
-      approximate: 'приблизно', logIt: '✓ Записати', changePortion: 'Змінити порцію',
+      approximate: 'приблизно', logIt: '✓ Записати', logToDiary: '✓ Записати в щоденник', changePortion: 'Змінити порцію', loggedToDiary: 'Записано в щоденник ✓', calculatingBtn: '⏳ Рахуємо калорії...',
       calcFailed: 'Не вдалося порахувати. Спробуйте знову.',
       confHigh: 'Висока точність', confMedium: 'Приблизно', confLow: 'Орієнтовно',
       forgotPhoto: 'Забула сфоткати? Просто напиши що їла 📝',
