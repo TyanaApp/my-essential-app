@@ -1247,6 +1247,7 @@ export const translations = {
       time15: '<15 min', time30: '30 min', time1h: '1 stunda', timeAny: 'Jebkurš',
       addAllMissing: 'Pievienot visu →',
       deleteFromSaved: 'Noņemt no saglabātajiem?', deleteYes: 'Jā', deleteNo: 'Nē', recipeDeleted: 'Recepte noņemta',
+      minUnit: 'min', estCost: 'apm.',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
