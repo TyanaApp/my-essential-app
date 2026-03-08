@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string | null
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string | null
+          value?: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string | null
+          value?: string
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          created_at: string | null
+          id: string
+          importance_rating: number | null
+          rating: number | null
+          suggestion: string | null
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          importance_rating?: number | null
+          rating?: number | null
+          suggestion?: string | null
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          importance_rating?: number | null
+          rating?: number | null
+          suggestion?: string | null
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       inventory_items: {
         Row: {
           added_at: string | null
@@ -130,6 +178,7 @@ export type Database = {
           display_name: string | null
           gender: string | null
           id: string
+          is_founding_member: boolean | null
           onboarding_completed: boolean | null
           streak_badges: string[] | null
           streak_current: number | null
@@ -141,6 +190,7 @@ export type Database = {
           trial_end: string | null
           updated_at: string
           user_id: string
+          user_number: number | null
         }
         Insert: {
           avatar_url?: string | null
@@ -153,6 +203,7 @@ export type Database = {
           display_name?: string | null
           gender?: string | null
           id?: string
+          is_founding_member?: boolean | null
           onboarding_completed?: boolean | null
           streak_badges?: string[] | null
           streak_current?: number | null
@@ -164,6 +215,7 @@ export type Database = {
           trial_end?: string | null
           updated_at?: string
           user_id: string
+          user_number?: number | null
         }
         Update: {
           avatar_url?: string | null
@@ -176,6 +228,7 @@ export type Database = {
           display_name?: string | null
           gender?: string | null
           id?: string
+          is_founding_member?: boolean | null
           onboarding_completed?: boolean | null
           streak_badges?: string[] | null
           streak_current?: number | null
@@ -187,6 +240,7 @@ export type Database = {
           trial_end?: string | null
           updated_at?: string
           user_id?: string
+          user_number?: number | null
         }
         Relationships: []
       }
@@ -292,6 +346,36 @@ export type Database = {
         }
         Relationships: []
       }
+      support_tickets: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          message: string
+          status: string | null
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          message: string
+          status?: string | null
+          subject: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          message?: string
+          status?: string | null
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_goals: {
         Row: {
           activity_level: string | null
@@ -354,7 +438,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      assign_user_number: { Args: { p_user_id: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
