@@ -144,7 +144,7 @@ const Diary = () => {
     Math.abs(caloriePct - 1) <= 0.2 ? '#EA580C' : '#DC2626';
 
 
-  const getMealLabel = (type: string) => MEAL_SECTIONS.find((s) => s.type === type)?.label || type;
+  
 
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
