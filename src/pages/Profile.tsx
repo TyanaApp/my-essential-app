@@ -191,7 +191,7 @@ const Profile = () => {
   const [paymentsOpen, setPaymentsOpen] = useState(false);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
-  const [ideasOpen, setIdeasOpen] = useState(false);
+  
   const [ratingOpen, setRatingOpen] = useState(false);
   const [familyOpen, setFamilyOpen] = useState(false);
   const [installGuideOpen, setInstallGuideOpen] = useState(false);
