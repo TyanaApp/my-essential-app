@@ -719,6 +719,12 @@ export const translations = {
       addAllMissing: 'Добавить всё →',
       deleteFromSaved: 'Удалить из сохранённых?', deleteYes: 'Да', deleteNo: 'Нет', recipeDeleted: 'Рецепт удалён',
       minUnit: 'мин', estCost: 'прим.',
+      tabSuggested: '✨ Предложенные', tabSaved: '♥️ Сохранённые',
+      savedToFavorites: 'Сохранено в избранное ♥️', removeFromSaved: 'Убрать из сохранённых?',
+      removeBtn: 'Убрать', emptyFavTitle: 'Здесь будут твои любимые рецепты',
+      emptyFavHint: 'Нажми ♡ на любом рецепте чтобы сохранить', loadMore: '+ Показать ещё рецепты',
+      newRecipes: '🔄 Новые рецепты', cook: '👨‍🍳 Приготовить',
+      matchPercent: '{pct}% из продуктов',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
