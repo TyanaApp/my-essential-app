@@ -135,6 +135,11 @@ export const translations = {
       loading: 'Loading...', error: 'Something went wrong. Please try again.', or: 'or', back: 'Back',
       theme: 'Theme', datePlaceholder: 'dd.mm.yyyy',
     },
+    update: {
+      title: '✨ TYANA update available!',
+      now: 'Update now',
+      later: 'Later',
+    },
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
       systemSettings: 'System Settings', payments: 'Payments', logout: 'Log Out',
