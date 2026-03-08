@@ -15,13 +15,6 @@ interface SystemSettingsModalProps {
 const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenChange }) => {
   const { t } = useLanguage();
   const { theme, setTheme } = useTheme();
-  const [showHelp, setShowHelp] = useState(false);
-
-  const faqs = [
-    { q: 'faqQuestion1', a: 'faqAnswer1' },
-    { q: 'faqQuestion2', a: 'faqAnswer2' },
-    { q: 'faqQuestion3', a: 'faqAnswer3' },
-  ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
