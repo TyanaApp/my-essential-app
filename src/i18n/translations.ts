@@ -240,6 +240,9 @@ export const translations = {
         'Check your fridge before grocery shopping',
       ],
     },
+    weeklyReport: {
+      lastWeekTitle: 'Last week summary', calDay: 'kcal/day', meals: 'meals', saved: 'saved', streakDays: 'days streak',
+    },
     dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     notifications: {
       bannerTitle: '🔔 Get alerts before food expires',
