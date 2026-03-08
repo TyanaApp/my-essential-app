@@ -37,7 +37,7 @@ const CookieConsent = () => {
       <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-3">
         <p className="text-sm flex-1 text-foreground">{t.msg}</p>
         <div className="flex items-center gap-3 shrink-0">
-          <Link to="/cookies" className="text-sm underline" style={{ color: '#7C3AED' }}>{t.learn}</Link>
+          <Link to="/cookies" className="text-sm underline text-primary">{t.learn}</Link>
           <Button
             onClick={handleAccept}
             className="text-white text-sm font-semibold px-6 rounded-xl"
