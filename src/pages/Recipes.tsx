@@ -301,7 +301,7 @@ const Recipes = () => {
                     {MEAL_TYPE_KEYS.map((key) => (
                       <button key={key} onClick={() => toggleMeal(key)}
                         className="px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all"
-                        style={{ borderColor: selectedMeals.includes(key) ? '#7C3AED' : '#DDD6FE', backgroundColor: selectedMeals.includes(key) ? '#EDE9FE' : 'white', color: selectedMeals.includes(key) ? '#7C3AED' : '#6B7280' }}>
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border-[1.5px] transition-all ${selectedMeals.includes(key) ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {t.recipes[key]}
                       </button>
                     ))}
