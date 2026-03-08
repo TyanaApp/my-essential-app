@@ -730,9 +730,8 @@ export const translations = {
       checkEmail: 'Проверьте почту для подтверждения аккаунта ✉️',
     },
     update: {
-      title: '✨ Доступно обновление TYANA!',
-      now: 'Обновить сейчас',
-      later: 'Позже',
+      title: '✨ Новая версия TYANA готова!',
+      now: 'Обновить — 2 сек',
     },
     common: {
       save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', close: 'Закрыть',
