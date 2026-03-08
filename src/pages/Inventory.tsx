@@ -257,10 +257,6 @@ const Inventory = () => {
         </button>
       </div>
 
-      {/* Pantry Quick Add */}
-      {tab === 'pantry' && (
-        <PantryQuickAdd onSaved={fetchItems} onOpenManual={openAdd} />
-      )}
 
       {/* Item list */}
       {loading ? (
