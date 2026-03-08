@@ -5,6 +5,7 @@ import tyanaLogo from '@/assets/tyana-logo-text.png';
 import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
 import BottomNav from './BottomNav';
+import TyanaLogo from './TyanaLogo';
 import InstallBanner from './InstallBanner';
 import NotificationBell from './NotificationBell';
 import { useTranslation } from '@/hooks/useTranslation';
