@@ -26,11 +26,6 @@ interface MealEntry {
   total_carbs: number | null;
 }
 
-interface SavedRecipe {
-  id: string;
-  title: string;
-  nutrition: { calories: number; protein: number; fat: number; carbs: number } | null;
-}
 
 const getWeekDays = (selectedDate: Date) => {
   const day = selectedDate.getDay();
