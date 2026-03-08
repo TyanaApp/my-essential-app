@@ -204,8 +204,7 @@ const Diary = () => {
                     </button>
                     <button
                       onClick={() => openScanModal(section.type)}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg"
-                      style={{ color: '#7C3AED', backgroundColor: '#F5F3FF' }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary"
                       aria-label="Scan meal"
                     >
                       <Camera className="w-4 h-4" />
