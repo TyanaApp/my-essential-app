@@ -324,8 +324,8 @@ const Recipes = () => {
       ) : generatedRecipes.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">🍳</div>
-          <p className="text-base font-medium mb-1" style={{ color: '#1E1B4B' }}>{t.recipes.noRecipes}</p>
-          <p className="text-sm" style={{ color: '#6B7280' }}>{t.recipes.noRecipesHint}</p>
+          <p className="text-base font-medium mb-1 text-foreground">{t.recipes.noRecipes}</p>
+          <p className="text-sm text-muted-foreground">{t.recipes.noRecipesHint}</p>
         </div>
       ) : null}
 

@@ -166,7 +166,7 @@ const NutritionAnalysis = () => {
                 );
               }
               return (
-                <p key={i} className="text-sm leading-relaxed" style={{ color: '#374151' }}>
+                <p key={i} className="text-sm leading-relaxed text-foreground/80">
                   {trimmed}
                 </p>
               );

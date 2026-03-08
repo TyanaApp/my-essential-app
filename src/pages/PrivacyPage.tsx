@@ -295,7 +295,7 @@ const PrivacyPage = () => {
 
         <div className="text-center mb-12">
           <h1 className="font-tyana text-2xl mb-2" style={{ color: '#7C3AED' }}>TYANA</h1>
-          <h2 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>{c.title}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>
 

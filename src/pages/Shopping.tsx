@@ -320,8 +320,8 @@ const Shopping = () => {
       ) : activeItems.length === 0 && purchasedItems.length === 0 ? (
         <motion.div {...fadeUp(3)} className="text-center py-16">
           <div className="text-5xl mb-4">🛒</div>
-          <p className="text-base font-medium mb-1" style={{ color: '#1E1B4B' }}>{t.shopping.empty}</p>
-          <p className="text-sm" style={{ color: '#6B7280' }}>{t.shopping.emptyHint}</p>
+          <p className="text-base font-medium mb-1 text-foreground">{t.shopping.empty}</p>
+          <p className="text-sm text-muted-foreground">{t.shopping.emptyHint}</p>
         </motion.div>
       ) : (
         <div className="space-y-4">

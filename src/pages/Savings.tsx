@@ -111,7 +111,7 @@ const Savings = () => {
                       <div className="flex items-center gap-2">
                         <span>{e.type === 'purchase' ? '💸' : '💚'}</span>
                         <div>
-                          <p className="text-xs font-medium" style={{ color: '#1E1B4B' }}>{e.description || e.type}</p>
+                          <p className="text-xs font-medium text-foreground">{e.description || e.type}</p>
                           <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
                             {new Date(e.created_at).toLocaleDateString()}
                           </p>
