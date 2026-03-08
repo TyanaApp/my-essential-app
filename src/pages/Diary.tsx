@@ -316,7 +316,12 @@ const Diary = () => {
                 </div>
 
                 {sectionEntries.length === 0 ? (
-                  <p className="text-xs py-2 text-muted-foreground">{t.diary.noMeals}</p>
+                  <button
+                    onClick={() => openAddModal(section.type)}
+                    className="w-full text-left text-xs py-2 text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    📝 {(t as any).smartEntry?.forgotPhoto || "Forgot to take a photo? Just write what you ate"}
+                  </button>
                 ) : (
                   <div className="space-y-1.5">
                     {sectionEntries.map((entry) => (
