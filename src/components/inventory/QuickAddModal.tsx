@@ -83,8 +83,10 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
   const [expandedCat, setExpandedCat] = useState<string | null>(null);
-  // Smart suggestion state
   const [suggestion, setSuggestion] = useState<{ product: QuickProduct; suggestedLoc: string } | null>(null);
+
+  const categories = useMemo(() => getCategoriesForLocation(storageLocation), [storageLocation]);
+  const allProducts = useMemo(() => getAllProducts(), []);
 
   if (!open) return null;
 
@@ -94,9 +96,6 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
   const locLabels = LOCATION_LABELS[storageLocation] || LOCATION_LABELS.fridge;
   const locEmoji = LOCATION_EMOJIS[storageLocation] || '🧊';
   const smartTexts = SMART_SUGGESTION_TEXTS[language] || SMART_SUGGESTION_TEXTS.en;
-
-  const categories = useMemo(() => getCategoriesForLocation(storageLocation), [storageLocation]);
-  const allProducts = useMemo(() => getAllProducts(), []);
 
   const getName = (p: QuickProduct) => p.names[language as keyof typeof p.names] || p.names.en;
   const getUnitLabel = (unit: string) => uLabels[unit] || unit;

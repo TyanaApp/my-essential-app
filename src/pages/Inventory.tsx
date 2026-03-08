@@ -352,6 +352,7 @@ const Inventory = () => {
         open={quickAddOpen}
         onClose={() => setQuickAddOpen(false)}
         onSaved={fetchItems}
+        activeTab={activeLocation}
       />
       <ScanModal
         open={scanOpen}
