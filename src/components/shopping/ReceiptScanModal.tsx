@@ -47,6 +47,8 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const receipt = (t as any).receipt || {};
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<'upload' | 'scanning' | 'results' | 'error' | 'manual' | 'no-food'>('upload');
@@ -84,7 +86,10 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   };
 
   const handleFile = useCallback((file: File) => {
-    if (!file.type.startsWith('image/')) return;
+    const isImage = file.type.startsWith('image/');
+    const isPdf = file.type === 'application/pdf';
+    if (!isImage && !isPdf) return;
+
     const reader = new FileReader();
     reader.onload = async (e) => {
       const dataUrl = e.target?.result as string;
@@ -94,7 +99,11 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
 
       try {
         const { data: result, error } = await supabase.functions.invoke('scan-receipt', {
-          body: { imageBase64: base64, language },
+          body: {
+            imageBase64: base64,
+            language,
+            fileType: isPdf ? 'pdf' : 'image',
+          },
         });
         if (error) throw error;
         if (result?.error) throw new Error('Scan failed');
@@ -327,21 +336,46 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
         <div className="p-4">
           {/* UPLOAD */}
           {step === 'upload' && (
-            <div className="text-center py-8">
-              <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden"
+            <div className="py-4">
+              <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
-              <div className="text-6xl mb-4">🧾</div>
-              <p className="text-sm mb-4 text-muted-foreground">{receipt.hint || 'Take a photo of your receipt'}</p>
-              <div className="flex flex-col gap-2 items-center">
-                <button onClick={() => fileRef.current?.click()}
-                  className="px-6 h-12 rounded-2xl text-white font-semibold text-sm bg-primary">
-                  📷 {receipt.takePhoto || 'Take Photo'}
+              <input ref={galleryRef} type="file" accept="image/*" className="hidden"
+                onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+              <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" className="hidden"
+                onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+              <div className="space-y-2.5">
+                {/* Take photo */}
+                <button onClick={() => cameraRef.current?.click()}
+                  className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border hover:border-primary transition-colors text-left bg-accent/30">
+                  <span className="text-3xl">📸</span>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">{receipt.takePhoto || 'Take photo'}</p>
+                    <p className="text-xs text-muted-foreground">{receipt.takePhotoHint || 'Take a photo of a paper receipt'}</p>
+                  </div>
                 </button>
-                <button onClick={initManualEntry}
-                  className="text-sm font-medium text-primary">
-                  ✏️ {receipt.manualEntry || 'Enter manually'}
+                {/* Choose from gallery */}
+                <button onClick={() => galleryRef.current?.click()}
+                  className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border hover:border-primary transition-colors text-left bg-accent/30">
+                  <span className="text-3xl">🖼</span>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">{receipt.choosePhoto || 'Choose from gallery'}</p>
+                    <p className="text-xs text-muted-foreground">{receipt.choosePhotoHint || 'Upload a photo from gallery'}</p>
+                  </div>
+                </button>
+                {/* Upload file */}
+                <button onClick={() => fileRef.current?.click()}
+                  className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border hover:border-primary transition-colors text-left bg-accent/30">
+                  <span className="text-3xl">📄</span>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">{receipt.uploadFile || 'Upload file'}</p>
+                    <p className="text-xs text-muted-foreground">{receipt.uploadFileHint || 'PDF or digital receipt'}</p>
+                  </div>
                 </button>
               </div>
+              <button onClick={initManualEntry}
+                className="w-full mt-3 text-sm font-medium text-primary text-center">
+                ✏️ {receipt.manualEntry || 'Enter manually'}
+              </button>
             </div>
           )}
 

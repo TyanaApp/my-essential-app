@@ -67,6 +67,10 @@ const T = {
   },
 };
 
+const BANNER_DISMISS_KEY = 'trial_banner_dismissed';
+const MODAL_SESSION_KEY = 'trial_expired_shown';
+const COOLDOWN_MS = 86400000; // 24 hours
+
 const TrialManager = () => {
   const { user } = useAuth();
   const { language } = useLanguage();
@@ -76,11 +80,18 @@ const TrialManager = () => {
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [trialDaysLeft, setTrialDaysLeft] = useState<number | null>(null);
   const [isFoundingMember, setIsFoundingMember] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const t = T[language as keyof typeof T] || T.en;
 
   useEffect(() => {
     if (!user) return;
+
+    // Check if banner was dismissed within 24h
+    const dismissedAt = localStorage.getItem(BANNER_DISMISS_KEY);
+    if (dismissedAt && Date.now() - Number(dismissedAt) < COOLDOWN_MS) {
+      setBannerDismissed(true);
+    }
 
     const checkTrial = async () => {
       const { data } = await supabase
@@ -98,15 +109,17 @@ const TrialManager = () => {
         const now = new Date();
 
         if (trialEnd < now) {
+          // Trial expired
           await supabase.from('profiles').update({
             subscription_plan: 'free',
             subscription_status: 'expired',
           } as any).eq('user_id', user.id);
 
-          const shown = sessionStorage.getItem('trial_expired_shown');
-          if (!shown) {
+          // Show modal ONCE per session, only on dashboard
+          const shown = sessionStorage.getItem(MODAL_SESSION_KEY);
+          if (!shown && location.pathname === '/dashboard') {
             setShowExpiredModal(true);
-            sessionStorage.setItem('trial_expired_shown', '1');
+            sessionStorage.setItem(MODAL_SESSION_KEY, '1');
           }
         } else {
           const msLeft = trialEnd.getTime() - now.getTime();
@@ -115,11 +128,18 @@ const TrialManager = () => {
             setTrialDaysLeft(daysLeft);
           }
         }
+      } else if (profile.subscription_status === 'expired') {
+        // Already expired — show modal once per session on dashboard only
+        const shown = sessionStorage.getItem(MODAL_SESSION_KEY);
+        if (!shown && location.pathname === '/dashboard') {
+          setShowExpiredModal(true);
+          sessionStorage.setItem(MODAL_SESSION_KEY, '1');
+        }
       }
     };
 
     checkTrial();
-  }, [user]);
+  }, [user, location.pathname]);
 
   const handleUpgrade = () => {
     setShowExpiredModal(false);
@@ -139,7 +159,14 @@ const TrialManager = () => {
     }
   };
 
-  const showBanner = trialDaysLeft !== null && 
+  const handleDismissBanner = () => {
+    setTrialDaysLeft(null);
+    setBannerDismissed(true);
+    localStorage.setItem(BANNER_DISMISS_KEY, String(Date.now()));
+  };
+
+  const showBanner = trialDaysLeft !== null &&
+    !bannerDismissed &&
     !['/auth', '/onboarding', '/'].includes(location.pathname);
 
   const getBannerColor = () => {
@@ -169,7 +196,7 @@ const TrialManager = () => {
             </button>
           </span>
           <button
-            onClick={() => setTrialDaysLeft(null)}
+            onClick={handleDismissBanner}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-white/80 hover:text-white"
             aria-label="Close"
           >

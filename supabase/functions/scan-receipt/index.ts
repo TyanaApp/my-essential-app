@@ -9,27 +9,31 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { imageBase64, language } = await req.json();
+    const { imageBase64, language, fileType } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     const langMap: Record<string, string> = { ru: 'Russian', uk: 'Ukrainian', lv: 'Latvian', en: 'English' };
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [{
-          role: "user",
-          content: [
-            { type: "image_url", image_url: { url: `data:image/jpeg;base64,${imageBase64}` } },
-            {
-              type: "text",
-              text: `YOU MUST respond in ${langMap[language] || 'English'}.
+    const isPdf = fileType === 'pdf';
+
+    const contentParts: any[] = [];
+
+    if (isPdf) {
+      contentParts.push({
+        type: "image_url",
+        image_url: { url: `data:application/pdf;base64,${imageBase64}` }
+      });
+    } else {
+      contentParts.push({
+        type: "image_url",
+        image_url: { url: `data:image/jpeg;base64,${imageBase64}` }
+      });
+    }
+
+    contentParts.push({
+      type: "text",
+      text: `YOU MUST respond in ${langMap[language] || 'English'}.
 
 This is a shopping receipt.
 Your job: identify ONLY food and drink items.
@@ -80,8 +84,19 @@ Rules:
 - Be smart: milk→fridge, pasta→pantry, meat→fridge, ice cream→freezer
 - If currency not visible, default to "EUR"
 - Translate item names to ${langMap[language] || 'English'}`
-            }
-          ]
+    });
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [{
+          role: "user",
+          content: contentParts
         }],
         max_tokens: 1200,
       }),
