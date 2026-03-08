@@ -890,6 +890,7 @@ export const translations = {
       scanWithCamera: 'Сканируйте камерой телефона', iosInstructions: 'Откройте в Safari → Поделиться → На экран «Домой»',
       androidInstructions: 'Откройте в Chrome → Меню ⋮ → На главный экран', bannerText: 'Добавьте на главный экран',
       getTheApp: '📱 Скачать приложение', iosTooltipLine1: 'Нажмите «Поделиться» ↗ → На экран «Домой»', iosTooltipLine2: 'Используйте Safari',
+      installed: 'TYANA установлена! 🎉', openInSafari: 'Для установки открой эту страницу в Safari', safariRequired: 'Safari → Поделиться → На экран Домой',
     },
     landing: {
       signIn: 'Войти', startFree: 'Начать бесплатно', navFeatures: 'Функции', navPricing: 'Цены', navFaq: 'Вопросы',
