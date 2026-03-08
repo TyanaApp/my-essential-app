@@ -72,7 +72,7 @@ const Dashboard = () => {
   const [adviceGeneratedAt, setAdviceGeneratedAt] = useState<string | null>(null);
   const [adviceFading, setAdviceFading] = useState(false);
   const [lastCaloriesForAdvice, setLastCaloriesForAdvice] = useState<number>(0);
-  const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string } | null>(null);
+  const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string; confidence?: string; based_on?: string; why_valuable?: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
 
   const getGreeting = () => {
@@ -372,15 +372,17 @@ const Dashboard = () => {
     setTipLoading(true);
     try {
       const [invRes, mealsRes] = await Promise.all([
-        supabase.from('inventory_items').select('name, expires_at, quantity, unit').eq('user_id', user.id).limit(20),
+        supabase.from('inventory_items').select('name, expires_at, quantity, unit, storage_location').eq('user_id', user.id).limit(30),
         supabase.from('meal_entries').select('custom_name').eq('user_id', user.id).eq('date', new Date().toISOString().split('T')[0]),
       ]);
       const { data: tipData } = await supabase.functions.invoke('zero-waste-tip', {
         body: { inventory: invRes.data || [], recentMeals: mealsRes.data || [], language },
       });
-      if (tipData && tipData.tip) {
+      if (tipData && tipData.tip && tipData.confidence !== 'low') {
         setZeroWasteTip(tipData);
         localStorage.setItem(cacheKey, JSON.stringify({ date: new Date().toISOString().split('T')[0], data: tipData }));
+      } else {
+        setZeroWasteTip(null);
       }
     } catch (e) {
       console.error('Zero waste tip error:', e);
@@ -893,6 +895,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Card 5 — AI Zero Waste Tip */}
+        {(tipLoading || zeroWasteTip) && (
         <motion.div {...fadeUp(5)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-bold flex items-center gap-1.5 text-foreground">
@@ -920,19 +923,16 @@ const Dashboard = () => {
                     {zeroWasteTip.category === 'food' ? '🍽' : zeroWasteTip.category === 'beauty' ? '💄' : zeroWasteTip.category === 'cleaning' ? '🧹' : zeroWasteTip.category === 'garden' ? '🌱' : '🏠'} {zeroWasteTip.category}
                   </span>
                 )}
-                {zeroWasteTip.product && (
+                {zeroWasteTip.confidence === 'high' && zeroWasteTip.based_on && (
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0FDF4', color: '#059669' }}>
-                    {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.product}
+                    {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.based_on}
                   </span>
                 )}
               </div>
             </>
-          ) : (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {((t as any).tips?.daily || ['Check your fridge before grocery shopping'])[0]}
-            </p>
-          )}
+          ) : null}
         </motion.div>
+        )}
       </div>
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
     </div>
