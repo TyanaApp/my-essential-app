@@ -167,7 +167,7 @@ const Auth = () => {
       </button>
 
       <motion.div
-        className="w-full max-w-[420px] bg-white rounded-3xl p-10"
+        className="w-full max-w-[420px] bg-card rounded-3xl p-10"
         style={{ boxShadow: '0 4px 32px rgba(124,58,237,0.12)' }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
