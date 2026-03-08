@@ -65,6 +65,7 @@ const Profile = () => {
   const [supportOpen, setSupportOpen] = useState(false);
   const [ideasOpen, setIdeasOpen] = useState(false);
   const [ratingOpen, setRatingOpen] = useState(false);
+  const [familyOpen, setFamilyOpen] = useState(false);
 
   // Listen for open-payments event
   useEffect(() => {
