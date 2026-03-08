@@ -241,7 +241,7 @@ const Recipes = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.mealType}</label>
+                  <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.mealType}</label>
                   <div className="flex flex-wrap gap-2">
                     {MEAL_TYPE_KEYS.map((key) => (
                       <button key={key} onClick={() => toggleMeal(key)}
