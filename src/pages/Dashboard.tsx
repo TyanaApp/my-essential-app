@@ -72,7 +72,7 @@ const Dashboard = () => {
   const [adviceGeneratedAt, setAdviceGeneratedAt] = useState<string | null>(null);
   const [adviceFading, setAdviceFading] = useState(false);
   const [lastCaloriesForAdvice, setLastCaloriesForAdvice] = useState<number>(0);
-  const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string } | null>(null);
+  const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string; confidence?: string; based_on?: string; why_valuable?: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
 
   const getGreeting = () => {
