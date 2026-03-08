@@ -47,7 +47,7 @@ serve(async (req) => {
 С любовью,
 Команда TYANA 💜
 
-P.S. Есть вопросы? Пиши: supporttyana@gmail.com`,
+P.S. Есть вопросы? Пиши нам в приложении!`,
 
       uk: `Привіт, ${name}! 👋
 
@@ -66,7 +66,7 @@ P.S. Есть вопросы? Пиши: supporttyana@gmail.com`,
 З любов'ю,
 Команда TYANA 💜
 
-P.S. Є питання? Пиши: supporttyana@gmail.com`,
+P.S. Є питання? Пиши нам у додатку!`,
 
       lv: `Sveiki, ${name}! 👋
 
@@ -85,7 +85,7 @@ Atvērt TYANA: https://tyana.lovable.app
 Ar mīlestību,
 TYANA komanda 💜
 
-P.S. Jautājumi? Rakstiet: supporttyana@gmail.com`,
+P.S. Jautājumi? Rakstiet mums lietotnē!`,
 
       en: `Hi ${name}! 👋
 
@@ -104,7 +104,7 @@ Open TYANA: https://tyana.lovable.app
 With love,
 TYANA Team 💜
 
-Questions? Email: supporttyana@gmail.com`,
+Questions? Reach us in the app!`,
     };
 
     const subject = subjects[language] || subjects.en;

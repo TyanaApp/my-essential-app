@@ -34,7 +34,7 @@ const PrivacyPage = () => {
       title: 'Privacy Policy',
       lastUpdated: 'Last updated: March 2026',
       s1Title: '1. Who we are',
-      s1: 'TYANA is an AI-powered kitchen and nutrition assistant. Contact: supporttyana@gmail.com | tyana.lovable.app. EU jurisdiction, Latvia.',
+      s1: 'TYANA is an AI-powered kitchen and nutrition assistant. tyana.lovable.app. EU jurisdiction, Latvia.',
       s2Title: '2. What data we collect',
       s2Items: [
         'Account: name, email, profile photo (Google OAuth)',
@@ -72,7 +72,7 @@ const PrivacyPage = () => {
         '✅ Objection — opt out of processing',
         '✅ Complaint — contact EU supervisory authority',
       ],
-      s5Note: 'All requests: supporttyana@gmail.com | Response within 30 days.',
+      s5Note: 'Response within 30 days.',
       s6Title: '6. Data retention',
       s6Items: [
         'Account data: until account deletion',
@@ -96,7 +96,7 @@ const PrivacyPage = () => {
       title: 'Политика конфиденциальности',
       lastUpdated: 'Последнее обновление: март 2026',
       s1Title: '1. Кто мы',
-      s1: 'TYANA — ИИ-помощник для кухни и питания. Контакт: supporttyana@gmail.com | tyana.lovable.app. Юрисдикция ЕС, Латвия.',
+      s1: 'TYANA — ИИ-помощник для кухни и питания. tyana.lovable.app. Юрисдикция ЕС, Латвия.',
       s2Title: '2. Какие данные мы собираем',
       s2Items: [
         'Аккаунт: имя, email, фото профиля (Google OAuth)',
@@ -134,7 +134,7 @@ const PrivacyPage = () => {
         '✅ Возражение — отказаться от обработки',
         '✅ Жалоба — обратиться в надзорный орган ЕС',
       ],
-      s5Note: 'Все запросы: supporttyana@gmail.com | Ответ в течение 30 дней.',
+      s5Note: 'Ответ в течение 30 дней.',
       s6Title: '6. Хранение данных',
       s6Items: [
         'Данные аккаунта: до удаления аккаунта',
@@ -158,7 +158,7 @@ const PrivacyPage = () => {
       title: 'Політика конфіденційності',
       lastUpdated: 'Останнє оновлення: березень 2026',
       s1Title: '1. Хто ми',
-      s1: 'TYANA — ШІ-помічник для кухні та харчування. Контакт: supporttyana@gmail.com | tyana.lovable.app. Юрисдикція ЄС, Латвія.',
+      s1: 'TYANA — ШІ-помічник для кухні та харчування. tyana.lovable.app. Юрисдикція ЄС, Латвія.',
       s2Title: '2. Які дані ми збираємо',
       s2Items: [
         'Акаунт: ім\'я, email, фото профілю (Google OAuth)',
@@ -196,7 +196,7 @@ const PrivacyPage = () => {
         '✅ Заперечення — відмовитися від обробки',
         '✅ Скарга — звернутися до наглядового органу ЄС',
       ],
-      s5Note: 'Усі запити: supporttyana@gmail.com | Відповідь протягом 30 днів.',
+      s5Note: 'Відповідь протягом 30 днів.',
       s6Title: '6. Зберігання даних',
       s6Items: [
         'Дані акаунту: до видалення акаунту',
@@ -220,7 +220,7 @@ const PrivacyPage = () => {
       title: 'Privātuma politika',
       lastUpdated: 'Pēdējoreiz atjaunināts: 2026. gada marts',
       s1Title: '1. Kas mēs esam',
-      s1: 'TYANA ir AI virtuves un uztura palīgs. Kontakts: supporttyana@gmail.com | tyana.lovable.app. ES jurisdikcija, Latvija.',
+      s1: 'TYANA ir AI virtuves un uztura palīgs. tyana.lovable.app. ES jurisdikcija, Latvija.',
       s2Title: '2. Kādus datus mēs vācam',
       s2Items: [
         'Konts: vārds, e-pasts, profila foto (Google OAuth)',
@@ -258,7 +258,7 @@ const PrivacyPage = () => {
         '✅ Iebildums — atteikties no apstrādes',
         '✅ Sūdzība — sazināties ar ES uzraudzības iestādi',
       ],
-      s5Note: 'Visi pieprasījumi: supporttyana@gmail.com | Atbilde 30 dienu laikā.',
+      s5Note: 'Atbilde 30 dienu laikā.',
       s6Title: '6. Datu glabāšana',
       s6Items: [
         'Konta dati: līdz konta dzēšanai',
