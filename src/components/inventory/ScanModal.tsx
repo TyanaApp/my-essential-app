@@ -46,7 +46,8 @@ interface ScanModalProps {
 
 const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const units = getUnits(language);
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [photos, setPhotos] = useState<(string | null)[]>([null, null, null, null]);
