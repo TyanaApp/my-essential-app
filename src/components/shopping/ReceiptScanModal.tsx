@@ -86,7 +86,10 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   };
 
   const handleFile = useCallback((file: File) => {
-    if (!file.type.startsWith('image/')) return;
+    const isImage = file.type.startsWith('image/');
+    const isPdf = file.type === 'application/pdf';
+    if (!isImage && !isPdf) return;
+
     const reader = new FileReader();
     reader.onload = async (e) => {
       const dataUrl = e.target?.result as string;
@@ -96,7 +99,11 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
 
       try {
         const { data: result, error } = await supabase.functions.invoke('scan-receipt', {
-          body: { imageBase64: base64, language },
+          body: {
+            imageBase64: base64,
+            language,
+            fileType: isPdf ? 'pdf' : 'image',
+          },
         });
         if (error) throw error;
         if (result?.error) throw new Error('Scan failed');
