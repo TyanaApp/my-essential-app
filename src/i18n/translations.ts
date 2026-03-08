@@ -1210,9 +1210,8 @@ export const translations = {
       checkEmail: 'Pārbaudiet e-pastu, lai apstiprinātu kontu ✉️',
     },
     update: {
-      title: '✨ TYANA atjauninājums pieejams!',
-      now: 'Atjaunināt tagad',
-      later: 'Vēlāk',
+      title: '✨ Jauna TYANA versija gatava!',
+      now: 'Atjaunināt — 2 sek',
     },
     common: {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
