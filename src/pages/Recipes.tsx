@@ -316,7 +316,7 @@ const Recipes = () => {
         </div>
       ) : savedRecipes.length > 0 ? (
         <div>
-          <h2 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>{t.recipes.savedRecipes}</h2>
+          <h2 className="text-sm font-bold mb-3 text-foreground">{t.recipes.savedRecipes}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {savedRecipes.map((r) => (<RecipeCard key={r.id} recipe={r} isSaved savedId={r.id} isFav={r.is_favorite} />))}
           </div>
