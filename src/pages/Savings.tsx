@@ -82,7 +82,7 @@ const Savings = () => {
             </div>
 
             {/* Saved card */}
-            <div style={cardStyle} className="p-5">
+            <div style={cardStyle} className="p-5 bg-card">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">💚</span>
                 <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
