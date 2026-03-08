@@ -519,6 +519,18 @@ export const translations = {
       title: '🍽 Meal reminders',
       breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner',
     },
+    familyMembers: {
+      addMember: 'Add family member', editMember: 'Edit member', whatName: 'Name',
+      namePlaceholder: 'e.g. Misha', avatar: 'Avatar', gender: 'Gender',
+      boy: 'Boy', girl: 'Girl', age: 'Age', weight: 'Weight (kg)', height: 'Height (cm)',
+      activity: 'Activity level', allergies: 'Allergies', allergiesPlaceholder: 'nuts, dairy',
+      calculatedTarget: 'Calculated target', kcal: 'kcal', years: 'y/o',
+      calorieTarget: 'Calorie target', todayMeals: "Today's meals", noMealsYet: 'No meals logged yet',
+      goals: 'Goals', done: 'Done', addAnother: 'Add family member',
+      memberAdded: 'Member added ✓', memberUpdated: 'Updated ✓', memberDeleted: 'Deleted ✓',
+      saveFailed: 'Failed to save', familySafe: 'Suitable for whole family ✅',
+      familyWarning: '⚠️ Contains {allergen} — not suitable for {name}',
+    },
   },
   ru: {
     nav: { home: 'Главная', inventory: 'Продукты', recipes: 'Рецепты', shopping: 'Покупки', diary: 'Дневник', settings: 'Настройки', profile: 'Профиль' },
