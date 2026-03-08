@@ -120,7 +120,7 @@ const TermsPage = () => {
         'Pro Founder €6.49/mēn: tikai pirmie 1000 lietotāji, cena fiksēta uz visiem laikiem',
         'Pro €12.99/mēn: lietotāji pēc pirmajiem 1000, neierobežoti',
         '7 dienu izmēģinājums: bezmaksas, bez kartes, automātiski pārslēdzas uz Free',
-        'Atmaksa: sazinieties ar supporttyana@gmail.com 7 dienu laikā pēc maksājuma',
+        'Atmaksa: sazinieties ar mums 7 dienu laikā pēc maksājuma',
       ],
       s5Title: '5. Aizliegtā izmantošana',
       s5Items: ['Automatizēta datu vākšana', 'Konta datu kopīgošana', 'Komerciāla izmantošana bez atļaujas', 'Drošības pārkāpumu mēģinājumi'],

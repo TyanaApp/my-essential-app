@@ -104,7 +104,7 @@ Open TYANA: https://tyana.lovable.app
 With love,
 TYANA Team 💜
 
-Questions? Email: supporttyana@gmail.com`,
+Questions? Reach us in the app!`,
     };
 
     const subject = subjects[language] || subjects.en;

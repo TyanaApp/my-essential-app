@@ -258,7 +258,7 @@ const PrivacyPage = () => {
         '✅ Iebildums — atteikties no apstrādes',
         '✅ Sūdzība — sazināties ar ES uzraudzības iestādi',
       ],
-      s5Note: 'Visi pieprasījumi: supporttyana@gmail.com | Atbilde 30 dienu laikā.',
+      s5Note: 'Atbilde 30 dienu laikā.',
       s6Title: '6. Datu glabāšana',
       s6Items: [
         'Konta dati: līdz konta dzēšanai',
