@@ -440,7 +440,7 @@ const RecipeDetailModal = ({
               <div className="space-y-1.5">
                 {ingredientAvailability.map((ing, idx) => (
                   <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl text-sm"
-                    style={{ backgroundColor: ing.inInventory ? '#F0FDF4' : '#FFFBEB', border: `1px solid ${ing.inInventory ? '#BBF7D0' : '#FDE68A'}` }}>
+                    style={{ backgroundColor: ing.inInventory ? 'hsl(var(--secondary))' : 'hsl(var(--secondary))', border: `1px solid hsl(var(--border))` }}>
                     <div className="flex items-center gap-2">
                       <span>{ing.inInventory ? '✅' : '🛒'}</span>
                       <span className="font-medium text-foreground">{ing.name}</span>
