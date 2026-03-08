@@ -231,8 +231,8 @@ const Auth = () => {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input id="email" type="email" value={email}
                 onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors(prev => ({ ...prev, email: undefined })); }}
-                className={`pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 ${errors.email ? 'border-red-500' : ''}`}
-                style={{ backgroundColor: '#F5F3FF', borderColor: errors.email ? undefined : '#DDD6FE' }}
+                className={`pl-10 h-[52px] rounded-xl border-[1px] focus:ring-0 bg-secondary border-border text-foreground ${errors.email ? 'border-red-500' : ''}`}
+                placeholder="your@email.com" required />
                 placeholder="your@email.com" required />
             </div>
             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
