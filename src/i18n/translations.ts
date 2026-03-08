@@ -161,7 +161,7 @@ export const translations = {
     },
     update: {
       title: '✨ New TYANA version ready!',
-      now: 'Update — 2 sec',
+      now: '✨ Update',
     },
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
@@ -731,7 +731,7 @@ export const translations = {
     },
     update: {
       title: '✨ Новая версия TYANA готова!',
-      now: 'Обновить — 2 сек',
+      now: '✨ Обновить',
     },
     common: {
       save: 'Сохранить', cancel: 'Отмена', delete: 'Удалить', edit: 'Изменить', close: 'Закрыть',
@@ -1211,7 +1211,7 @@ export const translations = {
     },
     update: {
       title: '✨ Jauna TYANA versija gatava!',
-      now: 'Atjaunināt — 2 sek',
+      now: '✨ Atjaunināt',
     },
     common: {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
@@ -1688,7 +1688,7 @@ export const translations = {
     },
     update: {
       title: '✨ Нова версія TYANA готова!',
-      now: 'Оновити — 2 сек',
+      now: '✨ Оновити',
     },
     common: {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',

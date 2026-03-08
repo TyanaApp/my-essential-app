@@ -234,6 +234,8 @@ const Profile = () => {
   const displayName = profile?.display_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
   const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
 
+  const buildDate = (typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : new Date().toISOString().slice(0, 10));
+
   const menuItems = [
     {
       icon: Edit,
@@ -491,9 +493,10 @@ const Profile = () => {
       </motion.div>
 
       {/* Legal footer */}
-      <div className="mt-6 mb-4">
+      <div className="mt-6 mb-2">
         <LegalFooterPill />
       </div>
+      <p className="text-center text-xs text-muted-foreground mb-4">TYANA v1.0.{buildDate}</p>
 
       {/* Modals */}
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
