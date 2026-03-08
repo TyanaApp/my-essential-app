@@ -227,6 +227,21 @@ interface Props {
   onSaved: () => void;
 }
 
+const STORAGE_TABS: Record<string, { id: string; emoji: string; labels: Record<string, string> }[]> = {
+  default: [
+    { id: 'fridge', emoji: '🧊', labels: { en: 'Fridge', ru: 'Холодильник', uk: 'Холодильник', lv: 'Ledusskapis' } },
+    { id: 'freezer', emoji: '❄️', labels: { en: 'Freezer', ru: 'Морозилка', uk: 'Морозилка', lv: 'Saldētava' } },
+    { id: 'pantry', emoji: '🏠', labels: { en: 'Pantry', ru: 'Кладовая', uk: 'Комора', lv: 'Pieliekamais' } },
+  ],
+};
+
+const BOTTOM_LABELS: Record<string, { add: string; cancel: string; addCount: string }> = {
+  en: { add: 'Add', cancel: 'Cancel', addCount: 'Add — {count} products' },
+  ru: { add: 'Добавить', cancel: 'Отменить', addCount: 'Добавить — {count} продуктов' },
+  uk: { add: 'Додати', cancel: 'Скасувати', addCount: 'Додати — {count} продуктів' },
+  lv: { add: 'Pievienot', cancel: 'Atcelt', addCount: 'Pievienot — {count} produktus' },
+};
+
 const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -239,6 +254,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
   const [selected, setSelected] = useState<Map<string, SelectedItem>>(new Map());
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
+  const [storageTab, setStorageTab] = useState('fridge');
 
   // Quantity popup state
   const [qtyPopupItem, setQtyPopupItem] = useState<QuickItem | null>(null);
@@ -328,7 +344,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
         name: val.name,
         quantity: val.qty,
         unit: val.unit,
-        storage_location: 'pantry',
+        storage_location: storageTab,
         tracking_mode: 'date_only',
       }));
       const { error } = await supabase.from('inventory_items').insert(items as any);
@@ -406,6 +422,24 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
             </button>
           </div>
 
+          {/* Storage location tabs */}
+          <div className="flex gap-1.5 px-4 pb-2">
+            {STORAGE_TABS.default.map(st => (
+              <button
+                key={st.id}
+                onClick={() => setStorageTab(st.id)}
+                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-full text-xs font-semibold transition-all"
+                style={{
+                  backgroundColor: storageTab === st.id ? 'hsl(var(--primary))' : 'hsl(var(--muted))',
+                  color: storageTab === st.id ? 'white' : 'hsl(var(--muted-foreground))',
+                }}
+              >
+                <span>{st.emoji}</span>
+                <span>{st.labels[language] || st.labels.en}</span>
+              </button>
+            ))}
+          </div>
+
           {/* Search */}
           <div className="px-4 pb-2">
             <div className="relative">
@@ -420,7 +454,7 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 pb-36" style={{ maxHeight: 'calc(92vh - 200px)' }}>
+          <div className="flex-1 overflow-y-auto px-4 pb-36" style={{ maxHeight: 'calc(92vh - 260px)' }}>
             {filteredItems ? (
               <div className="flex flex-wrap gap-2 py-2">
                 {filteredItems.length === 0 ? (
@@ -472,37 +506,27 @@ const QuickAddModal = ({ open, onClose, onSaved }: Props) => {
             )}
           </div>
 
-          {/* Bottom bar */}
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="bottom-action-bar"
-          >
+          {/* Bottom bar with Add + Cancel */}
+          <div className="sticky bottom-0 left-0 right-0 bg-card border-t border-border px-4 py-3 space-y-2" style={{ boxShadow: '0 -4px 20px rgba(124,58,237,0.12)' }}>
             <button
               onClick={handleSaveAll}
               disabled={saving || selected.size === 0}
-              className="w-full rounded-xl bg-primary px-4 py-4 text-base font-bold text-primary-foreground disabled:opacity-50"
+              className="w-full rounded-xl bg-primary px-4 py-3.5 text-base font-bold text-primary-foreground disabled:opacity-40 active:scale-[0.98] transition-transform"
               style={{ minHeight: '52px' }}
             >
               {saving
-                ? t.inventory.saving
-                : selected.size === 0
-                  ? (language === 'ru'
-                      ? 'Выбери продукты выше'
-                      : language === 'uk'
-                        ? 'Оберіть продукти вище'
-                        : language === 'lv'
-                          ? 'Izvēlies produktus augstāk'
-                          : 'Select products above')
-                  : (language === 'ru'
-                      ? `Сохранить — ${selected.size} продуктов`
-                      : language === 'uk'
-                        ? `Зберегти — ${selected.size} продуктів`
-                        : language === 'lv'
-                          ? `Saglabāt — ${selected.size} produktus`
-                          : `Save — ${selected.size} products`)}
+                ? (t.inventory?.saving || '...')
+                : selected.size > 0
+                  ? (BOTTOM_LABELS[language] || BOTTOM_LABELS.en).addCount.replace('{count}', String(selected.size))
+                  : (BOTTOM_LABELS[language] || BOTTOM_LABELS.en).add}
             </button>
-          </motion.div>
+            <button
+              onClick={handleClose}
+              className="w-full rounded-xl border border-border px-4 py-3 text-sm font-semibold text-muted-foreground hover:bg-muted/50 transition-colors"
+            >
+              {(BOTTOM_LABELS[language] || BOTTOM_LABELS.en).cancel}
+            </button>
+          </div>
         </motion.div>
 
         {/* Quantity Popup */}
