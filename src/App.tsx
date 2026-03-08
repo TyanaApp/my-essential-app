@@ -41,8 +41,8 @@ const App = () => {
             <Toaster />
             <Sonner />
             <OfflineBanner />
-            <CookieConsent />
             <BrowserRouter>
+              <CookieConsent />
               <AuthProvider>
                 <TrialManager />
                 <ProTrialPopup />
