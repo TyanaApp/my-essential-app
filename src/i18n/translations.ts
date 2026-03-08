@@ -522,8 +522,7 @@ export const translations = {
       subtitle: "We'll connect stores in your country — current deals right in the app",
       notify: '🔔 Notify me when ready',
       alreadyJoined: "You'll be notified",
-      joined: "Great! We'll notify you when ready ✓",
-      waitlistCount: '{count} users are waiting for this feature',
+      joined: "We'll notify you when it's ready ✓",
       profileLabel: '🏪 Store integrations',
     },
     reminders: {
