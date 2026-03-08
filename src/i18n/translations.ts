@@ -945,9 +945,9 @@ export const translations = {
       all: 'Все', mine: 'Мои', shared: 'Общие', addedBy: 'добавил(а)',
     },
     support: {
-      writeSupport: '💬 Написать в поддержку',
-      ideas: '💡 Идеи и предложения',
-      rateApp: '⭐️ Оценить приложение',
+      writeSupport: 'Написать в поддержку',
+      ideas: 'Идеи и предложения',
+      rateApp: 'Оценить приложение',
     },
     receipt: {
       title: '🧾 Добавить чек',
