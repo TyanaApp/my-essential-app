@@ -49,6 +49,40 @@ const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge:
   );
 };
 
+const WeeklyReportToggle = () => {
+  const { user } = useAuth();
+  const { t } = useTranslation();
+  const [enabled, setEnabled] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('profiles').select('weekly_report_enabled').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      setEnabled(data?.weekly_report_enabled !== false);
+      setLoaded(true);
+    });
+  }, [user]);
+
+  const toggle = async (checked: boolean) => {
+    setEnabled(checked);
+    if (user) {
+      await supabase.from('profiles').update({ weekly_report_enabled: checked } as any).eq('user_id', user.id);
+    }
+  };
+
+  if (!loaded) return null;
+
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium text-foreground">{(t.notifications as any).weeklyReport || '📊 Weekly email report'}</p>
+        <p className="text-xs text-muted-foreground">{(t.notifications as any).weeklyReportDesc || 'Every Sunday by email'}</p>
+      </div>
+      <Switch checked={enabled} onCheckedChange={toggle} />
+    </div>
+  );
+};
+
 const Profile = () => {
   const { t } = useTranslation();
   usePageTitle(t.profile.title);
