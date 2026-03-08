@@ -158,6 +158,13 @@ export const translations = {
       save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', close: 'Close',
       loading: 'Loading...', error: 'Something went wrong. Please try again.', or: 'or', back: 'Back',
       theme: 'Theme', datePlaceholder: 'dd.mm.yyyy',
+      confirm: 'Confirm', next: 'Next', done: 'Done', skip: 'Skip', update: 'Update',
+      submit: 'Submit', continue: 'Continue', generate: 'Generate', refresh: 'Refresh',
+      calculate: 'Calculate', scan: 'Scan', upload: 'Upload', log: 'Log',
+      addToDiary: 'Add to diary', today: 'Today', yesterday: 'Yesterday',
+      none: 'None', optional: 'Optional', required: 'Required',
+      success: 'Success', add: 'Add', per100g: 'per 100g',
+      selectedCount: 'Selected: {count} products', saveProducts: 'Save {count} products',
     },
     update: {
       title: '✨ New TYANA version ready!',
