@@ -60,10 +60,12 @@ const Inventory = () => {
   const { familyMode, members } = useFamily();
   const f = (t as any).family || {};
 
+  const qa = (t.inventory as any)?.quickAddFlow || {};
   const TABS: { id: Tab; label: string }[] = [
     { id: 'fridge', label: t.inventory.fridge },
     { id: 'pantry', label: t.inventory.pantry },
     { id: 'freezer', label: t.inventory.freezer },
+    { id: 'home', label: qa.homeTab || '🏡 Home' },
     { id: 'expiring', label: t.inventory.expiring },
   ];
 
