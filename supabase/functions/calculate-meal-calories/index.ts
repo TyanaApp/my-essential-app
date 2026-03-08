@@ -16,7 +16,6 @@ serve(async (req) => {
 
   try {
     const { mealDescription, quantityDescription, foodCategory, clarifications, language,
-            // Legacy support
             portionSize } = await req.json();
 
     if (!mealDescription?.trim()) {
@@ -35,8 +34,6 @@ serve(async (req) => {
     }
 
     const lang = langMap[language] || "English";
-
-    // Build quantity context
     const qtyInfo = quantityDescription || (portionSize ? `${portionSize} portion` : "medium portion");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -50,56 +47,75 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a world-class nutritionist calculator. You receive a meal description with a SPECIFIC quantity indicator and must calculate precise nutrition.
+            content: `You are a world-class nutritionist and food scientist with access to deep knowledge of:
+- Exact nutritional data for thousands of branded products
+- USDA nutritional database
+- European food composition databases
+- Branded snacks, candies, cookies from all countries (Nuts, Snickers, KitKat, Oreo, Lay's, Pringles, Milka, Raffaello, Ferrero Rocher, Bounty, Twix, M&Ms, Haribo, Chupa Chups, Laima, Staburadze)
+- Russian/Ukrainian products (Птичье молоко, Мишка косолапый, Белочка, Рот Фронт, Киевский торт, Наполеон, Оливье)
+- Restaurant dishes (McDonald's, KFC, Burger King, Pizza Hut, Hesburger) and homemade recipes
+- National dishes from Russia, Ukraine, Latvia, Europe (борщ, солянка, плов, вареники, пельмени, сырники, блины, драники, окрошка, серый горох, путра, скландрауси, рижский хлеб)
 
-YOU MUST respond entirely in ${lang}. No exceptions.
+Your job is to give the MOST ACCURATE calorie count possible.
+For branded products use exact nutritional label data.
+For homemade dishes calculate from ingredients.
+Never guess randomly. Always reason step by step.
 
-QUANTITY INTERPRETATION RULES:
-- "1 piece" of a named candy bar (Snickers, Nuts, KitKat, Mars, Twix, Bounty) → look up the EXACT standard weight and calories for that bar
-- "handful ~30g" of nuts → use 30g as base weight
-- "cup ~200ml" → 200ml of the described drink
-- "glass ~250ml" → 250ml
-- "small piece" / "medium piece" / "large piece" → estimate weight based on food type (cake slice small=80g, medium=120g, large=180g; pizza slice small=100g, medium=150g, large=200g)
-- "half bowl ~150g" / "normal bowl ~300g" / "full bowl ~400g" / "big bowl ~500g" → use those gram estimates for soups, porridge, salad, rice
-- "1 small fruit" / "1 medium fruit" / "1 large fruit" → apple small=120g, medium=180g, large=230g; banana small=90g, medium=120g, large=150g; etc.
-- "small handful ~15g" / "handful ~80g" for berries/grapes → use those gram estimates
-- "bowl ~150g" / "big bowl ~250g" for berries → use those
-- "half pack" / "1 pack" / "2 packs" → use standard package sizes (yogurt=125g, cottage cheese=200g, kefir=500ml, sour cream=200g)
-- "small portion" / "normal portion" / "large portion" / "very large portion" → estimate based on typical serving sizes
-- If quantity includes "g" or "kg" → use exact weight provided
-- If quantity includes number + "pieces" → multiply single item nutrition
-
-Be PRECISE with numbers. Use real nutritional data.
-
-Return ONLY valid JSON, no markdown, no code fences, no extra text.`,
+Respond entirely in ${lang}. Zero asterisks, zero markdown formatting, zero bullet symbols.`,
           },
           {
             role: "user",
-            content: `Meal: "${mealDescription}"
+            content: `Calculate exact nutrition for: "${mealDescription}"
 Quantity: ${qtyInfo}
 Food category hint: ${foodCategory || "unknown"}
 Clarifications: ${clarifications || "none"}
 
-Calculate nutrition step by step:
-1. Identify the exact food item(s)
-2. Determine weight in grams based on the quantity description
-3. Calculate macros for that exact weight
+Think step by step:
 
-Return ONLY this JSON:
+STEP 1 - IDENTIFY:
+What exactly is this product/dish?
+Is it a branded product, homemade dish, simple ingredient, or restaurant dish?
+
+STEP 2 - RESEARCH:
+For BRANDED PRODUCTS: Look up exact nutritional label data. Example: Nuts chocolate bar (42g) = 221 kcal, P:4.4g, F:13.2g, C:21.8g, Sugar:18.1g
+For HOMEMADE DISHES: Break down into individual ingredients with weights and calories for each.
+For SIMPLE INGREDIENTS: Use exact database values per 100g, scale to quantity.
+
+STEP 3 - CALCULATE for the exact quantity given.
+
+STEP 4 - CONFIDENCE:
+high = branded product with known label or simple ingredient with exact data
+medium = homemade dish or restaurant approximation
+low = very vague description
+
+Return ONLY this JSON (no text outside JSON, no markdown):
 {
-  "meal_name": "Localized meal name with quantity (e.g. 'Snickers — 1 bar (50g)' or 'Nuts — handful (30g)')",
-  "portion_description": "Quantity description with estimated grams, e.g. '1 piece (50g)' or 'handful (~30g)' or 'normal bowl (~300g)'",
-  "total_calories": 250,
-  "protein": 3,
-  "fat": 12,
-  "carbs": 33,
+  "meal_name": "Localized name with quantity info",
+  "identified_as": "branded_product | homemade_dish | simple_ingredient | restaurant_dish",
+  "quantity_used": "1 piece = 42g",
+  "portion_description": "1 piece (42g)",
+  "total_calories": 221,
+  "protein": 4.4,
+  "fat": 13.2,
+  "carbs": 21.8,
+  "sugar": 18.1,
+  "fiber": 0.8,
+  "breakdown": [
+    {"ingredient": "Ingredient name", "amount": "15g", "calories": 79},
+    {"ingredient": "Ingredient name", "amount": "8g", "calories": 32}
+  ],
+  "data_source": "official_label | recipe_calculation | database_lookup | estimation",
   "confidence": "high",
-  "note": "Brief note about calculation"
+  "note": "Brief note about the calculation"
 }
-confidence: "high" = exact known product or clear quantity, "medium" = reasonable estimate, "low" = very vague input.`,
+
+The breakdown array should have 2-6 items showing the main components.
+For branded products: show main ingredient components.
+For homemade dishes: show individual ingredients.
+For simple ingredients: can be a single item or empty array.`,
           },
         ],
-        max_tokens: 400,
+        max_tokens: 600,
       }),
     });
 
@@ -136,6 +152,11 @@ confidence: "high" = exact known product or clear quantity, "medium" = reasonabl
       console.error("Failed to parse AI response:", data.choices?.[0]?.message?.content);
       result = { error: true };
     }
+
+    // Clean any accidental asterisks
+    if (result.meal_name) result.meal_name = result.meal_name.replace(/\*+/g, '');
+    if (result.note) result.note = result.note.replace(/\*+/g, '');
+    if (result.portion_description) result.portion_description = result.portion_description.replace(/\*+/g, '');
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2, ArrowLeft } from 'lucide-react';
+import { X, Loader2, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -17,16 +17,51 @@ interface SmartMealEntryModalProps {
   onSaved: (entry: any) => void;
 }
 
+interface BreakdownItem {
+  ingredient: string;
+  amount: string;
+  calories: number;
+}
+
 interface MealResult {
   meal_name: string;
+  identified_as?: string;
+  quantity_used?: string;
   portion_description: string;
   total_calories: number;
   protein: number;
   fat: number;
   carbs: number;
+  sugar?: number;
+  fiber?: number;
+  breakdown?: BreakdownItem[];
+  data_source?: string;
   confidence: 'high' | 'medium' | 'low';
   note: string;
 }
+
+// Cache helpers
+const CACHE_PREFIX = 'calories_cache_';
+const CACHE_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+const getCachedResult = (key: string): MealResult | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + key);
+    if (!raw) return null;
+    const { result, timestamp } = JSON.parse(raw);
+    if (Date.now() - timestamp > CACHE_EXPIRY_MS) {
+      localStorage.removeItem(CACHE_PREFIX + key);
+      return null;
+    }
+    return result;
+  } catch { return null; }
+};
+
+const setCachedResult = (key: string, result: MealResult) => {
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ result, timestamp: Date.now() }));
+  } catch { /* storage full, ignore */ }
+};
 
 type FoodCategory = 'countable' | 'handful' | 'drink' | 'sliced' | 'bowl' | 'packaged' | 'fruit' | 'berries' | 'mixed';
 
@@ -258,6 +293,7 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
   const [mixedMode, setMixedMode] = useState<'count' | 'weight' | 'portion' | null>(null);
   const [mixedValue, setMixedValue] = useState('');
   const [mixedUnit, setMixedUnit] = useState<'g' | 'kg'>('g');
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   // Load favorite recipes and recent meals
   useEffect(() => {
@@ -365,6 +401,7 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     setMixedValue('');
     setMixedUnit('g');
     setFoodCategory('mixed');
+    setShowBreakdown(false);
   };
 
   const handleClose = () => { reset(); onClose(); };
@@ -410,9 +447,19 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     const isFood = await validateFood(mealText.trim());
     if (!isFood) return;
 
+    const qtyDesc = getQuantityDescription();
+    
+    // Check cache first
+    const cacheKey = (mealText.trim() + '|' + qtyDesc + '|' + language).toLowerCase().replace(/\s+/g, '_');
+    const cached = getCachedResult(cacheKey);
+    if (cached) {
+      setResult(cached);
+      setStep('result');
+      return;
+    }
+
     setStep('analyzing');
     try {
-      const qtyDesc = getQuantityDescription();
       const { data, error } = await supabase.functions.invoke('calculate-meal-calories', {
         body: {
           mealDescription: mealText.trim(),
@@ -429,7 +476,9 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
         return;
       }
 
-      setResult(data as MealResult);
+      const resultData = data as MealResult;
+      setResult(resultData);
+      setCachedResult(cacheKey, resultData);
       setStep('result');
     } catch {
       toast.error(sm.calcFailed || 'Could not calculate. Try again.');
@@ -464,10 +513,28 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     }
   };
 
+  const getDataSourceLabel = (source: string | undefined) => {
+    const labels: Record<string, Record<string, string>> = {
+      en: { official_label: 'Official label', recipe_calculation: 'Recipe calculation', database_lookup: 'Database lookup', estimation: 'Estimated' },
+      ru: { official_label: 'Официальная этикетка', recipe_calculation: 'Расчёт по рецепту', database_lookup: 'База данных', estimation: 'Оценка' },
+      uk: { official_label: 'Офіційне маркування', recipe_calculation: 'Розрахунок за рецептом', database_lookup: 'База даних', estimation: 'Оцінка' },
+      lv: { official_label: 'Oficiālā etiķete', recipe_calculation: 'Receptes aprēķins', database_lookup: 'Datubāze', estimation: 'Novērtējums' },
+    };
+    const l = labels[language] || labels.en;
+    return l[source || 'estimation'] || l.estimation;
+  };
+
   const confidenceBadge = (conf: string) => {
-    if (conf === 'high') return { emoji: '✅', label: sm.confHigh || 'High accuracy', color: '#059669' };
-    if (conf === 'medium') return { emoji: '⚠️', label: sm.confMedium || 'Estimated', color: '#EA580C' };
-    return { emoji: '❓', label: sm.confLow || 'Approximate', color: '#DC2626' };
+    const dsLabels: Record<string, Record<string, string>> = {
+      en: { high: 'High accuracy', medium: 'Approximate', low: 'Estimated' },
+      ru: { high: 'Высокая точность', medium: 'Приблизительно', low: 'Оценка' },
+      uk: { high: 'Висока точність', medium: 'Приблизно', low: 'Оцінка' },
+      lv: { high: 'Augsta precizitāte', medium: 'Aptuveni', low: 'Novērtējums' },
+    };
+    const l = dsLabels[language] || dsLabels.en;
+    if (conf === 'high') return { emoji: '✅', label: l.high, color: '#059669' };
+    if (conf === 'medium') return { emoji: '⚠️', label: l.medium, color: '#EA580C' };
+    return { emoji: '❓', label: l.low, color: '#DC2626' };
   };
 
   const toggleClarification = (value: string) => {
@@ -805,10 +872,13 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
           {/* RESULT STEP */}
           {step === 'result' && result && (
             <div className="space-y-4">
-              {/* Meal name & portion */}
+              {/* Meal name & data source */}
               <div className="text-center">
                 <h3 className="text-lg font-bold text-foreground">🍽 {result.meal_name}</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">{result.portion_description}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {result.quantity_used || result.portion_description}
+                  {result.data_source && ` • ${getDataSourceLabel(result.data_source)}`}
+                </p>
               </div>
 
               {/* Big calorie number */}
@@ -817,13 +887,15 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 <span className="text-lg ml-1 text-primary">{(t as any).diary?.kcalUnit || 'kcal'}</span>
               </div>
 
-              {/* Macro bar */}
-              <div className="flex justify-center gap-6">
+              {/* Macro bar - including sugar if present */}
+              <div className="flex justify-center gap-4 flex-wrap">
                 {[
-                  { label: (t as any).dashboard?.protein || 'Protein', value: result.protein, color: '#3B82F6' },
-                  { label: (t as any).dashboard?.fat || 'Fat', value: result.fat, color: '#F59E0B' },
-                  { label: (t as any).dashboard?.carbs || 'Carbs', value: result.carbs, color: '#10B981' },
-                ].map(m => (
+                  { label: (t as any).dashboard?.protein || 'Protein', value: result.protein, color: '#3B82F6', show: true },
+                  { label: (t as any).dashboard?.fat || 'Fat', value: result.fat, color: '#F59E0B', show: true },
+                  { label: (t as any).dashboard?.carbs || 'Carbs', value: result.carbs, color: '#10B981', show: true },
+                  { label: language === 'ru' ? 'Сахар' : language === 'uk' ? 'Цукор' : language === 'lv' ? 'Cukurs' : 'Sugar', value: result.sugar, color: '#EC4899', show: typeof result.sugar === 'number' && result.sugar > 0 },
+                  { label: language === 'ru' ? 'Клетч.' : language === 'uk' ? 'Клітк.' : language === 'lv' ? 'Šķiedr.' : 'Fiber', value: result.fiber, color: '#8B5CF6', show: typeof result.fiber === 'number' && result.fiber > 0 },
+                ].filter(m => m.show).map(m => (
                   <div key={m.label} className="text-center">
                     <div className="text-lg font-bold" style={{ color: m.color }}>{m.value}g</div>
                     <div className="text-[10px] font-medium text-muted-foreground">{m.label}</div>
@@ -831,7 +903,19 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 ))}
               </div>
 
-              {/* Confidence badge */}
+              {/* Sugar warning */}
+              {typeof result.sugar === 'number' && result.sugar > 15 && (
+                <div className="flex justify-center">
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-destructive/10 text-destructive">
+                    ⚠️ {language === 'ru' ? `Высокое содержание сахара: ${result.sugar}г` :
+                         language === 'uk' ? `Високий вміст цукру: ${result.sugar}г` :
+                         language === 'lv' ? `Augsts cukura saturs: ${result.sugar}g` :
+                         `High sugar content: ${result.sugar}g`}
+                  </span>
+                </div>
+              )}
+
+              {/* Confidence + data source badge */}
               {(() => {
                 const badge = confidenceBadge(result.confidence);
                 return (
@@ -842,6 +926,38 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                   </div>
                 );
               })()}
+
+              {/* Expandable breakdown */}
+              {result.breakdown && result.breakdown.length > 0 && (
+                <div className="border border-border rounded-xl overflow-hidden">
+                  <button
+                    onClick={() => setShowBreakdown(!showBreakdown)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted/30 transition-colors"
+                  >
+                    <span>📊 {language === 'ru' ? 'Состав' : language === 'uk' ? 'Склад' : language === 'lv' ? 'Sastāvs' : 'Breakdown'}</span>
+                    {showBreakdown ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                  </button>
+                  <AnimatePresence>
+                    {showBreakdown && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-4 pb-3 space-y-1.5 border-t border-border pt-2">
+                          {result.breakdown.map((item, i) => (
+                            <div key={i} className="flex items-center justify-between text-xs">
+                              <span className="text-muted-foreground">{item.ingredient} <span className="opacity-60">{item.amount}</span></span>
+                              <span className="font-medium text-foreground tabular-nums">{item.calories} {(t as any).diary?.kcalUnit || 'kcal'}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
 
               {/* Approximate note */}
               <p className="text-xs text-center text-muted-foreground italic">~{sm.approximate || 'approximate'}</p>
