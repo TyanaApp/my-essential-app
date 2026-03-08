@@ -1840,6 +1840,13 @@ export const translations = {
       save: 'Зберегти', cancel: 'Скасувати', delete: 'Видалити', edit: 'Редагувати', close: 'Закрити',
       loading: 'Завантаження...', error: 'Щось пішло не так. Спробуйте знову.', or: 'або', back: 'Назад',
       theme: 'Тема', datePlaceholder: 'дд.мм.рррр',
+      confirm: 'Підтвердити', next: 'Далі', done: 'Готово', skip: 'Пропустити', update: 'Оновити',
+      submit: 'Надіслати', continue: 'Продовжити', generate: 'Створити', refresh: 'Оновити',
+      calculate: 'Розрахувати', scan: 'Сканувати', upload: 'Завантажити', log: 'Записати',
+      addToDiary: 'У щоденник', today: 'Сьогодні', yesterday: 'Вчора',
+      none: 'Немає', optional: "Необов'язково", required: "Обов'язково",
+      success: 'Успішно', add: 'Додати', per100g: 'на 100г',
+      selectedCount: 'Обрано: {count} продуктів', saveProducts: 'Зберегти {count} продуктів',
     },
     profile: {
       title: 'Профіль', editProfile: 'Редагувати профіль', accountSettings: 'Налаштування акаунту',
