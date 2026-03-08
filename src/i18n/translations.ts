@@ -34,9 +34,10 @@ export const translations = {
       quickAddFlow: {
         title: 'What do you have at home?', subtitle: 'Just check items — storage location doesn\'t matter',
         quickAddBtn: '⚡️ Quick Add', searchPlaceholder: 'Start typing or pick from list...',
-        selectedCount: 'Selected: {count} items', addAll: 'Add all', done: 'Done ✓',
+        selectedCount: 'Selected: {count} items', addAll: 'Add all', addAllCount: 'Add all {count} items', done: 'Done ✓',
         adjustQty: 'Adjust quantities', backToSelect: '← Back', addedSuccess: '{count} items added',
         noResults: 'Nothing found', homeTab: '🏡 Home',
+        howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel',
       },
       quickAddCategories: {
         dairy: 'Eggs & Dairy', meat: 'Meat & Fish', vegetables: 'Vegetables', fruits: 'Fruits',
@@ -611,9 +612,10 @@ export const translations = {
       quickAddFlow: {
         title: 'Что есть дома?', subtitle: 'Просто отмечай — место хранения не важно',
         quickAddBtn: '⚡️ Быстро добавить', searchPlaceholder: 'Начни писать или выбери из списка...',
-        selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', done: 'Готово ✓',
+        selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', addAllCount: 'Добавить все {count} продуктов', done: 'Готово ✓',
         adjustQty: 'Уточни количество', backToSelect: '← Назад', addedSuccess: '{count} продуктов добавлено',
         noResults: 'Ничего не найдено', homeTab: '🏡 Дома',
+        howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена',
       },
       quickAddCategories: {
         dairy: 'Яйца и молочное', meat: 'Мясо и рыба', vegetables: 'Овощи', fruits: 'Фрукты',
@@ -1111,9 +1113,10 @@ export const translations = {
       quickAddFlow: {
         title: 'Kas ir mājās?', subtitle: 'Vienkārši atzīmē — glabāšanas vieta nav svarīga',
         quickAddBtn: '⚡️ Ātrā pievienošana', searchPlaceholder: 'Sāc rakstīt vai izvēlies no saraksta...',
-        selectedCount: 'Izvēlēts: {count} produkti', addAll: 'Pievienot visu', done: 'Gatavs ✓',
+        selectedCount: 'Izvēlēts: {count} produkti', addAll: 'Pievienot visu', addAllCount: 'Pievienot visus {count} produktus', done: 'Gatavs ✓',
         adjustQty: 'Pielāgo daudzumu', backToSelect: '← Atpakaļ', addedSuccess: '{count} produkti pievienoti',
         noResults: 'Nekas nav atrasts', homeTab: '🏡 Mājās',
+        howMuch: 'Cik daudz?', custom: 'Cits', enterQty: 'Ievadiet daudzumu', addItem: 'Pievienot', cancelBtn: 'Atcelt',
       },
       quickAddCategories: {
         dairy: 'Olas un piena produkti', meat: 'Gaļa un zivis', vegetables: 'Dārzeņi', fruits: 'Augļi',
@@ -1590,9 +1593,10 @@ export const translations = {
       quickAddFlow: {
         title: 'Що є вдома?', subtitle: 'Просто відмічай — місце зберігання не важливо',
         quickAddBtn: '⚡️ Швидке додавання', searchPlaceholder: 'Почни писати або обери зі списку...',
-        selectedCount: 'Вибрано: {count} продуктів', addAll: 'Додати все', done: 'Готово ✓',
+        selectedCount: 'Вибрано: {count} продуктів', addAll: 'Додати все', addAllCount: 'Додати всі {count} продуктів', done: 'Готово ✓',
         adjustQty: 'Уточни кількість', backToSelect: '← Назад', addedSuccess: '{count} продуктів додано',
         noResults: 'Нічого не знайдено', homeTab: '🏡 Вдома',
+        howMuch: 'Скільки?', custom: 'Своє', enterQty: 'Введіть кількість', addItem: 'Додати', cancelBtn: 'Скасувати',
       },
       quickAddCategories: {
         dairy: 'Яйця і молочне', meat: 'М\'ясо і риба', vegetables: 'Овочі', fruits: 'Фрукти',
