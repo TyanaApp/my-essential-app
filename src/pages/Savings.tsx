@@ -45,7 +45,7 @@ const Savings = () => {
     load();
   }, [user]);
 
-  const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
+  const cardStyle = { borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 
   return (
     <div className="min-h-screen p-6 pb-24">
