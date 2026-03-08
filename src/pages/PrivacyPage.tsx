@@ -6,12 +6,12 @@ import { useTranslation } from '@/hooks/useTranslation';
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-10">
     <h2
-      className="text-lg font-bold mb-4 pl-4"
-      style={{ borderLeft: '4px solid #7C3AED', color: '#1E1B4B' }}
+      style={{ borderLeft: '4px solid #7C3AED' }}
+      className="text-lg font-bold mb-4 pl-4 text-foreground"
     >
       {title}
     </h2>
-    <div className="text-base leading-[1.8] space-y-3" style={{ color: '#374151' }}>
+    <div className="text-base leading-[1.8] space-y-3 text-foreground/80">
       {children}
     </div>
   </div>
@@ -282,7 +282,7 @@ const PrivacyPage = () => {
   const c = content[language] || content.en;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="max-w-[680px] mx-auto px-6 py-12">
         <button
           onClick={() => navigate(-1)}
@@ -295,7 +295,7 @@ const PrivacyPage = () => {
 
         <div className="text-center mb-12">
           <h1 className="font-tyana text-2xl mb-2" style={{ color: '#7C3AED' }}>TYANA</h1>
-          <h2 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>{c.title}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>
 

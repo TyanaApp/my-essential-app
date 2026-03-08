@@ -107,14 +107,14 @@ const NutritionAnalysis = () => {
         <button onClick={() => navigate(-1)} className="p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
           <ArrowLeft className="w-5 h-5" style={{ color: '#7C3AED' }} />
         </button>
-        <h1 className="text-xl font-bold" style={{ color: '#1E1B4B' }}>
+        <h1 className="text-xl font-bold text-foreground">
           🧠 {tr.fullAnalysis || 'Nutrition Analysis'}
         </h1>
       </div>
 
       {/* Macro progress bars */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)' }}>
-        <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="bg-card rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)' }}>
+        <h3 className="text-sm font-bold mb-3 text-foreground">
           📊 {tr.todayMacros || "Today's macros"}
         </h3>
         <div className="space-y-3">
@@ -146,7 +146,7 @@ const NutritionAnalysis = () => {
       </motion.div>
 
       {/* AI Analysis */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)', borderLeft: '4px solid #7C3AED' }}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)', borderLeft: '4px solid #7C3AED' }}>
         {loading ? (
           <div className="flex flex-col items-center py-8 gap-3">
             <div className="w-7 h-7 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
@@ -159,14 +159,14 @@ const NutritionAnalysis = () => {
               if (!trimmed) return null;
               const isHeader = /^(📊|✅|⚠️|🍽|📈)/.test(trimmed);
               if (isHeader) {
-                return (
-                  <h3 key={i} className="text-base font-bold mt-3" style={{ color: '#1E1B4B' }}>
+                  return (
+                    <h3 key={i} className="text-base font-bold mt-3 text-foreground">
                     {trimmed}
                   </h3>
                 );
               }
               return (
-                <p key={i} className="text-sm leading-relaxed" style={{ color: '#374151' }}>
+                <p key={i} className="text-sm leading-relaxed text-foreground/80">
                   {trimmed}
                 </p>
               );

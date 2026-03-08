@@ -5,8 +5,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-10">
-    <h2 className="text-lg font-bold mb-4 pl-4" style={{ borderLeft: '4px solid #7C3AED', color: '#1E1B4B' }}>{title}</h2>
-    <div className="text-base leading-[1.8] space-y-3" style={{ color: '#374151' }}>{children}</div>
+    <h2 className="text-lg font-bold mb-4 pl-4 text-foreground" style={{ borderLeft: '4px solid #7C3AED' }}>{title}</h2>
+    <div className="text-base leading-[1.8] space-y-3 text-foreground/80">{children}</div>
   </div>
 );
 
@@ -96,7 +96,7 @@ const CookiesPage = () => {
   const c = content[language] || content.en;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="max-w-[680px] mx-auto px-6 py-12">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm mb-8 hover:opacity-70 transition-opacity" style={{ color: '#6B7280' }}>
           <ArrowLeft className="w-4 h-4" />{t.common.back}
@@ -104,7 +104,7 @@ const CookiesPage = () => {
 
         <div className="text-center mb-12">
           <h1 className="font-tyana text-2xl mb-2" style={{ color: '#7C3AED' }}>TYANA</h1>
-          <h2 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>{c.title}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>
 

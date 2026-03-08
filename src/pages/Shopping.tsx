@@ -25,7 +25,7 @@ interface LowStockItem { name: string; quantity: number | null; unit: string | n
 const CATEGORY_IDS = ['meat', 'dairy', 'produce', 'dry_goods', 'other'] as const;
 const CATEGORY_EMOJIS: Record<string, string> = { meat: '🥩', dairy: '🥛', produce: '🥬', dry_goods: '🌾', other: '🧴' };
 
-const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
+const cardStyle = { borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 
 const Shopping = () => {
   const { user } = useAuth();
@@ -269,22 +269,21 @@ const Shopping = () => {
         <h1 className="text-2xl font-bold text-foreground">{t.shopping.title}</h1>
       </motion.div>
 
-      <motion.div {...fadeUp(1)} className="flex items-center gap-2 mb-4">
+      <motion.div {...fadeUp(1)} className="flex flex-wrap items-center gap-2 mb-4">
         <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: '#7C3AED' }}>
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
         <button onClick={handleVoiceInput}
           className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] transition-all"
-          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'white', color: isListening ? '#7C3AED' : '#6B7280' }}>
+          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}>
           🎤 {isListening ? t.shopping.listening : ''}
         </button>
-        <div className="flex-1 flex items-center gap-1.5">
-          <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#6B7280' }}>{t.shopping.budget}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">{t.shopping.budget}</span>
           <div className="flex items-center gap-1">
-            <span className="text-xs font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+            <span className="text-xs font-medium text-primary">{getCurrencySymbol(currency)}</span>
             <input type="number" value={budget || ''} onChange={(e) => setBudget(Number(e.target.value))} placeholder="0"
-              className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-[#7C3AED]"
-              style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+              className="w-20 h-10 px-2 rounded-xl border text-sm text-right outline-none focus:border-primary bg-secondary border-border" />
           </div>
         </div>
       </motion.div>
@@ -305,7 +304,7 @@ const Shopping = () => {
         <motion.div {...fadeUp(2)} className="mb-5 p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}>
           <AlertTriangle className="w-5 h-5 shrink-0" style={{ color: '#EA580C' }} />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
+            <p className="text-sm font-semibold text-foreground">{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
             <p className="text-xs" style={{ color: '#6B7280' }}>{suggestions.slice(0, 3).map((s) => s.name).join(', ')}{suggestions.length > 3 ? '...' : ''}</p>
           </div>
           <button onClick={handleAddAllSuggestions} className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold text-white" style={{ backgroundColor: '#EA580C' }}>{t.shopping.addAll}</button>
@@ -320,8 +319,8 @@ const Shopping = () => {
       ) : activeItems.length === 0 && purchasedItems.length === 0 ? (
         <motion.div {...fadeUp(3)} className="text-center py-16">
           <div className="text-5xl mb-4">🛒</div>
-          <p className="text-base font-medium mb-1" style={{ color: '#1E1B4B' }}>{t.shopping.empty}</p>
-          <p className="text-sm" style={{ color: '#6B7280' }}>{t.shopping.emptyHint}</p>
+          <p className="text-base font-medium mb-1 text-foreground">{t.shopping.empty}</p>
+          <p className="text-sm text-muted-foreground">{t.shopping.emptyHint}</p>
         </motion.div>
       ) : (
         <div className="space-y-4">
@@ -329,8 +328,8 @@ const Shopping = () => {
             const catItems = groupedActive[cat.id];
             if (!catItems || catItems.length === 0) return null;
             return (
-              <motion.div key={cat.id} {...fadeUp(3)} style={cardStyle} className="p-4">
-                <h3 className="text-sm font-bold mb-3 flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+              <motion.div key={cat.id} {...fadeUp(3)} style={cardStyle} className="p-4 bg-card">
+                <h3 className="text-sm font-bold mb-3 flex items-center gap-1.5 text-foreground">
                   <span>{cat.emoji}</span> {cat.label}
                 </h3>
                 <div className="space-y-1">
@@ -339,7 +338,7 @@ const Shopping = () => {
                       <motion.div key={item.id} layout initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -60 }}
                         className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-[#F5F3FF] transition-colors">
                         <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0" style={{ borderColor: '#DDD6FE' }} />
-                        <span className="flex-1 text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{item.name}</span>
+                        <span className="flex-1 text-sm font-medium truncate text-foreground">{item.name}</span>
                         <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
                         {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
                         <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-[#EDE9FE]"><Pencil className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} /></button>

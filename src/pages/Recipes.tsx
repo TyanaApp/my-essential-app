@@ -173,14 +173,14 @@ const Recipes = () => {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl overflow-hidden cursor-pointer"
+        className="bg-card rounded-2xl overflow-hidden cursor-pointer"
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
         <RecipePhoto title={n.title} size="sm" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
+            <h3 className="text-base font-bold leading-tight text-foreground">{n.title}</h3>
             <div className="flex items-center gap-0.5 shrink-0">
               {isSaved && savedId && (
                 <button onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(savedId); }} className="p-1">
@@ -229,7 +229,7 @@ const Recipes = () => {
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
               <div className="rounded-2xl p-4 space-y-4" style={{ backgroundColor: '#F5F3FF', border: '1px solid #DDD6FE' }}>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.cookingFor}</label>
+                  <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.cookingFor}</label>
                   <div className="flex gap-2">
                     {SERVING_OPTIONS.map((n) => (
                       <button key={n} onClick={() => setCookingFor(n)}
@@ -241,7 +241,7 @@ const Recipes = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.mealType}</label>
+                  <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.mealType}</label>
                   <div className="flex flex-wrap gap-2">
                     {MEAL_TYPE_KEYS.map((key) => (
                       <button key={key} onClick={() => toggleMeal(key)}
@@ -253,7 +253,7 @@ const Recipes = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold mb-1.5 block" style={{ color: '#1E1B4B' }}>{t.recipes.time}</label>
+                  <label className="text-xs font-semibold mb-1.5 block text-foreground">{t.recipes.time}</label>
                   <div className="flex flex-wrap gap-2">
                     {TIME_OPTION_KEYS.map((key, i) => (
                       <button key={key} onClick={() => setTimeAvailable(TIME_VALUES[i])}
@@ -265,7 +265,7 @@ const Recipes = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold" style={{ color: '#1E1B4B' }}>{t.recipes.onlyHome}</span>
+                  <span className="text-xs font-semibold text-foreground">{t.recipes.onlyHome}</span>
                   <button onClick={() => setUseOnlyInventory(!useOnlyInventory)}
                     className="w-11 h-6 rounded-full relative transition-colors"
                     style={{ backgroundColor: useOnlyInventory ? '#7C3AED' : '#D1D5DB' }}>
@@ -276,8 +276,8 @@ const Recipes = () => {
                 {!loading && inventory.length === 0 ? (
                   <div className="text-center py-4 rounded-xl" style={{ backgroundColor: 'white' }}>
                     <div className="text-4xl mb-2">🧊</div>
-                    <p className="text-sm font-bold mb-1" style={{ color: '#1E1B4B' }}>{t.recipes.noInventory}</p>
-                    <p className="text-xs mb-3" style={{ color: '#6B7280' }}>{t.recipes.noInventoryHint}</p>
+                    <p className="text-sm font-bold mb-1 text-foreground">{t.recipes.noInventory}</p>
+                    <p className="text-xs mb-3 text-muted-foreground">{t.recipes.noInventoryHint}</p>
                     <button onClick={() => navigate('/inventory')} className="px-4 py-2 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: '#7C3AED' }}>
                       {t.recipes.goToInventory}
                     </button>
@@ -302,7 +302,7 @@ const Recipes = () => {
       {/* Generated recipes */}
       {generatedRecipes.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>{t.recipes.justGenerated}</h2>
+          <h2 className="text-sm font-bold mb-3 text-foreground">{t.recipes.justGenerated}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {generatedRecipes.map((r, idx) => (<RecipeCard key={`gen-${idx}`} recipe={r} />))}
           </div>
@@ -316,7 +316,7 @@ const Recipes = () => {
         </div>
       ) : savedRecipes.length > 0 ? (
         <div>
-          <h2 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>{t.recipes.savedRecipes}</h2>
+          <h2 className="text-sm font-bold mb-3 text-foreground">{t.recipes.savedRecipes}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {savedRecipes.map((r) => (<RecipeCard key={r.id} recipe={r} isSaved savedId={r.id} isFav={r.is_favorite} />))}
           </div>
@@ -324,8 +324,8 @@ const Recipes = () => {
       ) : generatedRecipes.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">🍳</div>
-          <p className="text-base font-medium mb-1" style={{ color: '#1E1B4B' }}>{t.recipes.noRecipes}</p>
-          <p className="text-sm" style={{ color: '#6B7280' }}>{t.recipes.noRecipesHint}</p>
+          <p className="text-base font-medium mb-1 text-foreground">{t.recipes.noRecipes}</p>
+          <p className="text-sm text-muted-foreground">{t.recipes.noRecipesHint}</p>
         </div>
       ) : null}
 

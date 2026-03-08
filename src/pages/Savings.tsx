@@ -45,7 +45,7 @@ const Savings = () => {
     load();
   }, [user]);
 
-  const cardStyle = { backgroundColor: 'white', borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
+  const cardStyle = { borderRadius: '20px', boxShadow: '0 2px 16px rgba(124,58,237,0.08)' };
 
   return (
     <div className="min-h-screen p-6 pb-24">
@@ -58,8 +58,8 @@ const Savings = () => {
       </button>
 
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-        <h1 className="text-2xl font-bold mb-2" style={{ color: '#1E1B4B' }}>{t.savings.title}</h1>
-        <p className="text-sm mb-6" style={{ color: '#9CA3AF' }}>{t.savings.subtitle}</p>
+        <h1 className="text-2xl font-bold mb-2 text-foreground">{t.savings.title}</h1>
+        <p className="text-sm mb-6 text-muted-foreground">{t.savings.subtitle}</p>
 
         {loading ? (
           <div className="flex justify-center py-16">
@@ -68,10 +68,10 @@ const Savings = () => {
         ) : (
           <div className="space-y-4">
             {/* Spent card */}
-            <div style={cardStyle} className="p-5">
+            <div style={cardStyle} className="p-5 bg-card">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">💸</span>
-                <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
+                <h3 className="text-sm font-bold text-foreground">
                   {t.savings.spent}
                 </h3>
               </div>
@@ -82,10 +82,10 @@ const Savings = () => {
             </div>
 
             {/* Saved card */}
-            <div style={cardStyle} className="p-5">
+            <div style={cardStyle} className="p-5 bg-card">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">💚</span>
-                <h3 className="text-sm font-bold" style={{ color: '#1E1B4B' }}>
+                <h3 className="text-sm font-bold text-foreground">
                   {t.savings.saved}
                 </h3>
               </div>
@@ -96,8 +96,8 @@ const Savings = () => {
             </div>
 
             {/* History */}
-            <div style={cardStyle} className="p-5">
-              <h3 className="text-sm font-bold mb-3" style={{ color: '#1E1B4B' }}>
+            <div style={cardStyle} className="p-5 bg-card">
+              <h3 className="text-sm font-bold mb-3 text-foreground">
                 {t.savings.history}
               </h3>
               {entries.length === 0 ? (
@@ -111,7 +111,7 @@ const Savings = () => {
                       <div className="flex items-center gap-2">
                         <span>{e.type === 'purchase' ? '💸' : '💚'}</span>
                         <div>
-                          <p className="text-xs font-medium" style={{ color: '#1E1B4B' }}>{e.description || e.type}</p>
+                          <p className="text-xs font-medium text-foreground">{e.description || e.type}</p>
                           <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
                             {new Date(e.created_at).toLocaleDateString()}
                           </p>
