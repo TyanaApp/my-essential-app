@@ -177,12 +177,7 @@ const Recipes = () => {
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
-        <img
-          src={`https://source.unsplash.com/400x300/?${encodeURIComponent(n.title + ' food')}`}
-          alt={n.title}
-          className="h-40 w-full object-cover"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-        />
+        <RecipePhoto title={n.title} size="sm" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight" style={{ color: '#1E1B4B' }}>{n.title}</h3>
