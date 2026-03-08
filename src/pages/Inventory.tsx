@@ -154,34 +154,6 @@ const Inventory = () => {
     toast.success(t.inventory.deleted);
   };
 
-  const handleAddToShopping = async (item: InventoryItem) => {
-    if (!user) return;
-    await supabase.from('shopping_items').insert({
-      user_id: user.id,
-      name: item.name,
-      quantity: item.quantity,
-      unit: item.unit,
-      category: item.category,
-    } as any);
-    toast.success(`${item.name} ${t.inventory.addedToShopping}`);
-  };
-
-  const handleToggleOpened = async (item: InventoryItem) => {
-    const newOpened = !item.is_opened;
-    await supabase
-      .from('inventory_items')
-      .update({
-        is_opened: newOpened,
-        opened_at: newOpened ? new Date().toISOString() : null,
-      } as any)
-      .eq('id', item.id);
-    setItems((prev) =>
-      prev.map((i) =>
-        i.id === item.id ? { ...i, is_opened: newOpened, opened_at: newOpened ? new Date().toISOString() : null } : i
-      )
-    );
-    toast.success(newOpened ? t.inventory.markedOpened : t.inventory.markedSealed);
-  };
 
 
   const openAdd = () => { setEditItem(null); setModalOpen(true); };
