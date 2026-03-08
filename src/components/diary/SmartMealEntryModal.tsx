@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2, ArrowLeft } from 'lucide-react';
+import { X, Loader2, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -17,16 +17,51 @@ interface SmartMealEntryModalProps {
   onSaved: (entry: any) => void;
 }
 
+interface BreakdownItem {
+  ingredient: string;
+  amount: string;
+  calories: number;
+}
+
 interface MealResult {
   meal_name: string;
+  identified_as?: string;
+  quantity_used?: string;
   portion_description: string;
   total_calories: number;
   protein: number;
   fat: number;
   carbs: number;
+  sugar?: number;
+  fiber?: number;
+  breakdown?: BreakdownItem[];
+  data_source?: string;
   confidence: 'high' | 'medium' | 'low';
   note: string;
 }
+
+// Cache helpers
+const CACHE_PREFIX = 'calories_cache_';
+const CACHE_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+const getCachedResult = (key: string): MealResult | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + key);
+    if (!raw) return null;
+    const { result, timestamp } = JSON.parse(raw);
+    if (Date.now() - timestamp > CACHE_EXPIRY_MS) {
+      localStorage.removeItem(CACHE_PREFIX + key);
+      return null;
+    }
+    return result;
+  } catch { return null; }
+};
+
+const setCachedResult = (key: string, result: MealResult) => {
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ result, timestamp: Date.now() }));
+  } catch { /* storage full, ignore */ }
+};
 
 type FoodCategory = 'countable' | 'handful' | 'drink' | 'sliced' | 'bowl' | 'packaged' | 'fruit' | 'berries' | 'mixed';
 
