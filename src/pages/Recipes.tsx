@@ -411,7 +411,7 @@ const Recipes = () => {
               </p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirmId(null)}
-                  className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
+                  className="flex-1 h-10 rounded-xl font-semibold text-sm border-[1.5px] border-border text-muted-foreground">
                   {t.common.cancel}
                 </button>
                 <button onClick={() => handleDeleteRecipe(deleteConfirmId)}
