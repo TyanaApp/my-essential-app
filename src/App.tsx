@@ -23,6 +23,7 @@ import Diary from "./pages/Diary";
 import Shopping from "./pages/Shopping";
 import Profile from "./pages/Profile";
 import Savings from "./pages/Savings";
+import Receipts from "./pages/Receipts";
 import Achievements from "./pages/Achievements";
 import NutritionAnalysis from "./pages/NutritionAnalysis";
 import NotFound from "./pages/NotFound";
@@ -65,6 +66,7 @@ const App = () => {
                     <Route path="/shopping" element={<Shopping />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/savings" element={<Savings />} />
+                    <Route path="/receipts" element={<Receipts />} />
                     <Route path="/achievements" element={<Achievements />} />
                     <Route path="/nutrition-analysis" element={<NutritionAnalysis />} />
                   </Route>
