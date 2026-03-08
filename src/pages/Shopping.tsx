@@ -99,8 +99,9 @@ const Shopping = () => {
 
   const fetchItems = async () => {
     if (!user) return;
+    // RLS handles family visibility automatically
     const [{ data }, profileRes] = await Promise.all([
-      supabase.from('shopping_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      supabase.from('shopping_items').select('*').order('created_at', { ascending: false }),
       supabase.from('profiles').select('currency').eq('user_id', user.id).maybeSingle(),
     ]);
     if (data) setItems(data as unknown as ShoppingItem[]);
