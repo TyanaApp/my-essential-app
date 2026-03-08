@@ -611,7 +611,7 @@ export const translations = {
         quickAddBtn: '⚡️ Быстро добавить', searchPlaceholder: 'Начни писать или выбери из списка...',
         selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', addAllCount: 'Добавить все {count} продуктов', done: 'Готово ✓',
         adjustQty: 'Уточни количество', backToSelect: '← Назад', addedSuccess: '{count} продуктов добавлено',
-        noResults: 'Ничего не найдено', homeTab: '🏡 Дома',
+        noResults: 'Ничего не найдено',
         howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена', backToPresets: 'Назад к вариантам',
       },
       quickAddCategories: {
