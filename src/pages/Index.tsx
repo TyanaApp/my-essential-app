@@ -6,7 +6,7 @@ import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useFoundingCounter } from '@/hooks/useFoundingCounter';
 import { Progress } from '@/components/ui/progress';
-import tyanaLogoText from '@/assets/tyana-logo-text.png';
+import TyanaLogo from '@/components/TyanaLogo';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
