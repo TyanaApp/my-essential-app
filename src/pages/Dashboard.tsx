@@ -240,19 +240,49 @@ const Dashboard = () => {
         }
       }
 
-      // Calculate personal calorie target
       const goalsData = goalsRes.data;
       const profileData = profileRes.data;
-      let caloriesTarget = goalsData?.daily_calories_target || 0;
       const weight = Number(goalsData?.weight_kg) || 0;
       const height = Number(goalsData?.height_cm) || 0;
       const userAge = Number(goalsData?.age) || 0;
-      const gender = profileData?.gender || '';
-      const activity = (goalsData as any)?.activity_level || 'normal';
-      const userGoals: string[] = (goalsData as any)?.goals || [];
       const missingBodyData = !weight || !height || !userAge;
 
+      // ADAPTIVE CALORIE TARGET: call recalculation every day with full profile analysis
+      let caloriesTarget = goalsData?.daily_calories_target || 2000;
+      
+      // Check if we need to recalculate today
+      const recalcCacheKey = `tyana_calorie_recalc_${user.id}`;
+      const cachedRecalc = localStorage.getItem(recalcCacheKey);
+      let needsRecalc = true;
+      
+      if (cachedRecalc) {
+        try {
+          const { date, target } = JSON.parse(cachedRecalc);
+          if (date === today && target) {
+            caloriesTarget = target;
+            needsRecalc = false;
+          }
+        } catch {}
+      }
+
+      // Recalculate if needed (once per day, uses full profile analysis)
+      if (needsRecalc && !missingBodyData) {
+        try {
+          const { data: recalcData, error } = await supabase.functions.invoke('recalculate-daily-calories', {});
+          if (!error && recalcData?.target) {
+            caloriesTarget = recalcData.target;
+            localStorage.setItem(recalcCacheKey, JSON.stringify({ date: today, data: recalcData, target: recalcData.target }));
+          }
+        } catch (e) {
+          console.error('Calorie recalculation error:', e);
+        }
+      }
+
+      // Fallback calculation if no target and body data exists
       if (!caloriesTarget && weight && height && userAge) {
+        const gender = profileData?.gender || '';
+        const activity = (goalsData as any)?.activity_level || 'normal';
+        const userGoals: string[] = (goalsData as any)?.goals || [];
         const activityMultiplier: Record<string, number> = {
           low: 1.2, normal: 1.375, moderate: 1.375, active: 1.55, very_active: 1.725,
         };
@@ -319,7 +349,7 @@ const Dashboard = () => {
       }
     };
     load();
-  }, [user]);
+  }, [user, language]);
 
   // Fetch AI advice
   const fetchAdvice = useCallback(async (force = false) => {
