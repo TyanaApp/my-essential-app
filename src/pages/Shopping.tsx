@@ -471,9 +471,6 @@ const Shopping = () => {
         onClose={() => setReceiptModalOpen(false)}
         onSaved={fetchItems}
       />
-        itemName={storagePickerItem?.name || ''}
-        onSelect={handleStorageSelect}
-      />
     </div>
   );
 };
