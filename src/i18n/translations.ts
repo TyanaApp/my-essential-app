@@ -443,9 +443,9 @@ export const translations = {
       all: 'All', mine: 'Mine', shared: 'Shared', addedBy: 'added by',
     },
     support: {
-      writeSupport: '💬 Write to support',
-      ideas: '💡 Ideas & Suggestions',
-      rateApp: '⭐️ Rate the app',
+      writeSupport: 'Write to support',
+      ideas: 'Ideas & Suggestions',
+      rateApp: 'Rate the app',
     },
     receipt: {
       title: '🧾 Add Receipt',
