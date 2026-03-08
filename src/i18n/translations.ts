@@ -1847,6 +1847,7 @@ export const translations = {
       scanWithCamera: 'Скануйте камерою телефону', iosInstructions: 'Відкрийте в Safari → Поділитися → На головний екран',
       androidInstructions: 'Відкрийте в Chrome → Меню ⋮ → На головний екран', bannerText: 'Додайте на головний екран',
       getTheApp: '📱 Завантажити додаток', iosTooltipLine1: 'Натисніть «Поділитися» ↗ → На головний екран', iosTooltipLine2: 'Використовуйте Safari',
+      installed: 'TYANA встановлена! 🎉', openInSafari: 'Відкрий цю сторінку в Safari для встановлення', safariRequired: 'Safari → Поділитися → На головний екран',
     },
     landing: {
       signIn: 'Увійти', startFree: 'Почати безкоштовно', navFeatures: 'Функції', navPricing: 'Ціни', navFaq: 'Питання',
