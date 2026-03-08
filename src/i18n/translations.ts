@@ -1797,6 +1797,20 @@ export const translations = {
       waitlistCount: '{count} користувачів вже чекають цю функцію',
       profileLabel: '🏪 Інтеграція з магазинами',
     },
+    reminders: {
+      title: 'Мої нагадування', addReminder: 'Додати нагадування', whatToRemind: 'Що нагадати?',
+      placeholder: 'Зайти в магазин за молоком', voiceReminder: 'Голосове нагадування',
+      once: 'Один раз', daily: 'Щодня', weekdays: 'По буднях', weekends: 'По вихідних',
+      dateLabel: 'Дата', timeLabel: 'Час', repeatLabel: 'Повтор',
+      saved: 'Нагадування збережено ✓', saveFailed: 'Не вдалося зберегти', voiceFailed: 'Не вдалося розпізнати голос',
+      processing: 'Обробка голосу...', confirmReminder: 'Підтвердити нагадування',
+      willRemind: 'Нагадаю', empty: 'Немає нагадувань',
+      today: 'Сьогодні', tomorrow: 'Завтра', recurring: 'Повторювані', completed: 'Виконані',
+    },
+    mealReminders: {
+      title: '🍽 Нагадування про їжу',
+      breakfast: '🌅 Сніданок', lunch: '☀️ Обід', dinner: '🌙 Вечеря',
+    },
   },
 } as const;
 

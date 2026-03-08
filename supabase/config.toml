@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.receipt-analytics]
 verify_jwt = false
+
+[functions.parse-reminder]
+verify_jwt = false
