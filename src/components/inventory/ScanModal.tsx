@@ -101,7 +101,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
         name: String(i.name || ''),
         quantity: Number(i.quantity) || 1,
         unit: units.some(u => u.value === i.unit) ? i.unit : 'pcs',
-        category: CATEGORIES.some(c => c.id === i.category) ? i.category : 'other',
+        category: CATEGORIES_DATA.some(c => c.id === i.category) ? i.category : 'other',
         storage_location: 'fridge',
         unknown: Boolean(i.unknown),
       }));
