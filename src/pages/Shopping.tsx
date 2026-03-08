@@ -13,6 +13,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useFamily } from '@/hooks/useFamily';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 import { useFoodValidation } from '@/hooks/useFoodValidation';
+import { getUnits, getUnitLabel } from '@/lib/units';
 import {
   Dialog,
   DialogContent,
