@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
 import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
+import FridgePickerModal from '@/components/diary/FridgePickerModal';
 import {
   Dialog,
   DialogContent,

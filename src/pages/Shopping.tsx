@@ -431,6 +431,12 @@ const Shopping = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <StoragePickerModal
+        open={!!storagePickerItem}
+        onClose={() => setStoragePickerItem(null)}
+        itemName={storagePickerItem?.name || ''}
+        onSelect={handleStorageSelect}
+      />
     </div>
   );
 };
