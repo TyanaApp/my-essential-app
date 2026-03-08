@@ -97,11 +97,11 @@ const LOADING_TIPS_LV = [
   'Gandrīz gatavs... ✨',
 ];
 
-const MealPlan = () => {
+const MealPlan = ({ embedded }: { embedded?: boolean }) => {
   const { user } = useAuth();
   const { t, language } = useTranslation();
   const mp = (t as any).mealPlan || {};
-  usePageTitle(mp.title || 'Meal Plan');
+  usePageTitle(embedded ? '' : (mp.title || 'Meal Plan'));
 
   const [planData, setPlanData] = useState<MealPlanData | null>(null);
   const [planId, setPlanId] = useState<string | null>(null);

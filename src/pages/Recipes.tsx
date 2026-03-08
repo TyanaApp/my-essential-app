@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2, ChefHat, CalendarDays } from 'lucide-react';
 import RecipePhoto from '@/components/RecipePhoto';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +12,7 @@ import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
+import MealPlan from '@/pages/MealPlan';
 
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
@@ -221,8 +222,53 @@ const Recipes = () => {
     );
   };
 
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') === 'plan' ? 'plan' : 'recipes';
+  const [activeMainTab, setActiveMainTab] = useState(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'plan') setActiveMainTab('plan');
+  }, [searchParams]);
+
+  const TAB_LABELS: Record<string, { recipes: string; plan: string }> = {
+    ru: { recipes: '🍽 Рецепты', plan: '📅 План на неделю' },
+    en: { recipes: '🍽 Recipes', plan: '📅 Weekly Plan' },
+    uk: { recipes: '🍽 Рецепти', plan: '📅 План на тиждень' },
+    lv: { recipes: '🍽 Receptes', plan: '📅 Nedēļas plāns' },
+  };
+  const tabLabels = TAB_LABELS[language] || TAB_LABELS.en;
+
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
+      {/* Tab bar */}
+      <div className="flex gap-1 mb-5 bg-secondary rounded-xl p-1">
+        <button
+          onClick={() => setActiveMainTab('recipes')}
+          className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+          style={{
+            backgroundColor: activeMainTab === 'recipes' ? 'hsl(var(--primary))' : 'transparent',
+            color: activeMainTab === 'recipes' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+          }}
+        >
+          {tabLabels.recipes}
+        </button>
+        <button
+          onClick={() => setActiveMainTab('plan')}
+          className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+          style={{
+            backgroundColor: activeMainTab === 'plan' ? 'hsl(var(--primary))' : 'transparent',
+            color: activeMainTab === 'plan' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+          }}
+        >
+          {tabLabels.plan}
+        </button>
+      </div>
+
+      {activeMainTab === 'plan' ? (
+        <MealPlan embedded />
+      ) : (
+      <>
       <h1 className="text-2xl font-bold mb-5 text-foreground">{t.recipes.title}</h1>
 
       {/* Generation settings */}
@@ -475,6 +521,8 @@ const Recipes = () => {
           </div>
         )}
       </AnimatePresence>
+      </>
+      )}
     </div>
   );
 };
