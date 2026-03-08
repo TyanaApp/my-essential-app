@@ -1,24 +1,17 @@
 import { useState, useEffect, useMemo } from 'react';
 import { calcMacroTargets } from '@/pages/NutritionAnalysis';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Search, Camera, Refrigerator } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plus, X, Camera } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
-import { useFoodValidation } from '@/hooks/useFoodValidation';
 import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import FridgePickerModal from '@/components/diary/FridgePickerModal';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import SmartMealEntryModal from '@/components/diary/SmartMealEntryModal';
 
 interface MealEntry {
   id: string;
@@ -33,11 +26,6 @@ interface MealEntry {
   total_carbs: number | null;
 }
 
-interface SavedRecipe {
-  id: string;
-  title: string;
-  nutrition: { calories: number; protein: number; fat: number; carbs: number } | null;
-}
 
 const getWeekDays = (selectedDate: Date) => {
   const day = selectedDate.getDay();
@@ -57,7 +45,7 @@ const Diary = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { updateStreak } = useStreak();
-  const { validateFood } = useFoodValidation();
+  
   const [streakReward, setStreakReward] = useState<{ badge: string; message: string; bonusScans?: number; grantLite?: boolean; grantPro?: boolean } | null>(null);
   usePageTitle(t.diary.title);
 
@@ -76,22 +64,15 @@ const Diary = () => {
   const [dailyTarget, setDailyTarget] = useState(2000);
   const [macroTargets, setMacroTargets] = useState({ protein: 120, fat: 60, carbs: 250 });
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMealType, setModalMealType] = useState('breakfast');
-  const [addMode, setAddMode] = useState<'recipe' | 'manual'>('manual');
-  const [recipes, setRecipes] = useState<SavedRecipe[]>([]);
-  const [recipeSearch, setRecipeSearch] = useState('');
-  const [manualName, setManualName] = useState('');
-  const [manualCalories, setManualCalories] = useState('');
-  const [manualProtein, setManualProtein] = useState('');
-  const [manualFat, setManualFat] = useState('');
-  const [manualCarbs, setManualCarbs] = useState('');
 
   // Scan modal state
   const [scanOpen, setScanOpen] = useState(false);
   const [scanMealType, setScanMealType] = useState('breakfast');
   const [fridgeOpen, setFridgeOpen] = useState(false);
   const [fridgeMealType, setFridgeMealType] = useState('breakfast');
+  // Smart entry modal state
+  const [smartEntryOpen, setSmartEntryOpen] = useState(false);
+  const [smartEntryMealType, setSmartEntryMealType] = useState('breakfast');
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
@@ -122,19 +103,10 @@ const Diary = () => {
     load();
   }, [user, dateStr]);
 
-  const loadRecipes = async () => {
-    if (!user) return;
-    const { data } = await supabase.from('recipes').select('id, title, nutrition').eq('user_id', user.id);
-    if (data) setRecipes(data as unknown as SavedRecipe[]);
-  };
 
   const openAddModal = (mealType: string) => {
-    setModalMealType(mealType);
-    setAddMode('manual');
-    setManualName(''); setManualCalories(''); setManualProtein(''); setManualFat(''); setManualCarbs('');
-    setRecipeSearch('');
-    setModalOpen(true);
-    loadRecipes();
+    setSmartEntryMealType(mealType);
+    setSmartEntryOpen(true);
   };
 
   const openScanModal = (mealType: string) => {
@@ -143,72 +115,11 @@ const Diary = () => {
   };
 
   const handleScanSaved = (entry: any) => {
-    if (entry?._prefill) {
-      // Open manual modal with pre-filled values
-      setScanOpen(false);
-      setModalMealType(scanMealType);
-      setManualName(entry.custom_name || '');
-      setManualCalories(String(entry.total_calories || 0));
-      setManualProtein(String(entry.total_protein || 0));
-      setManualFat(String(entry.total_fat || 0));
-      setManualCarbs(String(entry.total_carbs || 0));
-      setAddMode('manual');
-      setModalOpen(true);
-      return;
-    }
     if (entry) {
       setEntries(prev => [...prev, entry as MealEntry]);
     }
   };
 
-  const handleAddFromRecipe = async (recipe: SavedRecipe) => {
-    if (!user) return;
-    try {
-      const { data, error } = await supabase.from('meal_entries').insert({
-        user_id: user.id, date: dateStr, meal_type: modalMealType,
-        recipe_id: recipe.id, custom_name: recipe.title,
-        total_calories: recipe.nutrition?.calories || 0,
-        total_protein: recipe.nutrition?.protein || 0,
-        total_fat: recipe.nutrition?.fat || 0,
-        total_carbs: recipe.nutrition?.carbs || 0,
-      } as any).select().single();
-      if (error) throw error;
-      if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
-      toast.success(`${recipe.title} ${t.diary.logged}`);
-      setModalOpen(false);
-      // Update streak
-      const reward = await updateStreak();
-      if (reward) setStreakReward(reward);
-    } catch { toast.error(t.common.error); }
-  };
-
-  const handleAddManual = async () => {
-    if (!user || !manualName.trim()) return;
-
-    // Validate food item
-    const isFood = await validateFood(manualName.trim());
-    if (!isFood) {
-      setManualName('');
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase.from('meal_entries').insert({
-        user_id: user.id, date: dateStr, meal_type: modalMealType,
-        custom_name: manualName.trim(),
-        total_calories: Number(manualCalories) || 0,
-        total_protein: Number(manualProtein) || 0,
-        total_fat: Number(manualFat) || 0,
-        total_carbs: Number(manualCarbs) || 0,
-      } as any).select().single();
-      if (error) throw error;
-      if (data) setEntries((prev) => [...prev, data as unknown as MealEntry]);
-      toast.success(`${manualName} ${t.diary.logged}`);
-      setModalOpen(false);
-      const reward = await updateStreak();
-      if (reward) setStreakReward(reward);
-    } catch { toast.error(t.common.error); }
-  };
 
   const handleDelete = async (id: string) => {
     await supabase.from('meal_entries').delete().eq('id', id);
@@ -232,11 +143,8 @@ const Diary = () => {
     Math.abs(caloriePct - 1) <= 0.1 ? '#059669' :
     Math.abs(caloriePct - 1) <= 0.2 ? '#EA580C' : '#DC2626';
 
-  const filteredRecipes = recipes.filter((r) =>
-    r.title.toLowerCase().includes(recipeSearch.toLowerCase())
-  );
 
-  const getMealLabel = (type: string) => MEAL_SECTIONS.find((s) => s.type === type)?.label || type;
+  
 
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
@@ -316,7 +224,12 @@ const Diary = () => {
                 </div>
 
                 {sectionEntries.length === 0 ? (
-                  <p className="text-xs py-2 text-muted-foreground">{t.diary.noMeals}</p>
+                  <button
+                    onClick={() => openAddModal(section.type)}
+                    className="w-full text-left text-xs py-2 text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    📝 {(t as any).smartEntry?.forgotPhoto || "Forgot to take a photo? Just write what you ate"}
+                  </button>
                 ) : (
                   <div className="space-y-1.5">
                     {sectionEntries.map((entry) => (
@@ -393,121 +306,14 @@ const Diary = () => {
         onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
       />
 
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="rounded-2xl max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">
-              {t.diary.addMealTitle.replace('{meal}', getMealLabel(modalMealType))}
-            </DialogTitle>
-            <DialogDescription>{t.diary.logWhatYouAte}</DialogDescription>
-          </DialogHeader>
-
-          <div className="flex gap-1 p-1 rounded-xl mb-3" style={{ backgroundColor: '#F5F3FF' }}>
-            <button
-              onClick={() => setAddMode('recipe')}
-              className="flex-1 py-2 rounded-lg text-xs font-semibold transition-all"
-              style={{
-                backgroundColor: addMode === 'recipe' ? '#7C3AED' : 'transparent',
-                color: addMode === 'recipe' ? 'white' : '#6B7280',
-              }}
-            >
-              {t.diary.fromRecipes}
-            </button>
-            <button
-              onClick={() => setAddMode('manual')}
-              className="flex-1 py-2 rounded-lg text-xs font-semibold transition-all"
-              style={{
-                backgroundColor: addMode === 'manual' ? '#7C3AED' : 'transparent',
-                color: addMode === 'manual' ? 'white' : '#6B7280',
-              }}
-            >
-              {t.diary.manualEntry}
-            </button>
-          </div>
-
-          {addMode === 'recipe' ? (
-            <div className="space-y-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
-                <input
-                  value={recipeSearch}
-                  onChange={(e) => setRecipeSearch(e.target.value)}
-                  placeholder={t.diary.searchRecipes}
-                  className="w-full h-10 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                  style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                />
-              </div>
-              <div className="max-h-48 overflow-y-auto space-y-1">
-                {filteredRecipes.length === 0 ? (
-                  <p className="text-xs text-center py-4" style={{ color: '#9CA3AF' }}>
-                    {recipes.length === 0 ? t.diary.noSavedRecipes : t.diary.noMatchingRecipes}
-                  </p>
-                ) : (
-                  filteredRecipes.map((r) => (
-                    <button
-                      key={r.id}
-                      onClick={() => handleAddFromRecipe(r)}
-                      className="w-full text-left p-3 rounded-xl hover:bg-[#F5F3FF] transition-colors"
-                    >
-                      <p className="text-sm font-medium" style={{ color: '#1E1B4B' }}>{r.title}</p>
-                      <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
-                        {r.nutrition?.calories || 0} kcal · P:{r.nutrition?.protein || 0}g · F:{r.nutrition?.fat || 0}g · C:{r.nutrition?.carbs || 0}g
-                      </p>
-                    </button>
-                  ))
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.name}</label>
-                <input
-                  value={manualName}
-                  onChange={(e) => setManualName(e.target.value)}
-                  placeholder={t.diary.mealPlaceholder}
-                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                  style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.calories}</label>
-                  <input type="number" value={manualCalories} onChange={(e) => setManualCalories(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.protein}</label>
-                  <input type="number" value={manualProtein} onChange={(e) => setManualProtein(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.fat}</label>
-                  <input type="number" value={manualFat} onChange={(e) => setManualFat(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.diary.carbs}</label>
-                  <input type="number" value={manualCarbs} onChange={(e) => setManualCarbs(e.target.value)} placeholder="0"
-                    className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-                    style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
-                </div>
-              </div>
-              <button
-                onClick={handleAddManual}
-                disabled={!manualName.trim()}
-                className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
-                style={{ backgroundColor: '#7C3AED' }}
-              >
-                {t.diary.logMeal}
-              </button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Smart meal entry modal */}
+      <SmartMealEntryModal
+        open={smartEntryOpen}
+        onClose={() => setSmartEntryOpen(false)}
+        mealType={smartEntryMealType}
+        dateStr={dateStr}
+        onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
+      />
       <RewardModal
         open={!!streakReward}
         onClose={() => setStreakReward(null)}
