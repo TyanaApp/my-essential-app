@@ -517,10 +517,10 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
 
   const getDataSourceLabel = (source: string | undefined) => {
     const labels: Record<string, Record<string, string>> = {
-      en: { official_label: 'Official label', recipe_calculation: 'Recipe calculation', database_lookup: 'Database lookup', estimation: 'Estimated' },
-      ru: { official_label: 'Официальная этикетка', recipe_calculation: 'Расчёт по рецепту', database_lookup: 'База данных', estimation: 'Оценка' },
-      uk: { official_label: 'Офіційне маркування', recipe_calculation: 'Розрахунок за рецептом', database_lookup: 'База даних', estimation: 'Оцінка' },
-      lv: { official_label: 'Oficiālā etiķete', recipe_calculation: 'Receptes aprēķins', database_lookup: 'Datubāze', estimation: 'Novērtējums' },
+      en: { official_label: 'Official label', recipe_calculation: 'Recipe calculation', database_lookup: 'Database lookup', estimation: 'Estimated', 'Open Food Facts': '✅ Data from label' },
+      ru: { official_label: 'Официальная этикетка', recipe_calculation: 'Расчёт по рецепту', database_lookup: 'База данных', estimation: 'Оценка', 'Open Food Facts': '✅ Данные с этикетки' },
+      uk: { official_label: 'Офіційне маркування', recipe_calculation: 'Розрахунок за рецептом', database_lookup: 'База даних', estimation: 'Оцінка', 'Open Food Facts': '✅ Дані з етикетки' },
+      lv: { official_label: 'Oficiālā etiķete', recipe_calculation: 'Receptes aprēķins', database_lookup: 'Datubāze', estimation: 'Novērtējums', 'Open Food Facts': '✅ Dati no etiķetes' },
     };
     const l = labels[language] || labels.en;
     return l[source || 'estimation'] || l.estimation;
