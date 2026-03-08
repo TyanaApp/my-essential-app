@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
   Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity,
-  MessageCircle, Lightbulb, Star
+  MessageCircle, Lightbulb, Star, Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
