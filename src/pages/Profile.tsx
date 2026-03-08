@@ -247,6 +247,20 @@ const Profile = () => {
                   />
                 </div>
               ))}
+              {/* Weekly email report toggle */}
+              <WeeklyReportToggle />
+              ].map(item => (
+                <div key={item.key} className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{item.label}</p>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  </div>
+                  <Switch
+                    checked={notifSettings[item.key]}
+                    onCheckedChange={(checked) => updateNotifSettings({ ...notifSettings, [item.key]: checked })}
+                  />
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
