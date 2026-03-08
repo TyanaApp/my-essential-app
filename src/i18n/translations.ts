@@ -1819,6 +1819,12 @@ export const translations = {
       addAllMissing: 'Додати все →',
       deleteFromSaved: 'Видалити зі збережених?', deleteYes: 'Так', deleteNo: 'Ні', recipeDeleted: 'Рецепт видалено',
       minUnit: 'хв', estCost: 'прибл.',
+      tabSuggested: '✨ Запропоновані', tabSaved: '♥️ Збережені',
+      savedToFavorites: 'Збережено в обране ♥️', removeFromSaved: 'Прибрати зі збережених?',
+      removeBtn: 'Прибрати', emptyFavTitle: 'Тут будуть твої улюблені рецепти',
+      emptyFavHint: 'Натисни ♡ на будь-якому рецепті щоб зберегти', loadMore: '+ Показати ще рецепти',
+      newRecipes: '🔄 Нові рецепти', cook: '👨‍🍳 Приготувати',
+      matchPercent: '{pct}% з продуктів',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
