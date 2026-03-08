@@ -704,7 +704,7 @@ export const translations = {
     dashboard: {
       morning: 'Доброе утро', afternoon: 'Добрый день', evening: 'Добрый вечер',
       remaining: 'ккал осталось сегодня', overTarget: 'ккал сверх нормы',
-      logMeal: '+ Записать приём пищи', nothingExpiring: 'Ничего не истекает ✅',
+      logMeal: 'Записать приём пищи', nothingExpiring: 'Ничего не истекает ✅',
       expiringTitle: '{count} продуктов истекает', ideasToday: '🍳 Идеи на сегодня',
       savedMonth: 'сэкономлено в этом месяце', generateRecipes: 'Сгенерировать первые рецепты →',
       viewAll: 'Все', seeDetails: 'Подробнее',
