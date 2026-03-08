@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const FOOD_EMOJI_MAP: [RegExp, string][] = [
   [/pasta|паста|макарон|spaghetti|penne|noodle/i, '🍝'],
@@ -13,6 +13,10 @@ const FOOD_EMOJI_MAP: [RegExp, string][] = [
   [/pizza|піца|пицца/i, '🍕'],
   [/sandwich|бутерброд|сендвіч/i, '🥪'],
   [/smoothie|смузі|смузи/i, '🥤'],
+  [/pancake|блин|оладь|pankūk/i, '🥞'],
+  [/steak|стейк/i, '🥩'],
+  [/shrimp|креветк|garnele/i, '🦐'],
+  [/bread|хлеб|хліб|maize/i, '🍞'],
 ];
 
 const GRADIENT_COLORS: Record<string, string> = {
@@ -22,6 +26,39 @@ const GRADIENT_COLORS: Record<string, string> = {
   'P': '#DB2777', 'Q': '#DB2777', 'R': '#DB2777', 'S': '#DB2777', 'T': '#DB2777',
   'U': '#4F46E5', 'V': '#4F46E5', 'W': '#4F46E5', 'X': '#4F46E5', 'Y': '#4F46E5', 'Z': '#4F46E5',
 };
+
+// Map non-Latin titles to English food keywords for image search
+const FOOD_KEYWORD_MAP: [RegExp, string][] = [
+  [/паста|макарон/i, 'pasta'],
+  [/суп|борщ/i, 'soup'],
+  [/салат/i, 'salad'],
+  [/курица|куриц|курин|куряч/i, 'chicken'],
+  [/рыба|риба|лосось|тунец/i, 'fish'],
+  [/яйц|омлет/i, 'eggs omelette'],
+  [/рис|плов/i, 'rice'],
+  [/мясо|говядин|свинин|котлет/i, 'meat'],
+  [/торт|пирог|кекс|десерт/i, 'dessert cake'],
+  [/пицца|піца/i, 'pizza'],
+  [/бутерброд|сендвіч/i, 'sandwich'],
+  [/смузи|смузі/i, 'smoothie'],
+  [/блин|оладь|панкейк/i, 'pancakes'],
+  [/стейк/i, 'steak'],
+  [/креветк/i, 'shrimp'],
+  [/хлеб|хліб/i, 'bread'],
+  [/каша|овсян/i, 'porridge oatmeal'],
+  [/запеканк/i, 'casserole'],
+  [/тефтел|фрикадельк/i, 'meatballs'],
+  [/гриль/i, 'grill bbq'],
+  [/жарен/i, 'fried'],
+  [/тушен/i, 'stew'],
+  [/печен/i, 'baked'],
+  [/овощ|овочі/i, 'vegetables'],
+  [/фрукт/i, 'fruit'],
+  [/сырник/i, 'cottage cheese pancakes'],
+  [/вареник|пельмен/i, 'dumplings'],
+  [/борщ/i, 'borscht soup'],
+  [/голубц/i, 'cabbage rolls'],
+];
 
 function getFoodEmoji(title: string): string {
   for (const [pattern, emoji] of FOOD_EMOJI_MAP) {
@@ -36,8 +73,32 @@ function getGradient(title: string): string {
   return `linear-gradient(135deg, ${base} 0%, ${base}99 50%, ${base}55 100%)`;
 }
 
+function getSearchKeywords(title: string): string {
+  // Try to map Cyrillic/non-Latin food names to English keywords
+  for (const [pattern, keyword] of FOOD_KEYWORD_MAP) {
+    if (pattern.test(title)) return keyword;
+  }
+  // If already Latin, use the title directly
+  if (/^[a-zA-Z\s]+$/.test(title)) return title;
+  // Fallback: generic food
+  return 'delicious food dish';
+}
+
 function getPhotoUrl(title: string): string {
-  return `https://source.unsplash.com/400x300/?${encodeURIComponent(title + ' food dish')}`;
+  const keywords = getSearchKeywords(title);
+  // Use loremflickr — free, no API key, returns relevant food images
+  return `https://loremflickr.com/400/300/food,${encodeURIComponent(keywords)}?lock=${hashCode(title)}`;
+}
+
+// Simple hash to get consistent images for the same title
+function hashCode(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0;
+  }
+  return Math.abs(hash) % 10000;
 }
 
 interface RecipePhotoProps {
@@ -48,28 +109,39 @@ interface RecipePhotoProps {
 
 const RecipePhoto = ({ title, className = '', size = 'sm' }: RecipePhotoProps) => {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+  const [imgSrc, setImgSrc] = useState('');
 
   const emoji = getFoodEmoji(title);
   const gradient = getGradient(title);
   const height = size === 'lg' ? 'h-44' : 'h-40';
 
+  useEffect(() => {
+    setStatus('loading');
+    setImgSrc(getPhotoUrl(title));
+  }, [title]);
+
   return (
     <div className={`${height} w-full relative overflow-hidden ${className}`} style={{ background: gradient }}>
-      {/* Placeholder always visible behind */}
+      {/* Emoji placeholder always visible behind */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="text-5xl opacity-80">{emoji}</span>
       </div>
-      {status !== 'error' && (
+      {status !== 'error' && imgSrc && (
         <img
-          src={getPhotoUrl(title)}
+          src={imgSrc}
           alt={title}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
             status === 'loaded' ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => setStatus('loaded')}
           onError={() => setStatus('error')}
           loading="lazy"
+          crossOrigin="anonymous"
         />
+      )}
+      {/* Subtle gradient overlay for text readability */}
+      {status === 'loaded' && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       )}
     </div>
   );
