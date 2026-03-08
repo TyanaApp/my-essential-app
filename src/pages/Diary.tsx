@@ -148,9 +148,6 @@ const Diary = () => {
     Math.abs(caloriePct - 1) <= 0.1 ? '#059669' :
     Math.abs(caloriePct - 1) <= 0.2 ? '#EA580C' : '#DC2626';
 
-  const filteredRecipes = recipes.filter((r) =>
-    r.title.toLowerCase().includes(recipeSearch.toLowerCase())
-  );
 
   const getMealLabel = (type: string) => MEAL_SECTIONS.find((s) => s.type === type)?.label || type;
 
