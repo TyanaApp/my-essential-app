@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from 'next-themes';
 import LanguageSelector from '@/components/LanguageSelector';
-import { Globe, Moon, Sun, HelpCircle, ChevronRight, Scale } from 'lucide-react';
+import { Globe, Moon, Sun, Scale } from 'lucide-react';
 
 interface SystemSettingsModalProps {
   open: boolean;
@@ -15,13 +15,6 @@ interface SystemSettingsModalProps {
 const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenChange }) => {
   const { t } = useLanguage();
   const { theme, setTheme } = useTheme();
-  const [showHelp, setShowHelp] = useState(false);
-
-  const faqs = [
-    { q: 'faqQuestion1', a: 'faqAnswer1' },
-    { q: 'faqQuestion2', a: 'faqAnswer2' },
-    { q: 'faqQuestion3', a: 'faqAnswer3' },
-  ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -70,34 +63,6 @@ const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ open, onOpenC
             </div>
           </div>
 
-          {/* Help */}
-          <div className="space-y-3">
-            <Button
-              variant="outline"
-              className="w-full justify-between font-exo text-sm"
-              onClick={() => setShowHelp(!showHelp)}
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <HelpCircle className="w-5 h-5 shrink-0" />
-                <span className="truncate">{t('help')}</span>
-              </div>
-              <ChevronRight className={`w-5 h-5 shrink-0 transition-transform ${showHelp ? 'rotate-90' : ''}`} />
-            </Button>
-
-            {showHelp && (
-              <div className="space-y-4 p-3 sm:p-4 bg-secondary/20 rounded-xl">
-                <h4 className="font-nasa text-foreground text-sm">{t('faq')}</h4>
-                <div className="space-y-3">
-                  {faqs.map((faq, index) => (
-                    <div key={index} className="space-y-1">
-                      <p className="font-exo text-foreground text-xs sm:text-sm break-words">{t(faq.q)}</p>
-                      <p className="text-muted-foreground text-xs sm:text-sm break-words">{t(faq.a)}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Legal */}
           <div className="space-y-3">
