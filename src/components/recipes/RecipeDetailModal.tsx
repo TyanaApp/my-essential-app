@@ -562,7 +562,7 @@ const RecipeDetailModal = ({
                 { key: 'snack', label: ct.snack },
               ].map(m => (
                 <button key={m.key} onClick={() => handleLogMeal(m.key)} disabled={processing}
-                  className="py-4 rounded-2xl font-bold text-sm border-2 transition-all hover:border-primary active:scale-95"
+                  className="py-4 rounded-2xl font-bold text-sm border-2 transition-all hover:border-primary active:scale-95 border-border text-foreground">
                   style={{ borderColor: '#DDD6FE', color: '#1E1B4B' }}>
                   {m.label}
                 </button>

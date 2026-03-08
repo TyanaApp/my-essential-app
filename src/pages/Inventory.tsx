@@ -260,8 +260,7 @@ const Inventory = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t.inventory.search}
-          className="w-full h-12 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]"
-          style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}
+          className="w-full h-12 pl-9 pr-3 rounded-xl border text-sm outline-none focus:border-primary bg-secondary border-border text-foreground placeholder:text-muted-foreground"
         />
       </div>
 

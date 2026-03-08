@@ -275,7 +275,7 @@ const Diary = () => {
             })}
           </div>
         </div>
-        <div className="mt-1.5 h-1.5 rounded-full max-w-lg mx-auto" style={{ backgroundColor: '#F3F4F6' }}>
+        <div className="mt-1.5 h-1.5 rounded-full max-w-lg mx-auto bg-muted">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{ backgroundColor: totalsColor, width: `${Math.min(caloriePct * 100, 100)}%` }}

@@ -304,7 +304,7 @@ const Auth = () => {
             </div>
             <button
               onClick={() => setShowQRModal(true)}
-              className="w-full flex items-center justify-center gap-2 h-[52px] mt-4 rounded-xl border-[1.5px] transition-colors hover:bg-gray-50"
+              className="w-full flex items-center justify-center gap-2 h-[52px] mt-4 rounded-xl border-[1.5px] transition-colors hover:bg-secondary border-border text-primary"
               style={{ color: '#7C3AED', borderColor: '#DDD6FE' }}
             >
               <span className="text-sm font-semibold">{t.install.getTheApp}</span>
