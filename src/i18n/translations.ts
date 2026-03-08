@@ -394,8 +394,6 @@ export const translations = {
       footerTerms: 'Terms', footerPrivacy: 'Privacy',
       footerDisclaimer: 'TYANA is a personal AI nutritionist. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.',
       footerCopyright: '© 2025 TYANA. All rights reserved.',
-      foundingCounter: '{count} of 1000 founder spots taken',
-      foundingFull: 'All founder spots taken. Pro is now €12.99/mo',
       whyTitle: 'Why TYANA works',
       why1Title: 'Deeper than any app', why1Desc: 'Analyzes your nutrition as deeply as a professional nutritionist — but available 24/7',
       why2Title: 'Saves time and money', why2Desc: 'The average family throws away €80 of food per month. TYANA helps you use everything you buy.',
