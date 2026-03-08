@@ -89,7 +89,7 @@ P.S. Jautājumi? Rakstiet mums lietotnē!`,
 
       en: `Hi ${name}! 👋
 
-Welcome to TYANA — your personal AI nutrition assistant.
+Welcome to TYANA — your personal AI nutritionist.
 
 Your 7-day Pro trial is now active! 🚀
 
