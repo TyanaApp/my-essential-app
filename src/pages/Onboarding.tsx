@@ -149,6 +149,13 @@ const Onboarding = () => {
           trial_end: new Date(Date.now() + 7 * 86400000).toISOString(),
         } as any).eq('user_id', user.id);
 
+        // Assign user number for founding member system
+        try {
+          await supabase.rpc('assign_user_number', { p_user_id: user.id });
+        } catch (e) {
+          console.error('Failed to assign user number:', e);
+        }
+
         const finalDislikes = buildDislikeArray(dislikedFoods, dislikedFreeText);
         const finalFamilyDislikes = hasFamilyDislikes ? buildDislikeArray(familyDislikes, familyDislikesFreeText) : [];
 
