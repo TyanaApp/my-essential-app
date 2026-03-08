@@ -536,7 +536,6 @@ const Index = () => {
               <p className="text-sm mt-1" style={{ color: '#6B7280' }}>{t.landing.footerTagline}</p>
             </div>
             <LegalFooterPill />
-            <a href="mailto:supporttyana@gmail.com" className="text-sm hover:underline" style={{ color: '#6B7280' }}>supporttyana@gmail.com</a>
           </div>
           <p className="text-[12px] leading-relaxed text-center" style={{ color: '#9CA3AF' }}>
             {t.landing.footerDisclaimer}
