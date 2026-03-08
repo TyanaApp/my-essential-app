@@ -289,7 +289,7 @@ const Recipes = () => {
                     {SERVING_OPTIONS.map((n) => (
                       <button key={n} onClick={() => setCookingFor(n)}
                         className="w-10 h-10 rounded-xl text-sm font-bold border-[1.5px] transition-all"
-                        style={{ borderColor: cookingFor === n ? '#7C3AED' : '#DDD6FE', backgroundColor: cookingFor === n ? '#EDE9FE' : 'white', color: cookingFor === n ? '#7C3AED' : '#6B7280' }}>
+                        className={`w-10 h-10 rounded-xl text-sm font-bold border-[1.5px] transition-all ${cookingFor === n ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                         {n}{n === 5 ? '+' : ''}
                       </button>
                     ))}
