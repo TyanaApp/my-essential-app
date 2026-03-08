@@ -217,7 +217,7 @@ const TrialManager = () => {
               className="w-full font-semibold text-white"
               style={{ backgroundColor: '#7C3AED' }}
             >
-              {isFoundingMember ? t.founderPro : t.regularPro}
+              {isFoundingMember ? t.earlyBirdPro : t.regularPro}
             </Button>
             <Button
               onClick={() => handleCheckout('lite')}
@@ -227,7 +227,7 @@ const TrialManager = () => {
               {t.lite}
             </Button>
             {isFoundingMember && (
-              <p className="text-xs text-amber-600 font-medium">{t.founderNote}</p>
+              <p className="text-xs text-green-600 font-medium">{t.earlyBirdNote}</p>
             )}
             <Button
               variant="ghost"

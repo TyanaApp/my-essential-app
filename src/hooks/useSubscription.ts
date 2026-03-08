@@ -23,7 +23,7 @@ export const SUBSCRIPTION_PLANS = {
     interval: 'month',
     scansPerMonth: Infinity,
     maxRecipes: Infinity,
-    badge: '🏆 Founding Member',
+    badge: '✅ Early Bird',
   },
   pro_regular: {
     priceId: 'price_1T79vc2N2asjxki4EpkvxSDD',

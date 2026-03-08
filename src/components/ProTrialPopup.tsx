@@ -130,7 +130,7 @@ const ProTrialPopup = () => {
 
             {isFoundingMember && (
               <div className="rounded-xl px-4 py-2 mb-4 text-sm font-medium" style={{ backgroundColor: 'rgba(255,215,0,0.25)', border: '1px solid rgba(255,215,0,0.5)' }}>
-                {t.foundingBadge}
+                {t.earlyBirdBadge}
               </div>
             )}
 

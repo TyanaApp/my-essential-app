@@ -180,18 +180,18 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
           </div>
         )}
 
-        {showFounderOffer && (
+        {showEarlyBirdOffer && (
           <div className="text-center space-y-4">
-            <div className="text-5xl">⚡️</div>
+            <div className="text-5xl">🎉</div>
             <DrawerHeader className="p-0">
-              <DrawerTitle className="text-xl font-bold text-foreground">{t.founderTitle}</DrawerTitle>
+              <DrawerTitle className="text-xl font-bold text-foreground">{t.earlyBirdTitle}</DrawerTitle>
             </DrawerHeader>
-            <p className="text-sm text-muted-foreground">{t.founderDesc}</p>
+            <p className="text-sm text-muted-foreground">{t.earlyBirdDesc}</p>
             <div className="py-2">
               <span className="text-lg line-through text-muted-foreground mr-2">€12.99</span>
-              <span className="text-3xl font-bold" style={{ color: '#7C3AED' }}>{t.founderPrice}</span>
+              <span className="text-3xl font-bold" style={{ color: '#7C3AED' }}>€6.49/mo</span>
             </div>
-            <p className="text-xs text-muted-foreground">{t.founderOnly}</p>
+            <p className="text-xs text-green-600 font-medium">{t.earlyBirdSaving}</p>
             <Button
               className="w-full gap-2 text-base py-6"
               style={{ backgroundColor: '#7C3AED' }}
@@ -201,7 +201,6 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
               {processing === 'pro_founding' ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
               {t.subscribe}
             </Button>
-            <p className="text-xs text-amber-600 font-medium">⏳ {t.offerValid}</p>
             <Button variant="ghost" className="w-full text-muted-foreground" onClick={() => onOpenChange(false)}>
               {t.maybeLater}
             </Button>
