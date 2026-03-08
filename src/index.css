@@ -197,3 +197,15 @@
   z-index: 10;
   flex-shrink: 0;
 }
+
+.bottom-action-bar {
+  position: fixed !important;
+  bottom: 80px !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+  background: hsl(var(--card));
+  padding: 12px 16px;
+  border-top: 2px solid hsl(var(--primary));
+  box-shadow: 0 -4px 20px rgba(124, 58, 237, 0.15);
+}

@@ -300,7 +300,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
               {scannedItems.length === 0 ? (
                 <p className="text-sm text-center py-6" style={{ color: '#9CA3AF' }}>{t.inventory.noItemsDetected}</p>
               ) : (
-                <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1">
+                <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1 pb-28">
                   {groupedItems.map(group => (
                     <div key={group.id}>
                       <div className="flex items-center gap-1.5 mb-2">
@@ -382,15 +382,12 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
               <p className="text-xs mt-2" style={{ color: '#9CA3AF' }}>{t.scan.skipHint}</p>
 
               {/* Confirm area */}
-              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
-                <p className="text-sm font-medium mb-3" style={{ color: '#1E1B4B' }}>
-                  {t.scan.foundXItems.replace('{count}', String(validCount))}
-                </p>
+              <div className="bottom-action-bar">
                 <button
                   onClick={handleSaveAll}
                   disabled={saving || validCount === 0}
-                  className="w-full h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
-                  style={{ backgroundColor: '#7C3AED' }}
+                  className="w-full rounded-xl bg-primary px-4 py-4 text-base font-bold text-primary-foreground disabled:opacity-50"
+                  style={{ minHeight: '52px' }}
                 >
                   {saving ? t.common.loading : t.scan.saveToInventory}
                 </button>

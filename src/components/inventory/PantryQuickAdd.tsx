@@ -163,8 +163,7 @@ const PantryQuickAdd = ({ onSaved, onOpenManual }: Props) => {
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
-            className="fixed bottom-16 left-0 right-0 z-[100] border-t border-border bg-background px-4 py-3"
-            style={{ boxShadow: '0 -4px 12px rgba(0,0,0,0.08)' }}
+            className="bottom-action-bar"
           >
             <p className="text-xs text-muted-foreground mb-2">
               {((t as any).common?.selectedCount || (t as any).inventory?.selectedCount || 'Selected: {count} products').replace('{count}', String(selected.size))}
