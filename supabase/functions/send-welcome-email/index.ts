@@ -85,7 +85,7 @@ Atvērt TYANA: https://tyana.lovable.app
 Ar mīlestību,
 TYANA komanda 💜
 
-P.S. Jautājumi? Rakstiet: supporttyana@gmail.com`,
+P.S. Jautājumi? Rakstiet mums lietotnē!`,
 
       en: `Hi ${name}! 👋
 
