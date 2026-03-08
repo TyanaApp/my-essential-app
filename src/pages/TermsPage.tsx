@@ -5,8 +5,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-10">
-    <h2 className="text-lg font-bold mb-4 pl-4" style={{ borderLeft: '4px solid #7C3AED', color: '#1E1B4B' }}>{title}</h2>
-    <div className="text-base leading-[1.8] space-y-3" style={{ color: '#374151' }}>{children}</div>
+    <h2 className="text-lg font-bold mb-4 pl-4 text-foreground" style={{ borderLeft: '4px solid #7C3AED' }}>{title}</h2>
+    <div className="text-base leading-[1.8] space-y-3 text-foreground/80">{children}</div>
   </div>
 );
 

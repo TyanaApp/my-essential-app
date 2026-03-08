@@ -11,7 +11,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
     >
       {title}
     </h2>
-    <div className="text-base leading-[1.8] space-y-3" style={{ color: '#374151' }}>
+    <div className="text-base leading-[1.8] space-y-3 text-foreground/80">
       {children}
     </div>
   </div>
