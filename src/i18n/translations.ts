@@ -833,6 +833,11 @@ export const translations = {
       emailNotConfirmed: 'Lūdzu apstipriniet e-pastu pirms ieiet.', rateLimited: 'Pārāk daudz mēģinājumu.',
       checkEmail: 'Pārbaudiet e-pastu, lai apstiprinātu kontu ✉️',
     },
+    update: {
+      title: '✨ TYANA atjauninājums pieejams!',
+      now: 'Atjaunināt tagad',
+      later: 'Vēlāk',
+    },
     common: {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
       loading: 'Ielādē...', error: 'Kaut kas nogāja greizi. Lūdzu mēģiniet vēlreiz.', or: 'vai', back: 'Atpakaļ',
