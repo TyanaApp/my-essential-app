@@ -758,9 +758,10 @@ export const translations = {
       caloriesRecalculated: 'Калории пересчитаны', dayShort: 'день',
     },
     nutritionAdvice: {
-      title: 'Совет от TYANA', loading: 'Думаю...', noData: 'Запишите приёмы пищи для персонального совета',
+      title: '💜 Совет от TYANA', loading: 'Думаю...', noData: 'Запишите приёмы пищи для персонального совета',
       basedOnData: 'На основе твоих данных сегодня', fullAnalysis: 'Подробный анализ',
-      refreshAnalysis: 'Обновить анализ', analyzing: 'Анализирую ваши данные...',
+      refreshAnalysis: 'Обновить', analyzing: 'Анализирую ваши данные...',
+      updatedAgo: 'обновлено {min} мин назад',
       errorLoading: 'Не удалось загрузить анализ', todayMacros: 'Макронутриенты сегодня',
       calories: 'Калории', protein: 'Белок', fat: 'Жир', carbs: 'Углеводы',
     },
