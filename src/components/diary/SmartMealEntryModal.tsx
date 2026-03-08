@@ -445,9 +445,19 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     const isFood = await validateFood(mealText.trim());
     if (!isFood) return;
 
+    const qtyDesc = getQuantityDescription();
+    
+    // Check cache first
+    const cacheKey = (mealText.trim() + '|' + qtyDesc + '|' + language).toLowerCase().replace(/\s+/g, '_');
+    const cached = getCachedResult(cacheKey);
+    if (cached) {
+      setResult(cached);
+      setStep('result');
+      return;
+    }
+
     setStep('analyzing');
     try {
-      const qtyDesc = getQuantityDescription();
       const { data, error } = await supabase.functions.invoke('calculate-meal-calories', {
         body: {
           mealDescription: mealText.trim(),
@@ -464,7 +474,9 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
         return;
       }
 
-      setResult(data as MealResult);
+      const resultData = data as MealResult;
+      setResult(resultData);
+      setCachedResult(cacheKey, resultData);
       setStep('result');
     } catch {
       toast.error(sm.calcFailed || 'Could not calculate. Try again.');
@@ -499,10 +511,28 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     }
   };
 
+  const getDataSourceLabel = (source: string | undefined) => {
+    const labels: Record<string, Record<string, string>> = {
+      en: { official_label: 'Official label', recipe_calculation: 'Recipe calculation', database_lookup: 'Database lookup', estimation: 'Estimated' },
+      ru: { official_label: 'Официальная этикетка', recipe_calculation: 'Расчёт по рецепту', database_lookup: 'База данных', estimation: 'Оценка' },
+      uk: { official_label: 'Офіційне маркування', recipe_calculation: 'Розрахунок за рецептом', database_lookup: 'База даних', estimation: 'Оцінка' },
+      lv: { official_label: 'Oficiālā etiķete', recipe_calculation: 'Receptes aprēķins', database_lookup: 'Datubāze', estimation: 'Novērtējums' },
+    };
+    const l = labels[language] || labels.en;
+    return l[source || 'estimation'] || l.estimation;
+  };
+
   const confidenceBadge = (conf: string) => {
-    if (conf === 'high') return { emoji: '✅', label: sm.confHigh || 'High accuracy', color: '#059669' };
-    if (conf === 'medium') return { emoji: '⚠️', label: sm.confMedium || 'Estimated', color: '#EA580C' };
-    return { emoji: '❓', label: sm.confLow || 'Approximate', color: '#DC2626' };
+    const dsLabels: Record<string, Record<string, string>> = {
+      en: { high: 'High accuracy', medium: 'Approximate', low: 'Estimated' },
+      ru: { high: 'Высокая точность', medium: 'Приблизительно', low: 'Оценка' },
+      uk: { high: 'Висока точність', medium: 'Приблизно', low: 'Оцінка' },
+      lv: { high: 'Augsta precizitāte', medium: 'Aptuveni', low: 'Novērtējums' },
+    };
+    const l = dsLabels[language] || dsLabels.en;
+    if (conf === 'high') return { emoji: '✅', label: l.high, color: '#059669' };
+    if (conf === 'medium') return { emoji: '⚠️', label: l.medium, color: '#EA580C' };
+    return { emoji: '❓', label: l.low, color: '#DC2626' };
   };
 
   const toggleClarification = (value: string) => {
