@@ -69,6 +69,9 @@ const Dashboard = () => {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [advice, setAdvice] = useState<string>('');
   const [adviceLoading, setAdviceLoading] = useState(false);
+  const [adviceGeneratedAt, setAdviceGeneratedAt] = useState<string | null>(null);
+  const [adviceFading, setAdviceFading] = useState(false);
+  const [lastCaloriesForAdvice, setLastCaloriesForAdvice] = useState<number>(0);
   const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
 
@@ -253,71 +256,102 @@ const Dashboard = () => {
     load();
   }, [user]);
 
-  // Fetch daily AI advice with localStorage cache
-  useEffect(() => {
+  // Fetch AI advice
+  const fetchAdvice = useCallback(async (force = false) => {
     if (!user || !data) return;
     const cacheKey = `tyana_advice_${user.id}`;
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
+
+    if (!force) {
       try {
-        const { date, text } = JSON.parse(cached);
-        if (date === new Date().toISOString().split('T')[0]) {
-          setAdvice(text);
-          return;
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const { text, generatedAt } = JSON.parse(cached);
+          if (generatedAt) {
+            const ageMs = Date.now() - new Date(generatedAt).getTime();
+            if (ageMs < 3 * 60 * 60 * 1000) {
+              setAdvice(text);
+              setAdviceGeneratedAt(generatedAt);
+              setLastCaloriesForAdvice(data.caloriesConsumed);
+              return;
+            }
+          }
         }
       } catch {}
     }
 
-    const fetchAdvice = async () => {
-      setAdviceLoading(true);
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
-        const [todayMealsRes, weekMealsRes, inventoryRes, goalsRes] = await Promise.all([
-          supabase.from('meal_entries').select('custom_name, total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
-          supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).gte('date', weekAgo),
-          supabase.from('inventory_items').select('name').eq('user_id', user.id).limit(10),
-          supabase.from('user_goals').select('*').eq('user_id', user.id).maybeSingle(),
-        ]);
+    if (force) {
+      setAdviceFading(true);
+      await new Promise(r => setTimeout(r, 300));
+    }
 
-        const wm = weekMealsRes.data || [];
-        const weekLen = Math.max(wm.length, 1);
+    setAdviceLoading(true);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+      const [todayMealsRes, weekMealsRes, inventoryRes, goalsRes, profileRes2] = await Promise.all([
+        supabase.from('meal_entries').select('custom_name, meal_type, total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).eq('date', today),
+        supabase.from('meal_entries').select('total_calories, total_protein, total_fat, total_carbs').eq('user_id', user.id).gte('date', weekAgo),
+        supabase.from('inventory_items').select('name').eq('user_id', user.id).limit(15),
+        supabase.from('user_goals').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase.from('profiles').select('gender').eq('user_id', user.id).maybeSingle(),
+      ]);
 
-        const { data: adviceData } = await supabase.functions.invoke('nutrition-advice', {
-          body: {
-            userProfile: {
-              weight_kg: goalsRes.data?.weight_kg,
-              height_cm: goalsRes.data?.height_cm,
-              age: goalsRes.data?.age,
-              activity_level: goalsRes.data?.activity_level,
-            },
-            todayMeals: (todayMealsRes.data || []).map(m => ({
-              name: m.custom_name, calories: m.total_calories, protein: m.total_protein, fat: m.total_fat, carbs: m.total_carbs,
-            })),
-            weekMeals: {
-              avgCalories: Math.round(wm.reduce((s, m) => s + (m.total_calories || 0), 0) / weekLen),
-              avgProtein: Math.round(wm.reduce((s, m) => s + Number(m.total_protein || 0), 0) / weekLen),
-              avgFat: Math.round(wm.reduce((s, m) => s + Number(m.total_fat || 0), 0) / weekLen),
-              avgCarbs: Math.round(wm.reduce((s, m) => s + Number(m.total_carbs || 0), 0) / weekLen),
-            },
-            inventory: inventoryRes.data || [],
-            userGoals: goalsRes.data || {},
-            language,
-            mode: 'tip',
+      const wm = weekMealsRes.data || [];
+      const weekLen = Math.max(wm.length, 1);
+
+      const { data: adviceData } = await supabase.functions.invoke('nutrition-advice', {
+        body: {
+          userProfile: {
+            weight_kg: goalsRes.data?.weight_kg,
+            height_cm: goalsRes.data?.height_cm,
+            age: goalsRes.data?.age,
+            activity_level: goalsRes.data?.activity_level,
+            gender: profileRes2.data?.gender,
           },
-        });
+          todayMeals: (todayMealsRes.data || []).map(m => ({
+            name: m.custom_name, meal_type: m.meal_type,
+            calories: m.total_calories, protein: m.total_protein, fat: m.total_fat, carbs: m.total_carbs,
+          })),
+          weekMeals: {
+            avgCalories: Math.round(wm.reduce((s, m) => s + (m.total_calories || 0), 0) / weekLen),
+            avgProtein: Math.round(wm.reduce((s, m) => s + Number(m.total_protein || 0), 0) / weekLen),
+            avgFat: Math.round(wm.reduce((s, m) => s + Number(m.total_fat || 0), 0) / weekLen),
+            avgCarbs: Math.round(wm.reduce((s, m) => s + Number(m.total_carbs || 0), 0) / weekLen),
+          },
+          inventory: inventoryRes.data || [],
+          userGoals: goalsRes.data || {},
+          language,
+          mode: 'tip',
+        },
+      });
 
-        if (adviceData?.advice) {
-          setAdvice(adviceData.advice);
-          localStorage.setItem(cacheKey, JSON.stringify({ date: today, text: adviceData.advice }));
-        }
-      } catch (e) {
-        console.error('Advice fetch error:', e);
+      if (adviceData?.advice) {
+        const genAt = adviceData.generatedAt || new Date().toISOString();
+        setAdvice(adviceData.advice);
+        setAdviceGeneratedAt(genAt);
+        setLastCaloriesForAdvice(data.caloriesConsumed);
+        localStorage.setItem(cacheKey, JSON.stringify({ text: adviceData.advice, generatedAt: genAt }));
       }
-      setAdviceLoading(false);
-    };
-    fetchAdvice();
-  }, [user, data]);
+    } catch (e) {
+      console.error('Advice fetch error:', e);
+    }
+    setAdviceLoading(false);
+    setAdviceFading(false);
+  }, [user, data, language]);
+
+  useEffect(() => {
+    if (user && data) fetchAdvice();
+  }, [user, data, fetchAdvice]);
+
+  // Auto-refresh advice when calories change significantly (±200 kcal)
+  useEffect(() => {
+    if (!data || !advice || adviceLoading) return;
+    const diff = Math.abs(data.caloriesConsumed - lastCaloriesForAdvice);
+    if (diff >= 200) {
+      const timer = setTimeout(() => fetchAdvice(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [data?.caloriesConsumed, lastCaloriesForAdvice, advice, adviceLoading, fetchAdvice]);
 
   // Zero waste tip with daily cache
   const fetchZeroWasteTip = useCallback(async (force = false) => {
@@ -547,22 +581,46 @@ const Dashboard = () => {
         )}
 
         {/* AI Nutrition Advice Card */}
-        <motion.div {...fadeUp(1.8)} className="bg-card rounded-2xl p-4 shadow-[0_2px_16px_rgba(124,58,237,0.08)] border-l-4 border-primary">
-          <p className="text-xs font-medium mb-1.5 flex items-center gap-1.5 text-muted-foreground">
-            🧠 {(t as any).nutritionAdvice?.title || "TYANA's advice"}
-          </p>
+        <motion.div
+          {...fadeUp(1.8)}
+          className="bg-card rounded-2xl p-5 shadow-[0_2px_16px_rgba(124,58,237,0.08)] border-l-4 border-primary"
+          style={{ opacity: adviceFading ? 0.4 : 1, transition: 'opacity 0.3s ease' }}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-semibold text-muted-foreground">
+              {(t as any).nutritionAdvice?.title || "💜 TYANA's advice for you"}
+            </p>
+            {adviceGeneratedAt && !adviceLoading && (
+              <span className="text-[10px] text-muted-foreground/50">
+                {(() => {
+                  const mins = Math.round((Date.now() - new Date(adviceGeneratedAt).getTime()) / 60000);
+                  const template = (t as any).nutritionAdvice?.updatedAgo || 'updated {min} min ago';
+                  return template.replace('{min}', mins < 1 ? '<1' : String(mins));
+                })()}
+              </span>
+            )}
+          </div>
+
           {adviceLoading ? (
-            <div className="flex items-center gap-2 py-2">
+            <div className="flex items-center gap-2 py-3">
               <div className="w-4 h-4 border-2 rounded-full animate-spin border-accent border-t-primary" />
               <span className="text-xs text-muted-foreground">{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
             </div>
           ) : advice ? (
-            <p className="text-sm leading-relaxed mb-2 text-foreground">{advice}</p>
+            <p className="text-[15px] leading-[1.7] text-foreground/90">{advice}</p>
           ) : (
             <p className="text-sm text-muted-foreground">{(t as any).nutritionAdvice?.noData || 'Log meals to get personalized advice'}</p>
           )}
-          <div className="flex items-center justify-between mt-1">
-            <span className="text-[10px] text-muted-foreground/60">{(t as any).nutritionAdvice?.basedOnData || 'Based on your data today'}</span>
+
+          <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
+            <button
+              onClick={() => fetchAdvice(true)}
+              disabled={adviceLoading}
+              className="text-xs font-medium flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+            >
+              <RefreshCw className={`w-3 h-3 ${adviceLoading ? 'animate-spin' : ''}`} />
+              {(t as any).nutritionAdvice?.refreshAnalysis || 'Refresh'}
+            </button>
             <button onClick={() => navigate('/nutrition-analysis')} className="text-xs font-semibold flex items-center gap-1 text-primary">
               📊 {(t as any).nutritionAdvice?.fullAnalysis || 'Full analysis'} →
             </button>
