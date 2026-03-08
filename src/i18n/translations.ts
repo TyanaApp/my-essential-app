@@ -2258,6 +2258,13 @@ export const translations = {
       cat_dishes: 'Готові страви', cat_sweets: 'Солодке', cat_drinks: 'Напої',
       dashboardBtn: '🧮 Калькулятор КБЖУ',
     },
+    openFoodFacts: {
+      scanBarcode: 'Сканувати штрихкод', productFound: 'Продукт знайдено!', notInDatabase: 'Немає в базі',
+      dataFromLabel: 'Дані з етикетки', aiEstimate: 'ІІ-оцінка', foundInDatabase: 'Знайдено в базі продуктів',
+      per100g: 'На 100г', pointCamera: 'Наведіть камеру на штрихкод', lookingUp: 'Шукаємо продукт...',
+      scanError: 'Не вдалося зчитати штрихкод', notThis: 'Не те', searching: 'Пошук...',
+      sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ІІ-оцінка',
+    },
   },
 } as const;
 
