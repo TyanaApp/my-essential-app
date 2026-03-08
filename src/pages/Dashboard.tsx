@@ -359,7 +359,7 @@ const Dashboard = () => {
     if (user && data) fetchZeroWasteTip();
   }, [user, data, fetchZeroWasteTip]);
 
-    return (
+  if (loading) {
       <div className="min-h-screen p-6 pb-mobile-safe space-y-4">
         <SkeletonCard lines={2} />
         <SkeletonCard lines={5} />
