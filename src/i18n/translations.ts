@@ -34,9 +34,10 @@ export const translations = {
       quickAddFlow: {
         title: 'What do you have at home?', subtitle: 'Just check items — storage location doesn\'t matter',
         quickAddBtn: '⚡️ Quick Add', searchPlaceholder: 'Start typing or pick from list...',
-        selectedCount: 'Selected: {count} items', addAll: 'Add all', done: 'Done ✓',
+        selectedCount: 'Selected: {count} items', addAll: 'Add all', addAllCount: 'Add all {count} items', done: 'Done ✓',
         adjustQty: 'Adjust quantities', backToSelect: '← Back', addedSuccess: '{count} items added',
         noResults: 'Nothing found', homeTab: '🏡 Home',
+        howMuch: 'How much?', custom: 'Custom', enterQty: 'Enter quantity', addItem: 'Add', cancelBtn: 'Cancel',
       },
       quickAddCategories: {
         dairy: 'Eggs & Dairy', meat: 'Meat & Fish', vegetables: 'Vegetables', fruits: 'Fruits',
