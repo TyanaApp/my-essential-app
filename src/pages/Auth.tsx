@@ -274,8 +274,7 @@ const Auth = () => {
           )}
 
           <Button type="submit" disabled={isSubmitting || (isSignUp && !termsAccepted)}
-            className="w-full h-[52px] rounded-xl text-white font-semibold text-base hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#7C3AED' }}>
+            className="w-full h-[52px] rounded-xl text-primary-foreground font-semibold text-base hover:opacity-90 transition-opacity bg-primary">
             {isSubmitting ? t.common.loading : isSignUp ? t.auth.createAccount : t.auth.signIn}
           </Button>
         </form>
