@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFamily } from '@/hooks/useFamily';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
+import { useFoodValidation } from '@/hooks/useFoodValidation';
 import {
   Dialog,
   DialogContent,
