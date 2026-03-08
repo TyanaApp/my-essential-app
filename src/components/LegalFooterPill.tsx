@@ -14,19 +14,16 @@ const LegalFooterPill = () => {
 
   return (
     <div className="flex justify-center">
-      <div
-        className="inline-flex items-center gap-1 rounded-full px-4 sm:px-5 py-2 flex-wrap justify-center"
-        style={{ background: 'rgba(124, 58, 237, 0.08)' }}
-      >
-        <Link to="/privacy" className="text-[11px] sm:text-xs font-medium text-muted-foreground hover:underline whitespace-nowrap">
+      <div className="inline-flex items-center gap-1.5">
+        <Link to="/privacy" className="text-[11px] font-medium text-muted-foreground/70 hover:text-muted-foreground transition-colors">
           {labels.privacy}
         </Link>
-        <span className="text-[11px] sm:text-xs text-muted-foreground/50">·</span>
-        <Link to="/terms" className="text-[11px] sm:text-xs font-medium text-muted-foreground hover:underline whitespace-nowrap">
+        <span className="text-[11px] text-muted-foreground/30">·</span>
+        <Link to="/terms" className="text-[11px] font-medium text-muted-foreground/70 hover:text-muted-foreground transition-colors">
           {labels.terms}
         </Link>
-        <span className="text-[11px] sm:text-xs text-muted-foreground/50">·</span>
-        <Link to="/cookies" className="text-[11px] sm:text-xs font-medium text-muted-foreground hover:underline whitespace-nowrap">
+        <span className="text-[11px] text-muted-foreground/30">·</span>
+        <Link to="/cookies" className="text-[11px] font-medium text-muted-foreground/70 hover:text-muted-foreground transition-colors">
           {labels.cookie}
         </Link>
       </div>
