@@ -367,7 +367,7 @@ const RecipeDetailModal = ({
           <motion.div key="detail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {/* Header with photo */}
             <div className="relative h-56">
-              <RecipePhoto title={recipe.title} size="lg" className="h-56" />
+              <RecipePhoto title={recipe.title} imageQuery={recipe.imageQuery} size="lg" className="h-56" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               <button onClick={onClose} className="absolute top-4 left-4 p-2 rounded-full bg-black/30 backdrop-blur-sm">
                 <X className="w-5 h-5 text-white" />
