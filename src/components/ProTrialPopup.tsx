@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 const TRANSLATIONS = {
   en: {
     title: '7 days Pro for free!',
-    foundingBadge: '🏆 You are one of the first 1000! Price €6.49 locked forever',
+    earlyBirdBadge: '🎉 Your special price €6.49/mo — locked forever',
     feat1: '✨ Unlimited scanning',
     feat2: '🤖 AI recipes for your products',
     feat3: '📊 Personal nutrition analysis',
