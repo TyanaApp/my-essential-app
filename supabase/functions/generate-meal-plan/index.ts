@@ -5,6 +5,40 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Try to repair truncated JSON by closing open brackets/braces
+function repairJson(text: string): string {
+  let s = text.trim();
+  // Remove trailing comma
+  s = s.replace(/,\s*$/, '');
+  
+  // Count open/close brackets
+  let braces = 0, brackets = 0;
+  let inString = false, escape = false;
+  for (const ch of s) {
+    if (escape) { escape = false; continue; }
+    if (ch === '\\') { escape = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === '{') braces++;
+    if (ch === '}') braces--;
+    if (ch === '[') brackets++;
+    if (ch === ']') brackets--;
+  }
+  
+  // Close unclosed strings
+  if (inString) s += '"';
+  
+  // Remove trailing partial key-value
+  s = s.replace(/,\s*"[^"]*"?\s*:?\s*"?[^"{}[\]]*$/, '');
+  s = s.replace(/,\s*$/, '');
+  
+  // Close brackets/braces
+  for (let i = 0; i < brackets; i++) s += ']';
+  for (let i = 0; i < braces; i++) s += '}';
+  
+  return s;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -20,7 +54,6 @@ serve(async (req) => {
     const langMap: Record<string, string> = { ru: 'Russian', uk: 'Ukrainian', lv: 'Latvian', en: 'English' };
     const lang = langMap[language] || 'English';
 
-    // Safe defaults
     const calories = goals?.daily_calories_target || 2000;
     const dietType = goals?.diet_type || 'omnivore';
     const allergies = goals?.allergies?.join(', ') || 'none';
@@ -30,15 +63,10 @@ serve(async (req) => {
     const name = profile?.display_name || 'User';
 
     const inventoryList = (inventory || [])
-      .slice(0, 20)
-      .map((i: any) => `${i.name}: ${i.quantity || 1}${i.unit || 'pcs'} (exp: ${i.expires_at || 'n/a'})`)
-      .join('\n') || 'basic products (eggs, grains, vegetables, meat)';
+      .slice(0, 15)
+      .map((i: any) => `${i.name}`)
+      .join(', ') || 'basic products';
 
-    const familyList = (familyMembers || [])
-      .map((m: any) => `${m.name} age ${m.age || '?'} allergies:${m.allergies?.join(',') || 'none'}`)
-      .join('; ') || 'just one person';
-
-    // Calculate dates
     const startDate = weekStartDate || new Date().toISOString().split('T')[0];
     const dates: string[] = [];
     const start = new Date(startDate);
@@ -48,78 +76,21 @@ serve(async (req) => {
       dates.push(d.toISOString().split('T')[0]);
     }
 
-    const systemPrompt = `You are a professional nutritionist creating personalized meal plans.
-Respond entirely in ${lang}.
-Return ONLY valid JSON. No text outside JSON. No markdown. No asterisks. No code blocks.`;
+    // Simplified prompt to produce shorter output
+    const userPrompt = `Create a 7-day meal plan. Respond in ${lang}. Return ONLY valid JSON, no markdown.
 
-    const userPrompt = `Create a 7-day meal plan for ${name}.
+Person: ${name}, Goal: ${goalType}, ${calories} kcal/day, Diet: ${dietType}, Allergies: ${allergies}, Dislikes: ${disliked}, Household: ${householdSize}
+Available: ${inventoryList}
 
-PERSON: Age ${goals?.age || '?'}, Gender ${profile?.gender || '?'}, Weight ${goals?.weight_kg || '?'}kg, Height ${goals?.height_cm || '?'}cm
-Activity: ${goals?.activity_level || 'moderate'}
-Goal: ${goalType}
-Calories: ${calories} kcal/day
-Diet: ${dietType}
-Allergies: ${allergies}
-Dislikes: ${disliked}
-Household: ${householdSize} people
-Family: ${familyList}
+IMPORTANT: Keep ingredient lists SHORT (max 4 items each). Keep cookTime short like "15м" or "15m". Keep meal names short.
 
-AVAILABLE FOOD:
-${inventoryList}
+Return exactly this JSON structure:
+{"days":[{"date":"${dates[0]}","dayName":"day name","meals":{"breakfast":{"name":"meal","emoji":"🥣","calories":350,"protein":15,"fat":8,"carbs":55,"ingredients":["a","b","c"],"cookTime":"10м","fromInventory":true},"lunch":{"name":"meal","emoji":"🍲","calories":500,"protein":30,"fat":15,"carbs":60,"ingredients":["a","b"],"cookTime":"20м","fromInventory":false},"dinner":{"name":"meal","emoji":"🍗","calories":450,"protein":35,"fat":16,"carbs":40,"ingredients":["a","b"],"cookTime":"25м","fromInventory":true},"snack":{"name":"snack","emoji":"🍎","calories":150,"protein":5,"fat":3,"carbs":20,"ingredients":["a"],"cookTime":"0м","fromInventory":true}},"dayTotal":{"calories":1450,"protein":85,"fat":42,"carbs":175}}],"weekSummary":{"avgCalories":${calories},"avgProtein":100,"avgFat":65,"avgCarbs":250},"shoppingList":[{"name":"product","amount":"500g"}]}
 
-RULES:
-1. Each day: breakfast + lunch + dinner + snack
-2. Daily total within ±150 kcal of ${calories}
-3. No repeated meals in 7 days
-4. Prioritize expiring items first
-5. Mark fromInventory: true if all ingredients available
-6. List missingIngredients if shopping needed
-7. Scale for ${householdSize} people
-8. Weekend meals can be more elaborate
+Generate ALL 7 days: ${dates.map((d, i) => `${d}`).join(', ')}
+Each day total should be close to ${calories} kcal.`;
 
-Return this exact JSON:
-{
-  "days": [
-    {
-      "date": "${dates[0]}",
-      "dayName": "day name in ${lang}",
-      "meals": {
-        "breakfast": {
-          "name": "meal name",
-          "emoji": "🥣",
-          "calories": 350,
-          "protein": 15,
-          "fat": 8,
-          "carbs": 55,
-          "ingredients": ["ingredient 1", "ingredient 2"],
-          "cookTime": "10 min",
-          "fromInventory": true,
-          "missingIngredients": []
-        },
-        "lunch": { ...same structure },
-        "dinner": { ...same structure },
-        "snack": { ...same structure }
-      },
-      "dayTotal": { "calories": 1950, "protein": 98, "fat": 62, "carbs": 245 }
-    }
-  ],
-  "weekSummary": {
-    "avgCalories": 1950,
-    "avgProtein": 96,
-    "avgFat": 63,
-    "avgCarbs": 242,
-    "daysFromInventory": 4,
-    "estimatedShoppingCost": 25
-  },
-  "shoppingList": [
-    { "name": "product", "amount": "500g", "forDays": ["Mon", "Fri"] }
-  ]
-}
-
-Generate ALL 7 days with these dates:
-${dates.map((d, i) => `Day ${i + 1}: ${d}`).join('\n')}`;
-
-    console.log("Calling AI gateway for meal plan...");
+    console.log("Calling AI gateway...");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -130,38 +101,30 @@ ${dates.map((d, i) => `Day ${i + 1}: ${d}`).join('\n')}`;
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: `You are a nutritionist. Return ONLY compact valid JSON. No markdown, no code blocks, no extra text. Respond in ${lang}. Keep all string values short and concise.` },
           { role: "user", content: userPrompt },
         ],
-        max_tokens: 8000,
+        max_tokens: 16000,
+        temperature: 0.7,
       }),
     });
 
-    console.log("AI gateway status:", response.status);
+    console.log("AI status:", response.status);
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("AI gateway error:", response.status, errText);
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+      console.error("AI error:", response.status, errText);
       return new Response(JSON.stringify({ error: `AI error: ${response.status}` }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: response.status === 429 ? 429 : response.status === 402 ? 402 : 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const aiData = await response.json();
     const rawText = aiData.choices?.[0]?.message?.content || "";
+    const finishReason = aiData.choices?.[0]?.finish_reason || "unknown";
 
-    console.log("AI response length:", rawText.length);
-    console.log("AI response preview:", rawText.substring(0, 300));
+    console.log("Response length:", rawText.length, "finish_reason:", finishReason);
 
     if (!rawText) {
       return new Response(JSON.stringify({ error: "Empty AI response" }), {
@@ -169,48 +132,66 @@ ${dates.map((d, i) => `Day ${i + 1}: ${d}`).join('\n')}`;
       });
     }
 
-    // Aggressive JSON extraction
+    // Clean markdown
     let cleaned = rawText
       .replace(/```json\s*/gi, '')
       .replace(/```\s*/g, '')
-      .replace(/^\s*[\r\n]+/gm, '')
       .trim();
 
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error("No JSON found:", cleaned.substring(0, 500));
-      return new Response(JSON.stringify({ error: "Failed to parse meal plan" }), {
+    // Extract JSON
+    const jsonStart = cleaned.indexOf('{');
+    if (jsonStart === -1) {
+      console.error("No JSON found");
+      return new Response(JSON.stringify({ error: "No JSON in response" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    let jsonStr = cleaned.substring(jsonStart);
     let plan: any;
+
+    // Try parsing directly first
     try {
-      plan = JSON.parse(jsonMatch[0]);
-    } catch (parseErr) {
-      console.error("JSON parse error:", parseErr);
-      // Try fixing common issues
-      const fixed = jsonMatch[0]
-        .replace(/,\s*}/g, '}')
-        .replace(/,\s*]/g, ']')
-        .replace(/'/g, '"');
+      plan = JSON.parse(jsonStr);
+    } catch (e1) {
+      console.log("Direct parse failed, attempting repair...");
+      // Try repairing truncated JSON
       try {
-        plan = JSON.parse(fixed);
-      } catch {
-        return new Response(JSON.stringify({ error: "Failed to parse meal plan JSON" }), {
-          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        const repaired = repairJson(jsonStr);
+        plan = JSON.parse(repaired);
+        console.log("Repair succeeded");
+      } catch (e2) {
+        // Last resort: try to extract partial plan with at least some days
+        console.error("Repair failed:", e2);
+        
+        // Try to find and parse just the days array
+        try {
+          const daysMatch = jsonStr.match(/"days"\s*:\s*\[/);
+          if (daysMatch) {
+            const daysStart = jsonStr.indexOf(daysMatch[0]);
+            let partial = jsonStr.substring(daysStart + daysMatch[0].length - 1);
+            partial = repairJson(partial);
+            const daysArr = JSON.parse(partial);
+            if (Array.isArray(daysArr) && daysArr.length > 0) {
+              plan = { days: daysArr, weekSummary: { avgCalories: calories }, shoppingList: [] };
+              console.log("Partial recovery: got", daysArr.length, "days");
+            }
+          }
+        } catch {
+          return new Response(JSON.stringify({ error: "Failed to parse meal plan" }), {
+            status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
       }
     }
 
-    if (!plan.days || !Array.isArray(plan.days) || plan.days.length === 0) {
-      console.error("Empty plan generated:", JSON.stringify(plan).substring(0, 300));
-      return new Response(JSON.stringify({ error: "Empty plan generated" }), {
+    if (!plan?.days?.length) {
+      return new Response(JSON.stringify({ error: "Empty plan" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    console.log("Plan generated successfully, days:", plan.days.length);
+    console.log("Success:", plan.days.length, "days");
 
     return new Response(JSON.stringify(plan), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
