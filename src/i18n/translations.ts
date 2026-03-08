@@ -505,6 +505,20 @@ export const translations = {
       waitlistCount: '{count} users are waiting for this feature',
       profileLabel: '🏪 Store integrations',
     },
+    reminders: {
+      title: 'My Reminders', addReminder: 'Add reminder', whatToRemind: 'What to remind?',
+      placeholder: 'Go to the store for milk', voiceReminder: 'Voice reminder',
+      once: 'Once', daily: 'Daily', weekdays: 'Weekdays', weekends: 'Weekends',
+      dateLabel: 'Date', timeLabel: 'Time', repeatLabel: 'Repeat',
+      saved: 'Reminder saved ✓', saveFailed: 'Failed to save', voiceFailed: 'Could not parse voice',
+      processing: 'Processing voice...', confirmReminder: 'Confirm reminder',
+      willRemind: 'Will remind', empty: 'No reminders yet',
+      today: 'Today', tomorrow: 'Tomorrow', recurring: 'Recurring', completed: 'Completed',
+    },
+    mealReminders: {
+      title: '🍽 Meal reminders',
+      breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner',
+    },
   },
   ru: {
     nav: { home: 'Главная', inventory: 'Продукты', recipes: 'Рецепты', shopping: 'Покупки', diary: 'Дневник', settings: 'Настройки', profile: 'Профиль' },
