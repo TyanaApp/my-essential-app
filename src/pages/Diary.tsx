@@ -310,10 +310,10 @@ const Diary = () => {
                 ) : (
                   <div className="space-y-1.5">
                     {sectionEntries.map((entry) => (
-                      <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg" style={{ backgroundColor: '#FAFAFE' }}>
+                      <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-muted/30">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate" style={{ color: '#1E1B4B' }}>{entry.custom_name || t.diary.meal}</p>
-                          <p className="text-[10px]" style={{ color: '#9CA3AF' }}>
+                          <p className="text-sm font-medium truncate text-foreground">{entry.custom_name || t.diary.meal}</p>
+                          <p className="text-[10px] text-muted-foreground">
                             {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
                             {(entry.total_protein ?? 0) > 0 && ` · P:${entry.total_protein}g`}
                             {(entry.total_fat ?? 0) > 0 && ` · F:${entry.total_fat}g`}
