@@ -344,12 +344,11 @@ const Recipes = () => {
                 return (
                   <>
                     <div className="h-44 relative">
-                      <img
-                        src={`https://source.unsplash.com/600x400/?${encodeURIComponent(r.title + ' food dish')}`}
-                        alt={r.title}
-                        className="h-full w-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.background = 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #C4B5FD 100%)'; }}
-                      />
+                      <RecipePhoto title={r.title} size="lg" />
+                      <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm z-10">
+                        <X className="w-5 h-5 text-white" />
+                      </button>
+                    </div>
                       <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm">
                         <X className="w-5 h-5 text-white" />
                       </button>
