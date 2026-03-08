@@ -255,6 +255,8 @@ export const translations = {
       weeklySummaryDesc: 'Monday morning savings report',
       recipeSuggestions: 'Recipe suggestions',
       recipeSuggestionsDesc: 'Smart "use it up" recipe ideas',
+      weeklyReport: 'Weekly email report',
+      weeklyReportDesc: 'Every Sunday by email',
       useBeforeGone: '💡 Use before it\'s gone',
       cookNow: 'Cook this now →',
       noSuggestions: 'No expiring items to use up',
