@@ -1277,6 +1277,12 @@ export const translations = {
       addAllMissing: 'Pievienot visu →',
       deleteFromSaved: 'Noņemt no saglabātajiem?', deleteYes: 'Jā', deleteNo: 'Nē', recipeDeleted: 'Recepte noņemta',
       minUnit: 'min', estCost: 'apm.',
+      tabSuggested: '✨ Ieteiktās', tabSaved: '♥️ Saglabātās',
+      savedToFavorites: 'Saglabāts izlasē ♥️', removeFromSaved: 'Noņemt no saglabātajiem?',
+      removeBtn: 'Noņemt', emptyFavTitle: 'Šeit būs tavas mīļākās receptes',
+      emptyFavHint: 'Spied ♡ uz jebkuras receptes lai saglabātu', loadMore: '+ Rādīt vairāk receptes',
+      newRecipes: '🔄 Jaunas receptes', cook: '👨‍🍳 Gatavot',
+      matchPercent: '{pct}% no produktiem',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
