@@ -70,10 +70,17 @@ const Shopping = () => {
           // Fallback: split by comma/and
           const voiceItems = transcript.split(/,|and|и|un/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
           if (!user || voiceItems.length === 0) return;
-          const inserts = voiceItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
+          // Validate each item
+          const validItems: string[] = [];
+          for (const item of voiceItems) {
+            const ok = await validateFood(item);
+            if (ok) validItems.push(item);
+          }
+          if (validItems.length === 0) return;
+          const inserts = validItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
           await supabase.from('shopping_items').insert(inserts as any);
           await fetchItems();
-          toast.success(`${(t.shopping as any).adding || 'Adding'}: ${voiceItems.join(', ')} ✓`);
+          toast.success(`${(t.shopping as any).adding || 'Adding'}: ${validItems.join(', ')} ✓`);
           return;
         }
         

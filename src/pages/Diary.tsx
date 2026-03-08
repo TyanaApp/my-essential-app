@@ -184,6 +184,14 @@ const Diary = () => {
 
   const handleAddManual = async () => {
     if (!user || !manualName.trim()) return;
+
+    // Validate food item
+    const isFood = await validateFood(manualName.trim());
+    if (!isFood) {
+      setManualName('');
+      return;
+    }
+
     try {
       const { data, error } = await supabase.from('meal_entries').insert({
         user_id: user.id, date: dateStr, meal_type: modalMealType,
