@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useIsStandalone } from '@/hooks/useStandalone';
 import { motion } from 'framer-motion';
 import PWAInstallGuide from '@/components/install/PWAInstallGuide';
 import { 
@@ -189,6 +190,7 @@ const Profile = () => {
   const [ratingOpen, setRatingOpen] = useState(false);
   const [familyOpen, setFamilyOpen] = useState(false);
   const [installGuideOpen, setInstallGuideOpen] = useState(false);
+  const isStandalone = useIsStandalone();
 
   // Listen for open-payments event
   useEffect(() => {
@@ -453,16 +455,23 @@ const Profile = () => {
       >
         <Card className="bg-card border-border mb-4">
           <CardContent className="p-0">
-            <button
-              onClick={() => setInstallGuideOpen(true)}
-              className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Smartphone className="w-5 h-5 text-primary" />
-                <span className="font-exo text-foreground">{(t.profile as any).installApp || '📲 Install App'}</span>
+            {isStandalone ? (
+              <div className="w-full p-4 flex items-center gap-3">
+                <Smartphone className="w-5 h-5 text-emerald-500" />
+                <span className="font-exo text-muted-foreground">{(t.profile as any).alreadyInstalled || '✅ App installed'}</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
+            ) : (
+              <button
+                onClick={() => setInstallGuideOpen(true)}
+                className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Smartphone className="w-5 h-5 text-primary" />
+                  <span className="font-exo text-foreground">{(t.profile as any).installApp || '📲 Install App'}</span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </button>
+            )}
           </CardContent>
         </Card>
       </motion.div>

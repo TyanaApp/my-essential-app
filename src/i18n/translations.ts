@@ -166,7 +166,7 @@ export const translations = {
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
       systemSettings: 'System Settings', payments: 'Payments', logout: 'Log Out',
-      deleteAccount: 'Delete Account', installApp: '📲 Install App',
+      deleteAccount: 'Delete Account', installApp: '📲 Install App', alreadyInstalled: '✅ App installed',
       displayName: 'Display Name', bio: 'Bio', gender: 'Gender', dateOfBirth: 'Date of Birth',
       male: 'Male', female: 'Female', other: 'Other', preferNotToSay: 'Prefer not to say',
       connectDevices: 'Connect Devices', soon: 'Soon',
@@ -376,6 +376,9 @@ export const translations = {
       getTheApp: '📱 Get the App',
       iosTooltipLine1: 'Tap Share ↗ → Add to Home Screen',
       iosTooltipLine2: 'Use Safari for this to work',
+      installed: 'TYANA installed! 🎉',
+      openInSafari: 'Open this page in Safari to install',
+      safariRequired: 'Safari → Share → Add to Home Screen',
     },
     landing: {
       signIn: 'Sign In', startFree: 'Start Free',
@@ -741,7 +744,7 @@ export const translations = {
     profile: {
       title: 'Профиль', editProfile: 'Редактировать профиль', accountSettings: 'Настройки аккаунта',
       systemSettings: 'Системные настройки', payments: 'Платежи', logout: 'Выйти',
-      deleteAccount: 'Удалить аккаунт', installApp: '📲 Установить приложение',
+      deleteAccount: 'Удалить аккаунт', installApp: '📲 Установить приложение', alreadyInstalled: '✅ Приложение установлено',
       displayName: 'Имя', bio: 'О себе', gender: 'Пол', dateOfBirth: 'Дата рождения',
       male: 'Мужской', female: 'Женский', other: 'Другой', preferNotToSay: 'Не указывать',
       connectDevices: 'Подключить устройства', soon: 'Скоро',
@@ -887,6 +890,7 @@ export const translations = {
       scanWithCamera: 'Сканируйте камерой телефона', iosInstructions: 'Откройте в Safari → Поделиться → На экран «Домой»',
       androidInstructions: 'Откройте в Chrome → Меню ⋮ → На главный экран', bannerText: 'Добавьте на главный экран',
       getTheApp: '📱 Скачать приложение', iosTooltipLine1: 'Нажмите «Поделиться» ↗ → На экран «Домой»', iosTooltipLine2: 'Используйте Safari',
+      installed: 'TYANA установлена! 🎉', openInSafari: 'Для установки открой эту страницу в Safari', safariRequired: 'Safari → Поделиться → На экран Домой',
     },
     landing: {
       signIn: 'Войти', startFree: 'Начать бесплатно', navFeatures: 'Функции', navPricing: 'Цены', navFaq: 'Вопросы',
@@ -1221,7 +1225,7 @@ export const translations = {
     profile: {
       title: 'Profils', editProfile: 'Rediģēt profilu', accountSettings: 'Konta iestatījumi',
       systemSettings: 'Sistēmas iestatījumi', payments: 'Maksājumi', logout: 'Iziet',
-      deleteAccount: 'Dzēst kontu', installApp: '📲 Instalēt lietotni',
+      deleteAccount: 'Dzēst kontu', installApp: '📲 Instalēt lietotni', alreadyInstalled: '✅ Lietotne instalēta',
       displayName: 'Vārds', bio: 'Par sevi', gender: 'Dzimums', dateOfBirth: 'Dzimšanas datums',
       male: 'Vīrietis', female: 'Sieviete', other: 'Cits', preferNotToSay: 'Nevēlos norādīt',
       connectDevices: 'Savienot ierīces', soon: 'Drīzumā',
@@ -1364,6 +1368,7 @@ export const translations = {
       scanWithCamera: 'Skenējiet ar tālruņa kameru', iosInstructions: 'Atveriet Safari → Kopīgot → Pievienot sākuma ekrānam',
       androidInstructions: 'Atveriet Chrome → Izvēlne ⋮ → Pievienot sākuma ekrānam', bannerText: 'Pievienojiet sākuma ekrānam',
       getTheApp: '📱 Iegūt lietotni', iosTooltipLine1: 'Spiediet "Kopīgot" ↗ → Pievienot sākuma ekrānam', iosTooltipLine2: 'Izmantojiet Safari',
+      installed: 'TYANA instalēta! 🎉', openInSafari: 'Atver šo lapu Safari lai instalētu', safariRequired: 'Safari → Kopīgot → Pievienot sākuma ekrānam',
     },
     landing: {
       signIn: 'Ieiet', startFree: 'Sākt bezmaksas', navFeatures: 'Funkcijas', navPricing: 'Cenas', navFaq: 'Jautājumi',
@@ -1698,7 +1703,7 @@ export const translations = {
     profile: {
       title: 'Профіль', editProfile: 'Редагувати профіль', accountSettings: 'Налаштування акаунту',
       systemSettings: 'Системні налаштування', payments: 'Платежі', logout: 'Вийти',
-      deleteAccount: 'Видалити акаунт', installApp: '📲 Встановити додаток',
+      deleteAccount: 'Видалити акаунт', installApp: '📲 Встановити додаток', alreadyInstalled: '✅ Додаток встановлено',
       displayName: 'Ім\'я', bio: 'Про себе', gender: 'Стать', dateOfBirth: 'Дата народження',
       male: 'Чоловіча', female: 'Жіноча', other: 'Інша', preferNotToSay: 'Не вказувати',
       connectDevices: 'Підключити пристрої', soon: 'Скоро',
@@ -1842,6 +1847,7 @@ export const translations = {
       scanWithCamera: 'Скануйте камерою телефону', iosInstructions: 'Відкрийте в Safari → Поділитися → На головний екран',
       androidInstructions: 'Відкрийте в Chrome → Меню ⋮ → На головний екран', bannerText: 'Додайте на головний екран',
       getTheApp: '📱 Завантажити додаток', iosTooltipLine1: 'Натисніть «Поділитися» ↗ → На головний екран', iosTooltipLine2: 'Використовуйте Safari',
+      installed: 'TYANA встановлена! 🎉', openInSafari: 'Відкрий цю сторінку в Safari для встановлення', safariRequired: 'Safari → Поділитися → На головний екран',
     },
     landing: {
       signIn: 'Увійти', startFree: 'Почати безкоштовно', navFeatures: 'Функції', navPricing: 'Ціни', navFaq: 'Питання',
