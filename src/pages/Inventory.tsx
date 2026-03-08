@@ -276,13 +276,20 @@ const Inventory = () => {
       </button>
 
       {/* Action buttons */}
-      <div className="grid grid-cols-2 gap-2 mb-5">
+      <div className="grid grid-cols-3 gap-2 mb-5">
         <button
           className="flex items-center justify-center gap-1.5 h-12 rounded-xl border-[1.5px] text-sm font-medium"
           style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
           onClick={handleScanClick}
         >
           <Camera className="w-4 h-4" /> {t.inventory.scan}
+        </button>
+        <button
+          className="flex items-center justify-center gap-1.5 h-12 rounded-xl border-[1.5px] text-sm font-medium"
+          style={{ borderColor: 'hsl(263, 84%, 58%)', color: 'hsl(263, 84%, 58%)' }}
+          onClick={() => setBarcodeOpen(true)}
+        >
+          <ScanBarcode className="w-4 h-4" /> {(t as any).openFoodFacts?.scanBarcode || '📷 Barcode'}
         </button>
         <button
           className="flex items-center justify-center gap-1.5 h-12 rounded-xl text-sm font-medium border-[1.5px]"
