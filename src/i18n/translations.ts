@@ -603,6 +603,7 @@ export const translations = {
       expiryAlerts: 'Уведомления о сроках', expiryAlertsDesc: 'Узнайте когда продукты скоро испортятся',
       weeklySummary: 'Еженедельный отчёт', weeklySummaryDesc: 'Утренний отчёт об экономии в понедельник',
       recipeSuggestions: 'Предложения рецептов', recipeSuggestionsDesc: 'Умные идеи "используй пока не испортилось"',
+      weeklyReport: 'Еженедельный отчёт', weeklyReportDesc: 'Каждое воскресенье на email',
       useBeforeGone: '💡 Используйте пока не испортилось', cookNow: 'Приготовить сейчас →', noSuggestions: 'Нет продуктов с истекающим сроком',
     },
     scan: {
