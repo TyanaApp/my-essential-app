@@ -228,6 +228,8 @@ export const useNotifications = () => {
     settings,
     updateSettings,
     markAllRead,
+    deleteAlert,
+    clearAll,
     addAlert,
   };
 };
