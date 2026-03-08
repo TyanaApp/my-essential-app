@@ -33,7 +33,7 @@ const TermsPage = () => {
         'Pro Founder €6.49/month: first 1000 users only, price locked forever, unlimited',
         'Pro €12.99/month: users after first 1000, unlimited',
         '7-day trial: free for all new users, no card required, auto-switches to Free after',
-        'Refunds: contact supporttyana@gmail.com within 7 days of payment',
+        'Refunds: contact us within 7 days of payment',
       ],
       s5Title: '5. Prohibited use',
       s5Items: ['Automated data scraping', 'Sharing account credentials', 'Commercial use without permission', 'Attempting to breach security'],
