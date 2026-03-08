@@ -15,18 +15,18 @@ const LegalFooterPill = () => {
   return (
     <div className="flex justify-center">
       <div
-        className="inline-flex items-center gap-1 rounded-full px-5 py-2"
+        className="inline-flex items-center gap-1 rounded-full px-4 sm:px-5 py-2 flex-wrap justify-center"
         style={{ background: 'rgba(124, 58, 237, 0.08)' }}
       >
-        <Link to="/privacy" className="text-xs font-medium hover:underline" style={{ color: '#6B7280' }}>
+        <Link to="/privacy" className="text-[11px] sm:text-xs font-medium text-muted-foreground hover:underline whitespace-nowrap">
           {labels.privacy}
         </Link>
-        <span className="text-xs" style={{ color: '#D1D5DB' }}>·</span>
-        <Link to="/terms" className="text-xs font-medium hover:underline" style={{ color: '#6B7280' }}>
+        <span className="text-[11px] sm:text-xs text-muted-foreground/50">·</span>
+        <Link to="/terms" className="text-[11px] sm:text-xs font-medium text-muted-foreground hover:underline whitespace-nowrap">
           {labels.terms}
         </Link>
-        <span className="text-xs" style={{ color: '#D1D5DB' }}>·</span>
-        <Link to="/cookies" className="text-xs font-medium hover:underline" style={{ color: '#6B7280' }}>
+        <span className="text-[11px] sm:text-xs text-muted-foreground/50">·</span>
+        <Link to="/cookies" className="text-[11px] sm:text-xs font-medium text-muted-foreground hover:underline whitespace-nowrap">
           {labels.cookie}
         </Link>
       </div>
