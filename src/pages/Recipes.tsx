@@ -233,11 +233,11 @@ const Recipes = () => {
     if (tab === 'plan') setActiveMainTab('plan');
   }, [searchParams]);
 
-  const TAB_LABELS: Record<string, { recipes: string; plan: string }> = {
-    ru: { recipes: '🍽 Рецепты', plan: '📅 План на неделю' },
-    en: { recipes: '🍽 Recipes', plan: '📅 Weekly Plan' },
-    uk: { recipes: '🍽 Рецепти', plan: '📅 План на тиждень' },
-    lv: { recipes: '🍽 Receptes', plan: '📅 Nedēļas plāns' },
+  const TAB_LABELS: Record<string, { recipes: string; plan: string; calc: string }> = {
+    ru: { recipes: '🍽 Рецепты', plan: '📅 План', calc: '🔢 КБЖУ' },
+    en: { recipes: '🍽 Recipes', plan: '📅 Plan', calc: '🔢 KBJU' },
+    uk: { recipes: '🍽 Рецепти', plan: '📅 План', calc: '🔢 КБЖУ' },
+    lv: { recipes: '🍽 Receptes', plan: '📅 Plāns', calc: '🔢 KBJU' },
   };
   const tabLabels = TAB_LABELS[language] || TAB_LABELS.en;
 
