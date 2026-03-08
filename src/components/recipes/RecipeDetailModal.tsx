@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
 interface NormalizedRecipe {
-  title: string; ingredients: Ingredient[]; instructions: string[];
+  title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
   nutrition: Nutrition; prepTime: number; estimatedCost: number;
 }
 
@@ -367,7 +367,7 @@ const RecipeDetailModal = ({
           <motion.div key="detail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {/* Header with photo */}
             <div className="relative h-56">
-              <RecipePhoto title={recipe.title} size="lg" className="h-56" />
+              <RecipePhoto title={recipe.title} imageQuery={recipe.imageQuery} size="lg" className="h-56" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               <button onClick={onClose} className="absolute top-4 left-4 p-2 rounded-full bg-black/30 backdrop-blur-sm">
                 <X className="w-5 h-5 text-white" />

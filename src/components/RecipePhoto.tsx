@@ -251,11 +251,12 @@ function getGradient(title: string): string {
 
 interface RecipePhotoProps {
   title: string;
+  imageQuery?: string;
   className?: string;
   size?: 'sm' | 'lg';
 }
 
-const RecipePhoto = ({ title, className = '', size = 'sm' }: RecipePhotoProps) => {
+const RecipePhoto = ({ title, imageQuery, className = '', size = 'sm' }: RecipePhotoProps) => {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
   const [imgSrc, setImgSrc] = useState('');
   const [attempts, setAttempts] = useState(0);
@@ -267,8 +268,14 @@ const RecipePhoto = ({ title, className = '', size = 'sm' }: RecipePhotoProps) =
   useEffect(() => {
     setStatus('loading');
     setAttempts(0);
-    setImgSrc(getPhotoUrl(title, 0));
-  }, [title]);
+    // If we have imageQuery from AI, use it directly for much better matching
+    if (imageQuery) {
+      const lock = hashCode(title);
+      setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(imageQuery)}?lock=${lock}`);
+    } else {
+      setImgSrc(getPhotoUrl(title, 0));
+    }
+  }, [title, imageQuery]);
 
   const handleError = () => {
     if (attempts < 2) {
@@ -276,10 +283,11 @@ const RecipePhoto = ({ title, className = '', size = 'sm' }: RecipePhotoProps) =
       setAttempts(next);
       setStatus('loading');
       if (next === 1) {
-        // Retry with simpler query (first word + food)
-        const simpleWord = title.split(/\s+/)[0];
-        const simple = /^[a-zA-Z]/.test(simpleWord) ? simpleWord : 'food';
-        setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(simple + ' dish')}?lock=${hashCode(title) + 100}`);
+        // Retry: if imageQuery available use simpler version, otherwise use keyword mapping
+        const fallbackQuery = imageQuery 
+          ? imageQuery.split(' ')[0] + ' food'
+          : getSearchQuery(title).split(' ')[0] + ' dish';
+        setImgSrc(`https://loremflickr.com/400/300/food,${encodeURIComponent(fallbackQuery)}?lock=${hashCode(title) + 100}`);
       } else {
         // Give up, show emoji
         setStatus('error');

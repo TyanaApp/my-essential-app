@@ -19,7 +19,7 @@ const NutritionCalculator = lazy(() => import('@/pages/NutritionCalculator'));
 
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
-interface Recipe { title: string; ingredients: Ingredient[]; instructions: string[]; nutrition: Nutrition; prepTime: number; estimatedCost: number; }
+interface Recipe { title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[]; nutrition: Nutrition; prepTime: number; estimatedCost: number; }
 interface SavedRecipe { id: string; title: string; ingredients: Ingredient[] | null; instructions: string[] | null; nutrition: Nutrition | null; prep_time: number | null; estimated_cost: number | null; is_favorite: boolean; }
 
 const MEAL_TYPE_KEYS = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
@@ -171,7 +171,7 @@ const Recipes = () => {
 
   const normalizeRecipe = (r: Recipe | SavedRecipe) => {
     if ('id' in r) {
-      return { title: r.title, ingredients: (r.ingredients || []) as Ingredient[], instructions: (r.instructions || []) as string[], nutrition: (r.nutrition || { calories: 0, protein: 0, fat: 0, carbs: 0 }) as Nutrition, prepTime: r.prep_time || 0, estimatedCost: r.estimated_cost || 0 };
+      return { title: r.title, imageQuery: undefined, ingredients: (r.ingredients || []) as Ingredient[], instructions: (r.instructions || []) as string[], nutrition: (r.nutrition || { calories: 0, protein: 0, fat: 0, carbs: 0 }) as Nutrition, prepTime: r.prep_time || 0, estimatedCost: r.estimated_cost || 0 };
     }
     return r;
   };
@@ -189,7 +189,7 @@ const Recipes = () => {
         style={{ boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}
         onClick={() => { setAddedIngredients(new Set()); setDetailRecipe(recipe); }}
       >
-        <RecipePhoto title={n.title} size="sm" />
+        <RecipePhoto title={n.title} imageQuery={n.imageQuery} size="sm" />
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="text-base font-bold leading-tight text-foreground">{n.title}</h3>
