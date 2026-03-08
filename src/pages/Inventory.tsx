@@ -450,6 +450,11 @@ const Inventory = () => {
         onClose={() => setScanOpen(false)}
         onSaved={() => { fetchItems(); handleScanCompleted(); }}
       />
+      <BarcodeScannerModal
+        open={barcodeOpen}
+        onClose={() => setBarcodeOpen(false)}
+        onProductAdded={fetchItems}
+      />
       <UpgradeModal
         open={upgradeOpen}
         onOpenChange={setUpgradeOpen}
