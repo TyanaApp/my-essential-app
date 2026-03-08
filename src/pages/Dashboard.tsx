@@ -381,6 +381,9 @@ const Dashboard = () => {
         <p className="text-sm mt-0.5" style={{ color: '#9CA3AF' }}>{formatDate()}</p>
       </motion.div>
 
+      {/* Family widget */}
+      <FamilyWidget />
+
       {/* Streak card */}
       {data.streakCurrent > 0 && (
         <motion.div {...fadeUp(0.5)} className="mb-4">
