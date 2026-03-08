@@ -505,6 +505,9 @@ const Profile = () => {
       <SupportModal open={supportOpen} onOpenChange={setSupportOpen} />
       <IdeasModal open={ideasOpen} onOpenChange={setIdeasOpen} />
       <RatingModal open={ratingOpen} onOpenChange={setRatingOpen} />
+      {installGuideOpen && (
+        <PWAInstallGuide onDismiss={() => setInstallGuideOpen(false)} forceOpen />
+      )}
     </div>
   );
 };
