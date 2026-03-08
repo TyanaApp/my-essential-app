@@ -612,9 +612,10 @@ export const translations = {
       quickAddFlow: {
         title: 'Что есть дома?', subtitle: 'Просто отмечай — место хранения не важно',
         quickAddBtn: '⚡️ Быстро добавить', searchPlaceholder: 'Начни писать или выбери из списка...',
-        selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', done: 'Готово ✓',
+        selectedCount: 'Выбрано: {count} продуктов', addAll: 'Добавить все', addAllCount: 'Добавить все {count} продуктов', done: 'Готово ✓',
         adjustQty: 'Уточни количество', backToSelect: '← Назад', addedSuccess: '{count} продуктов добавлено',
         noResults: 'Ничего не найдено', homeTab: '🏡 Дома',
+        howMuch: 'Сколько?', custom: 'Своё', enterQty: 'Введите количество', addItem: 'Добавить', cancelBtn: 'Отмена',
       },
       quickAddCategories: {
         dairy: 'Яйца и молочное', meat: 'Мясо и рыба', vegetables: 'Овощи', fruits: 'Фрукты',
