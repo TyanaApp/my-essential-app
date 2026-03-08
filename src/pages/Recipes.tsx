@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2, ChefHat, CalendarDays } from 'lucide-react';
 import RecipePhoto from '@/components/RecipePhoto';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +12,7 @@ import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
+import MealPlan from '@/pages/MealPlan';
 
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
