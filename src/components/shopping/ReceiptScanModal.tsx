@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { X, Check, Plus, Trash2, Minus } from 'lucide-react';
+import { X, Check, Plus, Trash2, Minus, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -20,7 +20,9 @@ interface ReceiptItem {
 
 interface ReceiptData {
   store: string;
-  total: number;
+  receiptTotal: number;
+  foodTotal: number;
+  nonFoodTotal: number;
   currency: string;
   date: string;
   items: ReceiptItem[];
@@ -47,17 +49,17 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const receipt = (t as any).receipt || {};
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const [step, setStep] = useState<'upload' | 'scanning' | 'results' | 'error' | 'manual'>('upload');
+  const [step, setStep] = useState<'upload' | 'scanning' | 'results' | 'error' | 'manual' | 'no-food'>('upload');
   const [photo, setPhoto] = useState<string | null>(null);
   const [data, setData] = useState<ReceiptData | null>(null);
   const [saving, setSaving] = useState(false);
-  const [tab, setTab] = useState<'food' | 'other'>('food');
+  const [nonFoodExpanded, setNonFoodExpanded] = useState(false);
 
   const reset = () => {
     setStep('upload');
     setPhoto(null);
     setData(null);
-    setTab('food');
+    setNonFoodExpanded(false);
   };
 
   const handleClose = () => { reset(); onClose(); };
@@ -65,12 +67,20 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const initManualEntry = () => {
     setData({
       store: '',
-      total: 0,
+      receiptTotal: 0,
+      foodTotal: 0,
+      nonFoodTotal: 0,
       currency: 'EUR',
       date: new Date().toISOString().split('T')[0],
       items: [],
     });
     setStep('manual');
+  };
+
+  const recalcTotals = (items: ReceiptItem[]) => {
+    const foodTotal = items.filter(i => i.isFood).reduce((s, i) => s + i.price * i.quantity, 0);
+    const nonFoodTotal = items.filter(i => !i.isFood).reduce((s, i) => s + i.price * i.quantity, 0);
+    return { foodTotal, nonFoodTotal, receiptTotal: foodTotal + nonFoodTotal };
   };
 
   const handleFile = useCallback((file: File) => {
@@ -104,14 +114,20 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
           return;
         }
 
+        const hasFood = items.some(i => i.isFood);
+        const totals = recalcTotals(items);
+
         setData({
           store: result.store || '',
-          total: Number(result.total) || 0,
+          receiptTotal: Number(result.receiptTotal) || totals.receiptTotal,
+          foodTotal: Number(result.foodTotal) || totals.foodTotal,
+          nonFoodTotal: Number(result.nonFoodTotal) || totals.nonFoodTotal,
           currency: result.currency || 'EUR',
           date: result.date || new Date().toISOString().split('T')[0],
           items,
         });
-        setStep('results');
+
+        setStep(hasFood ? 'results' : 'no-food');
       } catch (err) {
         console.error('Receipt scan error:', err);
         setStep('error');
@@ -123,7 +139,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const foodItems = data?.items.filter(i => i.isFood) || [];
   const otherItems = data?.items.filter(i => !i.isFood) || [];
   const foodTotal = foodItems.reduce((s, i) => s + i.price * i.quantity, 0);
-  const otherTotal = otherItems.reduce((s, i) => s + i.price * i.quantity, 0);
+  const nonFoodTotal = otherItems.reduce((s, i) => s + i.price * i.quantity, 0);
   const checkedFood = foodItems.filter(i => i.checked);
 
   const toggleItem = (idx: number) => {
@@ -137,16 +153,15 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
     if (!data) return;
     const newItems = [...data.items];
     newItems[idx] = { ...newItems[idx], [field]: value };
-    // Recalculate total
-    const newTotal = newItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    setData({ ...data, items: newItems, total: newTotal });
+    const totals = recalcTotals(newItems);
+    setData({ ...data, items: newItems, ...totals });
   };
 
   const deleteItem = (idx: number) => {
     if (!data) return;
     const newItems = data.items.filter((_, i) => i !== idx);
-    const newTotal = newItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    setData({ ...data, items: newItems, total: newTotal });
+    const totals = recalcTotals(newItems);
+    setData({ ...data, items: newItems, ...totals });
   };
 
   const addEmptyItem = (isFood: boolean) => {
@@ -186,11 +201,10 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
       }
 
       // Save receipt to receipts table
-      const totalSpent = data.total || (foodTotal + otherTotal);
       await supabase.from('receipts' as any).insert({
         user_id: user.id,
         store_name: data.store || null,
-        total_amount: totalSpent,
+        total_amount: data.receiptTotal,
         currency: data.currency || 'EUR',
         receipt_date: data.date || new Date().toISOString().split('T')[0],
         items: data.items.map(i => ({
@@ -204,12 +218,12 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
         })),
       });
 
-      // Save total spending to savings_log
-      if (totalSpent > 0) {
+      // Save FOOD spending only to savings_log
+      if (foodTotal > 0) {
         await supabase.from('savings_log').insert({
           user_id: user.id,
           type: 'purchase',
-          amount: totalSpent,
+          amount: foodTotal,
           description: `🧾 ${data.store || receipt.receipt || 'Receipt'} ${data.date}`,
         } as any);
       }
@@ -230,6 +244,63 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const cur = data?.currency || 'EUR';
   const isResultsOrManual = step === 'results' || step === 'manual';
 
+  const renderItemRow = (item: ReceiptItem, globalIdx: number, isFood: boolean) => (
+    <div key={globalIdx} className="p-2.5 rounded-xl bg-accent/50 space-y-1.5">
+      <div className="flex items-center gap-2">
+        {isFood && (
+          <button onClick={() => toggleItem(globalIdx)}
+            className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0"
+            style={{ borderColor: item.checked ? 'hsl(var(--primary))' : 'hsl(var(--border))', backgroundColor: item.checked ? 'hsl(var(--primary))' : 'transparent' }}>
+            {item.checked && <Check className="w-3 h-3 text-white" />}
+          </button>
+        )}
+        <input value={item.name} onChange={e => updateItemField(globalIdx, 'name', e.target.value)}
+          placeholder={receipt.itemName || 'Item name'}
+          className="flex-1 min-w-0 text-sm font-medium bg-background rounded-lg px-2 py-1.5 border border-border outline-none focus:border-primary text-foreground" />
+        <button onClick={() => deleteItem(globalIdx)} className="p-1 rounded hover:bg-destructive/10">
+          <Trash2 className="w-3.5 h-3.5 text-destructive" />
+        </button>
+      </div>
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-0.5 bg-background rounded-lg border border-border">
+          <button onClick={() => updateItemField(globalIdx, 'quantity', Math.max(0.5, item.quantity - 1))}
+            className="w-6 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground">
+            <Minus className="w-3 h-3" />
+          </button>
+          <input type="number" value={item.quantity} onChange={e => updateItemField(globalIdx, 'quantity', Number(e.target.value) || 1)}
+            className="w-10 h-7 text-center text-xs bg-transparent outline-none text-foreground" />
+          <button onClick={() => updateItemField(globalIdx, 'quantity', item.quantity + 1)}
+            className="w-6 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground">
+            <Plus className="w-3 h-3" />
+          </button>
+        </div>
+        <select value={item.unit} onChange={e => updateItemField(globalIdx, 'unit', e.target.value)}
+          className="h-7 px-1.5 rounded-lg border border-border text-xs bg-background text-foreground outline-none">
+          {UNIT_OPTIONS.map(u => <option key={u} value={u}>{u}</option>)}
+        </select>
+        <div className="flex items-center gap-0.5 bg-background rounded-lg border border-border px-1.5">
+          <span className="text-xs text-muted-foreground">{getCurrencySymbol(cur)}</span>
+          <input type="number" step="0.01" value={item.price} onChange={e => updateItemField(globalIdx, 'price', Number(e.target.value) || 0)}
+            className="w-14 h-7 text-xs bg-transparent outline-none text-foreground text-right" />
+        </div>
+        {isFood && (
+          <div className="flex gap-0.5 ml-auto">
+            {STORAGE_OPTIONS.map(s => (
+              <button key={s.id} onClick={() => updateItemField(globalIdx, 'suggestedStorage', s.id)}
+                className="w-7 h-7 rounded-lg text-xs flex items-center justify-center border-[1.5px]"
+                style={{
+                  backgroundColor: item.suggestedStorage === s.id ? 'hsl(var(--accent))' : 'transparent',
+                  borderColor: item.suggestedStorage === s.id ? 'hsl(var(--primary))' : 'transparent',
+                }}>
+                {s.emoji}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <motion.div
@@ -244,6 +315,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
             {step === 'upload' ? (receipt.title || '🧾 Scan Receipt') :
              step === 'scanning' ? (receipt.analyzing || '🤖 Analyzing...') :
              step === 'error' ? '😔' :
+             step === 'no-food' ? '🤔' :
              step === 'manual' ? `✏️ ${receipt.manualEntry || 'Manual Entry'}` :
              `🧾 ${data?.store || ''} ${data?.date ? `• ${data.date}` : ''}`}
           </h2>
@@ -314,6 +386,20 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
             </div>
           )}
 
+          {/* NO FOOD ITEMS */}
+          {step === 'no-food' && (
+            <div className="text-center py-8">
+              <div className="text-5xl mb-4">🤔</div>
+              <p className="text-sm mb-6 text-muted-foreground">
+                {receipt.noFoodInReceipt || 'No food items found in this receipt. Only household items.'}
+              </p>
+              <button onClick={handleClose}
+                className="px-6 h-10 rounded-xl font-medium text-sm bg-secondary text-secondary-foreground">
+                {t.common.close || 'Close'}
+              </button>
+            </div>
+          )}
+
           {/* RESULTS / MANUAL */}
           {isResultsOrManual && data && (
             <div>
@@ -335,122 +421,82 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
                 </div>
               )}
 
-              {/* Total header */}
-              {data.total > 0 && (
-                <p className="text-sm font-medium mb-3 text-muted-foreground">
-                  {receipt.totalLabel || 'Total'}: {formatMoney(data.total, cur)}
+              {/* Header totals card */}
+              <div className="p-3 rounded-xl mb-3 bg-accent/50 space-y-1">
+                <p className="text-sm font-bold text-foreground">
+                  {receipt.receiptTotalLabel || 'Receipt total'}: {formatMoney(data.receiptTotal || (foodTotal + nonFoodTotal), cur)}
                 </p>
+                <div className="flex items-center gap-1 text-xs">
+                  <span style={{ color: '#059669' }}>🥗 {receipt.forFood || 'Food'}: {formatMoney(foodTotal, cur)}</span>
+                  <span className="text-muted-foreground mx-1">•</span>
+                  <span className="text-muted-foreground">🧴 {receipt.otherLabel || 'Other'}: {formatMoney(nonFoodTotal, cur)}</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground">{receipt.onlyFoodCounted || 'Only food spending counts toward your budget'}</p>
+              </div>
+
+              {/* FOOD SECTION */}
+              <div className="mb-3">
+                <div className="flex items-center gap-2 mb-2 px-1">
+                  <span className="text-sm font-bold text-primary">🥗 {receipt.foodItems || 'Food'}</span>
+                  <span className="text-xs font-medium text-primary">— {formatMoney(foodTotal, cur)}</span>
+                </div>
+                <div className="space-y-2 max-h-[30vh] overflow-y-auto pr-1">
+                  {foodItems.map((item) => {
+                    const globalIdx = data.items.indexOf(item);
+                    return renderItemRow(item, globalIdx, true);
+                  })}
+                </div>
+                <button onClick={() => addEmptyItem(true)}
+                  className="w-full mt-2 py-2 rounded-xl border-2 border-dashed border-border text-sm font-medium flex items-center justify-center gap-1.5 text-muted-foreground hover:text-primary hover:border-primary transition-colors">
+                  <Plus className="w-4 h-4" /> {receipt.addManually || 'Add manually'}
+                </button>
+              </div>
+
+              {/* NON-FOOD SECTION (collapsed) */}
+              {otherItems.length > 0 && (
+                <div className="mb-3">
+                  <button onClick={() => setNonFoodExpanded(!nonFoodExpanded)}
+                    className="w-full flex items-center justify-between px-1 py-1.5 text-left">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-muted-foreground">🧴 {receipt.otherItems || 'Other'}</span>
+                      <span className="text-xs text-muted-foreground">— {formatMoney(nonFoodTotal, cur)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-muted-foreground">{receipt.notCountedInBudget || 'not in budget'}</span>
+                      <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${nonFoodExpanded ? 'rotate-180' : ''}`} />
+                    </div>
+                  </button>
+                  {nonFoodExpanded && (
+                    <div className="space-y-2 mt-1">
+                      {otherItems.map((item) => {
+                        const globalIdx = data.items.indexOf(item);
+                        return renderItemRow(item, globalIdx, false);
+                      })}
+                    </div>
+                  )}
+                </div>
               )}
 
-              {/* Tabs */}
-              <div className="flex gap-2 mb-3">
-                <button onClick={() => setTab('food')}
-                  className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
-                  style={{ backgroundColor: tab === 'food' ? 'hsl(var(--primary))' : 'hsl(var(--accent))', color: tab === 'food' ? 'white' : 'hsl(var(--primary))' }}>
-                  🥗 {receipt.foodItems || 'Food'} ({foodItems.length})
-                </button>
-                <button onClick={() => setTab('other')}
-                  className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
-                  style={{ backgroundColor: tab === 'other' ? 'hsl(var(--primary))' : 'hsl(var(--accent))', color: tab === 'other' ? 'white' : 'hsl(var(--primary))' }}>
-                  🧴 {receipt.otherItems || 'Other'} ({otherItems.length})
-                </button>
-              </div>
-
-              {/* Items list */}
-              <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-1">
-                {(tab === 'food' ? foodItems : otherItems).map((item) => {
-                  const globalIdx = data.items.indexOf(item);
-                  return (
-                    <div key={globalIdx} className="p-2.5 rounded-xl bg-accent/50 space-y-1.5">
-                      {/* Row 1: checkbox, name, delete */}
-                      <div className="flex items-center gap-2">
-                        {tab === 'food' && (
-                          <button onClick={() => toggleItem(globalIdx)}
-                            className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0"
-                            style={{ borderColor: item.checked ? 'hsl(var(--primary))' : 'hsl(var(--border))', backgroundColor: item.checked ? 'hsl(var(--primary))' : 'transparent' }}>
-                            {item.checked && <Check className="w-3 h-3 text-white" />}
-                          </button>
-                        )}
-                        <input value={item.name} onChange={e => updateItemField(globalIdx, 'name', e.target.value)}
-                          placeholder={receipt.itemName || 'Item name'}
-                          className="flex-1 min-w-0 text-sm font-medium bg-background rounded-lg px-2 py-1.5 border border-border outline-none focus:border-primary text-foreground" />
-                        <button onClick={() => deleteItem(globalIdx)} className="p-1 rounded hover:bg-destructive/10">
-                          <Trash2 className="w-3.5 h-3.5 text-destructive" />
-                        </button>
-                      </div>
-
-                      {/* Row 2: qty, unit, price, storage */}
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <div className="flex items-center gap-0.5 bg-background rounded-lg border border-border">
-                          <button onClick={() => updateItemField(globalIdx, 'quantity', Math.max(0.5, item.quantity - 1))}
-                            className="w-6 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground">
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <input type="number" value={item.quantity} onChange={e => updateItemField(globalIdx, 'quantity', Number(e.target.value) || 1)}
-                            className="w-10 h-7 text-center text-xs bg-transparent outline-none text-foreground" />
-                          <button onClick={() => updateItemField(globalIdx, 'quantity', item.quantity + 1)}
-                            className="w-6 h-7 flex items-center justify-center text-muted-foreground hover:text-foreground">
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-
-                        <select value={item.unit} onChange={e => updateItemField(globalIdx, 'unit', e.target.value)}
-                          className="h-7 px-1.5 rounded-lg border border-border text-xs bg-background text-foreground outline-none">
-                          {UNIT_OPTIONS.map(u => (
-                            <option key={u} value={u}>{u}</option>
-                          ))}
-                        </select>
-
-                        <div className="flex items-center gap-0.5 bg-background rounded-lg border border-border px-1.5">
-                          <span className="text-xs text-muted-foreground">{getCurrencySymbol(cur)}</span>
-                          <input type="number" step="0.01" value={item.price} onChange={e => updateItemField(globalIdx, 'price', Number(e.target.value) || 0)}
-                            className="w-14 h-7 text-xs bg-transparent outline-none text-foreground text-right" />
-                        </div>
-
-                        {tab === 'food' && (
-                          <div className="flex gap-0.5 ml-auto">
-                            {STORAGE_OPTIONS.map(s => (
-                              <button key={s.id} onClick={() => updateItemField(globalIdx, 'suggestedStorage', s.id)}
-                                className="w-7 h-7 rounded-lg text-xs flex items-center justify-center border-[1.5px]"
-                                style={{
-                                  backgroundColor: item.suggestedStorage === s.id ? 'hsl(var(--accent))' : 'transparent',
-                                  borderColor: item.suggestedStorage === s.id ? 'hsl(var(--primary))' : 'transparent',
-                                }}>
-                                {s.emoji}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Add manually button */}
-              <button onClick={() => addEmptyItem(tab === 'food')}
-                className="w-full mt-2 py-2 rounded-xl border-2 border-dashed border-border text-sm font-medium flex items-center justify-center gap-1.5 text-muted-foreground hover:text-primary hover:border-primary transition-colors">
-                <Plus className="w-4 h-4" /> {receipt.addManually || 'Add manually'}
-              </button>
-
               {/* Summary */}
-              <div className="mt-4 p-3 rounded-xl space-y-1 bg-accent/50">
+              <div className="p-3 rounded-xl space-y-1 bg-accent/50">
                 <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">{receipt.foodItemsLabel || 'Food items'}: {foodItems.length}</span>
+                  <span style={{ color: '#059669' }}>🥗 {receipt.foodItemsLabel || 'Food items'}: {checkedFood.length}/{foodItems.length}</span>
                   <span className="font-medium text-foreground">{formatMoney(foodTotal, cur)}</span>
                 </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">{receipt.otherItemsLabel || 'Other items'}: {otherItems.length}</span>
-                  <span className="font-medium text-foreground">{formatMoney(otherTotal, cur)}</span>
-                </div>
+                {otherItems.length > 0 && (
+                  <div className="flex justify-between text-xs">
+                    <span className="text-muted-foreground">🧴 {receipt.otherItemsLabel || 'Other items'}: {otherItems.length}</span>
+                    <span className="font-medium text-muted-foreground">{formatMoney(nonFoodTotal, cur)}</span>
+                  </div>
+                )}
                 <div className="border-t border-border pt-1 flex justify-between text-sm font-bold">
-                  <span className="text-foreground">{receipt.totalSpent || 'Total spent'}</span>
-                  <span className="text-primary">{formatMoney(data.total || (foodTotal + otherTotal), cur)}</span>
+                  <span className="text-foreground">{receipt.goesToBudget || 'Goes to food budget'}</span>
+                  <span style={{ color: '#059669' }}>{formatMoney(foodTotal, cur)}</span>
                 </div>
               </div>
 
               {/* Action buttons */}
-              <button onClick={handleSave} disabled={saving || (checkedFood.length === 0 && data.items.length === 0)}
+              <button onClick={handleSave} disabled={saving || checkedFood.length === 0}
                 className="w-full mt-3 h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
                 {saving ? (t.common.loading) : `✓ ${(receipt.addToInventory || 'Add food to inventory')} (${checkedFood.length})`}
               </button>

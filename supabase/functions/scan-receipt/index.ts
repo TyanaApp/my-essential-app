@@ -31,13 +31,37 @@ serve(async (req) => {
               type: "text",
               text: `YOU MUST respond in ${langMap[language] || 'English'}.
 
-This is a shopping receipt. Extract all purchased items.
+This is a shopping receipt.
+Your job: identify ONLY food and drink items.
+
+INCLUDE as food (isFood: true):
+- All food products, ingredients, drinks
+- Spices, sauces, condiments
+- Baby food, pet food
+- Alcohol (beer, wine, spirits)
+
+EXCLUDE completely (isFood: false):
+- Household cleaning products
+- Personal care (shampoo, soap, toothpaste)
+- Cosmetics, medicine, vitamins
+- Clothing, electronics, toys
+- Bags, packaging items
+- Cigarettes, tobacco
+- Non-food items of any kind
+
+For the totals:
+- foodTotal = sum of ONLY food items prices
+- nonFoodTotal = sum of everything else
+- receiptTotal = full receipt total
+
 Return ONLY valid JSON (no markdown, no backticks):
 {
   "store": "Store name if visible",
-  "total": 23.50,
-  "currency": "EUR",
   "date": "2026-03-08",
+  "receiptTotal": 45.20,
+  "foodTotal": 32.50,
+  "nonFoodTotal": 12.70,
+  "currency": "EUR",
   "items": [
     {
       "name": "Item name in ${langMap[language] || 'English'}",
@@ -52,8 +76,7 @@ Return ONLY valid JSON (no markdown, no backticks):
 
 Rules:
 - unit: "g", "kg", "ml", "L", "pcs", "pack"
-- suggestedStorage: "fridge" / "pantry" / "freezer" / null (null for non-food)
-- isFood: true for food/drinks, false for cleaning/hygiene/household items
+- suggestedStorage: "fridge" / "pantry" / "freezer" for food items, null for non-food
 - Be smart: milk→fridge, pasta→pantry, meat→fridge, ice cream→freezer
 - If currency not visible, default to "EUR"
 - Translate item names to ${langMap[language] || 'English'}`
