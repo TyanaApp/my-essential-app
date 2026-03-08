@@ -329,7 +329,7 @@ const Shopping = () => {
             const catItems = groupedActive[cat.id];
             if (!catItems || catItems.length === 0) return null;
             return (
-              <motion.div key={cat.id} {...fadeUp(3)} style={cardStyle} className="p-4">
+              <motion.div key={cat.id} {...fadeUp(3)} style={cardStyle} className="p-4 bg-card">
                 <h3 className="text-sm font-bold mb-3 flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
                   <span>{cat.emoji}</span> {cat.label}
                 </h3>
