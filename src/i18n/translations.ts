@@ -744,7 +744,7 @@ export const translations = {
     profile: {
       title: 'Профиль', editProfile: 'Редактировать профиль', accountSettings: 'Настройки аккаунта',
       systemSettings: 'Системные настройки', payments: 'Платежи', logout: 'Выйти',
-      deleteAccount: 'Удалить аккаунт', installApp: '📲 Установить приложение',
+      deleteAccount: 'Удалить аккаунт', installApp: '📲 Установить приложение', alreadyInstalled: '✅ Приложение установлено',
       displayName: 'Имя', bio: 'О себе', gender: 'Пол', dateOfBirth: 'Дата рождения',
       male: 'Мужской', female: 'Женский', other: 'Другой', preferNotToSay: 'Не указывать',
       connectDevices: 'Подключить устройства', soon: 'Скоро',
