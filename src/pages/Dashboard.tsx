@@ -591,16 +591,29 @@ const Dashboard = () => {
                             })()}
                       </span>
                     </div>
-                    {item.suggestion && (
+                    {isExpired ? (
                       <div className="flex items-center gap-1.5 mt-1">
-                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
-                        <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                        <span className="text-[11px] font-medium" style={{ color: '#DC2626' }}>
+                          ⚠️ {language === 'ru' ? `${item.name} просрочен — не рекомендуется употреблять` :
+                               language === 'uk' ? `${item.name} прострочено — не рекомендується вживати` :
+                               language === 'lv' ? `${item.name} beidzies — nav ieteicams lietot` :
+                               `${item.name} is expired — not recommended to consume`}
+                        </span>
                       </div>
-                    )}
-                    {loadingSuggestions && !item.suggestion && (
-                      <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
-                        {(t.dashboard as any).loadingSuggestions || '...'}
-                      </span>
+                    ) : (
+                      <>
+                        {item.suggestion && (
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: actionDot }} />
+                            <span className="text-[11px]" style={{ color: '#9CA3AF' }}>{item.suggestion}</span>
+                          </div>
+                        )}
+                        {loadingSuggestions && !item.suggestion && (
+                          <span className="text-[11px] mt-1 block" style={{ color: '#9CA3AF' }}>
+                            {(t.dashboard as any).loadingSuggestions || '...'}
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
                 );
