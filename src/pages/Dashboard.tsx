@@ -851,25 +851,47 @@ const Dashboard = () => {
           )}
         </motion.div>
 
-        {/* Card 5 — Zero Waste Tip */}
+        {/* Card 5 — AI Zero Waste Tip */}
         <motion.div {...fadeUp(5)} style={cardStyle} className="p-5">
-          <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>
-            ♻️ {(t as any).tips?.title || 'Zero waste tip of the day'}
-          </h3>
-          <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
-            {(() => {
-              const tips = (t as any).tips?.daily || [
-                'Use leftover rice for fried rice tomorrow',
-                'Vegetable peels make great broth',
-                'Freeze bread before it goes stale',
-                'Wilting herbs? Make herb oil',
-                'Almost-expired yogurt works great in smoothies',
-                'Plan meals Sunday to waste 40% less',
-                'Check your fridge before grocery shopping',
-              ];
-              return tips[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
-            })()}
-          </p>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#1E1B4B' }}>
+              {zeroWasteTip?.emoji || '♻️'} {zeroWasteTip?.title || ((t as any).tips?.title || 'Zero waste tip of the day')}
+            </h3>
+            <button
+              onClick={() => fetchZeroWasteTip(true)}
+              disabled={tipLoading}
+              className="p-1.5 rounded-lg hover:bg-accent transition-colors"
+              style={{ color: '#7C3AED' }}
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${tipLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+          {tipLoading ? (
+            <div className="flex items-center gap-2 py-2">
+              <div className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>{(t.common as any)?.loading || 'Loading...'}</span>
+            </div>
+          ) : zeroWasteTip ? (
+            <>
+              <p className="text-sm leading-relaxed mb-2" style={{ color: '#6B7280' }}>{zeroWasteTip.tip}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                {zeroWasteTip.category && (
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#EDE9FE', color: '#7C3AED' }}>
+                    {zeroWasteTip.category === 'food' ? '🍽' : zeroWasteTip.category === 'beauty' ? '💄' : zeroWasteTip.category === 'cleaning' ? '🧹' : zeroWasteTip.category === 'garden' ? '🌱' : '🏠'} {zeroWasteTip.category}
+                  </span>
+                )}
+                {zeroWasteTip.product && (
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0FDF4', color: '#059669' }}>
+                    {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.product}
+                  </span>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
+              {((t as any).tips?.daily || ['Check your fridge before grocery shopping'])[0]}
+            </p>
+          )}
         </motion.div>
       </div>
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
