@@ -1263,7 +1263,7 @@ export const translations = {
     },
     landing: {
       signIn: 'Увійти', startFree: 'Почати безкоштовно', navFeatures: 'Функції', navPricing: 'Ціни', navFaq: 'Питання',
-      badge: '✦ ШІ-помічник для кухні', heroTitle: 'Перестаньте викидати гроші разом з їжею',
+      badge: '✦ Твій персональний ШІ-нутріціолог', heroTitle: 'Перестаньте викидати гроші разом з їжею',
       heroSubtitle: 'TYANA знає, що у вашому холодильнику, рахує калорії, знаходить знижки та економить вам',
       heroSavings: '€80+ на місяць', ctaButton: 'Почати безкоштовно — €0', ctaHint: '7 днів всі функції безкоштовно. Картка не потрібна.',
       statSaved: 'економія/міс', statPayoff: 'до окупності', statScan: 'скан холодильника', statPayoffValue: '5 днів', statScanValue: '10 сек',
