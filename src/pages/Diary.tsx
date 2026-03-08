@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { calcMacroTargets } from '@/pages/NutritionAnalysis';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Search, Camera, Refrigerator } from 'lucide-react';
+import { Plus, X, Search, Camera, Refrigerator, Pencil } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -12,6 +12,7 @@ import { useFoodValidation } from '@/hooks/useFoodValidation';
 import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import FridgePickerModal from '@/components/diary/FridgePickerModal';
+import SmartMealEntryModal from '@/components/diary/SmartMealEntryModal';
 import {
   Dialog,
   DialogContent,
