@@ -34,7 +34,7 @@ const PrivacyPage = () => {
       title: 'Privacy Policy',
       lastUpdated: 'Last updated: March 2026',
       s1Title: '1. Who we are',
-      s1: 'TYANA is an AI-powered kitchen and nutrition assistant. Contact: supporttyana@gmail.com | tyana.lovable.app. EU jurisdiction, Latvia.',
+      s1: 'TYANA is an AI-powered kitchen and nutrition assistant. tyana.lovable.app. EU jurisdiction, Latvia.',
       s2Title: '2. What data we collect',
       s2Items: [
         'Account: name, email, profile photo (Google OAuth)',
