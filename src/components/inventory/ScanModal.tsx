@@ -206,8 +206,8 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
         style={{ boxShadow: '0 -4px 40px rgba(0,0,0,0.15)', maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: '#EDE9FE' }}>
-          <h2 className="text-lg font-bold" style={{ color: '#1E1B4B' }}>
+        <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
+          <h2 className="text-lg font-bold text-foreground">
             {step === 1 ? t.scan.title : step === 2 ? t.scan.analyzing : step === 3 ? t.scan.results : '✅ ' + t.scan.savedTitle}
           </h2>
           <button onClick={handleClose} className="p-1 rounded-lg hover:bg-gray-100">
