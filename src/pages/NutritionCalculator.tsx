@@ -80,6 +80,51 @@ const NutritionCalculator = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [mealTypeDialog, setMealTypeDialog] = useState(false);
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+
+  const PLACEHOLDERS: Record<string, string[]> = {
+    ru: ['Салат Цезарь с курицей, 1 порция', 'Овсянка на молоке 200г', '2 яйца всмятку', 'Борщ домашний, тарелка', 'Snickers 1 шт', 'Куриная грудка запечённая 150г'],
+    uk: ['Салат Цезар з куркою, 1 порція', 'Вівсянка на молоці 200г', '2 яйця некруто', 'Борщ домашній, тарілка', 'Snickers 1 шт', 'Куряча грудка запечена 150г'],
+    lv: ['Cēzara salāti ar vistu, 1 porcija', 'Auzu pārslas ar pienu 200g', '2 mīksti vārītas olas', 'Biešu zupa, šķīvis', 'Snickers 1 gab', 'Cepta vistas krūtiņa 150g'],
+    en: ['Caesar salad with chicken, 1 serving', 'Oatmeal with milk 200g', '2 soft boiled eggs', 'Bowl of borscht', 'Snickers 1 bar', 'Baked chicken breast 150g'],
+  };
+
+  const LOADING_TIPS: Record<string, string[]> = {
+    ru: ['Анализируем состав...', 'Ищем в базах данных...', 'Считаем калории и БЖУ...', 'Почти готово...'],
+    uk: ['Аналізуємо склад...', 'Шукаємо в базах даних...', 'Рахуємо калорії та БЖВ...', 'Майже готово...'],
+    lv: ['Analizējam sastāvu...', 'Meklējam datubāzēs...', 'Aprēķinām kalorijas...', 'Gandrīz gatavs...'],
+    en: ['Analyzing composition...', 'Searching databases...', 'Calculating calories & macros...', 'Almost done...'],
+  };
+
+  const ERROR_MSGS: Record<string, string> = {
+    ru: 'Не удалось рассчитать. Попробуй описать подробнее.',
+    uk: 'Не вдалося розрахувати. Спробуй описати детальніше.',
+    lv: 'Neizdevās aprēķināt. Mēģini aprakstīt sīkāk.',
+    en: 'Could not calculate. Try describing in more detail.',
+  };
+
+  const placeholders = PLACEHOLDERS[language] || PLACEHOLDERS.en;
+  const loadingTips = LOADING_TIPS[language] || LOADING_TIPS.en;
+  const [loadingTipIdx, setLoadingTipIdx] = useState(0);
+
+  // Rotate placeholder every 3 seconds
+  useEffect(() => {
+    if (foodInput) return;
+    const interval = setInterval(() => {
+      setPlaceholderIdx(prev => (prev + 1) % placeholders.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [foodInput, placeholders.length]);
+
+  // Rotate loading tips
+  useEffect(() => {
+    if (!calculating) return;
+    setLoadingTipIdx(0);
+    const interval = setInterval(() => {
+      setLoadingTipIdx(prev => (prev + 1) % loadingTips.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [calculating, loadingTips.length]);
 
   // Load history from localStorage
   useEffect(() => {
@@ -116,14 +161,17 @@ const NutritionCalculator = () => {
         },
       });
 
-      if (error) throw error;
+      if (error) throw new Error(error.message || 'Function call failed');
       if (data?.error) throw new Error(data.error);
+      if (!data?.calories && !data?.per_portion?.calories && !data?.total?.calories) {
+        throw new Error('No nutrition data returned');
+      }
 
       setResult(data);
       saveToHistory(data, mode);
     } catch (e: any) {
       console.error('Calculation error:', e);
-      toast.error(e.message || (t.common as any)?.error || 'Error');
+      toast.error(ERROR_MSGS[language] || ERROR_MSGS.en);
     } finally {
       setCalculating(false);
     }
@@ -224,10 +272,7 @@ const NutritionCalculator = () => {
             <textarea
               value={foodInput}
               onChange={e => setFoodInput(e.target.value)}
-              placeholder={nc.foodPlaceholder || (useRu
-                ? 'Например: куриная грудка 200г, тарелка борща, пицца маргарита 2 куска...'
-                : 'e.g. chicken breast 200g, bowl of borscht, margherita pizza 2 slices...'
-              )}
+              placeholder={placeholders[placeholderIdx]}
               className="w-full min-h-[80px] p-3 rounded-xl border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
             />
 
@@ -358,7 +403,14 @@ const NutritionCalculator = () => {
             transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
             className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent"
           />
-          <p className="text-sm text-muted-foreground">{nc.calculating || 'Calculating...'}</p>
+          <motion.p
+            key={loadingTipIdx}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-muted-foreground"
+          >
+            {loadingTips[loadingTipIdx]}
+          </motion.p>
         </div>
       )}
 
