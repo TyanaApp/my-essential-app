@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, X, ShoppingCart, Clock, DollarSign, Check, ChevronDown, Plus, Trash2, ChefHat, CalendarDays } from 'lucide-react';
 import RecipePhoto from '@/components/RecipePhoto';
+import RecipeDetailModal from '@/components/recipes/RecipeDetailModal';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -57,7 +58,7 @@ const Recipes = () => {
     if (!user) return;
     const load = async () => {
       const [invRes, goalsRes, recipesRes] = await Promise.all([
-        supabase.from('inventory_items').select('name, quantity, unit').eq('user_id', user.id),
+        supabase.from('inventory_items').select('id, name, quantity, unit, price_per_unit, expires_at').eq('user_id', user.id),
         supabase.from('user_goals').select('*').eq('user_id', user.id).maybeSingle(),
         supabase.from('recipes').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
       ]);
@@ -384,117 +385,18 @@ const Recipes = () => {
       ) : null}
 
       {/* Recipe Detail Modal */}
-      <AnimatePresence>
-        {detailRecipe && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setDetailRecipe(null)}>
-            <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 100 }}
-              className="bg-card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-y-auto"
-              style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-center pt-2 sm:hidden"><div className="w-10 h-1 rounded-full bg-muted-foreground/30" /></div>
-              {(() => {
-                const r = normalizeRecipe(detailRecipe);
-                const cc = calorieColor(r.nutrition.calories);
-                const missing = r.ingredients.filter((i) => !i.inFridge);
-                return (
-                  <>
-                    <div className="h-44 relative">
-                      <RecipePhoto title={r.title} size="lg" />
-                      <button onClick={() => setDetailRecipe(null)} className="absolute top-3 right-3 p-1.5 rounded-full bg-white/20 backdrop-blur-sm z-10">
-                        <X className="w-5 h-5 text-white" />
-                      </button>
-                    </div>
-                    <div className="p-5">
-                      <h2 className="text-xl font-bold mb-3" style={{ color: '#1E1B4B' }}>{r.title}</h2>
-                      <div className="grid grid-cols-4 gap-2 mb-4">
-                        {[
-                          { label: (t.diary as any)?.kcalUnit || 'kcal', value: r.nutrition.calories, color: cc.text },
-                          { label: t.dashboard.protein, value: `${r.nutrition.protein}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#059669' },
-                          { label: t.dashboard.fat, value: `${r.nutrition.fat}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#EA580C' },
-                          { label: t.dashboard.carbs, value: `${r.nutrition.carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`, color: '#2563EB' },
-                        ].map((n) => (
-                          <div key={n.label} className="text-center p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
-                            <p className="text-base font-bold" style={{ color: n.color }}>{n.value}</p>
-                            <p className="text-[10px] font-medium" style={{ color: '#6B7280' }}>{n.label}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>{t.recipes.ingredients}</h3>
-                      {/* Missing ingredients banner */}
-                      {missing.length > 0 && (
-                        <div className="flex items-center justify-between p-2.5 rounded-xl mb-2" style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}>
-                          <span className="text-xs font-semibold" style={{ color: '#92400E' }}>
-                            🛒 {(t.recipes as any).needItems?.replace('{count}', String(missing.length)) || `Need ${missing.length} ingredients`}
-                          </span>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); addMissingToShopping(r.ingredients); }}
-                            className="text-[11px] font-bold px-2.5 py-1 rounded-lg text-white shrink-0"
-                            style={{ backgroundColor: '#7C3AED' }}
-                          >
-                            {(t.recipes as any).addAllMissing || 'Add all missing →'}
-                          </button>
-                        </div>
-                      )}
-                      <div className="space-y-1.5 mb-4">
-                        {r.ingredients.map((ing, idx) => {
-                          const isAdded = addedIngredients.has(ing.name);
-                          return (
-                            <div key={idx} className="flex items-center justify-between p-2 rounded-lg text-sm" style={{ backgroundColor: '#FAFAFE' }}>
-                              <span style={{ color: ing.inFridge ? '#1E1B4B' : '#6B7280' }}>
-                                {!ing.inFridge && '🛒 '}{ing.name}
-                                <span className="ml-2" style={{ color: '#9CA3AF' }}>{ing.amount}</span>
-                              </span>
-                              {ing.inFridge ? (
-                                <span className="text-xs font-medium" style={{ color: '#059669' }}>✅</span>
-                              ) : isAdded ? (
-                                <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#D1FAE5', color: '#059669' }}>✓</span>
-                              ) : (
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); addSingleToShopping(ing); }}
-                                  className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-                                  style={{ backgroundColor: '#7C3AED' }}
-                                >
-                                  <Plus className="w-3.5 h-3.5 text-white" />
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <h3 className="text-sm font-bold mb-2" style={{ color: '#1E1B4B' }}>{t.recipes.instructions}</h3>
-                      <ol className="space-y-2 mb-5">
-                        {r.instructions.map((step, idx) => (
-                          <li key={idx} className="flex gap-3 text-sm" style={{ color: '#374151' }}>
-                            <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: '#7C3AED' }}>{idx + 1}</span>
-                            <span className="pt-0.5">{step}</span>
-                          </li>
-                        ))}
-                      </ol>
-                      <div className="flex gap-2">
-                        {'id' in detailRecipe ? (
-                          <button onClick={() => { toggleFavorite((detailRecipe as SavedRecipe).id, (detailRecipe as SavedRecipe).is_favorite); setDetailRecipe(null); }}
-                            className="flex-1 h-11 rounded-xl font-semibold text-sm border-[1.5px] flex items-center justify-center gap-2" style={{ borderColor: '#7C3AED', color: '#7C3AED' }}>
-                            <Heart className="w-4 h-4" /> {(detailRecipe as SavedRecipe).is_favorite ? t.recipes.unfavorite : t.recipes.save}
-                          </button>
-                        ) : (
-                          <button onClick={() => { handleSaveRecipe(detailRecipe as Recipe); setDetailRecipe(null); }}
-                            className="flex-1 h-11 rounded-xl font-semibold text-sm border-[1.5px] flex items-center justify-center gap-2" style={{ borderColor: '#7C3AED', color: '#7C3AED' }}>
-                            <Heart className="w-4 h-4" /> {t.recipes.save}
-                          </button>
-                        )}
-                        <button onClick={() => { addMissingToShopping(r.ingredients); setDetailRecipe(null); }}
-                          className="flex-1 h-11 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2" style={{ backgroundColor: '#7C3AED' }}>
-                          <ShoppingCart className="w-4 h-4" />
-                          {missing.length > 0 ? t.recipes.addToList.replace('{count}', String(missing.length)) : t.recipes.allAvailable}
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {detailRecipe && (
+        <RecipeDetailModal
+          recipe={normalizeRecipe(detailRecipe)}
+          savedId={'id' in detailRecipe ? (detailRecipe as SavedRecipe).id : undefined}
+          isFavorite={'id' in detailRecipe ? (detailRecipe as SavedRecipe).is_favorite : false}
+          onClose={() => setDetailRecipe(null)}
+          onToggleFavorite={(id, current) => { toggleFavorite(id, current); }}
+          onSave={() => { if (!('id' in detailRecipe)) handleSaveRecipe(detailRecipe as Recipe); }}
+          inventory={inventory as any}
+          dailyTarget={dailyTarget}
+        />
+      )}
 
       <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} title={t.recipes.recipeLimit} description={t.recipes.recipeLimitDesc} suggestedPlan="lite" />
 
