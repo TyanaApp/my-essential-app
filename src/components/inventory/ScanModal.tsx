@@ -16,27 +16,29 @@ interface ScannedItem {
   storage_location: string;
   unknown?: boolean;
 }
-const STORAGE_OPTIONS = [
-  { id: 'fridge', emoji: '🧊', label: 'Fridge' },
-  { id: 'pantry', emoji: '🏠', label: 'Pantry' },
-  { id: 'freezer', emoji: '❄️', label: 'Freezer' },
+const STORAGE_OPTIONS: Record<string, { id: string; emoji: string; labels: Record<string, string> }[]> = {
+  default: [
+    { id: 'fridge', emoji: '🧊', labels: { en: 'Fridge', ru: 'Холодильник', uk: 'Холодильник', lv: 'Ledusskapis' } },
+    { id: 'pantry', emoji: '🏠', labels: { en: 'Pantry', ru: 'Кладовая', uk: 'Комора', lv: 'Pieliekamais' } },
+    { id: 'freezer', emoji: '❄️', labels: { en: 'Freezer', ru: 'Морозилка', uk: 'Морозилка', lv: 'Saldētava' } },
+  ],
+};
+
+const CATEGORIES_DATA: { id: string; emoji: string; labels: Record<string, string> }[] = [
+  { id: 'dairy', emoji: '🥛', labels: { en: 'Dairy', ru: 'Молочное', uk: 'Молочне', lv: 'Piena prod.' } },
+  { id: 'meat', emoji: '🥩', labels: { en: 'Meat & Fish', ru: 'Мясо и рыба', uk: 'М\'ясо та риба', lv: 'Gaļa un zivis' } },
+  { id: 'produce', emoji: '🥬', labels: { en: 'Produce', ru: 'Овощи/Фрукты', uk: 'Овочі/Фрукти', lv: 'Dārzeņi' } },
+  { id: 'drinks', emoji: '🧃', labels: { en: 'Drinks', ru: 'Напитки', uk: 'Напої', lv: 'Dzērieni' } },
+  { id: 'eggs', emoji: '🥚', labels: { en: 'Eggs', ru: 'Яйца', uk: 'Яйця', lv: 'Olas' } },
+  { id: 'other', emoji: '🧀', labels: { en: 'Other', ru: 'Другое', uk: 'Інше', lv: 'Cits' } },
 ];
 
-const CATEGORIES: { id: string; emoji: string; label: string }[] = [
-  { id: 'dairy', emoji: '🥛', label: 'Dairy' },
-  { id: 'meat', emoji: '🥩', label: 'Meat & Fish' },
-  { id: 'produce', emoji: '🥬', label: 'Produce' },
-  { id: 'drinks', emoji: '🧃', label: 'Drinks' },
-  { id: 'eggs', emoji: '🥚', label: 'Eggs' },
-  { id: 'other', emoji: '🧀', label: 'Other' },
-];
-
-const PHOTO_SLOTS = [
-  { id: 0, label: '📷 Shelf 1' },
-  { id: 1, label: '📷 Shelf 2' },
-  { id: 2, label: '📷 Drawer' },
-  { id: 3, label: '📷 Door' },
-];
+const PHOTO_SLOTS_DATA: Record<string, { id: number; label: string }[]> = {
+  en: [{ id: 0, label: '📷 Shelf 1' }, { id: 1, label: '📷 Shelf 2' }, { id: 2, label: '📷 Drawer' }, { id: 3, label: '📷 Door' }],
+  ru: [{ id: 0, label: '📷 Полка 1' }, { id: 1, label: '📷 Полка 2' }, { id: 2, label: '📷 Ящик' }, { id: 3, label: '📷 Дверца' }],
+  uk: [{ id: 0, label: '📷 Полиця 1' }, { id: 1, label: '📷 Полиця 2' }, { id: 2, label: '📷 Ящик' }, { id: 3, label: '📷 Дверцята' }],
+  lv: [{ id: 0, label: '📷 Plaukts 1' }, { id: 1, label: '📷 Plaukts 2' }, { id: 2, label: '📷 Atvilktne' }, { id: 3, label: '📷 Durvis' }],
+};
 
 interface ScanModalProps {
   open: boolean;
@@ -99,7 +101,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
         name: String(i.name || ''),
         quantity: Number(i.quantity) || 1,
         unit: units.some(u => u.value === i.unit) ? i.unit : 'pcs',
-        category: CATEGORIES.some(c => c.id === i.category) ? i.category : 'other',
+        category: CATEGORIES_DATA.some(c => c.id === i.category) ? i.category : 'other',
         storage_location: 'fridge',
         unknown: Boolean(i.unknown),
       }));
@@ -127,8 +129,9 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
     setScannedItems(prev => [...prev, { name: '', quantity: 1, unit: 'pcs', category: 'other', storage_location: 'fridge' }]);
   };
 
-  const groupedItems = CATEGORIES.map(cat => ({
+  const groupedItems = CATEGORIES_DATA.map(cat => ({
     ...cat,
+    label: cat.labels[language] || cat.labels.en,
     items: scannedItems
       .map((item, idx) => ({ ...item, _idx: idx }))
       .filter(item => item.category === cat.id),
@@ -197,7 +200,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -228,7 +231,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
             <div>
               <p className="text-sm mb-3" style={{ color: '#6B7280' }}>{t.scan.multiPhotoHint}</p>
               <div className="grid grid-cols-2 gap-3">
-                {PHOTO_SLOTS.map((slot) => (
+                {(PHOTO_SLOTS_DATA[language] || PHOTO_SLOTS_DATA.en).map((slot) => (
                   <div key={slot.id}>
                     <input
                       ref={el => { fileRefs.current[slot.id] = el; }}
@@ -360,8 +363,8 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                               className="text-[11px] bg-white rounded-lg px-1 py-1.5 border outline-none"
                               style={{ borderColor: '#DDD6FE', color: '#6B7280' }}
                             >
-                              {STORAGE_OPTIONS.map(s => (
-                                <option key={s.id} value={s.id}>{s.emoji} {s.label}</option>
+                              {STORAGE_OPTIONS.default.map(s => (
+                                <option key={s.id} value={s.id}>{s.emoji} {s.labels[language] || s.labels.en}</option>
                               ))}
                             </select>
                             {/* Remove */}
