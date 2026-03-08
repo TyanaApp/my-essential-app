@@ -7,6 +7,7 @@ interface Translations {
     en: string;
     ru: string;
     lv: string;
+    uk?: string;
   };
 }
 
