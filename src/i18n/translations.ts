@@ -1211,7 +1211,7 @@ export const translations = {
     },
     update: {
       title: '✨ Jauna TYANA versija gatava!',
-      now: 'Atjaunināt — 2 sek',
+      now: '✨ Atjaunināt',
     },
     common: {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
