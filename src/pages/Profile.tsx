@@ -493,9 +493,10 @@ const Profile = () => {
       </motion.div>
 
       {/* Legal footer */}
-      <div className="mt-6 mb-4">
+      <div className="mt-6 mb-2">
         <LegalFooterPill />
       </div>
+      <p className="text-center text-xs text-muted-foreground mb-4">TYANA v1.0.{buildDate}</p>
 
       {/* Modals */}
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />

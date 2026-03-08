@@ -2,13 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const UpdateBanner = () => {
-  const [newWorker, setNewWorker] = useState<ServiceWorker | null>(null);
   const [show, setShow] = useState(false);
   const { t } = useTranslation();
 
   const labels = (t as any).update || {
     title: '✨ New TYANA version ready!',
-    now: 'Update — 2 sec',
+    now: '✨ Update',
   };
 
   useEffect(() => {
@@ -18,20 +17,17 @@ const UpdateBanner = () => {
       const reg = await navigator.serviceWorker.getRegistration();
       if (!reg) return;
 
-      // Check for updates on every app load
       await reg.update().catch(() => {});
 
       const handleWorker = (worker: ServiceWorker) => {
         worker.addEventListener('statechange', () => {
           if (worker.state === 'installed' && navigator.serviceWorker.controller) {
-            setNewWorker(worker);
             setShow(true);
           }
         });
       };
 
       if (reg.waiting && navigator.serviceWorker.controller) {
-        setNewWorker(reg.waiting);
         setShow(true);
       }
 
@@ -44,13 +40,16 @@ const UpdateBanner = () => {
   }, []);
 
   const handleUpdate = useCallback(() => {
-    if (newWorker) {
-      newWorker.postMessage({ type: 'SKIP_WAITING' });
-    }
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      window.location.reload();
-    });
-  }, [newWorker]);
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => Promise.all(registrations.map((r) => r.unregister())))
+      .then(() => caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))))
+      .then(() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('v', String(Date.now()));
+        window.location.href = url.toString();
+      });
+  }, []);
 
   if (!show) return null;
 
