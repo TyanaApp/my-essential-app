@@ -27,7 +27,7 @@ const GoogleIcon = () => (
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { signIn, signUp, signInWithGoogle, signInWithMagicLink, user, loading } = useAuth();
   const isMobile = useIsMobile();
   const isStandalone = useIsStandalone();
