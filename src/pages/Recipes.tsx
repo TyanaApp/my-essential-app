@@ -58,7 +58,7 @@ const Recipes = () => {
     if (!user) return;
     const load = async () => {
       const [invRes, goalsRes, recipesRes] = await Promise.all([
-        supabase.from('inventory_items').select('name, quantity, unit').eq('user_id', user.id),
+        supabase.from('inventory_items').select('id, name, quantity, unit, price_per_unit, expires_at').eq('user_id', user.id),
         supabase.from('user_goals').select('*').eq('user_id', user.id).maybeSingle(),
         supabase.from('recipes').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
       ]);
