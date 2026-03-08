@@ -231,7 +231,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
             <div>
               <p className="text-sm mb-3" style={{ color: '#6B7280' }}>{t.scan.multiPhotoHint}</p>
               <div className="grid grid-cols-2 gap-3">
-                {PHOTO_SLOTS.map((slot) => (
+                {(PHOTO_SLOTS_DATA[language] || PHOTO_SLOTS_DATA.en).map((slot) => (
                   <div key={slot.id}>
                     <input
                       ref={el => { fileRefs.current[slot.id] = el; }}
