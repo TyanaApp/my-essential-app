@@ -32,7 +32,7 @@ serve(async (req) => {
     const bodies: Record<string, string> = {
       ru: `Привет, ${name}! 👋
 
-Добро пожаловать в TYANA — твой личный ИИ-помощник по питанию.
+Добро пожаловать в TYANA — твой персональный ИИ-нутрициолог.
 
 Твой 7-дневный Pro trial уже активирован! 🚀
 
@@ -51,7 +51,7 @@ P.S. Есть вопросы? Пиши нам в приложении!`,
 
       uk: `Привіт, ${name}! 👋
 
-Ласкаво просимо до TYANA — твій особистий ІІ-помічник з харчування.
+Ласкаво просимо до TYANA — твій персональний ШІ-нутріціолог.
 
 Твій 7-денний Pro trial вже активовано! 🚀
 
@@ -70,7 +70,7 @@ P.S. Є питання? Пиши нам у додатку!`,
 
       lv: `Sveiki, ${name}! 👋
 
-Laipni lūdzam TYANA — tavs personīgais AI uztura asistents.
+Laipni lūdzam TYANA — tavs personīgais AI uztura speciālists.
 
 Tavs 7 dienu Pro izmēģinājums ir aktivizēts! 🚀
 
@@ -89,7 +89,7 @@ P.S. Jautājumi? Rakstiet mums lietotnē!`,
 
       en: `Hi ${name}! 👋
 
-Welcome to TYANA — your personal AI nutrition assistant.
+Welcome to TYANA — your personal AI nutritionist.
 
 Your 7-day Pro trial is now active! 🚀
 

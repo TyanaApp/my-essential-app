@@ -34,7 +34,7 @@ const PrivacyPage = () => {
       title: 'Privacy Policy',
       lastUpdated: 'Last updated: March 2026',
       s1Title: '1. Who we are',
-      s1: 'TYANA is an AI-powered kitchen and nutrition assistant. tyana.lovable.app. EU jurisdiction, Latvia.',
+      s1: 'TYANA is a personal AI nutritionist. tyana.lovable.app. EU jurisdiction, Latvia.',
       s2Title: '2. What data we collect',
       s2Items: [
         'Account: name, email, profile photo (Google OAuth)',
@@ -96,7 +96,7 @@ const PrivacyPage = () => {
       title: 'Политика конфиденциальности',
       lastUpdated: 'Последнее обновление: март 2026',
       s1Title: '1. Кто мы',
-      s1: 'TYANA — ИИ-помощник для кухни и питания. tyana.lovable.app. Юрисдикция ЕС, Латвия.',
+      s1: 'TYANA — персональный ИИ-нутрициолог. tyana.lovable.app. Юрисдикция ЕС, Латвия.',
       s2Title: '2. Какие данные мы собираем',
       s2Items: [
         'Аккаунт: имя, email, фото профиля (Google OAuth)',
@@ -158,7 +158,7 @@ const PrivacyPage = () => {
       title: 'Політика конфіденційності',
       lastUpdated: 'Останнє оновлення: березень 2026',
       s1Title: '1. Хто ми',
-      s1: 'TYANA — ШІ-помічник для кухні та харчування. tyana.lovable.app. Юрисдикція ЄС, Латвія.',
+      s1: 'TYANA — персональний ШІ-нутріціолог. tyana.lovable.app. Юрисдикція ЄС, Латвія.',
       s2Title: '2. Які дані ми збираємо',
       s2Items: [
         'Акаунт: ім\'я, email, фото профілю (Google OAuth)',
@@ -220,7 +220,7 @@ const PrivacyPage = () => {
       title: 'Privātuma politika',
       lastUpdated: 'Pēdējoreiz atjaunināts: 2026. gada marts',
       s1Title: '1. Kas mēs esam',
-      s1: 'TYANA ir AI virtuves un uztura palīgs. tyana.lovable.app. ES jurisdikcija, Latvija.',
+      s1: 'TYANA ir personīgais AI uztura speciālists. tyana.lovable.app. ES jurisdikcija, Latvija.',
       s2Title: '2. Kādus datus mēs vācam',
       s2Items: [
         'Konts: vārds, e-pasts, profila foto (Google OAuth)',

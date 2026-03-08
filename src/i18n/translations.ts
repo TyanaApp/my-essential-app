@@ -327,7 +327,7 @@ export const translations = {
     landing: {
       signIn: 'Sign In', startFree: 'Start Free',
       navFeatures: 'Features', navPricing: 'Pricing', navFaq: 'FAQ',
-      badge: '✦ AI-Powered Kitchen Assistant',
+      badge: '✦ Your Personal AI Nutritionist',
       heroTitle: 'Stop throwing money away with your food',
       heroSubtitle: 'TYANA knows what\'s in your fridge, counts your calories, finds discounts and saves you',
       heroSavings: '€80+ per month',
@@ -367,7 +367,7 @@ export const translations = {
       faq6Q: 'Which countries have store discounts?', faq6A: 'We currently support major grocery chains in Latvia, Germany, and the Netherlands. We\'re expanding to more EU countries every month. Request your country in Settings!',
       footerTagline: 'Knows you better than you know yourself.',
       footerTerms: 'Terms', footerPrivacy: 'Privacy',
-      footerDisclaimer: 'TYANA is an AI-powered kitchen assistant. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.',
+      footerDisclaimer: 'TYANA is a personal AI nutritionist. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.',
       footerCopyright: '© 2025 TYANA. All rights reserved.',
       foundingCounter: '{count} of 1000 founder spots taken',
       foundingFull: 'All founder spots taken. Pro is now €12.99/mo',
@@ -662,7 +662,7 @@ export const translations = {
     },
     landing: {
       signIn: 'Войти', startFree: 'Начать бесплатно', navFeatures: 'Функции', navPricing: 'Цены', navFaq: 'Вопросы',
-      badge: '✦ ИИ-помощник для кухни', heroTitle: 'Перестаньте выбрасывать деньги вместе с едой',
+      badge: '✦ Твой персональный ИИ-нутрициолог', heroTitle: 'Перестаньте выбрасывать деньги вместе с едой',
       heroSubtitle: 'TYANA знает, что в вашем холодильнике, считает калории, находит скидки и экономит вам',
       heroSavings: '€80+ в месяц', ctaButton: 'Начать бесплатно — €0', ctaHint: '7 дней все функции бесплатно. Карта не нужна.',
       statSaved: 'экономия/мес', statPayoff: 'до окупаемости', statScan: 'скан холодильника', statPayoffValue: '5 дней', statScanValue: '10 сек',
@@ -693,7 +693,7 @@ export const translations = {
       faq6Q: 'В каких странах есть скидки?', faq6A: 'Сейчас мы поддерживаем крупные сети в Латвии, Германии и Нидерландах.',
       footerTagline: 'Знает тебя лучше, чем ты сама.',
       footerTerms: 'Условия', footerPrivacy: 'Конфиденциальность',
-      footerDisclaimer: 'TYANA — ИИ-помощник для кухни. Рекомендации по питанию не являются медицинскими советами.',
+      footerDisclaimer: 'TYANA — персональный ИИ-нутрициолог. Рекомендации по питанию не являются медицинскими советами.',
       footerCopyright: '© 2025 TYANA. Все права защищены.',
       foundingCounter: '{count} из 1000 мест основателя заняты',
       foundingFull: '🔒 Все места основателя заняты. Pro теперь €12.99/мес',
@@ -962,7 +962,7 @@ export const translations = {
     },
     landing: {
       signIn: 'Ieiet', startFree: 'Sākt bezmaksas', navFeatures: 'Funkcijas', navPricing: 'Cenas', navFaq: 'Jautājumi',
-      badge: '✦ AI virtuves palīgs', heroTitle: 'Pārtrauciet mest naudu kopā ar ēdienu',
+      badge: '✦ Tavs personīgais AI uztura speciālists', heroTitle: 'Pārtrauciet mest naudu kopā ar ēdienu',
       heroSubtitle: 'TYANA zina, kas ir jūsu ledusskapī, skaita kalorijas, atrod atlaides un ietaupa jums',
       heroSavings: '€80+ mēnesī', ctaButton: 'Sākt bezmaksas — €0', ctaHint: '7 dienas visas funkcijas bezmaksas.',
       statSaved: 'ietaupīts/mēn', statPayoff: 'līdz atmaksai', statScan: 'ledusskapja skens', statPayoffValue: '5 dienas', statScanValue: '10 sek',
@@ -1263,7 +1263,7 @@ export const translations = {
     },
     landing: {
       signIn: 'Увійти', startFree: 'Почати безкоштовно', navFeatures: 'Функції', navPricing: 'Ціни', navFaq: 'Питання',
-      badge: '✦ ШІ-помічник для кухні', heroTitle: 'Перестаньте викидати гроші разом з їжею',
+      badge: '✦ Твій персональний ШІ-нутріціолог', heroTitle: 'Перестаньте викидати гроші разом з їжею',
       heroSubtitle: 'TYANA знає, що у вашому холодильнику, рахує калорії, знаходить знижки та економить вам',
       heroSavings: '€80+ на місяць', ctaButton: 'Почати безкоштовно — €0', ctaHint: '7 днів всі функції безкоштовно. Картка не потрібна.',
       statSaved: 'економія/міс', statPayoff: 'до окупності', statScan: 'скан холодильника', statPayoffValue: '5 днів', statScanValue: '10 сек',
