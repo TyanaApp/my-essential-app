@@ -47,6 +47,8 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const receipt = (t as any).receipt || {};
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<'upload' | 'scanning' | 'results' | 'error' | 'manual' | 'no-food'>('upload');
