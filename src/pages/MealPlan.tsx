@@ -217,7 +217,11 @@ const MealPlan = ({ embedded }: { embedded?: boolean }) => {
       toast.success(mp.planGenerated || 'Meal plan generated! ✨');
     } catch (e: any) {
       console.error('Error generating plan:', e);
-      toast.error(e.message || (t.common as any)?.error || 'Error');
+      const errMsg = language === 'ru' ? 'Ошибка генерации. Попробуй ещё раз.' :
+        language === 'uk' ? 'Помилка генерації. Спробуй ще раз.' :
+        language === 'lv' ? 'Ģenerēšanas kļūda. Mēģini vēlreiz.' :
+        'Generation error. Please try again.';
+      toast.error(errMsg);
     } finally {
       setGenerating(false);
     }
