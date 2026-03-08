@@ -32,6 +32,30 @@ export type Database = {
         }
         Relationships: []
       }
+      families: {
+        Row: {
+          created_at: string
+          id: string
+          invite_code: string
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invite_code: string
+          name: string
+          owner_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invite_code?: string
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           created_at: string | null
@@ -176,6 +200,8 @@ export type Database = {
           created_at: string
           currency: string | null
           display_name: string | null
+          family_id: string | null
+          family_role: string | null
           gender: string | null
           id: string
           is_founding_member: boolean | null
@@ -201,6 +227,8 @@ export type Database = {
           created_at?: string
           currency?: string | null
           display_name?: string | null
+          family_id?: string | null
+          family_role?: string | null
           gender?: string | null
           id?: string
           is_founding_member?: boolean | null
@@ -226,6 +254,8 @@ export type Database = {
           created_at?: string
           currency?: string | null
           display_name?: string | null
+          family_id?: string | null
+          family_role?: string | null
           gender?: string | null
           id?: string
           is_founding_member?: boolean | null
@@ -242,7 +272,15 @@ export type Database = {
           user_id?: string
           user_number?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recipes: {
         Row: {
@@ -439,6 +477,7 @@ export type Database = {
     }
     Functions: {
       assign_user_number: { Args: { p_user_id: string }; Returns: Json }
+      get_family_id_for_user: { Args: { p_user_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
