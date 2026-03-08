@@ -895,6 +895,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Card 5 — AI Zero Waste Tip */}
+        {(tipLoading || zeroWasteTip) && (
         <motion.div {...fadeUp(5)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-bold flex items-center gap-1.5 text-foreground">
@@ -922,19 +923,16 @@ const Dashboard = () => {
                     {zeroWasteTip.category === 'food' ? '🍽' : zeroWasteTip.category === 'beauty' ? '💄' : zeroWasteTip.category === 'cleaning' ? '🧹' : zeroWasteTip.category === 'garden' ? '🌱' : '🏠'} {zeroWasteTip.category}
                   </span>
                 )}
-                {zeroWasteTip.product && (
+                {zeroWasteTip.confidence === 'high' && zeroWasteTip.based_on && (
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0FDF4', color: '#059669' }}>
-                    {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.product}
+                    {language === 'ru' ? 'На основе' : language === 'uk' ? 'На основі' : language === 'lv' ? 'Balstīts uz' : 'Based on'}: {zeroWasteTip.based_on}
                   </span>
                 )}
               </div>
             </>
-          ) : (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {((t as any).tips?.daily || ['Check your fridge before grocery shopping'])[0]}
-            </p>
-          )}
+          ) : null}
         </motion.div>
+        )}
       </div>
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
     </div>
