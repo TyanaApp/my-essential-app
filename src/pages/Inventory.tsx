@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { translateUnit } from '@/lib/units';
 import { Search, Camera, Plus, Pencil, Trash2, ShoppingCart, UtensilsCrossed, Package, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
