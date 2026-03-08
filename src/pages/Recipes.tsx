@@ -75,7 +75,13 @@ const Recipes = () => {
     setGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-recipes', {
-        body: { mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory, inventory, userGoals: userGoals || {}, language },
+        body: {
+          mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory,
+          inventory, userGoals: userGoals || {}, language,
+          familyMembers: familyMode ? subMembers.map(m => ({
+            name: m.name, age: m.age, allergies: m.allergies, diet_type: m.diet_type,
+          })) : undefined,
+        },
       });
       if (error) throw error;
       const recipes: Recipe[] = data?.recipes || [];
