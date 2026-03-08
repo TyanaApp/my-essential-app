@@ -1225,7 +1225,7 @@ export const translations = {
     profile: {
       title: 'Profils', editProfile: 'Rediģēt profilu', accountSettings: 'Konta iestatījumi',
       systemSettings: 'Sistēmas iestatījumi', payments: 'Maksājumi', logout: 'Iziet',
-      deleteAccount: 'Dzēst kontu', installApp: '📲 Instalēt lietotni',
+      deleteAccount: 'Dzēst kontu', installApp: '📲 Instalēt lietotni', alreadyInstalled: '✅ Lietotne instalēta',
       displayName: 'Vārds', bio: 'Par sevi', gender: 'Dzimums', dateOfBirth: 'Dzimšanas datums',
       male: 'Vīrietis', female: 'Sieviete', other: 'Cits', preferNotToSay: 'Nevēlos norādīt',
       connectDevices: 'Savienot ierīces', soon: 'Drīzumā',
