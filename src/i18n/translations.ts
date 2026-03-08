@@ -827,6 +827,7 @@ export const translations = {
       itemsAddedToInventory: '{count} продуктов добавлено ✓',
       saveFailed: 'Не удалось сохранить',
       receipt: 'Чек',
+      receiptHistory: 'История чеков',
     },
     storeDeals: {
       title: 'Скидки из ваших магазинов — скоро!',
