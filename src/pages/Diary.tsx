@@ -197,8 +197,7 @@ const Diary = () => {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => { setFridgeMealType(section.type); setFridgeOpen(true); }}
-                      className="flex items-center justify-center w-8 h-8 rounded-lg"
-                      style={{ color: '#059669', backgroundColor: '#F0FDF4' }}
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400"
                       aria-label="From fridge"
                     >
                       <span className="text-sm">🧊</span>
