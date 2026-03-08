@@ -344,7 +344,7 @@ const RecipeDetailModal = ({
   const matchPct = totalCount > 0 ? Math.round((haveCount / totalCount) * 100) : 0;
 
   return (
-    <div className="fixed inset-0 z-50 bg-background overflow-y-auto pb-24">
+    <div className="fixed inset-0 z-50 bg-background overflow-y-auto pb-40">
       {/* Confetti */}
       {showConfetti && (
         <div className="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
