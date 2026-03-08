@@ -37,7 +37,7 @@ export interface InventoryItem {
   tracking_mode: string | null;
 }
 
-type Tab = 'fridge' | 'pantry' | 'freezer' | 'home' | 'expiring';
+type Tab = 'fridge' | 'pantry' | 'freezer' | 'expiring';
 
 const Inventory = () => {
   const { user } = useAuth();
@@ -65,7 +65,6 @@ const Inventory = () => {
     { id: 'fridge', label: t.inventory.fridge },
     { id: 'pantry', label: t.inventory.pantry },
     { id: 'freezer', label: t.inventory.freezer },
-    { id: 'home', label: qa.homeTab || '🏡 Home' },
     { id: 'expiring', label: t.inventory.expiring },
   ];
 
@@ -210,7 +209,7 @@ const Inventory = () => {
       <h1 className="text-2xl font-bold mb-4 text-foreground">{t.inventory.title}</h1>
 
       {/* Tabs */}
-      <div className="grid grid-cols-5 gap-1.5 mb-4">
+      <div className="grid grid-cols-4 gap-1.5 mb-4">
         {TABS.map((tabItem) => (
           <button
             key={tabItem.id}

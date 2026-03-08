@@ -147,7 +147,7 @@ const Diary = () => {
   
 
   return (
-    <div className="min-h-screen p-6 pb-mobile-safe">
+    <div className="min-h-screen p-6" style={{ paddingBottom: 140 }}>
       <h1 className="text-2xl font-bold mb-4 text-foreground">{t.diary.title}</h1>
 
       {/* Week strip */}
