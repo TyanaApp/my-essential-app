@@ -367,7 +367,7 @@ export const translations = {
       faq6Q: 'Which countries have store discounts?', faq6A: 'We currently support major grocery chains in Latvia, Germany, and the Netherlands. We\'re expanding to more EU countries every month. Request your country in Settings!',
       footerTagline: 'Knows you better than you know yourself.',
       footerTerms: 'Terms', footerPrivacy: 'Privacy',
-      footerDisclaimer: 'TYANA is an AI-powered kitchen assistant. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.',
+      footerDisclaimer: 'TYANA is a personal AI nutritionist. Nutritional recommendations are not medical advice. Always consult a healthcare professional for dietary concerns.',
       footerCopyright: '© 2025 TYANA. All rights reserved.',
       foundingCounter: '{count} of 1000 founder spots taken',
       foundingFull: 'All founder spots taken. Pro is now €12.99/mo',
