@@ -190,6 +190,7 @@ const Profile = () => {
   const [ratingOpen, setRatingOpen] = useState(false);
   const [familyOpen, setFamilyOpen] = useState(false);
   const [installGuideOpen, setInstallGuideOpen] = useState(false);
+  const isStandalone = useIsStandalone();
 
   // Listen for open-payments event
   useEffect(() => {
