@@ -84,7 +84,7 @@
     --secondary-foreground: 263 30% 90%;
 
     --muted: 244 20% 22%;
-    --muted-foreground: 220 10% 55%;
+    --muted-foreground: 220 10% 65%;
 
     --accent: 244 30% 20%;
     --accent-foreground: 263 30% 90%;
@@ -92,8 +92,8 @@
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 244 20% 22%;
-    --input: 244 20% 22%;
+    --border: 244 20% 25%;
+    --input: 244 20% 25%;
     --ring: 263 70% 65%;
 
     /* Success/Warning - dark */
@@ -111,7 +111,7 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 244 30% 18%;
     --sidebar-accent-foreground: 263 30% 90%;
-    --sidebar-border: 244 20% 22%;
+    --sidebar-border: 244 20% 25%;
     --sidebar-ring: 263 70% 65%;
 
     /* Surface layers - dark */
@@ -163,7 +163,12 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Dark background text visibility — force white text on dark containers */
+/* ============================================
+   DARK MODE — COMPREHENSIVE TEXT VISIBILITY
+   Catches hardcoded inline styles
+   ============================================ */
+
+/* Force white text on dark Tailwind utility backgrounds */
 [class*="bg-violet-6"] *, [class*="bg-violet-7"] *, [class*="bg-violet-8"] *, [class*="bg-violet-9"] *,
 [class*="bg-purple-6"] *, [class*="bg-purple-7"] *, [class*="bg-purple-8"] *, [class*="bg-purple-9"] *,
 [class*="bg-gray-8"] *, [class*="bg-gray-9"] *,
@@ -179,12 +184,212 @@
   color: white;
 }
 
-.dark-card, .dark-card * {
-  color: white;
+.dark-card, .dark-card * { color: white; }
+.dark-card .text-muted, .dark-card .subtitle { color: rgba(255,255,255,0.7); }
+
+/* ——— DARK: Remap light background colors ——— */
+.dark [style*="background-color: #F5F3FF"],
+.dark [style*="background-color: rgb(245, 243, 255)"] {
+  background-color: hsl(244, 40%, 14%) !important;
+}
+.dark [style*="background-color: #EDE9FE"] {
+  background-color: hsl(244, 30%, 20%) !important;
+}
+.dark [style*="background-color: #DDD6FE"] {
+  background-color: hsl(244, 20%, 25%) !important;
+}
+.dark [style*="background-color: #FEF3C7"] {
+  background-color: hsl(40, 40%, 18%) !important;
+}
+.dark [style*="background-color: #FEE2E2"] {
+  background-color: hsl(0, 40%, 18%) !important;
+}
+.dark [style*="background-color: #F0FDF4"] {
+  background-color: hsl(140, 30%, 16%) !important;
+}
+.dark [style*="background-color: #FFF7ED"] {
+  background-color: hsl(30, 30%, 18%) !important;
+}
+.dark [style*="background-color: #EFF6FF"] {
+  background-color: hsl(210, 30%, 18%) !important;
+}
+.dark [style*="background-color: #F3F4F6"] {
+  background-color: hsl(244, 20%, 22%) !important;
+}
+.dark [style*="background-color: #D1FAE5"] {
+  background-color: hsl(150, 30%, 16%) !important;
+}
+.dark [style*="background-color: hsl(220, 13%, 91%)"] {
+  background-color: hsl(244, 20%, 22%) !important;
+}
+.dark [style*="background-color: #7C3AED"] {
+  background-color: hsl(263, 70%, 55%) !important;
+}
+.dark [style*="background-color: #059669"] {
+  background-color: hsl(160, 70%, 35%) !important;
+}
+.dark [style*="background-color: #DC2626"] {
+  background-color: hsl(0, 65%, 45%) !important;
+}
+.dark [style*="background-color: #1E1B4B"] {
+  background-color: hsl(244, 40%, 16%) !important;
 }
 
-.dark-card .text-muted, .dark-card .subtitle {
-  color: rgba(255, 255, 255, 0.7);
+/* ——— DARK: Remap hardcoded dark text to light ——— */
+.dark [style*="color: #1E1B4B"],
+.dark [style*="color: rgb(30, 27, 75)"] {
+  color: hsl(263, 30%, 92%) !important;
+}
+.dark [style*="color: #6B7280"],
+.dark [style*="color: rgb(107, 114, 128)"] {
+  color: hsl(220, 10%, 68%) !important;
+}
+.dark [style*="color: #9CA3AF"],
+.dark [style*="color: rgb(156, 163, 175)"] {
+  color: hsl(220, 10%, 58%) !important;
+}
+.dark [style*="color: #92400E"] {
+  color: hsl(30, 80%, 68%) !important;
+}
+.dark [style*="color: #374151"] {
+  color: hsl(220, 15%, 80%) !important;
+}
+
+/* ——— DARK: Boost accent colors for contrast ——— */
+.dark [style*="color: #059669"] {
+  color: hsl(160, 70%, 52%) !important;
+}
+.dark [style*="color: #DC2626"] {
+  color: hsl(0, 70%, 62%) !important;
+}
+.dark [style*="color: #EA580C"] {
+  color: hsl(21, 85%, 60%) !important;
+}
+.dark [style*="color: #3B82F6"] {
+  color: hsl(217, 91%, 68%) !important;
+}
+.dark [style*="color: #7C3AED"] {
+  color: hsl(263, 70%, 72%) !important;
+}
+.dark [style*="color: #A78BFA"] {
+  color: hsl(263, 90%, 82%) !important;
+}
+.dark [style*="color: #2563EB"] {
+  color: hsl(217, 91%, 68%) !important;
+}
+.dark [style*="color: white"],
+.dark [style*="color: #FFFFFF"],
+.dark [style*="color: #fff"] {
+  color: white !important;
+}
+
+/* ——— DARK: Fix hardcoded border colors ——— */
+.dark [style*="border-color: #DDD6FE"] {
+  border-color: hsl(244, 20%, 28%) !important;
+}
+.dark [style*="border-color: #FDE68A"] {
+  border-color: hsl(40, 40%, 25%) !important;
+}
+.dark [style*="border-color: #E5E7EB"] {
+  border-color: hsl(244, 20%, 25%) !important;
+}
+.dark [style*="border-color: #BBF7D0"] {
+  border-color: hsl(140, 30%, 25%) !important;
+}
+.dark [style*="border-color: hsl(263, 84%, 58%)"] {
+  border-color: hsl(263, 70%, 60%) !important;
+}
+
+/* ——— DARK: Auth page — white card → dark ——— */
+.dark .bg-white,
+.dark [class*="bg-white"] {
+  background-color: hsl(244, 40%, 14%) !important;
+  color: hsl(263, 30%, 92%) !important;
+}
+
+/* ——— DARK: Loading spinners ——— */
+.dark [style*="border-color: #EDE9FE"] {
+  border-color: hsl(244, 30%, 25%) !important;
+}
+.dark [style*="border-top-color: #7C3AED"] {
+  border-top-color: hsl(263, 70%, 65%) !important;
+}
+
+/* ——— DARK: Fix Tailwind color utility classes ——— */
+.dark .hover\:bg-gray-50:hover {
+  background-color: hsl(244, 30%, 18%) !important;
+}
+.dark .bg-purple-100 {
+  background-color: hsl(263, 30%, 22%) !important;
+}
+.dark .text-purple-600 {
+  color: hsl(263, 70%, 72%) !important;
+}
+.dark .border-purple-200 {
+  border-color: hsl(263, 30%, 28%) !important;
+}
+.dark .text-green-600 {
+  color: hsl(160, 70%, 52%) !important;
+}
+.dark .hover\:bg-\[\#EDE9FE\]:hover {
+  background-color: hsl(244, 30%, 22%) !important;
+}
+.dark .hover\:bg-red-50:hover {
+  background-color: hsl(0, 30%, 18%) !important;
+}
+.dark .focus\:border-\[\#7C3AED\]:focus {
+  border-color: hsl(263, 70%, 65%) !important;
+}
+
+/* ——— DARK: Fix background shorthand (without -color) ——— */
+.dark [style*="background: #F5F3FF"] {
+  background: hsl(244, 40%, 14%) !important;
+}
+.dark [style*="background: #EDE9FE"] {
+  background: hsl(244, 30%, 20%) !important;
+}
+.dark [style*="background: #FEF3C7"] {
+  background: hsl(40, 40%, 18%) !important;
+}
+.dark [style*="background: #FEE2E2"] {
+  background: hsl(0, 40%, 18%) !important;
+}
+.dark [style*="background: white"],
+.dark [style*="background: #fff"],
+.dark [style*="background: #FFFFFF"] {
+  background: hsl(244, 40%, 14%) !important;
+}
+
+/* ——— DARK: muted-foreground boost for better visibility ——— */
+.dark .text-muted-foreground {
+  color: hsl(220, 10%, 65%) !important;
+}
+
+/* ——— DARK: Sonner toast styling ——— */
+.dark [data-sonner-toast] {
+  background-color: hsl(244, 40%, 16%) !important;
+  color: hsl(263, 30%, 92%) !important;
+  border-color: hsl(244, 20%, 25%) !important;
+}
+
+/* ——— DARK: Dialog/Drawer backdrop + content ——— */
+.dark [data-vaul-drawer] [data-vaul-drawer-content],
+.dark [role="dialog"] {
+  background-color: hsl(244, 40%, 14%);
+  color: hsl(263, 30%, 92%);
+}
+
+/* ——— DARK: Input fields with hardcoded light bg ——— */
+.dark input[style*="background-color: #F5F3FF"],
+.dark input[style*="backgroundColor: #F5F3FF"] {
+  background-color: hsl(244, 30%, 18%) !important;
+  color: hsl(263, 30%, 92%) !important;
+  border-color: hsl(244, 20%, 28%) !important;
+}
+
+/* ——— DARK: Checkbox accent ——— */
+.dark input[type="checkbox"] {
+  accent-color: hsl(263, 70%, 65%);
 }
 
 .modal-actions {
