@@ -14,6 +14,8 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAutoReduce } from '@/hooks/useAutoReduce';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useStreak } from '@/hooks/useStreak';
+import { useFamily } from '@/hooks/useFamily';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast as sonnerToast } from 'sonner';
 
 export interface InventoryItem {
@@ -51,6 +53,10 @@ const Inventory = () => {
   const [editItem, setEditItem] = useState<InventoryItem | null>(null);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
   const [scanCount, setScanCount] = useState(0);
+  const [familyFilter, setFamilyFilter] = useState<'all' | 'mine' | 'shared'>('all');
+
+  const { familyMode, members } = useFamily();
+  const f = (t as any).family || {};
 
   const TABS: { id: Tab; label: string }[] = [
     { id: 'fridge', label: t.inventory.fridge },
@@ -96,10 +102,10 @@ const Inventory = () => {
 
   const fetchItems = async () => {
     if (!user) return;
+    // When in family mode, RLS already returns family members' items
     const { data, error } = await supabase
       .from('inventory_items')
       .select('*')
-      .eq('user_id', user.id)
       .order('added_at', { ascending: false });
     if (!error && data) setItems(data as unknown as InventoryItem[]);
     setLoading(false);
@@ -115,20 +121,26 @@ const Inventory = () => {
 
   const filteredItems = useMemo(() => {
     let list = items;
+    // Family filter
+    if (familyMode && familyFilter === 'mine') {
+      list = list.filter((i) => i.user_id === user?.id);
+    } else if (familyMode && familyFilter === 'shared') {
+      list = list.filter((i) => i.user_id !== user?.id);
+    }
     if (tab === 'expiring') {
-      list = items.filter((i) => {
+      list = list.filter((i) => {
         const d = daysUntilExpiry(i.expires_at);
         return d !== null && d <= 3;
       });
     } else {
-      list = items.filter((i) => i.storage_location === tab);
+      list = list.filter((i) => i.storage_location === tab);
     }
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter((i) => i.name.toLowerCase().includes(q));
     }
     return list;
-  }, [items, tab, search]);
+  }, [items, tab, search, familyMode, familyFilter, user]);
 
   const handleDelete = async (id: string) => {
     await supabase.from('inventory_items').delete().eq('id', id);
@@ -218,6 +230,25 @@ const Inventory = () => {
         ))}
       </div>
 
+      {/* Family filter chips */}
+      {familyMode && (
+        <div className="flex gap-2 mb-3">
+          {(['all', 'mine', 'shared'] as const).map((filt) => (
+            <button
+              key={filt}
+              onClick={() => setFamilyFilter(filt)}
+              className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+              style={{
+                backgroundColor: familyFilter === filt ? 'hsl(263, 84%, 58%)' : 'hsl(220, 13%, 91%)',
+                color: familyFilter === filt ? 'white' : '#6B7280',
+              }}
+            >
+              {filt === 'all' ? (f.all || 'All') : filt === 'mine' ? (f.mine || 'Mine') : (f.shared || 'Shared')}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Search */}
       <div className="relative mb-3">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#9CA3AF' }} />
@@ -276,6 +307,9 @@ const Inventory = () => {
             {filteredItems.map((item) => {
               const exp = expiryColor(item.expires_at);
               const lowQty = item.tracking_mode !== 'date_only' && item.quantity <= 0.2;
+              const memberInfo = familyMode && item.user_id !== user?.id
+                ? members.find(m => m.user_id === item.user_id)
+                : null;
               return (
                 <motion.div
                   key={item.id}
@@ -287,6 +321,14 @@ const Inventory = () => {
                   style={{ boxShadow: '0 1px 6px rgba(124,58,237,0.04)' }}
                 >
                   <div className="flex items-center gap-3">
+                    {/* Family member avatar */}
+                    {memberInfo && (
+                      <Avatar className="w-6 h-6 shrink-0">
+                        <AvatarFallback className="bg-primary/20 text-primary text-[9px]">
+                          {(memberInfo.display_name || '?').charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="text-sm font-semibold truncate" style={{ color: '#1E1B4B' }}>{item.name}</p>

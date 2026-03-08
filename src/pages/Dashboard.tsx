@@ -9,6 +9,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
+import FamilyWidget from '@/components/dashboard/FamilyWidget';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 import EditProfileModal from '@/components/profile/EditProfileModal';
@@ -379,6 +380,9 @@ const Dashboard = () => {
         </h2>
         <p className="text-sm mt-0.5" style={{ color: '#9CA3AF' }}>{formatDate()}</p>
       </motion.div>
+
+      {/* Family widget */}
+      <FamilyWidget />
 
       {/* Streak card */}
       {data.streakCurrent > 0 && (

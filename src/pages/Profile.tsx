@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   User, Settings, LogOut, ChevronRight, Camera, 
   Edit, CreditCard, Trash2, Shield, Bell, Watch, Smartphone, Activity,
-  MessageCircle, Lightbulb, Star
+  MessageCircle, Lightbulb, Star, Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -21,6 +21,7 @@ import SystemSettingsModal from '@/components/profile/SystemSettingsModal';
 import PaymentsModal from '@/components/profile/PaymentsModal';
 import DeleteAccountModal from '@/components/profile/DeleteAccountModal';
 import { SupportModal, IdeasModal, RatingModal } from '@/components/profile/SupportFeedbackModals';
+import FamilySettingsModal from '@/components/profile/FamilySettingsModal';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 
@@ -64,6 +65,7 @@ const Profile = () => {
   const [supportOpen, setSupportOpen] = useState(false);
   const [ideasOpen, setIdeasOpen] = useState(false);
   const [ratingOpen, setRatingOpen] = useState(false);
+  const [familyOpen, setFamilyOpen] = useState(false);
 
   // Listen for open-payments event
   useEffect(() => {
@@ -114,6 +116,11 @@ const Profile = () => {
       icon: Edit,
       label: t.profile.editProfile,
       onClick: () => setEditProfileOpen(true),
+    },
+    {
+      icon: Users,
+      label: (t as any).family?.title || 'Family',
+      onClick: () => setFamilyOpen(true),
     },
     {
       icon: Activity,
@@ -322,6 +329,7 @@ const Profile = () => {
 
       {/* Modals */}
       <EditProfileModal open={editProfileOpen} onOpenChange={setEditProfileOpen} />
+      <FamilySettingsModal open={familyOpen} onOpenChange={setFamilyOpen} />
       <AccountSettingsModal open={accountSettingsOpen} onOpenChange={setAccountSettingsOpen} />
       <SystemSettingsModal open={systemSettingsOpen} onOpenChange={setSystemSettingsOpen} />
       <PaymentsModal open={paymentsOpen} onOpenChange={setPaymentsOpen} />

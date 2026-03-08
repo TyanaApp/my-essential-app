@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useFamily } from '@/hooks/useFamily';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 import {
   Dialog,
@@ -98,8 +99,9 @@ const Shopping = () => {
 
   const fetchItems = async () => {
     if (!user) return;
+    // RLS handles family visibility automatically
     const [{ data }, profileRes] = await Promise.all([
-      supabase.from('shopping_items').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      supabase.from('shopping_items').select('*').order('created_at', { ascending: false }),
       supabase.from('profiles').select('currency').eq('user_id', user.id).maybeSingle(),
     ]);
     if (data) setItems(data as unknown as ShoppingItem[]);
@@ -124,6 +126,17 @@ const Shopping = () => {
   };
 
   useEffect(() => { fetchItems(); fetchSuggestions(); }, [user]);
+
+  // Realtime subscription for family shared shopping
+  useEffect(() => {
+    const channel = supabase
+      .channel('shopping-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping_items' }, () => {
+        fetchItems();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
 
   const activeItems = useMemo(() => items.filter((i) => !i.is_purchased), [items]);
   const purchasedItems = useMemo(() => items.filter((i) => i.is_purchased), [items]);
