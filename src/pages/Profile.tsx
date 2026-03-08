@@ -85,6 +85,43 @@ const WeeklyReportToggle = () => {
   );
 };
 
+const StoreDealsProfileRow = () => {
+  const { user } = useAuth();
+  const { t } = useTranslation();
+  const stores = (t as any).storeDeals || {};
+  const [joined, setJoined] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      if (data && (data as any).store_integration_waitlist) setJoined(true);
+    });
+  }, [user]);
+
+  const handleJoin = async () => {
+    if (!user) return;
+    await supabase.from('profiles').update({ store_integration_waitlist: true } as any).eq('user_id', user.id);
+    setJoined(true);
+    toast.success(stores.joined || "Great! We'll notify you when ready ✓");
+  };
+
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium text-foreground">{stores.profileLabel || '🏪 Store integrations'}</p>
+        <p className="text-xs text-muted-foreground">{stores.title || 'Coming soon'}</p>
+      </div>
+      {!joined ? (
+        <Button variant="outline" size="sm" onClick={handleJoin} className="text-xs">
+          🔔
+        </Button>
+      ) : (
+        <Badge className="bg-green-100 text-green-600 border-green-200 text-[10px]">✅</Badge>
+      )}
+    </div>
+  );
+};
+
 const Profile = () => {
   const { t } = useTranslation();
   usePageTitle(t.profile.title);
