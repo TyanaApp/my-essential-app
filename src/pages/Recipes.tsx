@@ -215,7 +215,7 @@ const Recipes = () => {
 
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
-      <h1 className="text-2xl font-bold mb-5" style={{ color: '#1E1B4B' }}>{t.recipes.title}</h1>
+      <h1 className="text-2xl font-bold mb-5 text-foreground">{t.recipes.title}</h1>
 
       {/* Generation settings */}
       <div className="mb-6">

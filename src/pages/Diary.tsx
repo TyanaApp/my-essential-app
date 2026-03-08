@@ -387,7 +387,7 @@ const Diary = () => {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
-            <DialogTitle style={{ color: '#1E1B4B' }}>
+            <DialogTitle className="text-foreground">
               {t.diary.addMealTitle.replace('{meal}', getMealLabel(modalMealType))}
             </DialogTitle>
             <DialogDescription>{t.diary.logWhatYouAte}</DialogDescription>

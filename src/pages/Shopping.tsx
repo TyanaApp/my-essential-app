@@ -249,7 +249,7 @@ const Shopping = () => {
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
       <motion.div {...fadeUp(0)} className="mb-5">
-        <h1 className="text-2xl font-bold" style={{ color: '#1E1B4B' }}>{t.shopping.title}</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t.shopping.title}</h1>
       </motion.div>
 
       <motion.div {...fadeUp(1)} className="flex items-center gap-2 mb-4">

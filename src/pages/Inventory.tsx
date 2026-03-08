@@ -345,7 +345,7 @@ const Inventory = () => {
                       </div>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {item.tracking_mode !== 'date_only' && (
-                          <span className="text-xs font-medium" style={{ color: '#6B7280' }}>
+                          <span className="text-xs font-medium text-muted-foreground">
                             {item.quantity} {item.unit}
                           </span>
                         )}
