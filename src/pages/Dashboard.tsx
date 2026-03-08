@@ -372,15 +372,17 @@ const Dashboard = () => {
     setTipLoading(true);
     try {
       const [invRes, mealsRes] = await Promise.all([
-        supabase.from('inventory_items').select('name, expires_at, quantity, unit').eq('user_id', user.id).limit(20),
+        supabase.from('inventory_items').select('name, expires_at, quantity, unit, storage_location').eq('user_id', user.id).limit(30),
         supabase.from('meal_entries').select('custom_name').eq('user_id', user.id).eq('date', new Date().toISOString().split('T')[0]),
       ]);
       const { data: tipData } = await supabase.functions.invoke('zero-waste-tip', {
         body: { inventory: invRes.data || [], recentMeals: mealsRes.data || [], language },
       });
-      if (tipData && tipData.tip) {
+      if (tipData && tipData.tip && tipData.confidence !== 'low') {
         setZeroWasteTip(tipData);
         localStorage.setItem(cacheKey, JSON.stringify({ date: new Date().toISOString().split('T')[0], data: tipData }));
+      } else {
+        setZeroWasteTip(null);
       }
     } catch (e) {
       console.error('Zero waste tip error:', e);
