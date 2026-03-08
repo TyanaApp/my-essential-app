@@ -205,7 +205,7 @@ const Inventory = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6" style={{ paddingBottom: 90 }}>
+    <div className="min-h-screen p-4 sm:p-6 pb-mobile-safe">
       <h1 className="text-2xl font-bold mb-4 text-foreground">{t.inventory.title}</h1>
 
       {/* Tabs */}

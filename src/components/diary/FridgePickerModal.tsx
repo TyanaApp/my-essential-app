@@ -117,46 +117,45 @@ const FridgePickerModal = ({ open, onClose, mealType, dateStr, onSaved }: Fridge
           <DrawerTitle className="text-foreground">🧊 {l.title}</DrawerTitle>
           <DrawerDescription>{l.desc}</DrawerDescription>
         </DrawerHeader>
-        <div className="px-4 pb-6">
+        <div className="flex-1 overflow-y-auto px-4 pb-2">
           {loading ? (
             <div className="flex justify-center py-8">
               <div className="w-6 h-6 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
             </div>
           ) : items.length === 0 ? (
-            <p className="text-sm text-center py-6" style={{ color: '#9CA3AF' }}>
+            <p className="text-sm text-center py-6 text-muted-foreground">
               {(t.inventory as any)?.empty || 'No items'}
             </p>
           ) : (
-            <>
-              <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto mb-4">
-                {items.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => toggle(item.id)}
-                    className="px-3 py-2 rounded-xl text-sm font-medium border-[1.5px] transition-all"
-                    style={{
-                      borderColor: selected.has(item.id) ? '#7C3AED' : '#E5E7EB',
-                      backgroundColor: selected.has(item.id) ? '#EDE9FE' : 'white',
-                      color: selected.has(item.id) ? '#7C3AED' : '#374151',
-                    }}
-                  >
-                    {item.name} {item.quantity || 1}{getUnitLabel(language, item.unit || 'pcs')}
-                  </button>
-                ))}
-              </div>
-              {selected.size > 0 && (
+            <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto mb-4">
+              {items.map(item => (
                 <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
-                  style={{ backgroundColor: '#7C3AED' }}
+                  key={item.id}
+                  onClick={() => toggle(item.id)}
+                  className="px-3 py-2 rounded-xl text-sm font-medium border-[1.5px] transition-all"
+                  style={{
+                    borderColor: selected.has(item.id) ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                    backgroundColor: selected.has(item.id) ? 'hsl(var(--primary) / 0.15)' : 'hsl(var(--card))',
+                    color: selected.has(item.id) ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                  }}
                 >
-                  {saving ? (l.estimating) : l.log.replace('{count}', String(selected.size))}
+                  {item.name} {item.quantity || 1}{getUnitLabel(language, item.unit || 'pcs')}
                 </button>
-              )}
-            </>
+              ))}
+            </div>
           )}
         </div>
+        {selected.size > 0 && (
+          <div className="modal-actions">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full h-11 rounded-xl text-sm font-semibold text-primary-foreground disabled:opacity-50 bg-primary"
+            >
+              {saving ? (l.estimating) : l.log.replace('{count}', String(selected.size))}
+            </button>
+          </div>
+        )}
       </DrawerContent>
     </Drawer>
   );

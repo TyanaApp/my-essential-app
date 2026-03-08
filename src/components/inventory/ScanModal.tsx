@@ -197,17 +197,17 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
-        style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 50 }}
+        className="bg-card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg flex flex-col"
+        style={{ boxShadow: '0 -4px 40px rgba(0,0,0,0.15)', maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: '#EDE9FE' }}>
-          <h2 className="text-lg font-bold" style={{ color: '#1E1B4B' }}>
+        <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
+          <h2 className="text-lg font-bold text-foreground">
             {step === 1 ? t.scan.title : step === 2 ? t.scan.analyzing : step === 3 ? t.scan.results : '✅ ' + t.scan.savedTitle}
           </h2>
           <button onClick={handleClose} className="p-1 rounded-lg hover:bg-gray-100">
@@ -222,7 +222,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
           ))}
         </div>
 
-        <div className="p-4">
+        <div className="flex-1 overflow-y-auto p-4">
           {/* STEP 1: Multi-photo upload */}
           {step === 1 && (
             <div>

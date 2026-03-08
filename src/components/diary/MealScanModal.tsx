@@ -205,25 +205,26 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
-        style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 50 }}
+        className="bg-card rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg flex flex-col"
+        style={{ boxShadow: '0 -4px 40px rgba(0,0,0,0.15)', maxHeight: '90vh' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: '#EDE9FE' }}>
-          <h2 className="text-lg font-bold" style={{ color: '#1E1B4B' }}>
+        <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
+          <h2 className="text-lg font-bold text-foreground">
             {step === 'capture' ? (ms.scanMeal || '📸 Scan meal') : step === 'analyzing' ? (ms.analyzing || '🤖 Analyzing...') : (ms.aiFound || '✅ AI found:')}
           </h2>
-          <button onClick={handleClose} className="p-1 rounded-lg hover:bg-gray-100">
-            <X className="w-5 h-5" style={{ color: '#6B7280' }} />
+          <button onClick={handleClose} className="p-1 rounded-lg hover:bg-muted">
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
-        <div className="p-4">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto p-4">
           {/* CAPTURE */}
           {step === 'capture' && (
             <div className="text-center py-6">
@@ -243,23 +244,13 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
               ) : (
                 <div
                   onClick={() => fileRef.current?.click()}
-                  className="w-full aspect-[4/3] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-[#7C3AED] hover:bg-[#F5F3FF] transition-colors"
-                  style={{ borderColor: '#DDD6FE' }}
+                  className="w-full aspect-[4/3] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary hover:bg-accent transition-colors border-border"
                 >
-                  <Camera className="w-12 h-12" style={{ color: '#7C3AED' }} />
-                  <span className="text-sm font-medium" style={{ color: '#6B7280' }}>
+                  <Camera className="w-12 h-12 text-primary" />
+                  <span className="text-sm font-medium text-muted-foreground">
                     {ms.takePhoto || 'Take a photo of your meal'}
                   </span>
                 </div>
-              )}
-              {!photo && (
-                <button
-                  onClick={() => fileRef.current?.click()}
-                  className="w-full mt-4 h-14 rounded-2xl text-white font-semibold text-sm"
-                  style={{ backgroundColor: '#7C3AED' }}
-                >
-                  📸 {ms.scanMeal || 'Scan meal'}
-                </button>
               )}
             </div>
           )}
@@ -268,14 +259,14 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
           {step === 'analyzing' && (
             <div className="py-8 text-center">
               <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center animate-pulse" style={{ backgroundColor: '#EDE9FE' }}>
+                <div className="w-16 h-16 rounded-full flex items-center justify-center animate-pulse bg-accent">
                   <span className="text-3xl">🤖</span>
                 </div>
               </div>
               {photo && (
                 <img src={photo} alt="meal" className="w-32 h-32 object-cover rounded-xl mx-auto mb-4 opacity-60" />
               )}
-              <p className="text-sm" style={{ color: '#6B7280' }}>{ms.analyzingHint || 'Analyzing your meal... ~10 seconds'}</p>
+              <p className="text-sm text-muted-foreground">{ms.analyzingHint || 'Analyzing your meal... ~10 seconds'}</p>
             </div>
           )}
 
@@ -289,18 +280,17 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
               <input
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
-                className="w-full text-lg font-bold bg-transparent border-b-2 pb-1 outline-none focus:border-[#7C3AED]"
-                style={{ color: '#1E1B4B', borderColor: '#EDE9FE' }}
+                className="w-full text-lg font-bold bg-transparent border-b-2 pb-1 outline-none focus:border-primary text-foreground border-border"
               />
 
               {/* Big calorie number */}
               <div className="text-center py-2">
                 {recalculating ? (
-                  <Loader2 className="w-8 h-8 animate-spin mx-auto" style={{ color: '#7C3AED' }} />
+                  <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
                 ) : (
                   <>
-                    <span className="text-4xl font-bold" style={{ color: '#7C3AED' }}>{adjustedResult.calories}</span>
-                    <span className="text-lg ml-1" style={{ color: '#7C3AED' }}>kcal</span>
+                    <span className="text-4xl font-bold text-primary">{adjustedResult.calories}</span>
+                    <span className="text-lg ml-1 text-primary">kcal</span>
                   </>
                 )}
               </div>
@@ -314,7 +304,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 ].map(m => (
                   <div key={m.label} className="text-center">
                     <div className="text-lg font-bold" style={{ color: m.color }}>{m.value}g</div>
-                    <div className="text-[10px] font-medium" style={{ color: '#6B7280' }}>{m.label}</div>
+                    <div className="text-[10px] font-medium text-muted-foreground">{m.label}</div>
                   </div>
                 ))}
               </div>
@@ -333,7 +323,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
 
               {/* Items breakdown — editable */}
               {result.items && result.items.length > 0 && (
-                <div className="rounded-xl p-3 space-y-1.5" style={{ backgroundColor: '#F5F3FF' }}>
+                <div className="rounded-xl p-3 space-y-1.5 bg-accent">
                   {result.items.map((item, i) => (
                     <div key={i} className="flex items-center justify-between text-sm gap-2">
                       {editingItemIdx === i ? (
@@ -341,39 +331,36 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                           <input
                             value={editingItemName}
                             onChange={e => setEditingItemName(e.target.value)}
-                            className="flex-1 h-7 px-2 rounded-lg border text-xs outline-none focus:border-[#7C3AED]"
-                            style={{ borderColor: '#DDD6FE', backgroundColor: 'white' }}
+                            className="flex-1 h-7 px-2 rounded-lg border text-xs outline-none focus:border-primary border-border bg-card"
                             autoFocus
                             onKeyDown={e => { if (e.key === 'Enter') recalculateItem(i, editingItemName); }}
                           />
                           <button
                             onClick={() => recalculateItem(i, editingItemName)}
                             disabled={recalculating}
-                            className="text-xs font-semibold px-2 py-1 rounded-lg text-white shrink-0"
-                            style={{ backgroundColor: '#7C3AED' }}
+                            className="text-xs font-semibold px-2 py-1 rounded-lg text-primary-foreground shrink-0 bg-primary"
                           >
                             {recalculating ? <Loader2 className="w-3 h-3 animate-spin" /> : '✓'}
                           </button>
-                          <button onClick={() => setEditingItemIdx(null)} className="text-xs px-1 py-1 rounded-lg" style={{ color: '#6B7280' }}>✕</button>
+                          <button onClick={() => setEditingItemIdx(null)} className="text-xs px-1 py-1 rounded-lg text-muted-foreground">✕</button>
                         </div>
                       ) : (
                         <>
                           <button
                             onClick={() => { setEditingItemIdx(i); setEditingItemName(item.name); }}
-                            className="flex items-center gap-1 text-left"
-                            style={{ color: '#1E1B4B' }}
+                            className="flex items-center gap-1 text-left text-foreground"
                           >
-                            <Pencil className="w-3 h-3 shrink-0" style={{ color: '#9CA3AF' }} />
+                            <Pencil className="w-3 h-3 shrink-0 text-muted-foreground" />
                             {item.name}
                           </button>
-                          <span style={{ color: '#6B7280' }}>
+                          <span className="text-muted-foreground">
                             {Math.round(item.calories * portionMultiplier)} kcal · {item.portion}
                           </span>
                         </>
                       )}
                     </div>
                   ))}
-                  <p className="text-[10px] mt-1" style={{ color: '#9CA3AF' }}>
+                  <p className="text-[10px] mt-1 text-muted-foreground">
                     {ms.tapToEdit || 'Tap item name to edit & recalculate'}
                   </p>
                 </div>
@@ -381,7 +368,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
 
               {/* Portion selector */}
               <div>
-                <p className="text-xs font-medium mb-2" style={{ color: '#6B7280' }}>{ms.portionEaten || 'Portion eaten:'}</p>
+                <p className="text-xs font-medium mb-2 text-muted-foreground">{ms.portionEaten || 'Portion eaten:'}</p>
                 <div className="flex gap-1.5">
                   {PORTION_OPTIONS.map(p => (
                     <button
@@ -389,9 +376,9 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                       onClick={() => setPortion(p.id)}
                       className="flex-1 py-2 rounded-xl text-xs font-semibold transition-all border-[1.5px]"
                       style={{
-                        borderColor: portion === p.id ? '#7C3AED' : '#DDD6FE',
-                        backgroundColor: portion === p.id ? '#EDE9FE' : 'white',
-                        color: portion === p.id ? '#7C3AED' : '#6B7280',
+                        borderColor: portion === p.id ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                        backgroundColor: portion === p.id ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                        color: portion === p.id ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
                       }}
                     >
                       {(ms as any)?.[p.labelKey] || (p.id === 'extra' ? '150%' : p.id === 'full' ? '100%' : p.id === 'three_quarters' ? '75%' : p.id === 'half' ? '50%' : '25%')}
@@ -399,37 +386,47 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                   ))}
                 </div>
               </div>
-
-              {/* Action buttons */}
-              <div className="space-y-2 pt-2">
-                <button
-                  onClick={handleLog}
-                  disabled={saving}
-                  className="w-full h-12 rounded-xl text-white font-semibold text-sm transition-opacity disabled:opacity-40"
-                  style={{ backgroundColor: '#7C3AED' }}
-                >
-                  {saving ? t.common.loading : (ms.logThisMeal || 'Log this meal')}
-                </button>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleEditManually}
-                    className="flex-1 h-10 rounded-xl text-sm font-medium border-[1.5px] flex items-center justify-center gap-1"
-                    style={{ borderColor: '#DDD6FE', color: '#6B7280' }}
-                  >
-                    <Pencil className="w-3.5 h-3.5" /> {ms.editManually || 'Edit manually'}
-                  </button>
-                  <button
-                    onClick={() => { reset(); fileRef.current?.click(); }}
-                    className="flex-1 h-10 rounded-xl text-sm font-medium border-[1.5px] flex items-center justify-center gap-1"
-                    style={{ borderColor: '#DDD6FE', color: '#6B7280' }}
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" /> {ms.scanAgain || 'Scan again'}
-                  </button>
-                </div>
-              </div>
             </div>
           )}
         </div>
+
+        {/* Fixed bottom buttons */}
+        {step === 'capture' && !photo && (
+          <div className="modal-actions rounded-b-2xl">
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="w-full h-14 rounded-2xl text-primary-foreground font-semibold text-sm bg-primary"
+            >
+              📸 {ms.scanMeal || 'Scan meal'}
+            </button>
+          </div>
+        )}
+
+        {step === 'results' && (
+          <div className="modal-actions rounded-b-2xl space-y-2">
+            <button
+              onClick={handleLog}
+              disabled={saving}
+              className="w-full h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary"
+            >
+              {saving ? t.common.loading : (ms.logThisMeal || 'Log this meal')}
+            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleEditManually}
+                className="flex-1 h-10 rounded-xl text-sm font-medium border-[1.5px] flex items-center justify-center gap-1 border-border text-muted-foreground"
+              >
+                <Pencil className="w-3.5 h-3.5" /> {ms.editManually || 'Edit manually'}
+              </button>
+              <button
+                onClick={() => { reset(); fileRef.current?.click(); }}
+                className="flex-1 h-10 rounded-xl text-sm font-medium border-[1.5px] flex items-center justify-center gap-1 border-border text-muted-foreground"
+              >
+                <RotateCcw className="w-3.5 h-3.5" /> {ms.scanAgain || 'Scan again'}
+              </button>
+            </div>
+          </div>
+        )}
       </motion.div>
     </div>
   );
