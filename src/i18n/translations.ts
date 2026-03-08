@@ -161,7 +161,7 @@ export const translations = {
     },
     update: {
       title: '✨ New TYANA version ready!',
-      now: 'Update — 2 sec',
+      now: '✨ Update',
     },
     profile: {
       title: 'Profile', editProfile: 'Edit Profile', accountSettings: 'Account Settings',
