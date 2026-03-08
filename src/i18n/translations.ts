@@ -1315,6 +1315,13 @@ export const translations = {
       save: 'Saglabāt', cancel: 'Atcelt', delete: 'Dzēst', edit: 'Rediģēt', close: 'Aizvērt',
       loading: 'Ielādē...', error: 'Kaut kas nogāja greizi. Lūdzu mēģiniet vēlreiz.', or: 'vai', back: 'Atpakaļ',
       theme: 'Tēma', datePlaceholder: 'dd.mm.gggg',
+      confirm: 'Apstiprināt', next: 'Tālāk', done: 'Gatavs', skip: 'Izlaist', update: 'Atjaunināt',
+      submit: 'Iesniegt', continue: 'Turpināt', generate: 'Izveidot', refresh: 'Atjaunināt',
+      calculate: 'Aprēķināt', scan: 'Skenēt', upload: 'Augšupielādēt', log: 'Ierakstīt',
+      addToDiary: 'Dienasgrāmatā', today: 'Šodien', yesterday: 'Vakar',
+      none: 'Nav', optional: 'Neobligāti', required: 'Obligāti',
+      success: 'Veiksmīgi', add: 'Pievienot', per100g: 'uz 100g',
+      selectedCount: 'Izvēlēts: {count} produkti', saveProducts: 'Saglabāt {count} produktus',
     },
     profile: {
       title: 'Profils', editProfile: 'Rediģēt profilu', accountSettings: 'Konta iestatījumi',
