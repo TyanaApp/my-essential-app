@@ -160,11 +160,9 @@ const Diary = () => {
             <button
               key={ds}
               onClick={() => setSelectedDate(d)}
-              className="flex flex-col items-center min-w-[44px] py-2 px-1.5 rounded-xl transition-all"
-              style={{
-                backgroundColor: isSelected ? '#7C3AED' : isToday ? '#EDE9FE' : 'white',
-                border: `1.5px solid ${isSelected ? '#7C3AED' : '#DDD6FE'}`,
-              }}
+              className={`flex flex-col items-center min-w-[44px] py-2 px-1.5 rounded-xl transition-all ${
+                isSelected ? 'bg-primary border-primary' : isToday ? 'bg-primary/10 border-border' : 'bg-card border-border'
+              } border-[1.5px]`}
             >
               <span className={`text-[10px] font-semibold mb-0.5 ${isSelected ? 'text-white' : 'text-muted-foreground'}`}>
                 {DAY_LABELS[i]}
