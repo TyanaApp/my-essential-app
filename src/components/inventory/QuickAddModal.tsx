@@ -34,6 +34,21 @@ interface QtyPreset {
   unit: string;
 }
 
+// Items that can be sold by weight
+const WEIGHABLE_ITEMS = new Set([
+  'cheese', 'butter', 'cottageCheese', 'beef', 'chicken', 'pork', 'fish', 'mince',
+  'potato', 'onion', 'carrot', 'tomato', 'cucumber', 'pepper', 'broccoli',
+  'apple', 'banana', 'orange', 'lemon', 'grapes', 'strawberry', 'mango', 'pear',
+  'nuts', 'rice', 'pasta', 'buckwheat', 'oatmeal', 'barley', 'lentils',
+]);
+
+const BY_WEIGHT_LABEL: Record<string, string> = {
+  en: '⚖️ By weight',
+  ru: '⚖️ На развес',
+  uk: '⚖️ На вагу',
+  lv: '⚖️ Pēc svara',
+};
+
 // Smart quantity presets per product type
 const getPresetsForItem = (nameKey: string, lang: string): { presets: QtyPreset[]; defaultIdx: number } => {
   const u = UNIT_LABELS[lang] || UNIT_LABELS.en;
