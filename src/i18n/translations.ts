@@ -1703,7 +1703,7 @@ export const translations = {
     profile: {
       title: 'Профіль', editProfile: 'Редагувати профіль', accountSettings: 'Налаштування акаунту',
       systemSettings: 'Системні налаштування', payments: 'Платежі', logout: 'Вийти',
-      deleteAccount: 'Видалити акаунт', installApp: '📲 Встановити додаток',
+      deleteAccount: 'Видалити акаунт', installApp: '📲 Встановити додаток', alreadyInstalled: '✅ Додаток встановлено',
       displayName: 'Ім\'я', bio: 'Про себе', gender: 'Стать', dateOfBirth: 'Дата народження',
       male: 'Чоловіча', female: 'Жіноча', other: 'Інша', preferNotToSay: 'Не вказувати',
       connectDevices: 'Підключити пристрої', soon: 'Скоро',
