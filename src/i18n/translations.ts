@@ -978,6 +978,18 @@ export const translations = {
       title: '🍽 Напоминания о еде',
       breakfast: '🌅 Завтрак', lunch: '☀️ Обед', dinner: '🌙 Ужин',
     },
+    familyMembers: {
+      addMember: 'Добавить члена семьи', editMember: 'Редактировать', whatName: 'Как зовут?',
+      namePlaceholder: 'напр. Миша', avatar: 'Аватар', gender: 'Пол',
+      boy: 'Мальчик', girl: 'Девочка', age: 'Возраст', weight: 'Вес (кг)', height: 'Рост (см)',
+      activity: 'Активность', allergies: 'Аллергии', allergiesPlaceholder: 'орехи, молоко',
+      calculatedTarget: 'Рассчитанная цель', kcal: 'ккал', years: 'лет',
+      calorieTarget: 'Цель калорий', todayMeals: 'Питание сегодня', noMealsYet: 'Ещё нет записей',
+      goals: 'Цели', done: 'Готово', addAnother: 'Добавить ещё одного',
+      memberAdded: 'Добавлено ✓', memberUpdated: 'Обновлено ✓', memberDeleted: 'Удалено ✓',
+      saveFailed: 'Не удалось сохранить', familySafe: 'Подходит всей семье ✅',
+      familyWarning: '⚠️ Содержит {allergen} — не подходит для {name}',
+    },
   },
   lv: {
     nav: { home: 'Sākums', inventory: 'Produkti', recipes: 'Receptes', shopping: 'Iepirkumi', diary: 'Dienasgrāmata', settings: 'Iestatījumi', profile: 'Profils' },
