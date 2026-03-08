@@ -133,12 +133,8 @@ const Diary = () => {
   };
 
   const openAddModal = (mealType: string) => {
-    setModalMealType(mealType);
-    setAddMode('manual');
-    setManualName(''); setManualCalories(''); setManualProtein(''); setManualFat(''); setManualCarbs('');
-    setRecipeSearch('');
-    setModalOpen(true);
-    loadRecipes();
+    setSmartEntryMealType(mealType);
+    setSmartEntryOpen(true);
   };
 
   const openScanModal = (mealType: string) => {
