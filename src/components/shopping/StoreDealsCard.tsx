@@ -9,28 +9,32 @@ const StoreDealsCard = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const stores = (t as any).storeDeals || {};
-  const [joined, setJoined] = useState(false);
-  const [waitlistCount, setWaitlistCount] = useState(0);
+  const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
-    // Check if user already joined waitlist - use raw query to avoid type issues
-    supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle().then(({ data }) => {
-      if (data && (data as any).store_integration_waitlist) setJoined(true);
-    });
-    // Count waitlist users
-    supabase.rpc('count_store_waitlist' as any).then(({ data: count }) => {
-      setWaitlistCount(count || 0);
+    // Check localStorage first
+    if (localStorage.getItem('store_waitlist_joined') === 'true') return;
+    if (!user) { setHidden(false); return; }
+    
+    supabase.from('profiles').select('store_integration_waitlist').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      if (data?.store_integration_waitlist) {
+        localStorage.setItem('store_waitlist_joined', 'true');
+      } else {
+        setHidden(false);
+      }
     });
   }, [user]);
 
   const handleJoin = async () => {
-    if (!user) return;
-    await supabase.from('profiles').update({ store_integration_waitlist: true } as any).eq('user_id', user.id);
-    setJoined(true);
-    setWaitlistCount(prev => prev + 1);
-    toast.success(stores.joined || 'Great! We\'ll notify you when ready ✓');
+    if (user) {
+      await supabase.from('profiles').update({ store_integration_waitlist: true } as any).eq('user_id', user.id);
+    }
+    localStorage.setItem('store_waitlist_joined', 'true');
+    setHidden(true);
+    toast.success(stores.joined || "We'll notify you when it's ready ✓");
   };
+
+  if (hidden) return null;
 
   return (
     <div className="p-4 rounded-2xl" style={{
@@ -44,23 +48,11 @@ const StoreDealsCard = () => {
       <p className="text-xs text-white/80 mb-3">
         {stores.subtitle || "We'll connect stores in your country — current deals right in the app"}
       </p>
-      {!joined ? (
-        <button onClick={handleJoin}
-          className="w-full h-10 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5"
-          style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', backdropFilter: 'blur(4px)' }}>
-          <Bell className="w-4 h-4" /> {stores.notify || '🔔 Notify me when ready'}
-        </button>
-      ) : (
-        <div className="w-full h-10 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5"
-          style={{ backgroundColor: 'rgba(255,255,255,0.15)', color: 'white' }}>
-          ✅ {stores.alreadyJoined || 'You\'ll be notified'}
-        </div>
-      )}
-      {waitlistCount > 0 && (
-        <p className="text-[11px] text-white/60 text-center mt-2">
-          {(stores.waitlistCount || '{count} users are waiting').replace('{count}', String(waitlistCount))}
-        </p>
-      )}
+      <button onClick={handleJoin}
+        className="w-full h-10 rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5"
+        style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', backdropFilter: 'blur(4px)' }}>
+        <Bell className="w-4 h-4" /> {stores.notify || '🔔 Notify me when ready'}
+      </button>
     </div>
   );
 };

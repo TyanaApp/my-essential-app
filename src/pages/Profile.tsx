@@ -93,21 +93,30 @@ const StoreDealsProfileRow = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const stores = (t as any).storeDeals || {};
-  const [joined, setJoined] = useState(false);
+  const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
-    supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle().then(({ data }) => {
-      if (data && (data as any).store_integration_waitlist) setJoined(true);
+    if (localStorage.getItem('store_waitlist_joined') === 'true') return;
+    if (!user) { setHidden(false); return; }
+    supabase.from('profiles').select('store_integration_waitlist').eq('user_id', user.id).maybeSingle().then(({ data }) => {
+      if (data?.store_integration_waitlist) {
+        localStorage.setItem('store_waitlist_joined', 'true');
+      } else {
+        setHidden(false);
+      }
     });
   }, [user]);
 
   const handleJoin = async () => {
-    if (!user) return;
-    await supabase.from('profiles').update({ store_integration_waitlist: true } as any).eq('user_id', user.id);
-    setJoined(true);
-    toast.success(stores.joined || "Great! We'll notify you when ready ✓");
+    if (user) {
+      await supabase.from('profiles').update({ store_integration_waitlist: true } as any).eq('user_id', user.id);
+    }
+    localStorage.setItem('store_waitlist_joined', 'true');
+    setHidden(true);
+    toast.success(stores.joined || "We'll notify you when it's ready ✓");
   };
+
+  if (hidden) return null;
 
   return (
     <div className="flex items-center justify-between">
@@ -115,13 +124,9 @@ const StoreDealsProfileRow = () => {
         <p className="text-sm font-medium text-foreground">{stores.profileLabel || '🏪 Store integrations'}</p>
         <p className="text-xs text-muted-foreground">{stores.title || 'Coming soon'}</p>
       </div>
-      {!joined ? (
-        <Button variant="outline" size="sm" onClick={handleJoin} className="text-xs">
-          🔔
-        </Button>
-      ) : (
-        <Badge className="bg-green-100 text-green-600 border-green-200 text-[10px]">✅</Badge>
-      )}
+      <Button variant="outline" size="sm" onClick={handleJoin} className="text-xs">
+        🔔
+      </Button>
     </div>
   );
 };
