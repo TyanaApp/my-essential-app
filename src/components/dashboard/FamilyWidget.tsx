@@ -17,11 +17,9 @@ const FamilyWidget: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<FamilySubMember | null>(null);
   const [memberMeals, setMemberMeals] = useState<any[]>([]);
 
-  if (!familyMode || !family || subMembers.length === 0) return null;
-
   // Fetch today's calories for all members
   useEffect(() => {
-    if (!user || subMembers.length === 0) return;
+    if (!user || !familyMode || subMembers.length === 0) return;
     const today = new Date().toISOString().split('T')[0];
 
     const fetchCalories = async () => {
