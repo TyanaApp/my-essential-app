@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Camera, Target, Tag, PiggyBank, ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useFoundingCounter } from '@/hooks/useFoundingCounter';
+import { Progress } from '@/components/ui/progress';
 import tyanaLogoText from '@/assets/tyana-logo-text.png';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
   const { t } = useTranslation();
+  const { count: foundingCount, isFull } = useFoundingCounter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
