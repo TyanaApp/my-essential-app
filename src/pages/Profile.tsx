@@ -27,6 +27,8 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { Switch } from '@/components/ui/switch';
 import LegalFooterPill from '@/components/LegalFooterPill';
 import StoreDealsCard from '@/components/shopping/StoreDealsCard';
+import { Input } from '@/components/ui/input';
+import { getMealReminderSettings, setMealReminderSettings, type MealReminderSettings } from '@/hooks/useMealReminders';
 
 const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge: string }) => {
   const [notify, setNotify] = useState(() => localStorage.getItem(`notify_device_${name}`) === '1');
