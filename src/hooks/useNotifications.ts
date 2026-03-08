@@ -1,6 +1,54 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+
+const NOTIF_I18N: Record<string, {
+  expiringTitle: string;
+  expiresToday: (n: string) => string;
+  expiresTomorrow: (n: string) => string;
+  expiresInDays: (n: string, d: number) => string;
+  browserTitle: string;
+  browserTomorrow: (n: string) => string;
+  browserInDays: (n: string, d: number) => string;
+}> = {
+  en: {
+    expiringTitle: '⚠️ Food expiring soon',
+    expiresToday: (n) => `${n} expires today!`,
+    expiresTomorrow: (n) => `${n} expires tomorrow!`,
+    expiresInDays: (n, d) => `${n} expires in ${d} days`,
+    browserTitle: '⚠️ TYANA — Food expiring soon',
+    browserTomorrow: (n) => `${n} expires tomorrow! Open app to see recipe ideas.`,
+    browserInDays: (n, d) => `${n} expires in ${d} days.`,
+  },
+  ru: {
+    expiringTitle: '⚠️ Продукт скоро испортится',
+    expiresToday: (n) => `${n} — истекает сегодня!`,
+    expiresTomorrow: (n) => `${n} — истекает завтра!`,
+    expiresInDays: (n, d) => `${n} — истекает через ${d} дн.`,
+    browserTitle: '⚠️ TYANA — Продукт скоро испортится',
+    browserTomorrow: (n) => `${n} истекает завтра! Откройте приложение для идей рецептов.`,
+    browserInDays: (n, d) => `${n} истекает через ${d} дн.`,
+  },
+  uk: {
+    expiringTitle: '⚠️ Продукт скоро зіпсується',
+    expiresToday: (n) => `${n} — спливає сьогодні!`,
+    expiresTomorrow: (n) => `${n} — спливає завтра!`,
+    expiresInDays: (n, d) => `${n} — спливає через ${d} дн.`,
+    browserTitle: '⚠️ TYANA — Продукт скоро зіпсується',
+    browserTomorrow: (n) => `${n} спливає завтра! Відкрийте додаток для ідей рецептів.`,
+    browserInDays: (n, d) => `${n} спливає через ${d} дн.`,
+  },
+  lv: {
+    expiringTitle: '⚠️ Produktam drīz beigsies derīguma termiņš',
+    expiresToday: (n) => `${n} — derīguma termiņš beidzas šodien!`,
+    expiresTomorrow: (n) => `${n} — derīguma termiņš beidzas rīt!`,
+    expiresInDays: (n, d) => `${n} — derīguma termiņš beidzas pēc ${d} dienām`,
+    browserTitle: '⚠️ TYANA — Produktam beidzas derīguma termiņš',
+    browserTomorrow: (n) => `${n} derīguma termiņš beidzas rīt! Atveriet lietotni recepšu idejām.`,
+    browserInDays: (n, d) => `${n} derīguma termiņš beidzas pēc ${d} dienām.`,
+  },
+};
 
 export interface AppAlert {
   id: string;
@@ -53,6 +101,8 @@ export const dismissBanner = () => localStorage.setItem('tyana_notif_banner_dism
 
 export const useNotifications = () => {
   const { user } = useAuth();
+  const { language: currentLanguage } = useLanguage();
+  const ni = NOTIF_I18N[currentLanguage] || NOTIF_I18N.en;
   const [alerts, setAlerts] = useState<AppAlert[]>(getStoredAlerts());
   const [settings, setSettings] = useState<NotificationSettings>(() => {
     const s = getNotificationSettings();
@@ -148,14 +198,14 @@ export const useNotifications = () => {
         const days = Math.ceil((new Date(item.expires_at).getTime() - Date.now()) / 86400000);
         const icon = days <= 1 ? '🔴' : '🟠';
         const bodyText = days <= 0
-          ? `${item.name} expires today!`
+          ? ni.expiresToday(item.name)
           : days === 1
-            ? `${item.name} expires tomorrow!`
-            : `${item.name} expires in ${days} days`;
+            ? ni.expiresTomorrow(item.name)
+            : ni.expiresInDays(item.name, days);
 
         addAlert({
           type: 'expiring',
-          title: `⚠️ Food expiring soon`,
+          title: ni.expiringTitle,
           body: bodyText,
           icon,
           link: '/inventory?tab=expiring',
@@ -166,16 +216,16 @@ export const useNotifications = () => {
       const urgent = data[0] as any;
       const urgentDays = Math.ceil((new Date(urgent.expires_at).getTime() - Date.now()) / 86400000);
       const urgentBody = urgentDays <= 1
-        ? `${urgent.name} expires tomorrow! Open app to see recipe ideas.`
-        : `${urgent.name} expires in ${urgentDays} days.`;
+        ? ni.browserTomorrow(urgent.name)
+        : ni.browserInDays(urgent.name, urgentDays);
 
       sendBrowserNotification(
-        '⚠️ TYANA — Food expiring soon',
+        ni.browserTitle,
         urgentBody,
         '/inventory?tab=expiring'
       );
     }
-  }, [user, settings.expiryAlerts, addAlert, sendBrowserNotification]);
+  }, [user, settings.expiryAlerts, addAlert, sendBrowserNotification, ni]);
 
   // Weekly summary check (Monday)
   const checkWeeklySummary = useCallback(async () => {
