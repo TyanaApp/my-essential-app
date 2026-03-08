@@ -514,10 +514,9 @@ const RecipeDetailModal = ({
             <div className="flex-1 px-5 py-4 space-y-2 overflow-y-auto">
               {ingredientAvailability.map((ing, idx) => (
                 <button key={idx} onClick={() => toggleCheck(idx)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl text-sm text-left transition-colors"
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-sm text-left transition-colors bg-secondary border border-border"
                   style={{
-                    backgroundColor: checkedIngredients.has(idx) ? '#F0FDF4' : '#F9FAFB',
-                    border: `1.5px solid ${checkedIngredients.has(idx) ? '#86EFAC' : '#E5E7EB'}`,
+                    borderColor: checkedIngredients.has(idx) ? '#86EFAC' : undefined,
                   }}>
                   <div className="w-6 h-6 rounded-md border-2 flex items-center justify-center shrink-0"
                     style={{
