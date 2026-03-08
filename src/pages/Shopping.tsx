@@ -466,6 +466,14 @@ const Shopping = () => {
         itemName={storagePickerItem?.name || ''}
         onSelect={handleStorageSelect}
       />
+      <ReceiptScanModal
+        open={receiptModalOpen}
+        onClose={() => setReceiptModalOpen(false)}
+        onSaved={fetchItems}
+      />
+        itemName={storagePickerItem?.name || ''}
+        onSelect={handleStorageSelect}
+      />
     </div>
   );
 };
