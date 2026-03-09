@@ -2,8 +2,51 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from '@/hooks/useTranslation';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { AppAlert } from '@/hooks/useNotifications';
+
+const NOTIF_TRANSLATIONS: Record<string, Record<string, string>> = {
+  en: {
+    title: 'Notifications',
+    markAllRead: 'Mark all as read',
+    clearAll: 'Clear all',
+    noNotifications: 'No notifications',
+    justNow: 'just now',
+    minAgo: 'min ago',
+    hAgo: 'h ago',
+    yesterday: 'yesterday',
+  },
+  ru: {
+    title: 'Уведомления',
+    markAllRead: 'Прочитать все',
+    clearAll: 'Очистить все',
+    noNotifications: 'Нет уведомлений',
+    justNow: 'только что',
+    minAgo: 'мин назад',
+    hAgo: 'ч назад',
+    yesterday: 'вчера',
+  },
+  uk: {
+    title: 'Сповіщення',
+    markAllRead: 'Прочитати все',
+    clearAll: 'Очистити все',
+    noNotifications: 'Немає сповіщень',
+    justNow: 'щойно',
+    minAgo: 'хв тому',
+    hAgo: 'год тому',
+    yesterday: 'вчора',
+  },
+  lv: {
+    title: 'Paziņojumi',
+    markAllRead: 'Atzīmēt visu kā izlasītu',
+    clearAll: 'Notīrīt visu',
+    noNotifications: 'Nav paziņojumu',
+    justNow: 'tikko',
+    minAgo: 'min atpakaļ',
+    hAgo: 'h atpakaļ',
+    yesterday: 'vakar',
+  },
+};
 
 interface NotificationBellProps {
   alerts: AppAlert[];
@@ -14,12 +57,11 @@ interface NotificationBellProps {
 }
 
 const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, onClearAll }: NotificationBellProps) => {
-  const { t } = useTranslation();
+  const { language } = useLanguage();
+  const n = NOTIF_TRANSLATIONS[language] || NOTIF_TRANSLATIONS.en;
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
-  const n = t.notifications as any;
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -46,13 +88,13 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
   const formatTime = (iso: string) => {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return n.justNow || 'Just now';
-    if (mins < 60) return `${mins} ${n.minAgo || 'min ago'}`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours} ${n.hAgo || 'h ago'}`;
-    const days = Math.floor(hours / 24);
-    if (days === 1) return n.yesterday || 'yesterday';
-    return `${days}d`;
+      if (mins < 1) return n.justNow;
+      if (mins < 60) return `${mins} ${n.minAgo}`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours} ${n.hAgo}`;
+      const days = Math.floor(hours / 24);
+      if (days === 1) return n.yesterday;
+      return `${days}d`;
   };
 
   return (
@@ -82,14 +124,14 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
             style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }}
           >
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <h4 className="text-sm font-bold text-foreground">{n.title}</h4>
+              <h4 className="text-sm font-bold text-foreground">{n.title || 'Notifications'}</h4>
               <div className="flex items-center gap-2">
                 {alerts.length > 0 && onClearAll && (
-                  <button
+                   <button
                     onClick={onClearAll}
                     className="text-xs font-medium text-destructive"
                   >
-                    {n.clearAll || 'Clear all'}
+                    {n.clearAll}
                   </button>
                 )}
                 {alerts.length > 0 && (
@@ -97,7 +139,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
                     onClick={onMarkAllRead}
                     className="text-xs font-medium text-primary"
                   >
-                    {n.markRead}
+                    {n.markAllRead}
                   </button>
                 )}
               </div>
@@ -106,7 +148,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
             <div className="max-h-80 overflow-y-auto">
               {alerts.length === 0 ? (
                 <div className="py-8 text-center">
-                  <p className="text-sm text-muted-foreground">{n.empty}</p>
+                  <p className="text-sm text-muted-foreground">{n.noNotifications}</p>
                 </div>
               ) : (
                 alerts.slice(0, 10).map(alert => (
