@@ -15,6 +15,19 @@ import {
   type QuickProduct,
   type QuickCategory,
 } from './quickAddData';
+import liverIcon from '@/assets/liver-icon.png';
+
+const IMAGE_EMOJI_MAP: Record<string, string> = {
+  'img:liver': liverIcon,
+};
+
+const renderEmoji = (emoji: string, size = 'text-base') => {
+  const imgSrc = IMAGE_EMOJI_MAP[emoji];
+  if (imgSrc) {
+    return <img src={imgSrc} alt="" className="w-5 h-5 inline-block object-contain" />;
+  }
+  return <span className={size}>{emoji}</span>;
+};
 
 interface SelectedItem {
   product: QuickProduct;
