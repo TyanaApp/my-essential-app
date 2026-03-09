@@ -920,20 +920,38 @@ const Dashboard = () => {
             </button>
           </div>
 
+          {/* Current month label */}
+          <p className="text-xs text-muted-foreground mb-2">
+            📅 {(() => {
+              const locale = language === 'ru' ? 'ru-RU' : language === 'uk' ? 'uk-UA' : language === 'lv' ? 'lv-LV' : 'en-US';
+              const now = new Date();
+              const monthName = now.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+              return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+            })()}
+          </p>
+
           {/* Spent this month */}
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-muted-foreground">💸 {t.savings.spent}</span>
             <span className="text-sm font-bold" style={{ color: '#DC2626' }}>{formatMoney(data.spentThisMonth, data.currency)}</span>
           </div>
-          <div className="h-2 rounded-full bg-muted mb-3">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                backgroundColor: data.spentThisMonth > data.monthlyBudget ? '#DC2626' : '#EA580C',
-                width: `${Math.min((data.spentThisMonth / data.monthlyBudget) * 100, 100)}%`,
-              }}
-            />
-          </div>
+          {(() => {
+            const budgetPct = data.monthlyBudget > 0 ? Math.min((data.spentThisMonth / data.monthlyBudget) * 100, 100) : 0;
+            const barColor = budgetPct > 90 ? '#DC2626' : budgetPct > 70 ? '#EA580C' : '#059669';
+            return (
+              <>
+                <div className="h-2 rounded-full bg-muted mb-1">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ backgroundColor: barColor, width: `${budgetPct}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground text-right mb-3">
+                  {formatMoney(data.spentThisMonth, data.currency)} / {formatMoney(data.monthlyBudget, data.currency)}
+                </p>
+              </>
+            );
+          })()}
 
           {/* Saved from waste */}
           <div className="flex items-center justify-between mb-2">
