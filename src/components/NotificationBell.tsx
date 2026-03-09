@@ -148,7 +148,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
             <div className="max-h-80 overflow-y-auto">
               {alerts.length === 0 ? (
                 <div className="py-8 text-center">
-                  <p className="text-sm text-muted-foreground">{n.empty}</p>
+                  <p className="text-sm text-muted-foreground">{n.noNotifications}</p>
                 </div>
               ) : (
                 alerts.slice(0, 10).map(alert => (
