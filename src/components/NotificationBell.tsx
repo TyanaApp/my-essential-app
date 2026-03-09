@@ -88,13 +88,13 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
   const formatTime = (iso: string) => {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return n.justNow || 'Just now';
-    if (mins < 60) return `${mins} ${n.minAgo || 'min ago'}`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours} ${n.hAgo || 'h ago'}`;
-    const days = Math.floor(hours / 24);
-    if (days === 1) return n.yesterday || 'yesterday';
-    return `${days}d`;
+      if (mins < 1) return n.justNow;
+      if (mins < 60) return `${mins} ${n.minAgo}`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours} ${n.hAgo}`;
+      const days = Math.floor(hours / 24);
+      if (days === 1) return n.yesterday;
+      return `${days}d`;
   };
 
   return (
