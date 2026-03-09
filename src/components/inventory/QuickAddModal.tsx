@@ -15,6 +15,19 @@ import {
   type QuickProduct,
   type QuickCategory,
 } from './quickAddData';
+import liverIcon from '@/assets/liver-icon.png';
+
+const IMAGE_EMOJI_MAP: Record<string, string> = {
+  'img:liver': liverIcon,
+};
+
+const renderEmoji = (emoji: string, size = 'text-base') => {
+  const imgSrc = IMAGE_EMOJI_MAP[emoji];
+  if (imgSrc) {
+    return <img src={imgSrc} alt="" className="w-5 h-5 inline-block object-contain" />;
+  }
+  return <span className={size}>{emoji}</span>;
+};
 
 interface SelectedItem {
   product: QuickProduct;
@@ -200,7 +213,7 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
       >
         <div className="flex items-center gap-1.5">
           {isSelected && <Check className="w-3.5 h-3.5" />}
-          <span>{product.emoji}</span>
+          {renderEmoji(product.emoji)}
           <span className="truncate">{name}</span>
         </div>
         {isSelected && sel && (
@@ -357,7 +370,10 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
                 exit={{ y: 80 }}
               >
                 <div className="text-center">
-                  <span className="text-4xl">{suggestion.product.emoji}</span>
+                  {IMAGE_EMOJI_MAP[suggestion.product.emoji]
+                    ? <img src={IMAGE_EMOJI_MAP[suggestion.product.emoji]} alt="" className="w-10 h-10 inline-block object-contain" />
+                    : <span className="text-4xl">{suggestion.product.emoji}</span>
+                  }
                   <p className="text-sm text-foreground mt-2">
                     {smartTexts.message(
                       getName(suggestion.product),
