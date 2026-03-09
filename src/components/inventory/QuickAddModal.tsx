@@ -370,7 +370,10 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
                 exit={{ y: 80 }}
               >
                 <div className="text-center">
-                  <span className="text-4xl">{suggestion.product.emoji}</span>
+                  {IMAGE_EMOJI_MAP[suggestion.product.emoji]
+                    ? <img src={IMAGE_EMOJI_MAP[suggestion.product.emoji]} alt="" className="w-10 h-10 inline-block object-contain" />
+                    : <span className="text-4xl">{suggestion.product.emoji}</span>
+                  }
                   <p className="text-sm text-foreground mt-2">
                     {smartTexts.message(
                       getName(suggestion.product),
