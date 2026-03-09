@@ -162,7 +162,7 @@ const Savings = () => {
                 </div>
                 <div className="h-2.5 rounded-full bg-muted mb-1">
                   <div className="h-full rounded-full transition-all" style={{
-                    backgroundColor: budgetPct > 90 ? '#DC2626' : budgetPct > 70 ? '#EA580C' : '#059669',
+                    backgroundColor: budgetBarColor,
                     width: `${budgetPct}%`,
                   }} />
                 </div>
