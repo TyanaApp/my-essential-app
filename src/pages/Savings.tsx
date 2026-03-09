@@ -124,6 +124,7 @@ const Savings = () => {
   }, [receipts, language]);
 
   const budgetPct = monthlyBudget > 0 ? Math.min((spent / monthlyBudget) * 100, 100) : 0;
+  const budgetBarColor = budgetPct > 90 ? '#DC2626' : budgetPct > 70 ? '#EA580C' : '#059669';
   const totalItems = wasteStats.used + wasteStats.wasted;
   const wasteScore = totalItems > 0 ? Math.round((wasteStats.used / totalItems) * 100) : 100;
 
