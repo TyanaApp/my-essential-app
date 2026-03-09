@@ -213,7 +213,7 @@ const QuickAddModal = ({ open, onClose, onSaved, activeTab = 'fridge' }: Props) 
       >
         <div className="flex items-center gap-1.5">
           {isSelected && <Check className="w-3.5 h-3.5" />}
-          <span>{product.emoji}</span>
+          {renderEmoji(product.emoji)}
           <span className="truncate">{name}</span>
         </div>
         {isSelected && sel && (
