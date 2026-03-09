@@ -124,7 +124,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
             style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }}
           >
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <h4 className="text-sm font-bold text-foreground">{n.title}</h4>
+              <h4 className="text-sm font-bold text-foreground">{n.title || 'Notifications'}</h4>
               <div className="flex items-center gap-2">
                 {alerts.length > 0 && onClearAll && (
                   <button
