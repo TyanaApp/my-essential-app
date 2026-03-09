@@ -68,7 +68,7 @@ export const FRIDGE_CATEGORIES: QuickCategory[] = [
       p('🍗', 'turkey', 'Turkey', 'Индейка', 'Індичка', 'Tītara gaļa', 'fridge', 'g', 500),
       p('🐇', 'rabbit', 'Rabbit', 'Кролик', 'Кролик', 'Truša gaļa', 'fridge', 'g', 500),
       p('🦆', 'duck', 'Duck', 'Утка', 'Качка', 'Pīle', 'fridge', 'g', 500),
-      p('🫀', 'liver', 'Liver', 'Печень', 'Печінка', 'Aknas', 'fridge', 'g', 500),
+      p('🫁', 'liver', 'Liver', 'Печень', 'Печінка', 'Aknas', 'fridge', 'g', 500),
       p('🫀', 'heart', 'Heart', 'Сердце', 'Серце', 'Sirds', 'fridge', 'g', 500),
     ],
   },
