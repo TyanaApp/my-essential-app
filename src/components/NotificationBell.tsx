@@ -127,11 +127,11 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
               <h4 className="text-sm font-bold text-foreground">{n.title || 'Notifications'}</h4>
               <div className="flex items-center gap-2">
                 {alerts.length > 0 && onClearAll && (
-                  <button
+                   <button
                     onClick={onClearAll}
                     className="text-xs font-medium text-destructive"
                   >
-                    {n.clearAll || 'Clear all'}
+                    {n.clearAll}
                   </button>
                 )}
                 {alerts.length > 0 && (
@@ -139,7 +139,7 @@ const NotificationBell = ({ alerts, unreadCount, onMarkAllRead, onDeleteAlert, o
                     onClick={onMarkAllRead}
                     className="text-xs font-medium text-primary"
                   >
-                    {n.markRead}
+                    {n.markAllRead}
                   </button>
                 )}
               </div>
