@@ -15,7 +15,7 @@ const OFFProductSuggestions = ({ query, onSelect, className = '' }: OFFProductSu
   const [results, setResults] = useState<OFFProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
