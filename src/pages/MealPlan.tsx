@@ -589,19 +589,37 @@ const MealPlan = ({ embedded }: { embedded?: boolean }) => {
             <div>
               <h4 className="text-sm font-semibold mb-2">{mp.ingredientsTitle || 'Ingredients'}</h4>
               <ul className="space-y-1">
-                {recipeModal.meal?.ingredients?.map((ing, i) => (
-                  <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                    {ing}
-                  </li>
-                ))}
+                {recipeModal.meal?.ingredients?.map((ing, i) => {
+                  const label = typeof ing === 'string'
+                    ? ing
+                    : `${ing.name} — ${ing.amount}${ing.unit}`;
+                  return (
+                    <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                      {label}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
+            {recipeModal.meal?.steps && recipeModal.meal.steps.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold mb-2">{mp.stepsTitle || (language === 'ru' ? 'Приготовление' : language === 'uk' ? 'Приготування' : 'Steps')}</h4>
+                <ol className="space-y-1.5">
+                  {recipeModal.meal.steps.map((s, i) => (
+                    <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                      <span className="text-xs font-bold text-primary shrink-0">{i + 1}.</span>
+                      {s}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
             <div className="flex gap-3 text-xs text-muted-foreground pt-2 border-t border-border">
-              <span>{recipeModal.meal?.calories} kcal</span>
-              <span>{mp.proteinShort || 'P'}: {recipeModal.meal?.protein}g</span>
-              <span>{mp.fatShort || 'F'}: {recipeModal.meal?.fat}g</span>
-              <span>{mp.carbsShort || 'C'}: {recipeModal.meal?.carbs}g</span>
+              <span>{recipeModal.meal?.calories} {(t.diary as any)?.kcalUnit || 'kcal'}</span>
+              <span>{mp.proteinShort || 'P'}: {recipeModal.meal?.protein}{mp.gramShort || 'g'}</span>
+              <span>{mp.fatShort || 'F'}: {recipeModal.meal?.fat}{mp.gramShort || 'g'}</span>
+              <span>{mp.carbsShort || 'C'}: {recipeModal.meal?.carbs}{mp.gramShort || 'g'}</span>
             </div>
           </div>
         </DialogContent>
