@@ -64,31 +64,57 @@ const Shopping = () => {
     recognition.onresult = async (event: any) => {
       const transcript = event.results[0][0].transcript;
       toast(`🎤 ${(t.shopping as any).heard || 'Heard'}: "${transcript}"`);
+      setIsListening(true); // keep spinner while processing
       
       try {
         const { data, error } = await supabase.functions.invoke('parse-voice-shopping', {
           body: { transcript, language }
         });
+
+        // Helper: check if item is duplicate
+        const isDuplicate = (name: string) => {
+          const n = name.toLowerCase().trim();
+          return items.some(existing => {
+            const e = existing.name.toLowerCase().trim();
+            return e === n || e.includes(n) || n.includes(e);
+          });
+        };
         
         if (error || !data?.items?.length) {
-          // Fallback: split by comma/and
           const voiceItems = transcript.split(/,|and|и|un/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
-          if (!user || voiceItems.length === 0) return;
-          // Validate each item
+          if (!user || voiceItems.length === 0) { setIsListening(false); return; }
           const validItems: string[] = [];
           for (const item of voiceItems) {
+            if (isDuplicate(item)) {
+              const alreadyMsg = language === 'ru' ? `"${item}" уже в списке` : language === 'uk' ? `"${item}" вже у списку` : language === 'lv' ? `"${item}" jau sarakstā` : `"${item}" already in list`;
+              toast(alreadyMsg);
+              continue;
+            }
             const ok = await validateFood(item);
             if (ok) validItems.push(item);
           }
-          if (validItems.length === 0) return;
+          if (validItems.length === 0) { setIsListening(false); return; }
           const inserts = validItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
           await supabase.from('shopping_items').insert(inserts as any);
           await fetchItems();
           toast.success(`${(t.shopping as any).adding || 'Adding'}: ${validItems.join(', ')} ✓`);
+          setIsListening(false);
           return;
         }
+
+        // Filter duplicates from parsed items
+        const newItems = data.items.filter((item: any) => {
+          if (isDuplicate(item.name)) {
+            const alreadyMsg = language === 'ru' ? `"${item.name}" уже в списке` : language === 'uk' ? `"${item.name}" вже у списку` : language === 'lv' ? `"${item.name}" jau sarakstā` : `"${item.name}" already in list`;
+            toast(alreadyMsg);
+            return false;
+          }
+          return true;
+        });
+
+        if (newItems.length === 0) { setIsListening(false); return; }
         
-        const inserts = data.items.map((item: any) => ({
+        const inserts = newItems.map((item: any) => ({
           user_id: user!.id,
           name: item.name,
           quantity: item.quantity || 1,
@@ -97,11 +123,12 @@ const Shopping = () => {
         }));
         await supabase.from('shopping_items').insert(inserts as any);
         await fetchItems();
-        const summary = data.items.map((i: any) => `${i.name} ${i.quantity}${i.unit}`).join(', ');
+        const summary = newItems.map((i: any) => `${i.name} ${i.quantity}${i.unit}`).join(', ');
         toast.success(`${(t.shopping as any).adding || 'Adding'}: ${summary} ✓`);
       } catch {
         toast.error(t.shopping.couldNotHear);
       }
+      setIsListening(false);
     };
     recognition.start();
   };
