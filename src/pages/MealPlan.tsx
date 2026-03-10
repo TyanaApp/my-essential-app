@@ -13,6 +13,12 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { toast } from 'sonner';
 import { format, addDays, startOfWeek } from 'date-fns';
 
+interface MealIngredient {
+  name: string;
+  amount: number | string;
+  unit: string;
+}
+
 interface Meal {
   name: string;
   emoji: string;
@@ -20,7 +26,8 @@ interface Meal {
   protein: number;
   fat: number;
   carbs: number;
-  ingredients: string[];
+  ingredients: (string | MealIngredient)[];
+  steps?: string[];
   cookTime: string;
   difficulty: string;
   fromInventory: boolean;
