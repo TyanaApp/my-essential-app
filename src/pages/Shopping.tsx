@@ -405,7 +405,7 @@ const Shopping = () => {
                       <Check className="w-3 h-3 text-white" />
                     </button>
                     <span className="flex-1 text-sm line-through truncate" style={{ color: '#9CA3AF' }}>{item.name}</span>
-                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
+                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
                   </div>
                 ))}
               </div>
