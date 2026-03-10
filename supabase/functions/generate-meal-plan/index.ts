@@ -76,18 +76,22 @@ serve(async (req) => {
       dates.push(d.toISOString().split('T')[0]);
     }
 
-    // Simplified prompt to produce shorter output
+    // Prompt requiring structured ingredients with amounts
     const userPrompt = `Create a 7-day meal plan. Respond in ${lang}. Return ONLY valid JSON, no markdown.
 
 Person: ${name}, Goal: ${goalType}, ${calories} kcal/day, Diet: ${dietType}, Allergies: ${allergies}, Dislikes: ${disliked}, Household: ${householdSize}
 Available: ${inventoryList}
 
-IMPORTANT: Keep ingredient lists SHORT (max 4 items each). Keep cookTime short like "15м" or "15m". Keep meal names short.
+CRITICAL RULES:
+- Keep max 5 ingredients per meal. Keep cookTime short like "15м" or "15m". Keep meal names short.
+- Every ingredient MUST have "name", "amount" (number), and "unit" (г/мл/шт/ст.л/ч.л).
+- Amounts must be realistic and match the KBJU values. Never omit amounts.
+- Include "steps" array with 3-5 short cooking steps per meal.
 
 Return exactly this JSON structure:
-{"days":[{"date":"${dates[0]}","dayName":"day name","meals":{"breakfast":{"name":"meal","emoji":"🥣","calories":350,"protein":15,"fat":8,"carbs":55,"ingredients":["a","b","c"],"cookTime":"10м","fromInventory":true},"lunch":{"name":"meal","emoji":"🍲","calories":500,"protein":30,"fat":15,"carbs":60,"ingredients":["a","b"],"cookTime":"20м","fromInventory":false},"dinner":{"name":"meal","emoji":"🍗","calories":450,"protein":35,"fat":16,"carbs":40,"ingredients":["a","b"],"cookTime":"25м","fromInventory":true},"snack":{"name":"snack","emoji":"🍎","calories":150,"protein":5,"fat":3,"carbs":20,"ingredients":["a"],"cookTime":"0м","fromInventory":true}},"dayTotal":{"calories":1450,"protein":85,"fat":42,"carbs":175}}],"weekSummary":{"avgCalories":${calories},"avgProtein":100,"avgFat":65,"avgCarbs":250},"shoppingList":[{"name":"product","amount":"500g"}]}
+{"days":[{"date":"${dates[0]}","dayName":"day name","meals":{"breakfast":{"name":"meal","emoji":"🥣","calories":350,"protein":15,"fat":8,"carbs":55,"ingredients":[{"name":"Oatmeal","amount":80,"unit":"g"},{"name":"Milk","amount":200,"unit":"ml"}],"steps":["Step 1","Step 2"],"cookTime":"10м","fromInventory":true},"lunch":{"name":"meal","emoji":"🍲","calories":500,"protein":30,"fat":15,"carbs":60,"ingredients":[{"name":"Chicken","amount":200,"unit":"g"},{"name":"Rice","amount":80,"unit":"g"}],"steps":["Step 1","Step 2"],"cookTime":"20м","fromInventory":false},"dinner":{"name":"meal","emoji":"🍗","calories":450,"protein":35,"fat":16,"carbs":40,"ingredients":[{"name":"Fish","amount":180,"unit":"g"}],"steps":["Step 1","Step 2"],"cookTime":"25м","fromInventory":true},"snack":{"name":"snack","emoji":"🍎","calories":150,"protein":5,"fat":3,"carbs":20,"ingredients":[{"name":"Apple","amount":1,"unit":"pcs"}],"steps":["Wash and eat"],"cookTime":"0м","fromInventory":true}},"dayTotal":{"calories":1450,"protein":85,"fat":42,"carbs":175}}],"weekSummary":{"avgCalories":${calories},"avgProtein":100,"avgFat":65,"avgCarbs":250},"shoppingList":[{"name":"product","amount":"500g"}]}
 
-Generate ALL 7 days: ${dates.map((d, i) => `${d}`).join(', ')}
+Generate ALL 7 days: ${dates.map((d) => `${d}`).join(', ')}
 Each day total should be close to ${calories} kcal.`;
 
     console.log("Calling AI gateway...");
