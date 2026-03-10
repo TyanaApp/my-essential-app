@@ -64,31 +64,57 @@ const Shopping = () => {
     recognition.onresult = async (event: any) => {
       const transcript = event.results[0][0].transcript;
       toast(`🎤 ${(t.shopping as any).heard || 'Heard'}: "${transcript}"`);
+      setIsListening(true); // keep spinner while processing
       
       try {
         const { data, error } = await supabase.functions.invoke('parse-voice-shopping', {
           body: { transcript, language }
         });
+
+        // Helper: check if item is duplicate
+        const isDuplicate = (name: string) => {
+          const n = name.toLowerCase().trim();
+          return items.some(existing => {
+            const e = existing.name.toLowerCase().trim();
+            return e === n || e.includes(n) || n.includes(e);
+          });
+        };
         
         if (error || !data?.items?.length) {
-          // Fallback: split by comma/and
           const voiceItems = transcript.split(/,|and|и|un/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
-          if (!user || voiceItems.length === 0) return;
-          // Validate each item
+          if (!user || voiceItems.length === 0) { setIsListening(false); return; }
           const validItems: string[] = [];
           for (const item of voiceItems) {
+            if (isDuplicate(item)) {
+              const alreadyMsg = language === 'ru' ? `"${item}" уже в списке` : language === 'uk' ? `"${item}" вже у списку` : language === 'lv' ? `"${item}" jau sarakstā` : `"${item}" already in list`;
+              toast(alreadyMsg);
+              continue;
+            }
             const ok = await validateFood(item);
             if (ok) validItems.push(item);
           }
-          if (validItems.length === 0) return;
+          if (validItems.length === 0) { setIsListening(false); return; }
           const inserts = validItems.map((name: string) => ({ user_id: user!.id, name, quantity: 1, unit: 'pcs', category: 'other' }));
           await supabase.from('shopping_items').insert(inserts as any);
           await fetchItems();
           toast.success(`${(t.shopping as any).adding || 'Adding'}: ${validItems.join(', ')} ✓`);
+          setIsListening(false);
           return;
         }
+
+        // Filter duplicates from parsed items
+        const newItems = data.items.filter((item: any) => {
+          if (isDuplicate(item.name)) {
+            const alreadyMsg = language === 'ru' ? `"${item.name}" уже в списке` : language === 'uk' ? `"${item.name}" вже у списку` : language === 'lv' ? `"${item.name}" jau sarakstā` : `"${item.name}" already in list`;
+            toast(alreadyMsg);
+            return false;
+          }
+          return true;
+        });
+
+        if (newItems.length === 0) { setIsListening(false); return; }
         
-        const inserts = data.items.map((item: any) => ({
+        const inserts = newItems.map((item: any) => ({
           user_id: user!.id,
           name: item.name,
           quantity: item.quantity || 1,
@@ -97,11 +123,12 @@ const Shopping = () => {
         }));
         await supabase.from('shopping_items').insert(inserts as any);
         await fetchItems();
-        const summary = data.items.map((i: any) => `${i.name} ${i.quantity}${i.unit}`).join(', ');
+        const summary = newItems.map((i: any) => `${i.name} ${i.quantity}${i.unit}`).join(', ');
         toast.success(`${(t.shopping as any).adding || 'Adding'}: ${summary} ✓`);
       } catch {
         toast.error(t.shopping.couldNotHear);
       }
+      setIsListening(false);
     };
     recognition.start();
   };
@@ -278,10 +305,11 @@ const Shopping = () => {
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
         <button onClick={handleVoiceInput}
-          className="flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all"
+          disabled={isListening}
+          className="flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all disabled:opacity-50"
           style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}
           aria-label="Voice input">
-          🎤
+          {isListening ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : '🎤'}
         </button>
         <button onClick={() => setReceiptModalOpen(true)}
           className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px]"
@@ -378,7 +406,7 @@ const Shopping = () => {
                       <Check className="w-3 h-3 text-white" />
                     </button>
                     <span className="flex-1 text-sm line-through truncate" style={{ color: '#9CA3AF' }}>{item.name}</span>
-                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {(t.shopping as any).units?.[item.unit || 'pcs'] || item.unit || 'pcs'}</span>
+                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
                   </div>
                 ))}
               </div>

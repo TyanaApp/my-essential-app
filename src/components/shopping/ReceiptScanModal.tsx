@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
+import { getUnits } from '@/lib/units';
 
 interface ReceiptItem {
   name: string;
@@ -40,7 +41,14 @@ const STORAGE_OPTIONS = [
   { id: 'freezer', emoji: '❄️' },
 ];
 
-const UNIT_OPTIONS = ['pcs', 'kg', 'g', 'L', 'ml', 'pack'];
+const CURRENCY_OPTIONS = [
+  { code: 'EUR', symbol: '€', label: '€ EUR' },
+  { code: 'USD', symbol: '$', label: '$ USD' },
+  { code: 'GBP', symbol: '£', label: '£ GBP' },
+  { code: 'RUB', symbol: '₽', label: '₽ RUB' },
+  { code: 'UAH', symbol: '₴', label: '₴ UAH' },
+  { code: 'PLN', symbol: 'zł', label: 'zł PLN' },
+];
 
 const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const { user } = useAuth();
@@ -56,6 +64,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const [data, setData] = useState<ReceiptData | null>(null);
   const [saving, setSaving] = useState(false);
   const [nonFoodExpanded, setNonFoodExpanded] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('EUR');
 
   const reset = () => {
     setStep('upload');
@@ -72,7 +81,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
       receiptTotal: 0,
       foodTotal: 0,
       nonFoodTotal: 0,
-      currency: 'EUR',
+      currency: selectedCurrency,
       date: new Date().toISOString().split('T')[0],
       items: [],
     });
@@ -103,6 +112,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
             imageBase64: base64,
             language,
             fileType: isPdf ? 'pdf' : 'image',
+            currency: selectedCurrency,
           },
         });
         if (error) throw error;
@@ -123,6 +133,9 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
           return;
         }
 
+        const detectedCurrency = result.currency || selectedCurrency;
+        setSelectedCurrency(detectedCurrency);
+
         const hasFood = items.some(i => i.isFood);
         const totals = recalcTotals(items);
 
@@ -131,7 +144,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
           receiptTotal: Number(result.receiptTotal) || totals.receiptTotal,
           foodTotal: Number(result.foodTotal) || totals.foodTotal,
           nonFoodTotal: Number(result.nonFoodTotal) || totals.nonFoodTotal,
-          currency: result.currency || 'EUR',
+          currency: detectedCurrency,
           date: result.date || new Date().toISOString().split('T')[0],
           items,
         });
@@ -143,7 +156,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
       }
     };
     reader.readAsDataURL(file);
-  }, [language]);
+  }, [language, selectedCurrency]);
 
   const foodItems = data?.items.filter(i => i.isFood) || [];
   const otherItems = data?.items.filter(i => !i.isFood) || [];
@@ -187,14 +200,21 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
     setData({ ...data, items: [...data.items, newItem] });
   };
 
+  const handleCurrencyChange = (code: string) => {
+    setSelectedCurrency(code);
+    if (data) {
+      setData({ ...data, currency: code });
+    }
+  };
+
   const handleSave = async () => {
     if (!user || !data) return;
+    const cur = data.currency || selectedCurrency;
     const toSave = data.items.filter(i => i.isFood && i.checked && i.name.trim());
     if (toSave.length === 0 && data.items.length === 0) return;
 
     setSaving(true);
     try {
-      // Save food items to inventory
       if (toSave.length > 0) {
         const inserts = toSave.map(i => ({
           user_id: user.id,
@@ -209,12 +229,11 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
         if (error) throw error;
       }
 
-      // Save receipt to receipts table
       await supabase.from('receipts' as any).insert({
         user_id: user.id,
         store_name: data.store || null,
         total_amount: data.receiptTotal,
-        currency: data.currency || 'EUR',
+        currency: cur,
         receipt_date: data.date || new Date().toISOString().split('T')[0],
         items: data.items.map(i => ({
           name: i.name,
@@ -227,7 +246,6 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
         })),
       });
 
-      // Save FOOD spending only to savings_log
       if (foodTotal > 0) {
         await supabase.from('savings_log').insert({
           user_id: user.id,
@@ -250,8 +268,34 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
 
   if (!open) return null;
 
-  const cur = data?.currency || 'EUR';
+  const cur = data?.currency || selectedCurrency;
   const isResultsOrManual = step === 'results' || step === 'manual';
+
+  const UNIT_OPTIONS_LOCALIZED = getUnits(language);
+
+  const currencyLabel = language === 'ru' ? 'Валюта чека:' : language === 'uk' ? 'Валюта чека:' : language === 'lv' ? 'Čeka valūta:' : 'Receipt currency:';
+
+  const renderCurrencySelector = () => (
+    <div className="mb-3">
+      <p className="text-xs font-medium mb-1.5 text-muted-foreground">{currencyLabel}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {CURRENCY_OPTIONS.map(c => (
+          <button
+            key={c.code}
+            onClick={() => handleCurrencyChange(c.code)}
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium border-[1.5px] transition-all"
+            style={{
+              borderColor: (data?.currency || selectedCurrency) === c.code ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+              backgroundColor: (data?.currency || selectedCurrency) === c.code ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+              color: (data?.currency || selectedCurrency) === c.code ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+            }}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   const renderItemRow = (item: ReceiptItem, globalIdx: number, isFood: boolean) => (
     <div key={globalIdx} className="p-2.5 rounded-xl bg-accent/50 space-y-1.5">
@@ -285,7 +329,7 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
         </div>
         <select value={item.unit} onChange={e => updateItemField(globalIdx, 'unit', e.target.value)}
           className="h-7 px-1.5 rounded-lg border border-border text-xs bg-background text-foreground outline-none">
-          {UNIT_OPTIONS.map(u => <option key={u} value={u}>{u}</option>)}
+          {UNIT_OPTIONS_LOCALIZED.map(u => <option key={u.value} value={u.value}>{u.label}</option>)}
         </select>
         <div className="flex items-center gap-0.5 bg-background rounded-lg border border-border px-1.5">
           <span className="text-xs text-muted-foreground">{getCurrencySymbol(cur)}</span>
@@ -343,8 +387,11 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
               <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" className="hidden"
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+
+              {/* Currency selector */}
+              {renderCurrencySelector()}
+
               <div className="space-y-2.5">
-                {/* Take photo */}
                 <button onClick={() => cameraRef.current?.click()}
                   className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border hover:border-primary transition-colors text-left bg-accent/30">
                   <span className="text-3xl">📸</span>
@@ -353,7 +400,6 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
                     <p className="text-xs text-muted-foreground">{receipt.takePhotoHint || 'Take a photo of a paper receipt'}</p>
                   </div>
                 </button>
-                {/* Choose from gallery */}
                 <button onClick={() => galleryRef.current?.click()}
                   className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border hover:border-primary transition-colors text-left bg-accent/30">
                   <span className="text-3xl">🖼</span>
@@ -362,7 +408,6 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
                     <p className="text-xs text-muted-foreground">{receipt.choosePhotoHint || 'Upload a photo from gallery'}</p>
                   </div>
                 </button>
-                {/* Upload file */}
                 <button onClick={() => fileRef.current?.click()}
                   className="w-full flex items-center gap-3 p-4 rounded-2xl border-2 border-border hover:border-primary transition-colors text-left bg-accent/30">
                   <span className="text-3xl">📄</span>
@@ -437,23 +482,29 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
           {/* RESULTS / MANUAL */}
           {isResultsOrManual && data && (
             <div>
-              {/* Store & date for manual */}
+              {/* Store & date & currency for manual */}
               {step === 'manual' && (
-                <div className="flex gap-2 mb-3">
-                  <input
-                    value={data.store}
-                    onChange={e => setData({ ...data, store: e.target.value })}
-                    placeholder={receipt.storeName || 'Store name'}
-                    className="flex-1 h-9 px-3 rounded-xl border border-border text-sm bg-background text-foreground outline-none focus:border-primary"
-                  />
-                  <input
-                    type="date"
-                    value={data.date}
-                    onChange={e => setData({ ...data, date: e.target.value })}
-                    className="w-36 h-9 px-2 rounded-xl border border-border text-sm bg-background text-foreground outline-none focus:border-primary"
-                  />
-                </div>
+                <>
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      value={data.store}
+                      onChange={e => setData({ ...data, store: e.target.value })}
+                      placeholder={receipt.storeName || 'Store name'}
+                      className="flex-1 h-9 px-3 rounded-xl border border-border text-sm bg-background text-foreground outline-none focus:border-primary"
+                    />
+                    <input
+                      type="date"
+                      value={data.date}
+                      onChange={e => setData({ ...data, date: e.target.value })}
+                      className="w-36 h-9 px-2 rounded-xl border border-border text-sm bg-background text-foreground outline-none focus:border-primary"
+                    />
+                  </div>
+                  {renderCurrencySelector()}
+                </>
               )}
+
+              {/* Currency selector for scanned results too */}
+              {step === 'results' && renderCurrencySelector()}
 
               {/* Header totals card */}
               <div className="p-3 rounded-xl mb-3 bg-accent/50 space-y-1">
