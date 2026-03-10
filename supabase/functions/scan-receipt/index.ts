@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { imageBase64, language, fileType } = await req.json();
+    const { imageBase64, language, fileType, currency: userCurrency } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -27,31 +27,36 @@ serve(async (req) => {
     } else {
       contentParts.push({
         type: "image_url",
-        image_url: { url: `data:image/jpeg;base64,${imageBase64}` }
+        image_url: { 
+          url: `data:image/jpeg;base64,${imageBase64}`,
+          detail: "high"
+        }
       });
     }
+
+    const currencyHint = userCurrency ? `The user expects currency "${userCurrency}". Use this unless the receipt clearly shows a different currency.` : '';
 
     contentParts.push({
       type: "text",
       text: `YOU MUST respond in ${langMap[language] || 'English'}.
 
-This is a shopping receipt.
-Your job: identify ONLY food and drink items.
+You are an expert OCR system for shopping receipts.
+Read this receipt image carefully, line by line.
 
-INCLUDE as food (isFood: true):
-- All food products, ingredients, drinks
-- Spices, sauces, condiments
-- Baby food, pet food
-- Alcohol (beer, wine, spirits)
+Your job: extract ALL purchased items with prices.
 
-EXCLUDE completely (isFood: false):
-- Household cleaning products
-- Personal care (shampoo, soap, toothpaste)
-- Cosmetics, medicine, vitamins
-- Clothing, electronics, toys
-- Bags, packaging items
-- Cigarettes, tobacco
-- Non-food items of any kind
+IMPORTANT OCR RULES:
+- Read every line carefully, even if blurry
+- Product names may be abbreviated — expand when possible
+- Prices may use , or . as decimal separator
+- Currency may be shown as €/$£/₽/₴/zł/Eur/EUR/USD/RUB/UAH/PLN/GBP/Ls/LVL
+- Detect currency from receipt automatically
+${currencyHint}
+- If image is blurry, still try to extract what you can
+
+CLASSIFY each item:
+FOOD (isFood: true): All food products, ingredients, drinks, spices, sauces, condiments, baby food, pet food, alcohol
+NOT FOOD (isFood: false): Household cleaning, personal care, cosmetics, medicine, vitamins, clothing, electronics, bags, packaging, cigarettes, tobacco
 
 For the totals:
 - foodTotal = sum of ONLY food items prices
@@ -61,7 +66,7 @@ For the totals:
 Return ONLY valid JSON (no markdown, no backticks):
 {
   "store": "Store name if visible",
-  "date": "2026-03-08",
+  "date": "YYYY-MM-DD",
   "receiptTotal": 45.20,
   "foodTotal": 32.50,
   "nonFoodTotal": 12.70,
@@ -70,7 +75,7 @@ Return ONLY valid JSON (no markdown, no backticks):
     {
       "name": "Item name in ${langMap[language] || 'English'}",
       "quantity": 1,
-      "unit": "L",
+      "unit": "pcs",
       "price": 1.29,
       "isFood": true,
       "suggestedStorage": "fridge"
@@ -98,7 +103,7 @@ Rules:
           role: "user",
           content: contentParts
         }],
-        max_tokens: 1200,
+        max_tokens: 2000,
       }),
     });
 
