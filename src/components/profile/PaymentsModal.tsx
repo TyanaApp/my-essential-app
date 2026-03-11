@@ -59,6 +59,9 @@ const T = {
     lockedForever: 'Price locked forever',
     yourPlan: 'Your current plan',
     startTrial: 'Start 7 days free',
+    getProSubscribe: '🚀 Get Pro — €6.49/mo',
+    getProRegular: '🚀 Get Pro — €6.49/mo',
+    getLite: 'Get Lite — €4.99/mo',
     switchToFree: 'Switch to Free',
     switchToLite: 'Switch to Lite',
     switchToPro: 'Switch to Pro',
@@ -117,6 +120,9 @@ const T = {
     lockedForever: 'Цена зафиксирована навсегда',
     yourPlan: 'Ваш текущий план',
     startTrial: 'Начать 7 дней бесплатно',
+    getProSubscribe: '🚀 Оформить Pro — €6.49/мес',
+    getProRegular: '🚀 Перейти на Pro — €6.49/мес',
+    getLite: 'Перейти на Lite — €4.99/мес',
     switchToFree: 'Перейти на бесплатный',
     switchToLite: 'Перейти на Lite',
     switchToPro: 'Перейти на Pro',
@@ -175,6 +181,9 @@ const T = {
     lockedForever: 'Cena fiksēta uz visiem laikiem',
     yourPlan: 'Jūsu pašreizējais plāns',
     startTrial: 'Sākt 7 dienas bezmaksas',
+    getProSubscribe: '🚀 Iegūt Pro — €6.49/mēn',
+    getProRegular: '🚀 Pāriet uz Pro — €6.49/mēn',
+    getLite: 'Iegūt Lite — €4.99/mēn',
     switchToFree: 'Pāriet uz bezmaksas',
     switchToLite: 'Pāriet uz Lite',
     switchToPro: 'Pāriet uz Pro',
@@ -233,6 +242,9 @@ const T = {
     lockedForever: 'Ціна зафіксована назавжди',
     yourPlan: 'Ваш поточний план',
     startTrial: 'Почати 7 днів безкоштовно',
+    getProSubscribe: '🚀 Оформити Pro — €6.49/міс',
+    getProRegular: '🚀 Перейти на Pro — €6.49/міс',
+    getLite: 'Перейти на Lite — €4.99/міс',
     switchToFree: 'Перейти на безкоштовний',
     switchToLite: 'Перейти на Lite',
     switchToPro: 'Перейти на Pro',
@@ -260,6 +272,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
   const [isFoundingMember, setIsFoundingMember] = useState(false);
   const [trialDaysLeft, setTrialDaysLeft] = useState(0);
   const [subscriptionStatus, setSubscriptionStatus] = useState('free');
+  const [trialUsed, setTrialUsed] = useState(false);
   const [spotsLeft, setSpotsLeft] = useState(0);
   const [earlyBirdActive, setEarlyBirdActive] = useState(false);
 
@@ -270,13 +283,14 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
     const loadProfile = async () => {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('is_founding_member, subscription_plan, subscription_status, trial_end')
+        .select('is_founding_member, subscription_plan, subscription_status, trial_end, trial_used')
         .eq('user_id', user.id)
         .maybeSingle();
 
       if (profile) {
         setIsFoundingMember(!!profile.is_founding_member);
         setSubscriptionStatus(profile.subscription_status || 'free');
+        setTrialUsed(!!profile.trial_used);
 
         if (profile.subscription_status === 'trial' && profile.trial_end) {
           const days = Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / 86400000));
@@ -463,7 +477,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
                 disabled={!!processingPlan}
               >
                 {processingPlan === 'lite' ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
-                {plan === 'free' || subscriptionStatus === 'trial' ? t.startTrial : t.switchToLite}
+                {subscriptionStatus === 'trial' ? t.switchToLite : plan === 'pro_founding' || plan === 'pro_regular' ? t.switchToLite : t.getLite}
               </Button>
             )}
           </div>
@@ -526,7 +540,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
                 disabled={!!processingPlan}
               >
                 {processingPlan === proPlanKey ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
-                {plan === 'free' || subscriptionStatus === 'trial' ? t.startTrial : t.switchToPro}
+                {subscriptionStatus === 'trial' ? t.getProSubscribe : trialUsed ? t.getProRegular : plan === 'free' ? t.startTrial : t.switchToPro}
               </Button>
             )}
           </div>
