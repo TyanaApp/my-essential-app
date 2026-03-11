@@ -10,7 +10,7 @@ import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import QuickAddModal from '@/components/inventory/QuickAddModal';
 import BarcodeScannerModal from '@/components/inventory/BarcodeScannerModal';
-import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
 import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
