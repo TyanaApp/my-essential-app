@@ -113,9 +113,9 @@ const AddWorkoutModal = ({ open, onOpenChange, onSaved, editWorkout, plannedType
   const minLabel = wt.min || 'min';
 
   const intensityConfig = [
-    { key: 'low' as const, color: '#22C55E', emoji: '🟢', label: wt.intensityLow || 'Light', sub: wt.intensityLowSub || 'Warm-up', met: '~4 MET' },
-    { key: 'medium' as const, color: '#F97316', emoji: '🟡', label: wt.intensityMedium || 'Medium', sub: wt.intensityMediumSub || 'Normal', met: '~6 MET' },
-    { key: 'high' as const, color: '#EF4444', emoji: '🔴', label: wt.intensityHigh || 'Intense', sub: wt.intensityHighSub || 'Hard', met: '~9 MET' },
+    { key: 'low' as const, color: '#22C55E', emoji: '🟢', label: wt.intensityLow || 'Light', sub: wt.intensityLowSub || 'Easy breathing, can talk' },
+    { key: 'medium' as const, color: '#F97316', emoji: '🟡', label: wt.intensityMedium || 'Medium', sub: wt.intensityMediumSub || 'Breathing harder, slightly sweaty' },
+    { key: 'high' as const, color: '#EF4444', emoji: '🔴', label: wt.intensityHigh || 'Intense', sub: wt.intensityHighSub || 'Hard to breathe, sweating a lot' },
   ];
 
   const dayLabels = (t as any).dayLabels || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
