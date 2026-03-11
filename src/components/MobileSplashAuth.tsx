@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import PasswordStrengthIndicator, { isPasswordValid } from '@/components/PasswordStrengthIndicator';
 import MobileInstallBanner from '@/components/install/MobileInstallBanner';
 import PWAInstallGuide from '@/components/install/PWAInstallGuide';
 import TyanaLogo from '@/components/TyanaLogo';
