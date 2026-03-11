@@ -11,6 +11,20 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const _sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: authHeader } } });
+    const { data: _cd, error: _ce } = await _sb.auth.getClaims(authHeader.replace("Bearer ", ""));
+    if (_ce || !_cd?.claims) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
   try {
     const body = await req.json();
     const { imageBase64, language, recalculate, itemName, portion, dislikedFoods } = body;
