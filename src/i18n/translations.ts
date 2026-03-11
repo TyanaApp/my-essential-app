@@ -160,6 +160,10 @@ export const translations = {
       emailNotConfirmed: 'Please confirm your email before signing in.',
       rateLimited: 'Too many attempts. Please wait a moment.',
       checkEmail: 'Check your email to confirm your account ✉️',
+      passwordTooWeak: 'Password too weak. Min 8 chars, include number and letter',
+      passwordStrengthWeak: 'Weak',
+      passwordStrengthMedium: 'Medium',
+      passwordStrengthStrong: 'Strong',
     },
     common: {
       save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', close: 'Close',
@@ -806,6 +810,10 @@ export const translations = {
       emailNotConfirmed: 'Подтвердите email перед входом.',
       rateLimited: 'Слишком много попыток. Подождите немного.',
       checkEmail: 'Проверьте почту для подтверждения аккаунта ✉️',
+      passwordTooWeak: 'Пароль слишком простой. Минимум 8 символов, цифра и буква',
+      passwordStrengthWeak: 'Слабый',
+      passwordStrengthMedium: 'Средний',
+      passwordStrengthStrong: 'Надёжный',
     },
     update: {
       title: '✨ Новая версия TYANA готова!',
@@ -1348,6 +1356,10 @@ export const translations = {
       userAlreadyRegistered: 'Šis e-pasts jau ir reģistrēts.', invalidCredentials: 'Nepareizs e-pasts vai parole.',
       emailNotConfirmed: 'Lūdzu apstipriniet e-pastu pirms ieiet.', rateLimited: 'Pārāk daudz mēģinājumu.',
       checkEmail: 'Pārbaudiet e-pastu, lai apstiprinātu kontu ✉️',
+      passwordTooWeak: 'Parole pārāk vāja. Min 8 simboli, cipars un burts',
+      passwordStrengthWeak: 'Vāja',
+      passwordStrengthMedium: 'Vidēja',
+      passwordStrengthStrong: 'Stipra',
     },
     update: {
       title: '✨ Jauna TYANA versija gatava!',
@@ -1890,6 +1902,10 @@ export const translations = {
       userAlreadyRegistered: 'Цей email вже зареєстрований. Спробуйте увійти.',
       invalidCredentials: 'Невірний email або пароль.', emailNotConfirmed: 'Підтвердіть email перед входом.',
       rateLimited: 'Забагато спроб. Зачекайте трохи.', checkEmail: 'Перевірте пошту для підтвердження акаунту ✉️',
+      passwordTooWeak: 'Пароль занадто простий. Мінімум 8 символів, цифра і літера',
+      passwordStrengthWeak: 'Слабкий',
+      passwordStrengthMedium: 'Середній',
+      passwordStrengthStrong: 'Надійний',
     },
     update: {
       title: '✨ Нова версія TYANA готова!',

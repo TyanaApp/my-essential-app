@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import PasswordStrengthIndicator, { isPasswordValid } from '@/components/PasswordStrengthIndicator';
 import MobileInstallBanner from '@/components/install/MobileInstallBanner';
 import PWAInstallGuide from '@/components/install/PWAInstallGuide';
 import TyanaLogo from '@/components/TyanaLogo';
@@ -40,7 +41,7 @@ const MobileSplashAuth: React.FC = () => {
   const { signIn, signUp, signInWithGoogle } = useAuth();
 
   const emailSchema = z.string().email();
-  const passwordSchema = z.string().min(6);
+  const passwordSchema = z.string().min(8);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [view, setView] = useState<AuthView>('main');
@@ -79,7 +80,9 @@ const MobileSplashAuth: React.FC = () => {
     e.preventDefault();
     const newErrors: { email?: string; password?: string } = {};
     if (!emailSchema.safeParse(email).success) newErrors.email = t.common.error;
-    if (!passwordSchema.safeParse(password).success) newErrors.password = t.common.error;
+    if (!passwordSchema.safeParse(password).success || (isSignUp && !isPasswordValid(password))) {
+      newErrors.password = isSignUp ? t.auth.passwordTooWeak : t.common.error;
+    }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
@@ -292,6 +295,7 @@ const MobileSplashAuth: React.FC = () => {
                     {showPassword ? '🙈' : '👁'}
                   </button>
                 </div>
+                {isSignUp && <PasswordStrengthIndicator password={password} labels={{ weak: t.auth.passwordStrengthWeak, medium: t.auth.passwordStrengthMedium, strong: t.auth.passwordStrengthStrong }} />}
                 {errors.password && <p className="text-red-300 text-xs mt-1 ml-1">{errors.password}</p>}
               </div>
 
