@@ -289,6 +289,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
       if (profile) {
         setIsFoundingMember(!!profile.is_founding_member);
         setSubscriptionStatus(profile.subscription_status || 'free');
+        setTrialUsed(!!profile.trial_used);
 
         if (profile.subscription_status === 'trial' && profile.trial_end) {
           const days = Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / 86400000));
