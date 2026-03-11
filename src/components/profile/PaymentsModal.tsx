@@ -272,6 +272,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
   const [isFoundingMember, setIsFoundingMember] = useState(false);
   const [trialDaysLeft, setTrialDaysLeft] = useState(0);
   const [subscriptionStatus, setSubscriptionStatus] = useState('free');
+  const [trialUsed, setTrialUsed] = useState(false);
   const [spotsLeft, setSpotsLeft] = useState(0);
   const [earlyBirdActive, setEarlyBirdActive] = useState(false);
 
