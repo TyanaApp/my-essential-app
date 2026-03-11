@@ -1796,7 +1796,7 @@ export const translations = {
       todayQuestion: 'Treniņš šodien?', addWorkout: 'Pievienot treniņu', added: 'Treniņš pievienots',
       whatWorkout: 'Kāds treniņš?', editWorkout: 'Rediģēt treniņu',
       intensityLow: 'Viegls', intensityMedium: 'Vidējs', intensityHigh: 'Intensīvs',
-      intensityLowSub: 'Iesildīšanās', intensityMediumSub: 'Parasts', intensityHighSub: 'Smags',
+      intensityLowSub: 'Vienmērīga elpošana, var runāt', intensityMediumSub: 'Elpošana ātrāka, nedaudz svīsti', intensityHighSub: 'Grūti elpot, stipri svīsti',
       min: 'min', caloriesBurned: 'Sadedzinātas kalorijas: ~{cal} kcal',
       goalWillIncrease: 'Tavs mērķis šodien palielināsies: {from} → {to} kcal',
       goalIncreased: 'Mērķis palielināts par +{cal} kcal',
