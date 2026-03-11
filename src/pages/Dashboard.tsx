@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Plus, ChevronRight, AlertTriangle, Check, Sparkles, Brain, RefreshCw } from 'lucide-react';
 import CalorieTargetCard from '@/components/dashboard/CalorieTargetCard';
 import EatingInsightsCard from '@/components/dashboard/EatingInsightsCard';
+import WorkoutWidget from '@/components/dashboard/WorkoutWidget';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -139,6 +140,7 @@ const Dashboard = () => {
   const [lastCaloriesForAdvice, setLastCaloriesForAdvice] = useState<number>(0);
   const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string; confidence?: string; based_on?: string; why_valuable?: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
+  const [workoutBurned, setWorkoutBurned] = useState(0);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -532,9 +534,10 @@ const Dashboard = () => {
 
    if (!data) return null;
 
+  const adjustedTarget = data.caloriesTarget + workoutBurned;
   const caloriesConsumed = data.caloriesConsumed;
-  const remaining = data.caloriesTarget - caloriesConsumed;
-  const pct = Math.min(data.caloriesConsumed / data.caloriesTarget, 1);
+  const remaining = adjustedTarget - caloriesConsumed;
+  const pct = Math.min(data.caloriesConsumed / adjustedTarget, 1);
   const circumference = 2 * Math.PI * 72;
   const strokeDashoffset = circumference * (1 - pct);
 
@@ -626,7 +629,7 @@ const Dashboard = () => {
                   {data.caloriesConsumed}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  / {data.caloriesTarget} {(t as any).diary?.kcalUnit || 'kcal'}
+                  / {adjustedTarget} {(t as any).diary?.kcalUnit || 'kcal'}
                 </span>
               </div>
             </div>
@@ -660,6 +663,12 @@ const Dashboard = () => {
                 {remaining >= 0 ? `${remaining} ${t.dashboard.remaining}` : `${Math.abs(remaining)} ${t.dashboard.overTarget}`}
               </p>
 
+              {workoutBurned > 0 && (
+                <p className="text-xs font-medium mt-1" style={{ color: '#059669' }}>
+                  {((t as any).workout?.workoutBurnLabel || '🏋️ +{cal} kcal from workout').replace('{cal}', String(workoutBurned))}
+                </p>
+              )}
+
               <button
                 onClick={() => navigate('/diary')}
                 className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px] border-primary text-primary"
@@ -670,6 +679,9 @@ const Dashboard = () => {
           </div>
           <CalorieTargetCard />
         </motion.div>
+
+        {/* Workout Widget */}
+        <WorkoutWidget onCalorieAdjust={setWorkoutBurned} fadeUp={fadeUp} cardClass={cardClass} />
 
         {/* Missing body data banner */}
         {data.missingBodyData && (
