@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
 import { WifiOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/contexts/LanguageContext';
+
+const offlineText: Record<string, string> = {
+  en: "You're offline. Some features may be limited.",
+  ru: 'Вы офлайн. Некоторые функции могут быть ограничены.',
+  lv: 'Esat bezsaistē. Dažas funkcijas var būt ierobežotas.',
+  uk: 'Ви офлайн. Деякі функції можуть бути обмежені.',
+};
 
 const OfflineBanner = () => {
   const [offline, setOffline] = useState(!navigator.onLine);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const goOffline = () => setOffline(true);
@@ -27,7 +36,7 @@ const OfflineBanner = () => {
           style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}
         >
           <WifiOff className="w-4 h-4" />
-          You're offline. Some features may be limited.
+          {offlineText[language] || offlineText.en}
         </motion.div>
       )}
     </AnimatePresence>
