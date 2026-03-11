@@ -341,15 +341,15 @@ const Profile = () => {
               <>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-lg">🌟</span>
-                  <span className="font-bold text-foreground">Pro ({(t as any).planBanner?.trial || 'trial'})</span>
+                  <span className="font-bold text-foreground">Pro ({t.planBanner.trial})</span>
                 </div>
                 {profile?.trial_end && (
                   <p className="text-xs text-muted-foreground mb-2">
-                    {(t as any).planBanner?.daysLeft || 'Days left'}: {Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))}
+                    {t.planBanner.daysLeft}: {Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))}
                   </p>
                 )}
                 <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
-                  {(t as any).planBanner?.choosePlan || 'Choose a plan'}
+                  {t.planBanner.choosePlan}
                 </Button>
               </>
             ) : isPro ? (
@@ -362,7 +362,7 @@ const Profile = () => {
                   )}
                 </div>
                 {isFoundingMember && (
-                  <p className="text-xs text-muted-foreground mb-1">€6.49/{(t as any).planBanner?.perMonth || 'mo'} {(t as any).planBanner?.forever || 'forever'}</p>
+                  <p className="text-xs text-muted-foreground mb-1">€6.49/{t.planBanner.perMonth} {t.planBanner.forever}</p>
                 )}
                 {subscriptionEnd && (
                   <p className="text-xs text-muted-foreground mb-2">
@@ -392,10 +392,10 @@ const Profile = () => {
               <>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-lg">🆓</span>
-                  <span className="font-bold text-foreground">{(t as any).planBanner?.freePlan || 'Free plan'}</span>
+                  <span className="font-bold text-foreground">{t.planBanner.freePlan}</span>
                 </div>
                 <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
-                  ⭐️ {(t as any).planBanner?.upgradePlan || 'Upgrade plan'}
+                  ⭐️ {t.planBanner.upgradePlan}
                 </Button>
               </>
             )}
