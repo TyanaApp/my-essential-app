@@ -25,8 +25,17 @@ serve(async (req) => {
       });
     }
 
+    // Derive email from JWT claims — never trust client-supplied email
+    const jwtEmail = _cd.claims.email;
+    if (!jwtEmail) {
+      return new Response(JSON.stringify({ error: "No email in token" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
   try {
-    const { email, name, language } = await req.json();
+    const { name, language } = await req.json();
+    const email = jwtEmail;
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
