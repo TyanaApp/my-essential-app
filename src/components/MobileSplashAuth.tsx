@@ -80,7 +80,9 @@ const MobileSplashAuth: React.FC = () => {
     e.preventDefault();
     const newErrors: { email?: string; password?: string } = {};
     if (!emailSchema.safeParse(email).success) newErrors.email = t.common.error;
-    if (!passwordSchema.safeParse(password).success) newErrors.password = t.common.error;
+    if (!passwordSchema.safeParse(password).success || (isSignUp && !isPasswordValid(password))) {
+      newErrors.password = isSignUp ? t.auth.passwordTooWeak : t.common.error;
+    }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
