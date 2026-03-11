@@ -282,7 +282,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
     const loadProfile = async () => {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('is_founding_member, subscription_plan, subscription_status, trial_end')
+        .select('is_founding_member, subscription_plan, subscription_status, trial_end, trial_used')
         .eq('user_id', user.id)
         .maybeSingle();
 
