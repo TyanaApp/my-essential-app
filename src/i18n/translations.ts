@@ -1578,6 +1578,10 @@ export const translations = {
         proRegular: ['Neierobežotas skenēšanas un receptes', 'Uzlabota AI analīze', 'Prioritāra atbalsts', 'Ģimenes koplietošana', 'Pielāgoti pārskati'],
       },
     },
+    planBanner: {
+      freePlan: 'Bezmaksas plāns', upgradePlan: 'Uzlabot plānu', trial: 'izmēģinājums',
+      daysLeft: 'Atlikušās dienas', choosePlan: 'Izvēlēties plānu', perMonth: 'mēn', forever: 'uz mūžu',
+    },
     upgrade: { upgradeTo: 'Uzlabot uz', maybeLater: 'Varbūt vēlāk' },
     install: {
       addToHome: '📲 Pievienot TYANA sākuma ekrānam', installBtn: 'Instalēt', modalTitle: 'Instalējiet TYANA savā tālrunī',
