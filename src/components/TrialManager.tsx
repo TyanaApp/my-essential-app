@@ -110,10 +110,7 @@ const TrialManager = () => {
 
         if (trialEnd < now) {
           // Trial expired
-          await supabase.from('profiles').update({
-            subscription_plan: 'free',
-            subscription_status: 'expired',
-          } as any).eq('user_id', user.id);
+          await supabase.rpc('expire_trial' as any);
 
           // Show modal ONCE per session, only on dashboard
           const shown = sessionStorage.getItem(MODAL_SESSION_KEY);

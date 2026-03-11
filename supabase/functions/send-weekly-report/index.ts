@@ -10,6 +10,14 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+    const authHeader = req.headers.get("Authorization");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!authHeader || authHeader.replace("Bearer ", "") !== serviceKey) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
   try {
     const { email, name, language, weekData } = await req.json();
 

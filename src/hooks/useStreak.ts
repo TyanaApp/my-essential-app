@@ -94,13 +94,11 @@ export const useStreak = () => {
       }
 
       if (milestone.grantLite) {
-        updates.subscription_plan = 'lite';
-        updates.trial_end = new Date(Date.now() + 30 * 86400000).toISOString();
+        try { await supabase.rpc('grant_streak_reward', { p_plan: 'lite', p_trial_days: 30 } as any); } catch {}
       }
 
       if (milestone.grantPro) {
-        updates.subscription_plan = 'pro_founding';
-        updates.trial_end = new Date(Date.now() + 30 * 86400000).toISOString();
+        try { await supabase.rpc('grant_streak_reward', { p_plan: 'pro_founding', p_trial_days: 30 } as any); } catch {}
       }
 
       await supabase.from('profiles').update(updates as any).eq('user_id', user.id);

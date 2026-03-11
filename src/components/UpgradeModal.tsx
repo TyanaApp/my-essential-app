@@ -117,11 +117,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
   const handleStartTrial = async () => {
     if (!user) return;
     setProcessing('trial');
-    await supabase.from('profiles').update({
-      subscription_plan: 'pro',
-      subscription_status: 'trial',
-      trial_end: new Date(Date.now() + 7 * 86400000).toISOString(),
-    } as any).eq('user_id', user.id);
+    await supabase.rpc('activate_trial' as any);
     toast.success(t.trialActivated);
     setProcessing(null);
     onOpenChange(false);

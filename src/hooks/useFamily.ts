@@ -117,104 +117,33 @@ export const useFamily = () => {
   const createFamily = async (name: string) => {
     if (!user) return { error: 'Not authenticated' };
     
-    const invite_code = generateInviteCode();
-    const { data, error } = await supabase
-      .from('families')
-      .insert({ name, owner_id: user.id, invite_code } as any)
-      .select()
-      .single();
+    const { data, error } = await supabase.rpc('create_family_rpc', { p_name: name } as any);
 
     if (error) return { error: error.message };
-
-    const familyId = (data as any).id;
-
-    await supabase
-      .from('profiles')
-      .update({ family_id: familyId, family_role: 'owner' } as any)
-      .eq('user_id', user.id);
-
-    // Auto-add owner as family member
-    const { data: ownerProfile } = await supabase
-      .from('profiles')
-      .select('display_name, gender')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    await (supabase.from('family_members').insert({
-      family_id: familyId,
-      user_id: user.id,
-      name: ownerProfile?.display_name || 'Me',
-      avatar_emoji: ownerProfile?.gender === 'female' ? '👩' : '👨',
-      is_owner: true,
-    }) as any);
+    const result = data as any;
+    if (result?.error) return { error: result.error };
 
     await fetchFamily();
-    return { error: null, invite_code };
+    return { error: null, invite_code: result.invite_code };
   };
 
   const joinFamily = async (code: string) => {
     if (!user) return { error: 'Not authenticated', familyName: '' };
 
-    const { data, error } = await supabase
-      .from('families')
-      .select('id, name')
-      .eq('invite_code', code.trim().toUpperCase())
-      .maybeSingle();
+    const { data, error } = await supabase.rpc('join_family_by_invite', { p_invite_code: code.trim().toUpperCase() } as any);
 
-    if (error || !data) return { error: 'Invalid code', familyName: '' };
-
-    const familyId = (data as any).id;
-
-    await supabase
-      .from('profiles')
-      .update({ family_id: familyId, family_role: 'member' } as any)
-      .eq('user_id', user.id);
-
-    // Add as family member
-    const { data: joinerProfile } = await supabase
-      .from('profiles')
-      .select('display_name, gender')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    await (supabase.from('family_members').insert({
-      family_id: familyId,
-      user_id: user.id,
-      name: joinerProfile?.display_name || 'Member',
-      avatar_emoji: joinerProfile?.gender === 'female' ? '👩' : '👨',
-      is_owner: false,
-    }) as any);
+    if (error) return { error: error.message, familyName: '' };
+    const result = data as any;
+    if (result?.error) return { error: result.error, familyName: '' };
 
     await fetchFamily();
-    return { error: null, familyName: (data as any).name };
+    return { error: null, familyName: result.family_name };
   };
 
   const leaveFamily = async () => {
     if (!user) return;
 
-    const isOwner = family?.owner_id === user.id;
-    
-    if (isOwner && family) {
-      // Delete all family_members first (cascade will handle via FK)
-      await supabase
-        .from('profiles')
-        .update({ family_id: null, family_role: null } as any)
-        .eq('family_id', family.id);
-
-      await supabase
-        .from('families')
-        .delete()
-        .eq('id', family.id);
-    } else {
-      // Remove from family_members
-      if (family) {
-        await (supabase.from('family_members').delete().eq('family_id', family.id).eq('user_id', user.id) as any);
-      }
-      await supabase
-        .from('profiles')
-        .update({ family_id: null, family_role: null } as any)
-        .eq('user_id', user.id);
-    }
+    await supabase.rpc('leave_family_rpc' as any);
 
     setFamily(null);
     setMembers([]);

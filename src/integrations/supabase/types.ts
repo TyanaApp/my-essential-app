@@ -712,10 +712,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      activate_trial: { Args: never; Returns: undefined }
       assign_user_number: { Args: { p_user_id: string }; Returns: Json }
       count_store_waitlist: { Args: never; Returns: number }
+      create_family_rpc: { Args: { p_name: string }; Returns: Json }
+      expire_trial: { Args: never; Returns: undefined }
+      find_family_by_invite: {
+        Args: { p_invite_code: string }
+        Returns: {
+          id: string
+          name: string
+        }[]
+      }
       get_family_id_for_user: { Args: { p_user_id: string }; Returns: string }
       get_member_family_id: { Args: { p_user_id: string }; Returns: string }
+      grant_streak_reward: {
+        Args: { p_plan: string; p_trial_days: number }
+        Returns: undefined
+      }
+      join_family_by_invite: { Args: { p_invite_code: string }; Returns: Json }
+      leave_family_rpc: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
