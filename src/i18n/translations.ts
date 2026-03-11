@@ -160,6 +160,10 @@ export const translations = {
       emailNotConfirmed: 'Please confirm your email before signing in.',
       rateLimited: 'Too many attempts. Please wait a moment.',
       checkEmail: 'Check your email to confirm your account ✉️',
+      passwordTooWeak: 'Password too weak. Min 8 chars, include number and letter',
+      passwordStrengthWeak: 'Weak',
+      passwordStrengthMedium: 'Medium',
+      passwordStrengthStrong: 'Strong',
     },
     common: {
       save: 'Save', cancel: 'Cancel', delete: 'Delete', edit: 'Edit', close: 'Close',
