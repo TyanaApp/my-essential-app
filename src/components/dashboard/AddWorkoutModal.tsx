@@ -232,8 +232,7 @@ const AddWorkoutModal = ({ open, onOpenChange, onSaved, editWorkout, plannedType
                     >
                       <span className="text-lg">{ic.emoji}</span>
                       <span className="text-xs font-semibold text-foreground">{ic.label}</span>
-                      <span className="text-[10px] text-muted-foreground">{ic.sub}</span>
-                      <span className="text-[9px] text-muted-foreground/60">{ic.met}</span>
+                      <span className="text-[10px] text-muted-foreground leading-tight text-center">{ic.sub}</span>
                     </button>
                   ))}
                 </div>

@@ -2358,7 +2358,7 @@ export const translations = {
       todayQuestion: 'Тренування сьогодні?', addWorkout: 'Додати тренування', added: 'Тренування додано',
       whatWorkout: 'Яке тренування?', editWorkout: 'Редагувати тренування',
       intensityLow: 'Легка', intensityMedium: 'Середня', intensityHigh: 'Інтенсивна',
-      intensityLowSub: 'Розминка', intensityMediumSub: 'Звичайна', intensityHighSub: 'До поту',
+      intensityLowSub: 'Дихання рівне, можна говорити', intensityMediumSub: 'Дихаєш частіше, трохи потієш', intensityHighSub: 'Важко дихати, сильно потієш',
       min: 'хв', caloriesBurned: 'Калорій спалено: ~{cal} ккал',
       goalWillIncrease: 'Твоя ціль на сьогодні збільшиться: {from} → {to} ккал',
       goalIncreased: 'Ціль збільшена на +{cal} ккал',
