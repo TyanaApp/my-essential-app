@@ -629,7 +629,7 @@ const Dashboard = () => {
                   {data.caloriesConsumed}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  / {data.caloriesTarget} {(t as any).diary?.kcalUnit || 'kcal'}
+                  / {adjustedTarget} {(t as any).diary?.kcalUnit || 'kcal'}
                 </span>
               </div>
             </div>
@@ -663,6 +663,12 @@ const Dashboard = () => {
                 {remaining >= 0 ? `${remaining} ${t.dashboard.remaining}` : `${Math.abs(remaining)} ${t.dashboard.overTarget}`}
               </p>
 
+              {workoutBurned > 0 && (
+                <p className="text-xs font-medium mt-1" style={{ color: '#059669' }}>
+                  {((t as any).workout?.workoutBurnLabel || '🏋️ +{cal} kcal from workout').replace('{cal}', String(workoutBurned))}
+                </p>
+              )}
+
               <button
                 onClick={() => navigate('/diary')}
                 className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px] border-primary text-primary"
@@ -673,6 +679,9 @@ const Dashboard = () => {
           </div>
           <CalorieTargetCard />
         </motion.div>
+
+        {/* Workout Widget */}
+        <WorkoutWidget onCalorieAdjust={setWorkoutBurned} fadeUp={fadeUp} cardClass={cardClass} />
 
         {/* Missing body data banner */}
         {data.missingBodyData && (
