@@ -957,9 +957,10 @@ const Dashboard = () => {
             </button>
           )}
         </motion.div>
+          );
+        })()}
 
 
-        {/* Card 4 — Budget & Savings */}
         <motion.div {...fadeUp(4)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-foreground">
