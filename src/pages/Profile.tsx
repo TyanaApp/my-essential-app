@@ -337,68 +337,82 @@ const Profile = () => {
       >
         <Card className="bg-card border-border overflow-hidden">
           <CardContent className="p-4">
-            {isTrial ? (
-              <>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🌟</span>
-                  <span className="font-bold text-foreground">Pro ({t.planBanner.trial})</span>
-                </div>
-                {profile?.trial_end && (
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {t.planBanner.daysLeft}: {Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))}
-                  </p>
-                )}
-                <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
-                  {t.planBanner.choosePlan}
-                </Button>
-              </>
-            ) : isPro ? (
-              <>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🚀</span>
-                  <span className="font-bold text-foreground">Pro</span>
-                  {isFoundingMember && (
-                    <Badge className="bg-primary/10 text-primary text-[10px]">🌟 Founding</Badge>
+            {(() => {
+              const pb = (t as any).planBanner || {};
+              const freePlan = pb.freePlan || 'Бесплатный план';
+              const upgradePlan = pb.upgradePlan || 'Улучшить план';
+              const trial = pb.trial || 'пробный период';
+              const daysLeft = pb.daysLeft || 'Осталось дней';
+              const choosePlan = pb.choosePlan || 'Выбрать план';
+              const perMonth = pb.perMonth || 'мес';
+              const forever = pb.forever || 'навсегда';
+
+              if (isTrial) return (
+                <>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">🌟</span>
+                    <span className="font-bold text-foreground">Pro ({trial})</span>
+                  </div>
+                  {profile?.trial_end && (
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {daysLeft}: {Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))}
+                    </p>
                   )}
-                </div>
-                {isFoundingMember && (
-                  <p className="text-xs text-muted-foreground mb-1">€6.49/{t.planBanner.perMonth} {t.planBanner.forever}</p>
-                )}
-                {subscriptionEnd && (
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {(t.payments as any)?.renews || 'Renews'}: {new Date(subscriptionEnd).toLocaleDateString()}
-                  </p>
-                )}
-                <Button size="sm" variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
-                  {(t.payments as any)?.manageSubscription || 'Manage subscription'}
-                </Button>
-              </>
-            ) : isLite ? (
-              <>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">⭐️</span>
-                  <span className="font-bold text-foreground">Lite</span>
-                </div>
-                {subscriptionEnd && (
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {(t.payments as any)?.renews || 'Renews'}: {new Date(subscriptionEnd).toLocaleDateString()}
-                  </p>
-                )}
-                <Button size="sm" variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
-                  {(t.payments as any)?.manageSubscription || 'Manage subscription'}
-                </Button>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🆓</span>
-                  <span className="font-bold text-foreground">{t.planBanner.freePlan}</span>
-                </div>
-                <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
-                  ⭐️ {t.planBanner.upgradePlan}
-                </Button>
-              </>
-            )}
+                  <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
+                    {choosePlan}
+                  </Button>
+                </>
+              );
+              if (isPro) return (
+                <>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">🚀</span>
+                    <span className="font-bold text-foreground">Pro</span>
+                    {isFoundingMember && (
+                      <Badge className="bg-primary/10 text-primary text-[10px]">🌟 Founding</Badge>
+                    )}
+                  </div>
+                  {isFoundingMember && (
+                    <p className="text-xs text-muted-foreground mb-1">€6.49/{perMonth} {forever}</p>
+                  )}
+                  {subscriptionEnd && (
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {(t.payments as any)?.renews || 'Renews'}: {new Date(subscriptionEnd).toLocaleDateString()}
+                    </p>
+                  )}
+                  <Button size="sm" variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
+                    {(t.payments as any)?.manageSubscription || 'Manage subscription'}
+                  </Button>
+                </>
+              );
+              if (isLite) return (
+                <>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">⭐️</span>
+                    <span className="font-bold text-foreground">Lite</span>
+                  </div>
+                  {subscriptionEnd && (
+                    <p className="text-xs text-muted-foreground mb-2">
+                      {(t.payments as any)?.renews || 'Renews'}: {new Date(subscriptionEnd).toLocaleDateString()}
+                    </p>
+                  )}
+                  <Button size="sm" variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
+                    {(t.payments as any)?.manageSubscription || 'Manage subscription'}
+                  </Button>
+                </>
+              );
+              return (
+                <>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">🆓</span>
+                    <span className="font-bold text-foreground">{freePlan}</span>
+                  </div>
+                  <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
+                    ⭐️ {upgradePlan}
+                  </Button>
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
       </motion.div>
