@@ -140,6 +140,7 @@ const Dashboard = () => {
   const [lastCaloriesForAdvice, setLastCaloriesForAdvice] = useState<number>(0);
   const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string; confidence?: string; based_on?: string; why_valuable?: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
+  const [workoutBurned, setWorkoutBurned] = useState(0);
 
   const getGreeting = () => {
     const h = new Date().getHours();
