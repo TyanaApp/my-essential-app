@@ -491,6 +491,39 @@ export type Database = {
         }
         Relationships: []
       }
+      recurring_workouts: {
+        Row: {
+          created_at: string
+          days_of_week: number[]
+          duration_min: number
+          id: string
+          intensity: string
+          is_active: boolean
+          user_id: string
+          workout_type: string
+        }
+        Insert: {
+          created_at?: string
+          days_of_week?: number[]
+          duration_min?: number
+          id?: string
+          intensity?: string
+          is_active?: boolean
+          user_id: string
+          workout_type: string
+        }
+        Update: {
+          created_at?: string
+          days_of_week?: number[]
+          duration_min?: number
+          id?: string
+          intensity?: string
+          is_active?: boolean
+          user_id?: string
+          workout_type?: string
+        }
+        Relationships: []
+      }
       reminders: {
         Row: {
           created_at: string
@@ -704,6 +737,42 @@ export type Database = {
           id?: string
           user_id?: string
           weight?: number
+        }
+        Relationships: []
+      }
+      workouts: {
+        Row: {
+          calories_burned: number
+          created_at: string
+          date: string
+          duration_min: number
+          id: string
+          intensity: string
+          user_id: string
+          weight_kg: number | null
+          workout_type: string
+        }
+        Insert: {
+          calories_burned?: number
+          created_at?: string
+          date?: string
+          duration_min?: number
+          id?: string
+          intensity?: string
+          user_id: string
+          weight_kg?: number | null
+          workout_type: string
+        }
+        Update: {
+          calories_burned?: number
+          created_at?: string
+          date?: string
+          duration_min?: number
+          id?: string
+          intensity?: string
+          user_id?: string
+          weight_kg?: number | null
+          workout_type?: string
         }
         Relationships: []
       }
