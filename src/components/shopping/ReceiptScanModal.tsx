@@ -257,6 +257,18 @@ const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
         } as any);
       }
 
+      // Save prices to price memory
+      await saveBatchPrices(
+        data.items.filter(i => i.isFood && i.price > 0).map(i => ({
+          product_name: i.name,
+          price: i.price,
+          currency: cur,
+          quantity: i.quantity,
+          unit: i.unit,
+          store_name: data.store || null,
+        }))
+      );
+
       toast.success((receipt.itemsAddedToInventory || '{count} items added').replace('{count}', String(toSave.length)));
       onSaved();
       handleClose();
