@@ -97,6 +97,14 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   const navigate = useNavigate();
   const tx = TEXTS[language] || TEXTS.en;
 
+  const SCAN_TIPS: Record<string, string[]> = {
+    en: ['Good lighting improves recognition', 'Point camera at each shelf separately', 'The closer to products, the more accurate'],
+    ru: ['Хорошее освещение улучшает распознавание', 'Наводи камеру на каждую полку отдельно', 'Чем ближе к продуктам, тем точнее результат'],
+    uk: ['Гарне освітлення покращує розпізнавання', 'Наводь камеру на кожну полицю окремо', 'Чим ближче до продуктів, тим точніший результат'],
+    lv: ['Labs apgaismojums uzlabo atpazīšanu', 'Vērs kameru uz katru plauktu atsevišķi', 'Jo tuvāk produktiem, jo precīzāks rezultāts'],
+  };
+  const tips = SCAN_TIPS[language] || SCAN_TIPS.en;
+
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [photos, setPhotos] = useState<(string | null)[]>(Array(MAX_SLOTS).fill(null));
   const [base64s, setBase64s] = useState<(string | null)[]>(Array(MAX_SLOTS).fill(null));
