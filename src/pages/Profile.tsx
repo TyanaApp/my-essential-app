@@ -186,6 +186,8 @@ const Profile = () => {
   const { settings: notifSettings, updateSettings: updateNotifSettings } = useNotifications();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { plan, isPro, isLite, isFree, isTrial, isFoundingMember } = usePlanLimits();
+  const { subscriptionEnd, openCustomerPortal } = useSubscription();
 
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [accountSettingsOpen, setAccountSettingsOpen] = useState(false);
