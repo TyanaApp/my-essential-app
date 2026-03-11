@@ -8,6 +8,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatMoney, getCurrencySymbol } from '@/lib/formatMoney';
 import { getUnits } from '@/lib/units';
+import { usePriceMemory } from '@/hooks/usePriceMemory';
 
 interface ReceiptItem {
   name: string;
