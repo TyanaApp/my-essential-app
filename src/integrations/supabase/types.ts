@@ -318,6 +318,45 @@ export type Database = {
         }
         Relationships: []
       }
+      product_price_history: {
+        Row: {
+          created_at: string
+          currency: string
+          id: string
+          price: number
+          price_per_unit: number
+          product_name: string
+          quantity: number
+          store_name: string | null
+          unit: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          id?: string
+          price: number
+          price_per_unit: number
+          product_name: string
+          quantity?: number
+          store_name?: string | null
+          unit?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          id?: string
+          price?: number
+          price_per_unit?: number
+          product_name?: string
+          quantity?: number
+          store_name?: string | null
+          unit?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
