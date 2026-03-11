@@ -652,7 +652,7 @@ export const translations = {
       todayQuestion: 'Workout today?', addWorkout: 'Add workout', added: 'Workout logged',
       whatWorkout: 'What workout?', editWorkout: 'Edit workout',
       intensityLow: 'Light', intensityMedium: 'Medium', intensityHigh: 'Intense',
-      intensityLowSub: 'Warm-up', intensityMediumSub: 'Normal', intensityHighSub: 'Hard',
+      intensityLowSub: 'Easy breathing, can talk', intensityMediumSub: 'Breathing harder, slightly sweaty', intensityHighSub: 'Hard to breathe, sweating a lot',
       min: 'min', caloriesBurned: 'Calories burned: ~{cal} kcal',
       goalWillIncrease: 'Your goal today will increase: {from} → {to} kcal',
       goalIncreased: 'Goal increased by +{cal} kcal',
