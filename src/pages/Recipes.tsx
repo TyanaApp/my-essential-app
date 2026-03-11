@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useFamily } from '@/hooks/useFamily';
 import { toast } from 'sonner';
-import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -132,7 +132,7 @@ const Recipes = () => {
 
   const handleSaveRecipe = async (recipe: Recipe) => {
     if (!user) return;
-    const limit = PLAN_LIMITS[plan].maxRecipes;
+    const limit = plan === 'free' ? 3 : plan === 'lite' ? 50 : Infinity;
     if (savedRecipes.length >= limit) { setUpgradeOpen(true); return; }
     try {
       const { error } = await supabase.from('recipes').insert({
@@ -559,7 +559,7 @@ const Recipes = () => {
         />
       )}
 
-      <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} title={t.recipes.recipeLimit} description={t.recipes.recipeLimitDesc} suggestedPlan="lite" />
+      <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} />
 
       {/* Unfavorite confirmation dialog */}
       <AnimatePresence>

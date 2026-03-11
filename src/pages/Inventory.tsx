@@ -10,7 +10,7 @@ import ScanModal from '@/components/inventory/ScanModal';
 import PantryQuickAdd from '@/components/inventory/PantryQuickAdd';
 import QuickAddModal from '@/components/inventory/QuickAddModal';
 import BarcodeScannerModal from '@/components/inventory/BarcodeScannerModal';
-import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
 import { getCurrencySymbol } from '@/lib/formatMoney';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -80,7 +80,7 @@ const Inventory = () => {
   const streakT = (t as any).streak || {};
 
   const handleScanClick = async () => {
-    const limit = PLAN_LIMITS[plan].scansPerMonth;
+    const limit = plan === 'free' ? 5 : plan === 'lite' ? 15 : Infinity;
     if (scanCount >= limit) {
       // Try bonus scan first
       const used = await useBonusScan();
@@ -367,9 +367,6 @@ const Inventory = () => {
       <UpgradeModal
         open={upgradeOpen}
         onOpenChange={setUpgradeOpen}
-        title={t.inventory.scanLimit}
-        description={t.inventory.scanLimitDesc}
-        suggestedPlan="lite"
       />
     </div>
   );

@@ -2,17 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
-// New Stripe plans
+// Updated Stripe plans
 export const SUBSCRIPTION_PLANS = {
   lite: {
     priceId: 'price_1T79tP2N2asjxki49FFBKFeL',
     productId: 'prod_U5KY1HNe6IirjK',
     name: 'TYANA Lite',
-    price: 5.99,
+    price: 4.99,
     currency: '€',
     interval: 'month',
-    scansPerMonth: 15,
-    maxRecipes: 50,
   },
   pro_founding: {
     priceId: 'price_1T79ut2N2asjxki45jclLOlc',
@@ -21,31 +19,19 @@ export const SUBSCRIPTION_PLANS = {
     price: 6.49,
     currency: '€',
     interval: 'month',
-    scansPerMonth: Infinity,
-    maxRecipes: Infinity,
     badge: '✅ Early Bird',
   },
   pro_regular: {
     priceId: 'price_1T79vc2N2asjxki4EpkvxSDD',
     productId: 'prod_U5Ka0ihj35s3M0',
     name: 'TYANA Pro',
-    price: 12.99,
+    price: 9.99,
     currency: '€',
     interval: 'month',
-    scansPerMonth: Infinity,
-    maxRecipes: Infinity,
   },
 } as const;
 
 export type PlanType = 'free' | 'lite' | 'pro_founding' | 'pro_regular';
-
-// Plan limits
-export const PLAN_LIMITS: Record<PlanType, { scansPerMonth: number; maxRecipes: number }> = {
-  free: { scansPerMonth: 5, maxRecipes: 3 },
-  lite: { scansPerMonth: 15, maxRecipes: 50 },
-  pro_founding: { scansPerMonth: Infinity, maxRecipes: Infinity },
-  pro_regular: { scansPerMonth: Infinity, maxRecipes: Infinity },
-};
 
 interface SubscriptionStatus {
   subscribed: boolean;

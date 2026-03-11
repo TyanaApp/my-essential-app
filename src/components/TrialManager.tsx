@@ -2,81 +2,53 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
-import { useSubscription } from '@/hooks/useSubscription';
+import TrialExpiredModal from '@/components/TrialExpiredModal';
 
 const T = {
   en: {
     endsIn3: '⏰ Pro trial ends in 3 days',
+    endsIn2: '⏰ Pro trial ends in 2 days',
     endsIn1: '🔔 Pro trial ends tomorrow',
-    endsToday: 'Your Pro trial ends today',
+    endsToday: '🎯 Today is the last day of Pro — don\'t lose access',
     viewPlans: 'View plans',
     choosePlan: 'Choose plan',
-    earlyBirdPro: '👑 Pro €6.49/mo — locked forever',
-    regularPro: '👑 Pro €12.99/mo',
-    lite: '⭐️ Lite €5.99/mo',
-    earlyBirdNote: 'Early Bird Price — locked forever',
-    continueFree: 'Continue Free',
-    expiredTitle: 'Your trial ended',
-    expiredDesc: 'Upgrade to keep Pro features.',
   },
   ru: {
     endsIn3: '⏰ Pro заканчивается через 3 дня',
+    endsIn2: '⏰ Pro заканчивается через 2 дня',
     endsIn1: '🔔 Завтра заканчивается Pro trial',
-    endsToday: 'Ваш Pro trial завершается сегодня',
+    endsToday: '🎯 Сегодня последний день Pro — не теряй доступ',
     viewPlans: 'Посмотреть планы',
     choosePlan: 'Выбрать план',
-    earlyBirdPro: '👑 Pro €6.49/мес — навсегда',
-    regularPro: '👑 Pro €12.99/мес',
-    lite: '⭐️ Lite €5.99/мес',
-    earlyBirdNote: 'Цена раннего доступа — навсегда',
-    continueFree: 'Продолжить бесплатно',
-    expiredTitle: 'Ваш пробный период завершён',
-    expiredDesc: 'Обновите подписку, чтобы сохранить Pro функции.',
   },
   lv: {
     endsIn3: '⏰ Pro beidzas pēc 3 dienām',
+    endsIn2: '⏰ Pro beidzas pēc 2 dienām',
     endsIn1: '🔔 Pro rīt beidzas',
-    endsToday: 'Jūsu Pro beidzas šodien',
+    endsToday: '🎯 Šodien pēdējā Pro diena — nezaudē piekļuvi',
     viewPlans: 'Skatīt plānus',
     choosePlan: 'Izvēlēties plānu',
-    earlyBirdPro: '👑 Pro €6.49/mēn — uz visiem laikiem',
-    regularPro: '👑 Pro €12.99/mēn',
-    lite: '⭐️ Lite €5.99/mēn',
-    earlyBirdNote: 'Agrīnā piekļuve — uz visiem laikiem',
-    continueFree: 'Turpināt bez maksas',
-    expiredTitle: 'Jūsu izmēģinājums beidzies',
-    expiredDesc: 'Uzlabojiet, lai saglabātu Pro funkcijas.',
   },
   uk: {
     endsIn3: '⏰ Pro закінчується через 3 дні',
+    endsIn2: '⏰ Pro закінчується через 2 дні',
     endsIn1: '🔔 Завтра закінчується Pro trial',
-    endsToday: 'Ваш Pro trial завершується сьогодні',
+    endsToday: '🎯 Сьогодні останній день Pro — не втрать доступ',
     viewPlans: 'Переглянути плани',
     choosePlan: 'Обрати план',
-    earlyBirdPro: '👑 Pro €6.49/міс — назавжди',
-    regularPro: '👑 Pro €12.99/міс',
-    lite: '⭐️ Lite €5.99/міс',
-    earlyBirdNote: 'Ціна раннього доступу — назавжди',
-    continueFree: 'Продовжити безкоштовно',
-    expiredTitle: 'Пробний період закінчився',
-    expiredDesc: 'Оновіть підписку, щоб зберегти Pro функції.',
   },
 };
 
 const BANNER_DISMISS_KEY = 'trial_banner_dismissed';
 const MODAL_SESSION_KEY = 'trial_expired_shown';
-const COOLDOWN_MS = 86400000; // 24 hours
+const COOLDOWN_MS = 86400000;
 
 const TrialManager = () => {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const { language } = useLanguage();
-  const navigate = useNavigate();
   const location = useLocation();
-  const { createCheckout } = useSubscription();
   const [showExpiredModal, setShowExpiredModal] = useState(false);
   const [trialDaysLeft, setTrialDaysLeft] = useState<number | null>(null);
   const [isFoundingMember, setIsFoundingMember] = useState(false);
@@ -87,7 +59,6 @@ const TrialManager = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Check if banner was dismissed within 24h
     const dismissedAt = localStorage.getItem(BANNER_DISMISS_KEY);
     if (dismissedAt && Date.now() - Number(dismissedAt) < COOLDOWN_MS) {
       setBannerDismissed(true);
@@ -109,10 +80,13 @@ const TrialManager = () => {
         const now = new Date();
 
         if (trialEnd < now) {
-          // Trial expired
-          await supabase.rpc('expire_trial' as any);
+          // Expire via edge function (service_role)
+          if (session?.access_token) {
+            await supabase.functions.invoke('expire-trial', {
+              headers: { Authorization: `Bearer ${session.access_token}` },
+            });
+          }
 
-          // Show modal ONCE per session, only on dashboard
           const shown = sessionStorage.getItem(MODAL_SESSION_KEY);
           if (!shown && location.pathname === '/dashboard') {
             setShowExpiredModal(true);
@@ -121,14 +95,12 @@ const TrialManager = () => {
         } else {
           const msLeft = trialEnd.getTime() - now.getTime();
           const daysLeft = Math.ceil(msLeft / 86400000);
-          if (daysLeft <= 3) {
-            setTrialDaysLeft(daysLeft);
-          }
+          if (daysLeft <= 3) setTrialDaysLeft(daysLeft);
         }
-      } else if (profile.subscription_status === 'expired') {
-        // Already expired — show modal once per session on dashboard only
+      } else if (profile.subscription_status === 'expired' || (profile.subscription_status === 'free' && profile.subscription_plan === 'free')) {
+        // Check if just expired
         const shown = sessionStorage.getItem(MODAL_SESSION_KEY);
-        if (!shown && location.pathname === '/dashboard') {
+        if (!shown && location.pathname === '/dashboard' && profile.subscription_status === 'expired') {
           setShowExpiredModal(true);
           sessionStorage.setItem(MODAL_SESSION_KEY, '1');
         }
@@ -136,23 +108,14 @@ const TrialManager = () => {
     };
 
     checkTrial();
-  }, [user, location.pathname]);
+  }, [user, location.pathname, session]);
 
   const handleUpgrade = () => {
     setShowExpiredModal(false);
-    navigate('/profile');
-    setTimeout(() => {
-      const event = new CustomEvent('open-payments');
-      window.dispatchEvent(event);
-    }, 500);
-  };
-
-  const handleCheckout = async (planType: 'lite' | 'pro_founding' | 'pro_regular') => {
-    try {
-      await createCheckout(planType);
-      setShowExpiredModal(false);
-    } catch {
-      handleUpgrade();
+    const event = new CustomEvent('open-payments');
+    window.dispatchEvent(event);
+    if (!window.location.pathname.includes('/profile')) {
+      window.location.href = '/profile';
     }
   };
 
@@ -167,7 +130,7 @@ const TrialManager = () => {
     !['/auth', '/onboarding', '/'].includes(location.pathname);
 
   const getBannerColor = () => {
-    if (trialDaysLeft === 0) return '#DC2626';
+    if (trialDaysLeft === 0) return '#7C3AED';
     if (trialDaysLeft === 1) return '#EA580C';
     return '#CA8A04';
   };
@@ -175,6 +138,7 @@ const TrialManager = () => {
   const getBannerText = () => {
     if (trialDaysLeft === 0) return t.endsToday;
     if (trialDaysLeft === 1) return t.endsIn1;
+    if (trialDaysLeft === 2) return t.endsIn2;
     return t.endsIn3;
   };
 
@@ -202,40 +166,12 @@ const TrialManager = () => {
         </div>
       )}
 
-      <Dialog open={showExpiredModal} onOpenChange={setShowExpiredModal}>
-        <DialogContent className="bg-card border-border max-w-sm text-center">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold">{t.expiredTitle}</DialogTitle>
-          </DialogHeader>
-          <p className="text-muted-foreground text-sm py-2">{t.expiredDesc}</p>
-          <div className="flex flex-col gap-2 mt-2">
-            <Button
-              onClick={() => handleCheckout(isFoundingMember ? 'pro_founding' : 'pro_regular')}
-              className="w-full font-semibold text-white"
-              style={{ backgroundColor: '#7C3AED' }}
-            >
-              {isFoundingMember ? t.earlyBirdPro : t.regularPro}
-            </Button>
-            <Button
-              onClick={() => handleCheckout('lite')}
-              variant="outline"
-              className="w-full font-semibold"
-            >
-              {t.lite}
-            </Button>
-            {isFoundingMember && (
-              <p className="text-xs text-green-600 font-medium">{t.earlyBirdNote}</p>
-            )}
-            <Button
-              variant="ghost"
-              onClick={() => setShowExpiredModal(false)}
-              className="w-full text-muted-foreground"
-            >
-              {t.continueFree}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <TrialExpiredModal
+        open={showExpiredModal}
+        onOpenChange={setShowExpiredModal}
+        isFoundingMember={isFoundingMember}
+        onUpgrade={handleUpgrade}
+      />
     </>
   );
 };
