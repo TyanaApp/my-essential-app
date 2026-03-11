@@ -367,9 +367,6 @@ const Inventory = () => {
       <UpgradeModal
         open={upgradeOpen}
         onOpenChange={setUpgradeOpen}
-        title={t.inventory.scanLimit}
-        description={t.inventory.scanLimitDesc}
-        suggestedPlan="lite"
       />
     </div>
   );

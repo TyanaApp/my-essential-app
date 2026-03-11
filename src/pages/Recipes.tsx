@@ -559,7 +559,7 @@ const Recipes = () => {
         />
       )}
 
-      <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} title={t.recipes.recipeLimit} description={t.recipes.recipeLimitDesc} suggestedPlan="lite" />
+      <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} />
 
       {/* Unfavorite confirmation dialog */}
       <AnimatePresence>
