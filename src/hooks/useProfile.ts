@@ -10,6 +10,10 @@ export interface Profile {
   gender: string | null;
   birth_date: string | null;
   avatar_url: string | null;
+  trial_end: string | null;
+  subscription_plan: string | null;
+  subscription_status: string | null;
+  is_founding_member: boolean | null;
 }
 
 export const useProfile = () => {
