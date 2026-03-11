@@ -321,6 +321,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          barcode_scans_used: number | null
           bio: string | null
           birth_date: string | null
           bonus_scans: number | null
@@ -330,9 +331,13 @@ export type Database = {
           display_name: string | null
           family_id: string | null
           family_role: string | null
+          fridge_scans_used: number | null
           gender: string | null
           id: string
           is_founding_member: boolean | null
+          monthly_fridge_scans: number | null
+          monthly_receipt_scans: number | null
+          monthly_reset_date: string | null
           onboarding_completed: boolean | null
           store_integration_waitlist: boolean | null
           streak_badges: string[] | null
@@ -343,6 +348,7 @@ export type Database = {
           subscription_plan: string | null
           subscription_status: string | null
           trial_end: string | null
+          trial_started_at: string | null
           trial_used: boolean | null
           updated_at: string
           user_id: string
@@ -351,6 +357,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          barcode_scans_used?: number | null
           bio?: string | null
           birth_date?: string | null
           bonus_scans?: number | null
@@ -360,9 +367,13 @@ export type Database = {
           display_name?: string | null
           family_id?: string | null
           family_role?: string | null
+          fridge_scans_used?: number | null
           gender?: string | null
           id?: string
           is_founding_member?: boolean | null
+          monthly_fridge_scans?: number | null
+          monthly_receipt_scans?: number | null
+          monthly_reset_date?: string | null
           onboarding_completed?: boolean | null
           store_integration_waitlist?: boolean | null
           streak_badges?: string[] | null
@@ -373,6 +384,7 @@ export type Database = {
           subscription_plan?: string | null
           subscription_status?: string | null
           trial_end?: string | null
+          trial_started_at?: string | null
           trial_used?: boolean | null
           updated_at?: string
           user_id: string
@@ -381,6 +393,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          barcode_scans_used?: number | null
           bio?: string | null
           birth_date?: string | null
           bonus_scans?: number | null
@@ -390,9 +403,13 @@ export type Database = {
           display_name?: string | null
           family_id?: string | null
           family_role?: string | null
+          fridge_scans_used?: number | null
           gender?: string | null
           id?: string
           is_founding_member?: boolean | null
+          monthly_fridge_scans?: number | null
+          monthly_receipt_scans?: number | null
+          monthly_reset_date?: string | null
           onboarding_completed?: boolean | null
           store_integration_waitlist?: boolean | null
           streak_badges?: string[] | null
@@ -403,6 +420,7 @@ export type Database = {
           subscription_plan?: string | null
           subscription_status?: string | null
           trial_end?: string | null
+          trial_started_at?: string | null
           trial_used?: boolean | null
           updated_at?: string
           user_id?: string
@@ -655,6 +673,33 @@ export type Database = {
           message?: string
           status?: string | null
           subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      usage_tracking: {
+        Row: {
+          date: string
+          gpt_calls_today: number
+          id: string
+          last_reset_date: string
+          recipes_shown_today: number
+          user_id: string
+        }
+        Insert: {
+          date?: string
+          gpt_calls_today?: number
+          id?: string
+          last_reset_date?: string
+          recipes_shown_today?: number
+          user_id: string
+        }
+        Update: {
+          date?: string
+          gpt_calls_today?: number
+          id?: string
+          last_reset_date?: string
+          recipes_shown_today?: number
           user_id?: string
         }
         Relationships: []
