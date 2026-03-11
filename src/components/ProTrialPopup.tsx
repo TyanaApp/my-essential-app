@@ -93,12 +93,7 @@ const ProTrialPopup = () => {
 
   const handleTryPro = async () => {
     if (!user) return;
-    await supabase.from('profiles').update({
-      subscription_plan: 'pro',
-      subscription_status: 'trial',
-      trial_end: new Date(Date.now() + 7 * 86400000).toISOString(),
-    } as any).eq('user_id', user.id);
-
+    await supabase.rpc('activate_trial');
     localStorage.setItem('trial_popup_shown', '1');
     setShow(false);
     toast.success(t.activated);
