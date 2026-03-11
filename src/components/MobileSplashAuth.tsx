@@ -295,6 +295,7 @@ const MobileSplashAuth: React.FC = () => {
                     {showPassword ? '🙈' : '👁'}
                   </button>
                 </div>
+                {isSignUp && <PasswordStrengthIndicator password={password} labels={{ weak: t.auth.passwordStrengthWeak, medium: t.auth.passwordStrengthMedium, strong: t.auth.passwordStrengthStrong }} />}
                 {errors.password && <p className="text-red-300 text-xs mt-1 ml-1">{errors.password}</p>}
               </div>
 
