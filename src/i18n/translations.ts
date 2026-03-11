@@ -1902,6 +1902,10 @@ export const translations = {
       userAlreadyRegistered: 'Цей email вже зареєстрований. Спробуйте увійти.',
       invalidCredentials: 'Невірний email або пароль.', emailNotConfirmed: 'Підтвердіть email перед входом.',
       rateLimited: 'Забагато спроб. Зачекайте трохи.', checkEmail: 'Перевірте пошту для підтвердження акаунту ✉️',
+      passwordTooWeak: 'Пароль занадто простий. Мінімум 8 символів, цифра і літера',
+      passwordStrengthWeak: 'Слабкий',
+      passwordStrengthMedium: 'Середній',
+      passwordStrengthStrong: 'Надійний',
     },
     update: {
       title: '✨ Нова версія TYANA готова!',
