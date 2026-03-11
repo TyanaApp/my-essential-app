@@ -53,6 +53,7 @@ const CURRENCY_OPTIONS = [
 
 const ReceiptScanModal = ({ open, onClose, onSaved }: Props) => {
   const { user } = useAuth();
+  const { saveBatchPrices } = usePriceMemory();
   const { t } = useTranslation();
   const { language } = useLanguage();
   const receipt = (t as any).receipt || {};
