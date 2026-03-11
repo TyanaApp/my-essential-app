@@ -93,10 +93,15 @@ const ProTrialPopup = () => {
 
   const handleTryPro = async () => {
     if (!user) return;
-    await supabase.rpc('activate_trial');
+    try {
+      const { error } = await supabase.rpc('activate_trial');
+      if (error) throw error;
+      toast.success(t.activated);
+    } catch (e: any) {
+      console.error('Trial activation failed:', e);
+    }
     localStorage.setItem('trial_popup_shown', '1');
     setShow(false);
-    toast.success(t.activated);
   };
 
   const handleSkip = () => {
