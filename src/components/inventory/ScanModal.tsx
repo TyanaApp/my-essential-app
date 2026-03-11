@@ -145,44 +145,38 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
     setStep(2);
 
     try {
-      const allItems: ScannedItem[] = [];
+      // Send ALL images at once for parallel processing in the edge function
+      const allBase64s = activeSlots.map(slotIdx => base64s[slotIdx]!);
+      
+      setScanProgress(tx.scanningShelf.replace('{current}', '1').replace('{total}', String(activeSlots.length)));
 
-      for (let i = 0; i < activeSlots.length; i++) {
-        const slotIdx = activeSlots[i];
-        const shelfNum = i + 1;
-        setScanProgress(
-          tx.scanningShelf
-            .replace('{current}', String(shelfNum))
-            .replace('{total}', String(activeSlots.length))
-        );
-
-        const { data, error } = await supabase.functions.invoke('scan-fridge', {
-          body: { images: [base64s[slotIdx]], shelfNumber: shelfNum },
+      // Start progress animation
+      const progressInterval = setInterval(() => {
+        setScanProgress(prev => {
+          if (prev.includes('⏳')) return prev.replace('⏳', '🔍');
+          return prev.replace('🔍', '⏳');
         });
+      }, 3000);
 
-        if (error) throw error;
+      const { data, error } = await supabase.functions.invoke('scan-fridge', {
+        body: { images: allBase64s, language },
+      });
 
-        const items: ScannedItem[] = (data?.items || []).map((item: any) => ({
-          name: String(item.name || ''),
-          quantity: Number(item.quantity) || 1,
-          unit: units.some(u => u.value === item.unit) ? item.unit : 'pcs',
-          category: CATEGORIES_DATA.some(c => c.id === item.category) ? item.category : 'other',
-          storage_location: 'fridge',
-          unknown: Boolean(item.unknown),
-          shelf: shelfNum,
-        }));
+      clearInterval(progressInterval);
 
-        // Deduplicate against already found items
-        for (const newItem of items) {
-          const isDup = allItems.some(
-            existing => existing.name.toLowerCase().trim() === newItem.name.toLowerCase().trim()
-          );
-          if (!isDup) allItems.push(newItem);
-        }
-      }
+      if (error) throw error;
 
-      setScanProgress(tx.scanDone.replace('{count}', String(allItems.length)));
-      setScannedItems(allItems);
+      const items: ScannedItem[] = (data?.items || []).map((item: any) => ({
+        name: String(item.name || ''),
+        quantity: Number(item.quantity) || 1,
+        unit: units.some(u => u.value === item.unit) ? item.unit : 'pcs',
+        category: CATEGORIES_DATA.some(c => c.id === item.category) ? item.category : 'other',
+        storage_location: 'fridge',
+        unknown: Boolean(item.unknown),
+      }));
+
+      setScanProgress(tx.scanDone.replace('{count}', String(items.length)));
+      setScannedItems(items);
       setTimeout(() => setStep(3), 800);
     } catch (err) {
       console.error('Scan error:', err);
