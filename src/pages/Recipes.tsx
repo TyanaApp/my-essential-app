@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useFamily } from '@/hooks/useFamily';
 import { toast } from 'sonner';
-import { useSubscription, PLAN_LIMITS } from '@/hooks/useSubscription';
+import { useSubscription } from '@/hooks/useSubscription';
 import UpgradeModal from '@/components/UpgradeModal';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useTranslation } from '@/hooks/useTranslation';
