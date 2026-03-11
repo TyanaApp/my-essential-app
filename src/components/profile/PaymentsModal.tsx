@@ -477,7 +477,7 @@ const PaymentsModal: React.FC<PaymentsModalProps> = ({ open, onOpenChange }) => 
                 disabled={!!processingPlan}
               >
                 {processingPlan === 'lite' ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
-                {plan === 'free' || subscriptionStatus === 'trial' ? t.startTrial : t.switchToLite}
+                {subscriptionStatus === 'trial' ? t.switchToLite : plan === 'pro_founding' || plan === 'pro_regular' ? t.switchToLite : t.getLite}
               </Button>
             )}
           </div>
