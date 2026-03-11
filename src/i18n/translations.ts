@@ -386,6 +386,10 @@ export const translations = {
         proRegular: ['Unlimited scans & recipes', 'Advanced AI insights', 'Priority support', 'Family sharing', 'Custom reports'],
       },
     },
+    planBanner: {
+      freePlan: 'Free plan', upgradePlan: 'Upgrade plan', trial: 'trial',
+      daysLeft: 'Days left', choosePlan: 'Choose a plan', perMonth: 'mo', forever: 'forever',
+    },
     upgrade: {
       upgradeTo: 'Upgrade to',
       maybeLater: 'Maybe later',
@@ -997,7 +1001,11 @@ export const translations = {
         lite: ['15 сканирований/мес', '50 рецептов', 'Базовые ИИ-подсказки', 'Список покупок'],
         proFounder: ['🏆 Цена основателя — навсегда', 'Безлимитные сканирования и рецепты', 'Продвинутый ИИ-анализ', 'Приоритетная поддержка', 'Семейный доступ'],
         proRegular: ['Безлимитные сканирования и рецепты', 'Продвинутый ИИ-анализ', 'Приоритетная поддержка', 'Семейный доступ', 'Персональные отчёты'],
-      },
+    },
+    planBanner: {
+      freePlan: 'Бесплатный план', upgradePlan: 'Улучшить план', trial: 'пробный период',
+      daysLeft: 'Осталось дней', choosePlan: 'Выбрать план', perMonth: 'мес', forever: 'навсегда',
+    },
     },
     upgrade: { upgradeTo: 'Перейти на', maybeLater: 'Позже' },
     install: {
@@ -1570,6 +1578,10 @@ export const translations = {
         proRegular: ['Neierobežotas skenēšanas un receptes', 'Uzlabota AI analīze', 'Prioritāra atbalsts', 'Ģimenes koplietošana', 'Pielāgoti pārskati'],
       },
     },
+    planBanner: {
+      freePlan: 'Bezmaksas plāns', upgradePlan: 'Uzlabot plānu', trial: 'izmēģinājums',
+      daysLeft: 'Atlikušās dienas', choosePlan: 'Izvēlēties plānu', perMonth: 'mēn', forever: 'uz mūžu',
+    },
     upgrade: { upgradeTo: 'Uzlabot uz', maybeLater: 'Varbūt vēlāk' },
     install: {
       addToHome: '📲 Pievienot TYANA sākuma ekrānam', installBtn: 'Instalēt', modalTitle: 'Instalējiet TYANA savā tālrunī',
@@ -2141,6 +2153,10 @@ export const translations = {
         proFounder: ['🏆 Ціна засновника — назавжди', 'Безлімітні сканування і рецепти', 'Просунутий ШІ-аналіз', 'Пріоритетна підтримка', 'Сімейний доступ'],
         proRegular: ['Безлімітні сканування і рецепти', 'Просунутий ШІ-аналіз', 'Пріоритетна підтримка', 'Сімейний доступ', 'Персональні звіти'],
       },
+    },
+    planBanner: {
+      freePlan: 'Безкоштовний план', upgradePlan: 'Покращити план', trial: 'пробний період',
+      daysLeft: 'Залишилось днів', choosePlan: 'Обрати план', perMonth: 'міс', forever: 'назавжди',
     },
     upgrade: { upgradeTo: 'Перейти на', maybeLater: 'Пізніше' },
     install: {

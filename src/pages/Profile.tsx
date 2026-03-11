@@ -31,6 +31,8 @@ import LegalFooterPill from '@/components/LegalFooterPill';
 import StoreDealsCard from '@/components/shopping/StoreDealsCard';
 import { Input } from '@/components/ui/input';
 import { getMealReminderSettings, setMealReminderSettings, type MealReminderSettings } from '@/hooks/useMealReminders';
+import { usePlanLimits } from '@/hooks/usePlanLimits';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge: string }) => {
   const [notify, setNotify] = useState(() => localStorage.getItem(`notify_device_${name}`) === '1');
@@ -184,6 +186,8 @@ const Profile = () => {
   const { settings: notifSettings, updateSettings: updateNotifSettings } = useNotifications();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { plan, isPro, isLite, isFree, isTrial, isFoundingMember } = usePlanLimits();
+  const { subscriptionEnd, openCustomerPortal } = useSubscription();
 
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [accountSettingsOpen, setAccountSettingsOpen] = useState(false);
@@ -322,6 +326,81 @@ const Profile = () => {
             {profile.bio}
           </p>
         )}
+      </motion.div>
+
+      {/* Plan Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="mb-4"
+      >
+        <Card className="bg-card border-border overflow-hidden">
+          <CardContent className="p-4">
+            {isTrial ? (
+              <>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🌟</span>
+                  <span className="font-bold text-foreground">Pro ({(t as any).planBanner?.trial || 'trial'})</span>
+                </div>
+                {profile?.trial_end && (
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {(t as any).planBanner?.daysLeft || 'Days left'}: {Math.max(0, Math.ceil((new Date(profile.trial_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))}
+                  </p>
+                )}
+                <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
+                  {(t as any).planBanner?.choosePlan || 'Choose a plan'}
+                </Button>
+              </>
+            ) : isPro ? (
+              <>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🚀</span>
+                  <span className="font-bold text-foreground">Pro</span>
+                  {isFoundingMember && (
+                    <Badge className="bg-primary/10 text-primary text-[10px]">🌟 Founding</Badge>
+                  )}
+                </div>
+                {isFoundingMember && (
+                  <p className="text-xs text-muted-foreground mb-1">€6.49/{(t as any).planBanner?.perMonth || 'mo'} {(t as any).planBanner?.forever || 'forever'}</p>
+                )}
+                {subscriptionEnd && (
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {(t.payments as any)?.renews || 'Renews'}: {new Date(subscriptionEnd).toLocaleDateString()}
+                  </p>
+                )}
+                <Button size="sm" variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
+                  {(t.payments as any)?.manageSubscription || 'Manage subscription'}
+                </Button>
+              </>
+            ) : isLite ? (
+              <>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">⭐️</span>
+                  <span className="font-bold text-foreground">Lite</span>
+                </div>
+                {subscriptionEnd && (
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {(t.payments as any)?.renews || 'Renews'}: {new Date(subscriptionEnd).toLocaleDateString()}
+                  </p>
+                )}
+                <Button size="sm" variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
+                  {(t.payments as any)?.manageSubscription || 'Manage subscription'}
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🆓</span>
+                  <span className="font-bold text-foreground">{(t as any).planBanner?.freePlan || 'Free plan'}</span>
+                </div>
+                <Button size="sm" className="w-full" onClick={() => setPaymentsOpen(true)}>
+                  ⭐️ {(t as any).planBanner?.upgradePlan || 'Upgrade plan'}
+                </Button>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </motion.div>
 
       {/* Menu Items */}
