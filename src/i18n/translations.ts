@@ -1356,6 +1356,10 @@ export const translations = {
       userAlreadyRegistered: 'Šis e-pasts jau ir reģistrēts.', invalidCredentials: 'Nepareizs e-pasts vai parole.',
       emailNotConfirmed: 'Lūdzu apstipriniet e-pastu pirms ieiet.', rateLimited: 'Pārāk daudz mēģinājumu.',
       checkEmail: 'Pārbaudiet e-pastu, lai apstiprinātu kontu ✉️',
+      passwordTooWeak: 'Parole pārāk vāja. Min 8 simboli, cipars un burts',
+      passwordStrengthWeak: 'Vāja',
+      passwordStrengthMedium: 'Vidēja',
+      passwordStrengthStrong: 'Stipra',
     },
     update: {
       title: '✨ Jauna TYANA versija gatava!',
