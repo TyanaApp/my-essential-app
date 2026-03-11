@@ -41,7 +41,7 @@ const MobileSplashAuth: React.FC = () => {
   const { signIn, signUp, signInWithGoogle } = useAuth();
 
   const emailSchema = z.string().email();
-  const passwordSchema = z.string().min(6);
+  const passwordSchema = z.string().min(8);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [view, setView] = useState<AuthView>('main');
