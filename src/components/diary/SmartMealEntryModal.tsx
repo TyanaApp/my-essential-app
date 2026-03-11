@@ -29,7 +29,7 @@ interface MealResult {
   meal_name: string;
   identified_as?: string;
   quantity_used?: string;
-  portion_description: string;
+  portion_description?: string;
   total_calories: number;
   protein: number;
   fat: number;
@@ -39,7 +39,7 @@ interface MealResult {
   breakdown?: BreakdownItem[];
   data_source?: string;
   confidence: 'high' | 'medium' | 'low';
-  note: string;
+  note?: string;
 }
 
 // Cache helpers
