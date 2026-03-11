@@ -810,6 +810,10 @@ export const translations = {
       emailNotConfirmed: 'Подтвердите email перед входом.',
       rateLimited: 'Слишком много попыток. Подождите немного.',
       checkEmail: 'Проверьте почту для подтверждения аккаунта ✉️',
+      passwordTooWeak: 'Пароль слишком простой. Минимум 8 символов, цифра и буква',
+      passwordStrengthWeak: 'Слабый',
+      passwordStrengthMedium: 'Средний',
+      passwordStrengthStrong: 'Надёжный',
     },
     update: {
       title: '✨ Новая версия TYANA готова!',
