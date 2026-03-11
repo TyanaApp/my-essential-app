@@ -417,7 +417,8 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                   </div>
                 ))}
               </div>
-              <p className="text-center text-sm font-medium text-muted-foreground">{scanProgress || t.scan.aiAnalyzing}</p>
+              <p className="text-center text-sm font-medium text-muted-foreground mb-3">{scanProgress || t.scan.aiAnalyzing}</p>
+              <ScanTipRotator tips={tips} />
             </div>
           )}
 
