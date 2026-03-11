@@ -84,6 +84,19 @@ const TEXTS: Record<string, Record<string, string>> = {
   },
 };
 
+const ScanTipRotator = ({ tips }: { tips: string[] }) => {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setIdx(i => (i + 1) % tips.length), 4000);
+    return () => clearInterval(interval);
+  }, [tips.length]);
+  return (
+    <p className="text-center text-xs text-muted-foreground/70 italic px-4 transition-opacity duration-300">
+      💡 {tips[idx]}
+    </p>
+  );
+};
+
 interface ScanModalProps {
   open: boolean;
   onClose: () => void;
