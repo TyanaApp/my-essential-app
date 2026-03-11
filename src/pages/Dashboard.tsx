@@ -142,6 +142,32 @@ const Dashboard = () => {
   const [tipLoading, setTipLoading] = useState(false);
   const [workoutBurned, setWorkoutBurned] = useState(0);
 
+  // Recipe dismiss logic with daily reset
+  const [dismissedRecipes, setDismissedRecipes] = useState<string[]>(() => {
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem('recipe_ideas_reset_date');
+    if (lastReset !== today) {
+      localStorage.removeItem('dismissed_recipe_ideas');
+      localStorage.setItem('recipe_ideas_reset_date', today);
+      return [];
+    }
+    try {
+      const saved = localStorage.getItem('dismissed_recipe_ideas');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+  const [dismissingId, setDismissingId] = useState<string | null>(null);
+
+  const dismissRecipe = (recipeId: string) => {
+    setDismissingId(recipeId);
+    setTimeout(() => {
+      const updated = [...dismissedRecipes, recipeId];
+      setDismissedRecipes(updated);
+      localStorage.setItem('dismissed_recipe_ideas', JSON.stringify(updated));
+      setDismissingId(null);
+    }, 300);
+  };
+
   const getGreeting = () => {
     const h = new Date().getHours();
     if (h < 12) return t.dashboard.morning;
