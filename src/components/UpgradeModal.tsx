@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,37 +18,24 @@ const T = {
     currentPlan: 'Current plan',
     subscribe: 'Subscribe',
     manageSub: 'Manage subscription',
-    // Plan names
-    freeName: 'Free',
-    freeTag: 'Try it',
-    liteName: 'Lite',
-    liteTag: 'For yourself',
-    proName: 'Pro',
-    proTag: '🌟 Best value',
+    downgradeToFree: 'Downgrade to Free',
+    switchToLite: 'Switch to Lite — €4.99/mo',
+    downgradeToLite: 'Downgrade to Lite',
+    getLite: 'Get Lite — €4.99/mo',
+    getPro: '🚀 Get Pro — €6.49/mo',
+    tryPro7: '🚀 Try Pro free for 7 days',
+    getProSubscribe: '🚀 Subscribe to Pro — €6.49/mo',
+    freeName: 'Free', freeTag: 'Try it',
+    liteName: 'Lite', liteTag: 'For yourself',
+    proName: 'Pro', proTag: '🌟 Best value',
     foundingTag: '🌟 Early access price',
-    spotsLeft: 'spots left',
-    forever: 'forever',
-    perMonth: '/mo',
-    // Feature labels
-    fProducts: 'products',
-    fShopping: 'shopping items',
-    fAiDaily: 'AI requests/day',
-    fRecipesDaily: 'recipes/day',
-    fFridgeScans: 'fridge scan',
-    fBarcode: 'barcode scans',
-    fReceipts: 'receipt scans',
-    fDiary: 'diary history',
-    fWorkouts: 'Workouts',
-    fFamily: 'Family mode',
-    fMealPlan: 'Meal plan',
-    fAnalytics: 'Analytics',
-    fEmail: 'Email reports',
-    fPriority: 'Priority support',
-    todayOnly: 'Today only',
-    days: 'days',
-    unlimited: 'Unlimited',
-    basic: 'Basic',
-    full: 'Full',
+    spotsLeft: 'spots left', forever: 'forever', perMonth: '/mo',
+    fProducts: 'products', fShopping: 'shopping items', fAiDaily: 'AI requests/day',
+    fRecipesDaily: 'recipes/day', fFridgeScans: 'fridge scan', fBarcode: 'barcode scans',
+    fReceipts: 'receipt scans', fDiary: 'diary history', fWorkouts: 'Workouts',
+    fFamily: 'Family mode', fMealPlan: 'Meal plan', fAnalytics: 'Analytics',
+    fEmail: 'Email reports', fPriority: 'Priority support',
+    todayOnly: 'Today only', days: 'days', unlimited: 'Unlimited', basic: 'Basic', full: 'Full',
   },
   ru: {
     tryFreeTitle: '🎁 Попробуй Pro бесплатно 7 дней',
@@ -59,35 +46,24 @@ const T = {
     currentPlan: 'Текущий план',
     subscribe: 'Подписаться',
     manageSub: 'Управлять подпиской',
-    freeName: 'Free',
-    freeTag: 'Попробовать',
-    liteName: 'Lite',
-    liteTag: 'Для себя',
-    proName: 'Pro',
-    proTag: '🌟 Лучший выбор',
+    downgradeToFree: 'Перейти на Free',
+    switchToLite: 'Перейти на Lite — €4.99/мес',
+    downgradeToLite: 'Понизить до Lite',
+    getLite: 'Перейти на Lite — €4.99/мес',
+    getPro: '🚀 Перейти на Pro — €6.49/мес',
+    tryPro7: '🚀 Попробовать Pro 7 дней бесплатно',
+    getProSubscribe: '🚀 Оформить Pro — €6.49/мес',
+    freeName: 'Free', freeTag: 'Попробовать',
+    liteName: 'Lite', liteTag: 'Для себя',
+    proName: 'Pro', proTag: '🌟 Лучший выбор',
     foundingTag: '🌟 Цена раннего доступа',
-    spotsLeft: 'мест осталось',
-    forever: 'навсегда',
-    perMonth: '/мес',
-    fProducts: 'продуктов',
-    fShopping: 'покупок',
-    fAiDaily: 'ИИ-запросов/день',
-    fRecipesDaily: 'рецептов/день',
-    fFridgeScans: 'скан холодильника',
-    fBarcode: 'сканов штрихкодов',
-    fReceipts: 'сканов чеков',
-    fDiary: 'история дневника',
-    fWorkouts: 'Тренировки',
-    fFamily: 'Семейный режим',
-    fMealPlan: 'План питания',
-    fAnalytics: 'Аналитика',
-    fEmail: 'Отчёты на email',
-    fPriority: 'Приоритетная поддержка',
-    todayOnly: 'Только сегодня',
-    days: 'дней',
-    unlimited: 'Безлимитно',
-    basic: 'Базовая',
-    full: 'Полная',
+    spotsLeft: 'мест осталось', forever: 'навсегда', perMonth: '/мес',
+    fProducts: 'продуктов', fShopping: 'покупок', fAiDaily: 'ИИ-запросов/день',
+    fRecipesDaily: 'рецептов/день', fFridgeScans: 'скан холодильника', fBarcode: 'сканов штрихкодов',
+    fReceipts: 'сканов чеков', fDiary: 'история дневника', fWorkouts: 'Тренировки',
+    fFamily: 'Семейный режим', fMealPlan: 'План питания', fAnalytics: 'Аналитика',
+    fEmail: 'Отчёты на email', fPriority: 'Приоритетная поддержка',
+    todayOnly: 'Только сегодня', days: 'дней', unlimited: 'Безлимитно', basic: 'Базовая', full: 'Полная',
   },
   lv: {
     tryFreeTitle: '🎁 Izmēģini Pro bez maksas 7 dienas',
@@ -98,35 +74,24 @@ const T = {
     currentPlan: 'Pašreizējais plāns',
     subscribe: 'Abonēt',
     manageSub: 'Pārvaldīt abonementu',
-    freeName: 'Free',
-    freeTag: 'Izmēģināt',
-    liteName: 'Lite',
-    liteTag: 'Sev',
-    proName: 'Pro',
-    proTag: '🌟 Labākā vērtība',
+    downgradeToFree: 'Pāriet uz Free',
+    switchToLite: 'Pāriet uz Lite — €4.99/mēn',
+    downgradeToLite: 'Pazemināt uz Lite',
+    getLite: 'Iegūt Lite — €4.99/mēn',
+    getPro: '🚀 Iegūt Pro — €6.49/mēn',
+    tryPro7: '🚀 Izmēģināt Pro 7 dienas bezmaksas',
+    getProSubscribe: '🚀 Iegūt Pro — €6.49/mēn',
+    freeName: 'Free', freeTag: 'Izmēģināt',
+    liteName: 'Lite', liteTag: 'Sev',
+    proName: 'Pro', proTag: '🌟 Labākā vērtība',
     foundingTag: '🌟 Agrīnā piekļuves cena',
-    spotsLeft: 'vietas atlikušas',
-    forever: 'uz visiem laikiem',
-    perMonth: '/mēn',
-    fProducts: 'produkti',
-    fShopping: 'iepirkumu preces',
-    fAiDaily: 'AI pieprasījumi/dienā',
-    fRecipesDaily: 'receptes/dienā',
-    fFridgeScans: 'ledusskapja skenēšana',
-    fBarcode: 'svītrkodu skenēšanas',
-    fReceipts: 'čeku skenēšanas',
-    fDiary: 'dienasgrāmatas vēsture',
-    fWorkouts: 'Treniņi',
-    fFamily: 'Ģimenes režīms',
-    fMealPlan: 'Ēdienreižu plāns',
-    fAnalytics: 'Analītika',
-    fEmail: 'E-pasta atskaites',
-    fPriority: 'Prioritārais atbalsts',
-    todayOnly: 'Tikai šodien',
-    days: 'dienas',
-    unlimited: 'Neierobežoti',
-    basic: 'Pamata',
-    full: 'Pilna',
+    spotsLeft: 'vietas atlikušas', forever: 'uz visiem laikiem', perMonth: '/mēn',
+    fProducts: 'produkti', fShopping: 'iepirkumu preces', fAiDaily: 'AI pieprasījumi/dienā',
+    fRecipesDaily: 'receptes/dienā', fFridgeScans: 'ledusskapja skenēšana', fBarcode: 'svītrkodu skenēšanas',
+    fReceipts: 'čeku skenēšanas', fDiary: 'dienasgrāmatas vēsture', fWorkouts: 'Treniņi',
+    fFamily: 'Ģimenes režīms', fMealPlan: 'Ēdienreižu plāns', fAnalytics: 'Analītika',
+    fEmail: 'E-pasta atskaites', fPriority: 'Prioritārais atbalsts',
+    todayOnly: 'Tikai šodien', days: 'dienas', unlimited: 'Neierobežoti', basic: 'Pamata', full: 'Pilna',
   },
   uk: {
     tryFreeTitle: '🎁 Спробуй Pro безкоштовно 7 днів',
@@ -137,35 +102,24 @@ const T = {
     currentPlan: 'Поточний план',
     subscribe: 'Підписатися',
     manageSub: 'Керувати підпискою',
-    freeName: 'Free',
-    freeTag: 'Спробувати',
-    liteName: 'Lite',
-    liteTag: 'Для себе',
-    proName: 'Pro',
-    proTag: '🌟 Найкращий вибір',
+    downgradeToFree: 'Перейти на Free',
+    switchToLite: 'Перейти на Lite — €4.99/міс',
+    downgradeToLite: 'Знизити до Lite',
+    getLite: 'Перейти на Lite — €4.99/міс',
+    getPro: '🚀 Перейти на Pro — €6.49/міс',
+    tryPro7: '🚀 Спробувати Pro 7 днів безкоштовно',
+    getProSubscribe: '🚀 Оформити Pro — €6.49/міс',
+    freeName: 'Free', freeTag: 'Спробувати',
+    liteName: 'Lite', liteTag: 'Для себе',
+    proName: 'Pro', proTag: '🌟 Найкращий вибір',
     foundingTag: '🌟 Ціна раннього доступу',
-    spotsLeft: 'місць залишилось',
-    forever: 'назавжди',
-    perMonth: '/міс',
-    fProducts: 'продуктів',
-    fShopping: 'покупок',
-    fAiDaily: 'ШІ-запитів/день',
-    fRecipesDaily: 'рецептів/день',
-    fFridgeScans: 'скан холодильника',
-    fBarcode: 'сканів штрихкодів',
-    fReceipts: 'сканів чеків',
-    fDiary: 'історія щоденника',
-    fWorkouts: 'Тренування',
-    fFamily: 'Сімейний режим',
-    fMealPlan: 'План харчування',
-    fAnalytics: 'Аналітика',
-    fEmail: 'Звіти на email',
-    fPriority: 'Пріоритетна підтримка',
-    todayOnly: 'Тільки сьогодні',
-    days: 'днів',
-    unlimited: 'Безлімітно',
-    basic: 'Базова',
-    full: 'Повна',
+    spotsLeft: 'місць залишилось', forever: 'назавжди', perMonth: '/міс',
+    fProducts: 'продуктів', fShopping: 'покупок', fAiDaily: 'ШІ-запитів/день',
+    fRecipesDaily: 'рецептів/день', fFridgeScans: 'скан холодильника', fBarcode: 'сканів штрихкодів',
+    fReceipts: 'сканів чеків', fDiary: 'історія щоденника', fWorkouts: 'Тренування',
+    fFamily: 'Сімейний режим', fMealPlan: 'План харчування', fAnalytics: 'Аналітика',
+    fEmail: 'Звіти на email', fPriority: 'Пріоритетна підтримка',
+    todayOnly: 'Тільки сьогодні', days: 'днів', unlimited: 'Безлімітно', basic: 'Базова', full: 'Повна',
   },
 };
 
@@ -179,9 +133,11 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
   const { language } = useLanguage();
   const { createCheckout, openCustomerPortal, plan: currentStripePlan } = useSubscription();
   const [processing, setProcessing] = useState<string | null>(null);
-  const [trialStatus, setTrialStatus] = useState<'none' | 'active' | 'expired'>('none');
+  const [trialUsed, setTrialUsed] = useState(false);
+  const [isOnTrial, setIsOnTrial] = useState(false);
   const [isFoundingMember, setIsFoundingMember] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<string>('free');
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string>('free');
   const [spotsLeft, setSpotsLeft] = useState<number | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -197,10 +153,11 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
       if (profileRes.data) {
         const p = profileRes.data as any;
         setIsFoundingMember(!!p.is_founding_member);
-        setCurrentPlan(p.subscription_plan || 'free');
-        if (p.subscription_status === 'trial') setTrialStatus('active');
-        else if (p.trial_used) setTrialStatus('expired');
-        else setTrialStatus('none');
+        const plan = p.subscription_plan || 'free';
+        setCurrentPlan(plan);
+        setSubscriptionStatus(p.subscription_status || 'free');
+        setIsOnTrial(p.subscription_status === 'trial');
+        setTrialUsed(!!p.trial_used);
       }
       if (settingsRes.data) {
         const count = parseInt(settingsRes.data.value) || 0;
@@ -238,6 +195,52 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
   if (!loaded && open) return null;
 
   const isPaid = currentStripePlan !== 'free' && currentStripePlan !== undefined;
+  const isOnPro = currentPlan === 'pro' || currentPlan === 'pro_founding';
+  const isOnLite = currentPlan === 'lite';
+  const isOnFree = !isOnPro && !isOnLite;
+
+  // Determine button for each plan card
+  const getPlanButton = (planKey: string) => {
+    if (planKey === 'free') {
+      if (isOnFree && !isOnTrial) {
+        return { text: t.currentPlan, disabled: true, style: 'gray' as const };
+      }
+      if (isOnTrial || isOnLite || isOnPro) {
+        return { text: t.downgradeToFree, disabled: false, style: 'outline' as const };
+      }
+    }
+    if (planKey === 'lite') {
+      if (isOnLite) {
+        return { text: t.currentPlan, disabled: true, style: 'gray' as const };
+      }
+      if (isOnTrial) {
+        return { text: t.switchToLite, disabled: false, style: 'outline' as const };
+      }
+      if (isOnPro) {
+        return { text: t.downgradeToLite, disabled: false, style: 'outline' as const };
+      }
+      return { text: t.getLite, disabled: false, style: 'violet' as const };
+    }
+    if (planKey === 'pro') {
+      if (isOnPro && !isOnTrial) {
+        return { text: t.currentPlan, disabled: true, style: 'gray' as const };
+      }
+      if (isOnTrial) {
+        // User is ON trial — show subscribe button, NOT trial button
+        return { text: t.getProSubscribe, disabled: false, style: 'violet' as const };
+      }
+      if (trialUsed) {
+        // Trial already used — no free trial option
+        return { text: t.getPro, disabled: false, style: 'violet' as const };
+      }
+      // Free user, trial NOT used — show trial offer
+      return { text: t.tryPro7, disabled: false, style: 'violet' as const };
+    }
+    return { text: t.subscribe, disabled: false, style: 'violet' as const };
+  };
+
+  // Show trial banner ONLY when: Free plan AND trial NOT used AND NOT on trial
+  const showTrialBanner = isOnFree && !trialUsed && !isOnTrial;
 
   const FeatureRow = ({ has, label }: { has: boolean | string; label: string }) => (
     <div className="flex items-center gap-2 text-xs">
@@ -248,64 +251,38 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
 
   const plans = [
     {
-      key: 'free',
-      name: t.freeName,
-      tag: t.freeTag,
-      price: '€0',
+      key: 'free', name: t.freeName, tag: t.freeTag, price: '€0',
       features: [
-        { has: '15', label: t.fProducts },
-        { has: '10', label: t.fShopping },
-        { has: '3', label: t.fAiDaily },
-        { has: '1', label: t.fRecipesDaily },
-        { has: '1', label: t.fFridgeScans },
-        { has: '3', label: t.fBarcode },
-        { has: false, label: t.fReceipts },
-        { has: t.todayOnly, label: t.fDiary },
-        { has: false, label: t.fWorkouts },
-        { has: false, label: t.fFamily },
-        { has: false, label: t.fMealPlan },
-        { has: false, label: t.fAnalytics },
+        { has: '15', label: t.fProducts }, { has: '10', label: t.fShopping },
+        { has: '3', label: t.fAiDaily }, { has: '1', label: t.fRecipesDaily },
+        { has: '1', label: t.fFridgeScans }, { has: '3', label: t.fBarcode },
+        { has: false, label: t.fReceipts }, { has: t.todayOnly, label: t.fDiary },
+        { has: false, label: t.fWorkouts }, { has: false, label: t.fFamily },
+        { has: false, label: t.fMealPlan }, { has: false, label: t.fAnalytics },
       ],
     },
     {
-      key: 'lite',
-      name: t.liteName,
-      tag: t.liteTag,
-      price: '€4.99',
+      key: 'lite', name: t.liteName, tag: t.liteTag, price: '€4.99',
       features: [
-        { has: '100', label: t.fProducts },
-        { has: t.unlimited, label: t.fShopping },
-        { has: '10', label: t.fAiDaily },
-        { has: '5', label: t.fRecipesDaily },
-        { has: '10', label: `${t.fFridgeScans}/mo` },
-        { has: t.unlimited, label: t.fBarcode },
-        { has: '10', label: `${t.fReceipts}/mo` },
-        { has: `30 ${t.days}`, label: t.fDiary },
-        { has: true, label: t.fWorkouts },
-        { has: false, label: t.fFamily },
-        { has: false, label: t.fMealPlan },
-        { has: `${t.basic} (7d)`, label: t.fAnalytics },
+        { has: '100', label: t.fProducts }, { has: t.unlimited, label: t.fShopping },
+        { has: '10', label: t.fAiDaily }, { has: '5', label: t.fRecipesDaily },
+        { has: '10', label: `${t.fFridgeScans}/mo` }, { has: t.unlimited, label: t.fBarcode },
+        { has: '10', label: `${t.fReceipts}/mo` }, { has: `30 ${t.days}`, label: t.fDiary },
+        { has: true, label: t.fWorkouts }, { has: false, label: t.fFamily },
+        { has: false, label: t.fMealPlan }, { has: `${t.basic} (7d)`, label: t.fAnalytics },
       ],
     },
     {
-      key: 'pro',
-      name: t.proName,
-      tag: isFoundingMember ? t.foundingTag : t.proTag,
+      key: 'pro', name: t.proName, tag: isFoundingMember ? t.foundingTag : t.proTag,
       price: isFoundingMember ? '€6.49' : '€9.99',
       originalPrice: isFoundingMember ? '€9.99' : undefined,
       features: [
-        { has: t.unlimited, label: t.fProducts },
-        { has: t.unlimited, label: t.fShopping },
-        { has: t.unlimited, label: t.fAiDaily },
-        { has: t.unlimited, label: t.fRecipesDaily },
-        { has: t.unlimited, label: t.fFridgeScans },
-        { has: t.unlimited, label: t.fBarcode },
-        { has: t.unlimited, label: t.fReceipts },
-        { has: t.unlimited, label: t.fDiary },
-        { has: true, label: t.fWorkouts },
-        { has: true, label: t.fFamily },
-        { has: true, label: t.fMealPlan },
-        { has: `${t.full}`, label: t.fAnalytics },
+        { has: t.unlimited, label: t.fProducts }, { has: t.unlimited, label: t.fShopping },
+        { has: t.unlimited, label: t.fAiDaily }, { has: t.unlimited, label: t.fRecipesDaily },
+        { has: t.unlimited, label: t.fFridgeScans }, { has: t.unlimited, label: t.fBarcode },
+        { has: t.unlimited, label: t.fReceipts }, { has: t.unlimited, label: t.fDiary },
+        { has: true, label: t.fWorkouts }, { has: true, label: t.fFamily },
+        { has: true, label: t.fMealPlan }, { has: `${t.full}`, label: t.fAnalytics },
       ],
     },
   ];
@@ -313,8 +290,8 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="bg-card border-border px-4 pb-8 pt-4 max-w-2xl mx-auto max-h-[90vh] overflow-y-auto">
-        {/* Trial offer for new users */}
-        {trialStatus === 'none' && (
+        {/* Trial offer banner — ONLY for free users who haven't used trial */}
+        {showTrialBanner && (
           <div className="text-center mb-6 p-4 rounded-2xl" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)/0.1), hsl(var(--accent)/0.1))' }}>
             <div className="text-4xl mb-2">🎁</div>
             <h3 className="text-lg font-bold text-foreground">{t.tryFreeTitle}</h3>
@@ -334,7 +311,11 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
         {/* Plan cards */}
         <div className="space-y-4">
           {plans.map((p) => {
-            const isCurrent = p.key === currentPlan || (p.key === 'pro' && (currentPlan === 'pro' || currentPlan === 'pro_founding'));
+            const isCurrent = (p.key === 'free' && isOnFree && !isOnTrial) ||
+              (p.key === 'lite' && isOnLite) ||
+              (p.key === 'pro' && isOnPro && !isOnTrial);
+            const btn = getPlanButton(p.key);
+
             return (
               <div
                 key={p.key}
@@ -372,29 +353,37 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
                   ))}
                 </div>
 
-                {isCurrent ? (
+                {/* Button logic */}
+                {btn.disabled ? (
                   <div className="text-center">
-                    {isPaid ? (
+                    {isPaid && p.key !== 'free' ? (
                       <Button variant="outline" className="w-full" onClick={() => openCustomerPortal()}>
                         {t.manageSub}
                       </Button>
                     ) : (
-                      <span className="text-sm font-medium text-muted-foreground">✓ {t.currentPlan}</span>
+                      <span className="text-sm font-medium text-muted-foreground">✓ {btn.text}</span>
                     )}
                   </div>
                 ) : p.key !== 'free' ? (
                   <Button
                     className="w-full text-white"
-                    style={{ backgroundColor: '#7C3AED' }}
+                    style={{ backgroundColor: btn.style === 'violet' ? '#7C3AED' : undefined }}
+                    variant={btn.style === 'outline' ? 'outline' : 'default'}
                     onClick={() => {
-                      if (p.key === 'lite') handleCheckout('lite');
-                      else handleCheckout(isFoundingMember ? 'pro_founding' : 'pro_regular');
+                      // For pro card: if user hasn't used trial and is on free plan, start trial
+                      if (p.key === 'pro' && !trialUsed && isOnFree && !isOnTrial) {
+                        handleStartTrial();
+                      } else if (p.key === 'lite') {
+                        handleCheckout('lite');
+                      } else {
+                        handleCheckout(isFoundingMember ? 'pro_founding' : 'pro_regular');
+                      }
                     }}
                     disabled={!!processing}
                   >
                     {processing && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    <Zap className="w-4 h-4 mr-1" />
-                    {t.subscribe} {p.price}{t.perMonth}
+                    {p.key !== 'free' && btn.style === 'violet' && <Zap className="w-4 h-4 mr-1" />}
+                    {btn.text}
                   </Button>
                 ) : null}
               </div>

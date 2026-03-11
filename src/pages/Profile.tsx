@@ -39,7 +39,7 @@ const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge:
   const handleNotify = (checked: boolean) => {
     setNotify(checked);
     localStorage.setItem(`notify_device_${name}`, checked ? '1' : '0');
-    if (checked) toast.success("We'll notify you when ready!");
+    if (checked) toast.success('✓');
   };
   return (
     <div className="flex items-center justify-between">
