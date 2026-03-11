@@ -2154,6 +2154,10 @@ export const translations = {
         proRegular: ['Безлімітні сканування і рецепти', 'Просунутий ШІ-аналіз', 'Пріоритетна підтримка', 'Сімейний доступ', 'Персональні звіти'],
       },
     },
+    planBanner: {
+      freePlan: 'Безкоштовний план', upgradePlan: 'Покращити план', trial: 'пробний період',
+      daysLeft: 'Залишилось днів', choosePlan: 'Обрати план', perMonth: 'міс', forever: 'назавжди',
+    },
     upgrade: { upgradeTo: 'Перейти на', maybeLater: 'Пізніше' },
     install: {
       addToHome: '📲 Додати TYANA на головний екран', installBtn: 'Встановити', modalTitle: 'Встановіть TYANA на телефон',
