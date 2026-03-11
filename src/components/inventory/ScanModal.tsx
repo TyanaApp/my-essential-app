@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X, Plus, Minus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -84,6 +84,19 @@ const TEXTS: Record<string, Record<string, string>> = {
   },
 };
 
+const ScanTipRotator = ({ tips }: { tips: string[] }) => {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setIdx(i => (i + 1) % tips.length), 4000);
+    return () => clearInterval(interval);
+  }, [tips.length]);
+  return (
+    <p className="text-center text-xs text-muted-foreground/70 italic px-4 transition-opacity duration-300">
+      💡 {tips[idx]}
+    </p>
+  );
+};
+
 interface ScanModalProps {
   open: boolean;
   onClose: () => void;
@@ -96,6 +109,14 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
   const units = getUnits(language);
   const navigate = useNavigate();
   const tx = TEXTS[language] || TEXTS.en;
+
+  const SCAN_TIPS: Record<string, string[]> = {
+    en: ['Good lighting improves recognition', 'Point camera at each shelf separately', 'The closer to products, the more accurate'],
+    ru: ['Хорошее освещение улучшает распознавание', 'Наводи камеру на каждую полку отдельно', 'Чем ближе к продуктам, тем точнее результат'],
+    uk: ['Гарне освітлення покращує розпізнавання', 'Наводь камеру на кожну полицю окремо', 'Чим ближче до продуктів, тим точніший результат'],
+    lv: ['Labs apgaismojums uzlabo atpazīšanu', 'Vērs kameru uz katru plauktu atsevišķi', 'Jo tuvāk produktiem, jo precīzāks rezultāts'],
+  };
+  const tips = SCAN_TIPS[language] || SCAN_TIPS.en;
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [photos, setPhotos] = useState<(string | null)[]>(Array(MAX_SLOTS).fill(null));
@@ -145,44 +166,38 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
     setStep(2);
 
     try {
-      const allItems: ScannedItem[] = [];
+      // Send ALL images at once for parallel processing in the edge function
+      const allBase64s = activeSlots.map(slotIdx => base64s[slotIdx]!);
+      
+      setScanProgress(tx.scanningShelf.replace('{current}', '1').replace('{total}', String(activeSlots.length)));
 
-      for (let i = 0; i < activeSlots.length; i++) {
-        const slotIdx = activeSlots[i];
-        const shelfNum = i + 1;
-        setScanProgress(
-          tx.scanningShelf
-            .replace('{current}', String(shelfNum))
-            .replace('{total}', String(activeSlots.length))
-        );
-
-        const { data, error } = await supabase.functions.invoke('scan-fridge', {
-          body: { images: [base64s[slotIdx]], shelfNumber: shelfNum },
+      // Start progress animation
+      const progressInterval = setInterval(() => {
+        setScanProgress(prev => {
+          if (prev.includes('⏳')) return prev.replace('⏳', '🔍');
+          return prev.replace('🔍', '⏳');
         });
+      }, 3000);
 
-        if (error) throw error;
+      const { data, error } = await supabase.functions.invoke('scan-fridge', {
+        body: { images: allBase64s, language },
+      });
 
-        const items: ScannedItem[] = (data?.items || []).map((item: any) => ({
-          name: String(item.name || ''),
-          quantity: Number(item.quantity) || 1,
-          unit: units.some(u => u.value === item.unit) ? item.unit : 'pcs',
-          category: CATEGORIES_DATA.some(c => c.id === item.category) ? item.category : 'other',
-          storage_location: 'fridge',
-          unknown: Boolean(item.unknown),
-          shelf: shelfNum,
-        }));
+      clearInterval(progressInterval);
 
-        // Deduplicate against already found items
-        for (const newItem of items) {
-          const isDup = allItems.some(
-            existing => existing.name.toLowerCase().trim() === newItem.name.toLowerCase().trim()
-          );
-          if (!isDup) allItems.push(newItem);
-        }
-      }
+      if (error) throw error;
 
-      setScanProgress(tx.scanDone.replace('{count}', String(allItems.length)));
-      setScannedItems(allItems);
+      const items: ScannedItem[] = (data?.items || []).map((item: any) => ({
+        name: String(item.name || ''),
+        quantity: Number(item.quantity) || 1,
+        unit: units.some(u => u.value === item.unit) ? item.unit : 'pcs',
+        category: CATEGORIES_DATA.some(c => c.id === item.category) ? item.category : 'other',
+        storage_location: 'fridge',
+        unknown: Boolean(item.unknown),
+      }));
+
+      setScanProgress(tx.scanDone.replace('{count}', String(items.length)));
+      setScannedItems(items);
       setTimeout(() => setStep(3), 800);
     } catch (err) {
       console.error('Scan error:', err);
@@ -205,7 +220,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
 
       try {
         const { data, error } = await supabase.functions.invoke('scan-fridge', {
-          body: { images: [b64], shelfNumber: shelfNum },
+          body: { images: [b64], shelfNumber: shelfNum, language },
         });
         if (error) throw error;
 
@@ -415,7 +430,8 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
                   </div>
                 ))}
               </div>
-              <p className="text-center text-sm font-medium text-muted-foreground">{scanProgress || t.scan.aiAnalyzing}</p>
+              <p className="text-center text-sm font-medium text-muted-foreground mb-3">{scanProgress || t.scan.aiAnalyzing}</p>
+              <ScanTipRotator tips={tips} />
             </div>
           )}
 

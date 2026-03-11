@@ -142,6 +142,32 @@ const Dashboard = () => {
   const [tipLoading, setTipLoading] = useState(false);
   const [workoutBurned, setWorkoutBurned] = useState(0);
 
+  // Recipe dismiss logic with daily reset
+  const [dismissedRecipes, setDismissedRecipes] = useState<string[]>(() => {
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem('recipe_ideas_reset_date');
+    if (lastReset !== today) {
+      localStorage.removeItem('dismissed_recipe_ideas');
+      localStorage.setItem('recipe_ideas_reset_date', today);
+      return [];
+    }
+    try {
+      const saved = localStorage.getItem('dismissed_recipe_ideas');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+  const [dismissingId, setDismissingId] = useState<string | null>(null);
+
+  const dismissRecipe = (recipeId: string) => {
+    setDismissingId(recipeId);
+    setTimeout(() => {
+      const updated = [...dismissedRecipes, recipeId];
+      setDismissedRecipes(updated);
+      localStorage.setItem('dismissed_recipe_ideas', JSON.stringify(updated));
+      setDismissingId(null);
+    }, 300);
+  };
+
   const getGreeting = () => {
     const h = new Date().getHours();
     if (h < 12) return t.dashboard.morning;
@@ -864,6 +890,9 @@ const Dashboard = () => {
         )}
 
         {/* Card 3 — Recipe Ideas */}
+        {(() => {
+          const visibleRecipes = data.recentRecipes.filter(r => !dismissedRecipes.includes(r.id));
+          return (
         <motion.div {...fadeUp(3)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-foreground">{t.dashboard.ideasToday}</h3>
@@ -875,14 +904,26 @@ const Dashboard = () => {
             </button>
           </div>
 
-          {data.recentRecipes.length > 0 ? (
+          {visibleRecipes.length > 0 ? (
             <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-              {data.recentRecipes.map((r) => (
+              {visibleRecipes.map((r) => (
                 <div
                   key={r.id}
-                  className="shrink-0 w-40 rounded-xl overflow-hidden cursor-pointer bg-secondary border border-border"
+                  className="shrink-0 w-40 rounded-xl overflow-hidden cursor-pointer bg-secondary border border-border relative"
+                  style={{
+                    opacity: dismissingId === r.id ? 0 : 1,
+                    maxHeight: dismissingId === r.id ? 0 : 200,
+                    marginBottom: dismissingId === r.id ? 0 : undefined,
+                    transition: 'opacity 0.3s ease, max-height 0.3s ease, margin-bottom 0.3s ease',
+                  }}
                   onClick={() => navigate('/recipes')}
                 >
+                  <button
+                    onClick={(e) => { e.stopPropagation(); dismissRecipe(r.id); }}
+                    className="absolute top-1 right-1 z-10 w-5 h-5 rounded-full bg-black/50 text-white flex items-center justify-center text-xs hover:bg-black/70 transition-colors"
+                  >
+                    ✕
+                  </button>
                   <img
                     src={`https://source.unsplash.com/400x300/?${encodeURIComponent(r.title + ' food')}`}
                     alt={r.title}
@@ -916,9 +957,10 @@ const Dashboard = () => {
             </button>
           )}
         </motion.div>
+          );
+        })()}
 
 
-        {/* Card 4 — Budget & Savings */}
         <motion.div {...fadeUp(4)} className={`${cardClass} p-5`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-foreground">
