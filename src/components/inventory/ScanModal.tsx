@@ -199,7 +199,7 @@ const ScanModal = ({ open, onClose, onSaved }: ScanModalProps) => {
 
       try {
         const { data, error } = await supabase.functions.invoke('scan-fridge', {
-          body: { images: [b64], shelfNumber: shelfNum },
+          body: { images: [b64], shelfNumber: shelfNum, language },
         });
         if (error) throw error;
 
