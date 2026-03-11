@@ -2354,6 +2354,21 @@ export const translations = {
       scanError: 'Не вдалося зчитати штрихкод', notThis: 'Не те', searching: 'Пошук...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ІІ-оцінка',
     },
+    workout: {
+      todayQuestion: 'Тренування сьогодні?', addWorkout: 'Додати тренування', added: 'Тренування додано',
+      whatWorkout: 'Яке тренування?', editWorkout: 'Редагувати тренування',
+      intensityLow: 'Легка', intensityMedium: 'Середня', intensityHigh: 'Інтенсивна',
+      intensityLowSub: 'Розминка', intensityMediumSub: 'Звичайна', intensityHighSub: 'До поту',
+      min: 'хв', caloriesBurned: 'Калорій спалено: ~{cal} ккал',
+      goalWillIncrease: 'Твоя ціль на сьогодні збільшиться: {from} → {to} ккал',
+      goalIncreased: 'Ціль збільшена на +{cal} ккал',
+      repeatQuestion: 'Повторювати це тренування?', repeatNo: 'Ні', repeatWeekly: 'Щотижня', repeatByDays: 'За днями',
+      saved: 'Тренування збережено ✓', saveFailed: 'Помилка збереження', deleted: 'Тренування видалено ✓',
+      saveWorkout: 'Зберегти тренування', plannedToday: 'Сьогодні заплановано',
+      completed: 'Виконано', skip: 'Пропустити',
+      workoutBurnLabel: '🏋️ +{cal} ккал за тренування',
+      weekSummary: 'Цього тижня: {count} тренувань • -{cal} ккал спалено',
+    },
   },
 } as const;
 
