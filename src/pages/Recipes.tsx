@@ -132,7 +132,7 @@ const Recipes = () => {
 
   const handleSaveRecipe = async (recipe: Recipe) => {
     if (!user) return;
-    const limit = PLAN_LIMITS[plan].maxRecipes;
+    const limit = plan === 'free' ? 3 : plan === 'lite' ? 50 : Infinity;
     if (savedRecipes.length >= limit) { setUpgradeOpen(true); return; }
     try {
       const { error } = await supabase.from('recipes').insert({

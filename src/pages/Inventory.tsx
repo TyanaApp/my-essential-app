@@ -80,7 +80,7 @@ const Inventory = () => {
   const streakT = (t as any).streak || {};
 
   const handleScanClick = async () => {
-    const limit = PLAN_LIMITS[plan].scansPerMonth;
+    const limit = plan === 'free' ? 5 : plan === 'lite' ? 15 : Infinity;
     if (scanCount >= limit) {
       // Try bonus scan first
       const used = await useBonusScan();
