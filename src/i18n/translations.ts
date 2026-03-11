@@ -386,6 +386,10 @@ export const translations = {
         proRegular: ['Unlimited scans & recipes', 'Advanced AI insights', 'Priority support', 'Family sharing', 'Custom reports'],
       },
     },
+    planBanner: {
+      freePlan: 'Free plan', upgradePlan: 'Upgrade plan', trial: 'trial',
+      daysLeft: 'Days left', choosePlan: 'Choose a plan', perMonth: 'mo', forever: 'forever',
+    },
     upgrade: {
       upgradeTo: 'Upgrade to',
       maybeLater: 'Maybe later',
