@@ -330,7 +330,7 @@ const Shopping = () => {
             <span className="text-muted-foreground">{t.shopping.estTotal} {formatMoney(totalEstimated, currency)}</span>
             <span style={{ color: budgetColor }} className="font-semibold">{budgetPct.toFixed(0)}{t.shopping.ofBudget}</span>
           </div>
-          <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+          <div className="h-2 rounded-full bg-muted">
             <div className="h-full rounded-full transition-all duration-500" style={{ backgroundColor: budgetColor, width: `${budgetPct}%` }} />
           </div>
         </motion.div>
