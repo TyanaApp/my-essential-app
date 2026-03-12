@@ -147,13 +147,16 @@ If no tip passes all gates, return:
     }
 
     const data = await response.json();
-    let result: any = {};
+    let result: any = { confidence: "low", tip: null, title: null };
 
     try {
       const text = data.choices?.[0]?.message?.content || "{}";
-      result = JSON.parse(text.replace(/```json|```/g, "").trim());
+      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      if (parsed && typeof parsed === 'object') {
+        result = { ...result, ...parsed };
+      }
     } catch {
-      result = { confidence: "low", tip: null, title: null };
+      // keep default result
     }
 
     // Server-side quality filter: reject trash/packaging tips
