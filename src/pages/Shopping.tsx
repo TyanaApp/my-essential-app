@@ -388,7 +388,7 @@ const Shopping = () => {
           })}
 
           {purchasedItems.length > 0 && (
-            <motion.div {...fadeUp(4)} style={cardStyle} className="p-4">
+            <motion.div {...fadeUp(4)} style={cardStyle} className="p-4 bg-card">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#059669' }}>
                   <Check className="w-4 h-4" /> {t.shopping.purchased} ({purchasedItems.length})
