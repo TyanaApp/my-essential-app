@@ -513,7 +513,7 @@ const Recipes = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
                       <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
                         className="flex-1 h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
                         {generating ? (
@@ -529,13 +529,14 @@ const Recipes = () => {
                           setUseOnlyInventory(next);
                           localStorage.setItem('only_from_inventory', String(next));
                         }}
-                        className={`shrink-0 inline-flex items-center gap-1.5 rounded-[999px] px-4 py-2 text-xs font-medium transition-all border ${
+                        title={rt.onlyFromHome || 'Only from what I have at home'}
+                        className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-base transition-all border-[1.5px] ${
                           useOnlyInventory
-                            ? 'bg-primary border-primary text-primary-foreground shadow-md'
-                            : 'bg-transparent border-primary text-primary'
+                            ? 'bg-primary border-primary text-primary-foreground shadow-sm'
+                            : 'bg-card border-border text-muted-foreground hover:border-primary hover:text-primary'
                         }`}
                       >
-                        🏠 {rt.onlyFromHome || 'Only from what I have'}
+                        🏠
                       </button>
                     </div>
                   </div>
