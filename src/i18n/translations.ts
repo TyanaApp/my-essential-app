@@ -1943,6 +1943,11 @@ export const translations = {
       emptyFavHint: 'Натисни ♡ на будь-якому рецепті щоб зберегти', loadMore: '+ Показати ще рецепти',
       newRecipes: '🔄 Нові рецепти', cook: '👨‍🍳 Приготувати',
       matchPercent: '{pct}% з продуктів',
+      categoryNowTitle: 'Прямо зараз', categoryNowSub: 'З того що є вдома',
+      categoryBuyTitle: 'Докупити трохи', categoryBuySub: 'Ще смачніше з кількома покупками',
+      buyNeeded: 'Докупити', addToShoppingShort: '+ До списку покупок',
+      noCookableItems: 'Немає продуктів для готування', noCookableHint: 'Ось що можна приготувати якщо докупити',
+      addProducts: '+ Додати продукти',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
