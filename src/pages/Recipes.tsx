@@ -450,6 +450,27 @@ const Recipes = () => {
         </button>
       </div>
 
+      {/* Only from inventory toggle */}
+      {recipeTab === 'suggested' && (
+        <button
+          onClick={() => {
+            const next = !useOnlyInventory;
+            setUseOnlyInventory(next);
+            localStorage.setItem('only_from_inventory', String(next));
+          }}
+          className={`w-full flex items-center justify-between rounded-xl px-4 py-3 mb-4 text-sm font-semibold transition-all border ${
+            useOnlyInventory
+              ? 'bg-primary text-primary-foreground border-primary'
+              : 'bg-secondary text-muted-foreground border-border'
+          }`}
+        >
+          <span>🏠 {rt.onlyFromHome || 'Only from what I have at home'}</span>
+          <div className={`w-10 h-6 rounded-full relative transition-colors ${useOnlyInventory ? 'bg-primary-foreground/30' : 'bg-muted'}`}>
+            <div className={`absolute top-0.5 w-5 h-5 rounded-full transition-transform shadow ${useOnlyInventory ? 'translate-x-[18px] bg-primary-foreground' : 'translate-x-0.5 bg-muted-foreground/50'}`} />
+          </div>
+        </button>
+      )}
+
       {recipeTab === 'suggested' ? (
         <>
           {/* Generation settings */}
