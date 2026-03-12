@@ -61,7 +61,9 @@ const Recipes = () => {
   const [cookingFor, setCookingFor] = useState(2);
   const [selectedMeals, setSelectedMeals] = useState<string[]>(['dinner']);
   const [timeAvailable, setTimeAvailable] = useState('30 min');
-  const [useOnlyInventory, setUseOnlyInventory] = useState(false);
+  const [useOnlyInventory, setUseOnlyInventory] = useState(() => {
+    try { return localStorage.getItem('only_from_inventory') === 'true'; } catch { return false; }
+  });
   const [generating, setGenerating] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 

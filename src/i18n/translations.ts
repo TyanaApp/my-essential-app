@@ -1951,6 +1951,7 @@ export const translations = {
       buyNeeded: 'Докупити', addToShoppingShort: '+ До списку покупок',
       noCookableItems: 'Немає продуктів для готування', noCookableHint: 'Ось що можна приготувати якщо докупити',
       addProducts: '+ Додати продукти',
+      onlyFromHome: 'Тільки з того що є вдома', addProductsEmpty: 'Додай продукти щоб отримати рецепти',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
