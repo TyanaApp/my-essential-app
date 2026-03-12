@@ -278,19 +278,25 @@ const Dashboard = () => {
       // ADAPTIVE CALORIE TARGET: call recalculation every day with full profile analysis
       let caloriesTarget = goalsData?.daily_calories_target || 2000;
       
-      // Check if we need to recalculate today
+      // Always recalculate if new day — never use stale cached value
       const recalcCacheKey = `tyana_calorie_recalc_${user.id}`;
       const cachedRecalc = localStorage.getItem(recalcCacheKey);
       let needsRecalc = true;
       
       if (cachedRecalc) {
         try {
-          const { date, target } = JSON.parse(cachedRecalc);
-          if (date === today && target) {
-            caloriesTarget = target;
+          const parsed = JSON.parse(cachedRecalc);
+          // Only skip recalc if same calendar day AND target exists
+          if (parsed.date === today && parsed.target) {
+            caloriesTarget = parsed.target;
             needsRecalc = false;
+          } else {
+            // Different day — clear stale cache
+            localStorage.removeItem(recalcCacheKey);
           }
-        } catch {}
+        } catch {
+          localStorage.removeItem(recalcCacheKey);
+        }
       }
 
       // Recalculate if needed (once per day, uses full profile analysis)
@@ -378,6 +384,36 @@ const Dashboard = () => {
     };
     load();
   }, [user, language]);
+
+  // Re-check calorie target when app becomes visible (e.g. new day)
+  useEffect(() => {
+    if (!user) return;
+    const handleVisibility = async () => {
+      if (document.visibilityState !== 'visible') return;
+      const today = new Date().toISOString().split('T')[0];
+      const recalcCacheKey = `tyana_calorie_recalc_${user.id}`;
+      const cached = localStorage.getItem(recalcCacheKey);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed.date === today) return; // same day, skip
+        } catch {}
+      }
+      // New day — force recalc
+      localStorage.removeItem(recalcCacheKey);
+      try {
+        const { data: recalcData, error } = await supabase.functions.invoke('recalculate-daily-calories', {});
+        if (!error && recalcData?.target) {
+          localStorage.setItem(recalcCacheKey, JSON.stringify({ date: today, target: recalcData.target, data: recalcData }));
+          setData(prev => prev ? { ...prev, caloriesTarget: recalcData.target } : prev);
+        }
+      } catch (e) {
+        console.error('Visibility recalc error:', e);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [user]);
 
   // Fetch AI advice
   const fetchAdvice = useCallback(async (force = false) => {

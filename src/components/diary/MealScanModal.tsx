@@ -94,8 +94,13 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
         body: { imageBase64: base64, language },
       });
 
-      if (error || data?.error) {
-        toast.error(ms.scanFailed || 'Scan failed');
+      if (error || !data || data?.error) {
+        // Never block user — fall back to manual entry
+        const fallbackMsg = language === 'ru' ? 'Не смогли распознать автоматически. Введите вручную:' :
+          language === 'uk' ? 'Не вдалось розпізнати. Введіть вручну:' :
+          language === 'lv' ? 'Nevarēja atpazīt. Ievadiet manuāli:' :
+          'Could not recognize. Enter manually:';
+        toast(fallbackMsg);
         setStep('capture');
         return;
       }
@@ -104,7 +109,11 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
       setEditName(data.meal_name || '');
       setStep('results');
     } catch {
-      toast.error(ms.scanFailed || 'Scan failed');
+      const fallbackMsg = language === 'ru' ? 'Не смогли распознать автоматически. Введите вручную:' :
+        language === 'uk' ? 'Не вдалось розпізнати. Введіть вручну:' :
+        language === 'lv' ? 'Nevarēja atpazīt. Ievadiet manuāli:' :
+        'Could not recognize. Enter manually:';
+      toast(fallbackMsg);
       setStep('capture');
     }
   };

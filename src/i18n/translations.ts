@@ -794,7 +794,7 @@ export const translations = {
       mealPlaceholder: 'напр. Овсянка с бананом',
     },
     mealScan: {
-      scanMeal: '📸 Сфото блюда', scanMealBtn: '📸',
+      scanMeal: '📸 Фото блюда', scanMealBtn: '📸',
       analyzing: '🤖 Анализируем...', aiFound: '✅ ИИ определил:',
       takePhoto: 'Сфотографируйте ваше блюдо',
       analyzingHint: 'Анализируем блюдо... ~10 секунд',
@@ -1957,7 +1957,7 @@ export const translations = {
       logged: 'записано ✓', meal: 'Страва', kcalUnit: 'ккал', mealPlaceholder: 'напр. Вівсянка з бананом',
     },
     mealScan: {
-      scanMeal: '📸 Сфото страви', scanMealBtn: '📸', analyzing: '🤖 Аналізуємо...', aiFound: '✅ ШІ визначив:',
+      scanMeal: '📸 Фото страви', scanMealBtn: '📸', analyzing: '🤖 Аналізуємо...', aiFound: '✅ ШІ визначив:',
       takePhoto: 'Сфотографуйте вашу страву', analyzingHint: 'Аналізуємо страву... ~10 секунд',
       scanFailed: 'Не вдалося розпізнати. Спробуйте знову.', logThisMeal: 'Записати', editManually: 'Змінити вручну', scanAgain: 'Знову',
       portionEaten: 'Скільки з\'їли:', portionExtra: '150%', portionFull: 'Все', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
