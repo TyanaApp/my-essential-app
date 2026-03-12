@@ -375,10 +375,10 @@ const Shopping = () => {
                         className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-secondary transition-colors">
                         <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0 border-border" />
                         <span className="flex-1 text-sm font-medium truncate text-foreground">{item.name}</span>
-                        <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
-                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
-                        <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-[#EDE9FE]"><Pencil className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} /></button>
-                        <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" style={{ color: '#DC2626' }} /></button>
+                        <span className="text-xs shrink-0 text-muted-foreground">{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
+                        {item.estimated_price && <span className="text-xs shrink-0 text-muted-foreground/70">{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
+                        <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-secondary"><Pencil className="w-3.5 h-3.5 text-primary" /></button>
+                        <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-destructive/10"><Trash2 className="w-3.5 h-3.5 text-destructive" /></button>
                       </motion.div>
                     ))}
                   </AnimatePresence>
