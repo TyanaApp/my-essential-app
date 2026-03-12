@@ -767,6 +767,11 @@ export const translations = {
       emptyFavHint: 'Нажми ♡ на любом рецепте чтобы сохранить', loadMore: '+ Показать ещё рецепты',
       newRecipes: '🔄 Новые рецепты', cook: '👨‍🍳 Приготовить',
       matchPercent: '{pct}% из продуктов',
+      categoryNowTitle: 'Прямо сейчас', categoryNowSub: 'Из того что есть дома',
+      categoryBuyTitle: 'Докупить немного', categoryBuySub: 'Ещё вкуснее с парой покупок',
+      buyNeeded: 'Докупить', addToShoppingShort: '+ В список покупок',
+      noCookableItems: 'В холодильнике нет продуктов для готовки', noCookableHint: 'Вот что можно приготовить если докупить',
+      addProducts: '+ Добавить продукты',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
