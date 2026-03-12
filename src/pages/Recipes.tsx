@@ -452,7 +452,41 @@ const Recipes = () => {
         </button>
       </div>
 
-      {/* Only from inventory toggle - removed, moved next to generate button */}
+      {/* Only from inventory toggle */}
+      {recipeTab === 'suggested' && (
+        <div className="flex gap-1 mb-4 bg-secondary rounded-xl p-1">
+          <button
+            onClick={() => {
+              if (useOnlyInventory) {
+                setUseOnlyInventory(false);
+                localStorage.setItem('only_from_inventory', 'false');
+              }
+            }}
+            className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all"
+            style={{
+              backgroundColor: !useOnlyInventory ? 'hsl(var(--primary))' : 'transparent',
+              color: !useOnlyInventory ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+            }}
+          >
+            {rt.tabSuggested || '✨ All recipes'}
+          </button>
+          <button
+            onClick={() => {
+              if (!useOnlyInventory) {
+                setUseOnlyInventory(true);
+                localStorage.setItem('only_from_inventory', 'true');
+              }
+            }}
+            className="flex-1 py-2 rounded-lg text-sm font-semibold transition-all"
+            style={{
+              backgroundColor: useOnlyInventory ? 'hsl(var(--primary))' : 'transparent',
+              color: useOnlyInventory ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
+            }}
+          >
+            🏠 {rt.onlyFromHome || 'From what I have'}
+          </button>
+        </div>
+      )}
 
       {recipeTab === 'suggested' ? (
         <>
