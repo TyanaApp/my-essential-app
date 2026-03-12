@@ -1874,6 +1874,7 @@ export const translations = {
       per100g: 'Uz 100g', pointCamera: 'Pavērs kameru uz svītrkodu', lookingUp: 'Meklējam produktu...',
       scanError: 'Neizdevās nolasīt svītrkodu', notThis: 'Nav tas', searching: 'Meklē...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 MI novērtējums',
+      cameraPermission: 'Kamerai nav piekļuves',
     },
     workout: {
       todayQuestion: 'Treniņš šodien?', addWorkout: 'Pievienot treniņu', added: 'Treniņš pievienots',
