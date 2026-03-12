@@ -422,7 +422,7 @@ const Shopping = () => {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
-            <DialogTitle style={{ color: '#1E1B4B' }}>{editItem ? t.shopping.editItem : t.shopping.addItemTitle}</DialogTitle>
+            <DialogTitle className="text-foreground">{editItem ? t.shopping.editItem : t.shopping.addItemTitle}</DialogTitle>
             <DialogDescription>{editItem ? t.shopping.editDesc : t.shopping.addDesc}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 mt-2">
