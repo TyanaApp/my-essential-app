@@ -89,7 +89,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           <motion.button
             key={lang.code}
             onClick={() => setLanguage(lang.code)}
-            className={`flex-1 px-4 py-2.5 rounded-[16px] font-exo text-sm font-medium transition-all ${
+            className={`shrink-0 min-w-[80px] px-4 py-2.5 rounded-[16px] font-exo text-sm font-medium transition-all ${
               language === lang.code
                 ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
                 : 'bg-surface/50 text-muted-foreground hover:bg-surface hover:text-foreground border border-border/50'
