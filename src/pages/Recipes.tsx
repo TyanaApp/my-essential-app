@@ -547,32 +547,15 @@ const Recipes = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
-                        className="flex-1 h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
-                        {generating ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                            {t.recipes.generating}
-                          </span>
-                        ) : t.recipes.generateBtn}
-                      </button>
-                      <button
-                        onClick={() => {
-                          const next = !useOnlyInventory;
-                          setUseOnlyInventory(next);
-                          localStorage.setItem('only_from_inventory', String(next));
-                        }}
-                        title={rt.onlyFromHome || 'Only from what I have at home'}
-                        className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xl transition-all border-2 ${
-                          useOnlyInventory
-                            ? 'bg-primary border-primary shadow-md'
-                            : 'bg-transparent border-primary'
-                        }`}
-                      >
-                        🏠
-                      </button>
-                    </div>
+                    <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
+                      className="w-full h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
+                      {generating ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                          {t.recipes.generating}
+                        </span>
+                      ) : t.recipes.generateBtn}
+                    </button>
                   </div>
                 </motion.div>
               )}
