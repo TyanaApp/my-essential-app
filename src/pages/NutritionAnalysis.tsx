@@ -104,8 +104,8 @@ const NutritionAnalysis = () => {
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
-          <ArrowLeft className="w-5 h-5" style={{ color: '#7C3AED' }} />
+        <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-secondary">
+          <ArrowLeft className="w-5 h-5 text-primary" />
         </button>
         <h1 className="text-xl font-bold text-foreground">
           🧠 {tr.fullAnalysis || 'Nutrition Analysis'}
@@ -120,24 +120,24 @@ const NutritionAnalysis = () => {
         <div className="space-y-3">
           <div>
             <div className="flex justify-between text-xs mb-1">
-              <span style={{ color: '#6B7280' }}>{tr.calories || 'Calories'}</span>
+              <span className="text-muted-foreground">{tr.calories || 'Calories'}</span>
               <span className="font-bold" style={{ color: macroColor(macros.calories, macros.targets.calories) }}>
                 {macros.calories} / {macros.targets.calories} kcal
               </span>
             </div>
-            <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+            <div className="h-2 rounded-full bg-muted">
               <div className="h-full rounded-full transition-all duration-500" style={{ backgroundColor: macroColor(macros.calories, macros.targets.calories), width: `${Math.min((macros.calories / macros.targets.calories) * 100, 100)}%` }} />
             </div>
           </div>
           {macroItems.map(m => (
             <div key={m.label}>
               <div className="flex justify-between text-xs mb-1">
-                <span style={{ color: '#6B7280' }}>{m.label}</span>
+                <span className="text-muted-foreground">{m.label}</span>
                 <span className="font-bold" style={{ color: macroColor(m.value, m.target) }}>
                   {m.value} / {m.target}g
                 </span>
               </div>
-              <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+              <div className="h-2 rounded-full bg-muted">
                 <div className="h-full rounded-full transition-all duration-500" style={{ backgroundColor: macroColor(m.value, m.target), width: `${Math.min((m.value / m.target) * 100, 100)}%` }} />
               </div>
             </div>
@@ -146,11 +146,11 @@ const NutritionAnalysis = () => {
       </motion.div>
 
       {/* AI Analysis */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card rounded-2xl p-5 mb-4" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)', borderLeft: '4px solid #7C3AED' }}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card rounded-2xl p-5 mb-4 border-l-4 border-primary" style={{ boxShadow: '0 2px 16px rgba(124,58,237,0.08)' }}>
         {loading ? (
           <div className="flex flex-col items-center py-8 gap-3">
             <div className="w-7 h-7 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
-            <span className="text-sm" style={{ color: '#9CA3AF' }}>{tr.analyzing || 'Analyzing your data...'}</span>
+            <span className="text-sm text-muted-foreground">{tr.analyzing || 'Analyzing your data...'}</span>
           </div>
         ) : (
           <div className="space-y-4">
@@ -179,8 +179,7 @@ const NutritionAnalysis = () => {
       <button
         onClick={fetchAnalysis}
         disabled={loading}
-        className="w-full py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
-        style={{ backgroundColor: '#7C3AED', color: 'white', opacity: loading ? 0.5 : 1 }}
+        className="w-full py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2 bg-primary text-primary-foreground disabled:opacity-50"
       >
         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         {tr.refreshAnalysis || 'Refresh analysis'}

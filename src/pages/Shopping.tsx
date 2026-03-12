@@ -301,19 +301,17 @@ const Shopping = () => {
       </motion.div>
 
       <motion.div {...fadeUp(1)} className="flex flex-wrap items-center gap-2 mb-4">
-        <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: '#7C3AED' }}>
+        <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-primary-foreground bg-primary">
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
         <button onClick={handleVoiceInput}
           disabled={isListening}
-          className="flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all disabled:opacity-50"
-          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}
+          className={`flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all disabled:opacity-50 ${isListening ? 'border-primary bg-primary/15 text-primary' : 'border-border text-muted-foreground'}`}
           aria-label="Voice input">
           {isListening ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : '🎤'}
         </button>
         <button onClick={() => setReceiptModalOpen(true)}
-          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px]"
-          style={{ borderColor: '#DDD6FE', color: '#7C3AED', backgroundColor: '#F5F3FF' }}>
+          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] border-border text-primary bg-secondary">
           🧾 {(t as any).receipt?.scanBtn || 'Scan receipt'}
         </button>
         <div className="flex items-center gap-1.5">
@@ -329,24 +327,24 @@ const Shopping = () => {
       {budget > 0 && (
         <motion.div {...fadeUp(2)} className="mb-5">
           <div className="flex justify-between text-xs mb-1">
-            <span style={{ color: '#6B7280' }}>{t.shopping.estTotal} {formatMoney(totalEstimated, currency)}</span>
+            <span className="text-muted-foreground">{t.shopping.estTotal} {formatMoney(totalEstimated, currency)}</span>
             <span style={{ color: budgetColor }} className="font-semibold">{budgetPct.toFixed(0)}{t.shopping.ofBudget}</span>
           </div>
-          <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+          <div className="h-2 rounded-full bg-muted">
             <div className="h-full rounded-full transition-all duration-500" style={{ backgroundColor: budgetColor, width: `${budgetPct}%` }} />
           </div>
         </motion.div>
       )}
 
       {suggestions.length > 0 && !suggestDismissed && (
-        <motion.div {...fadeUp(2)} className="mb-5 p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: '#FEF3C7', border: '1px solid #FDE68A' }}>
-          <AlertTriangle className="w-5 h-5 shrink-0" style={{ color: '#EA580C' }} />
+        <motion.div {...fadeUp(2)} className="mb-5 p-4 rounded-2xl flex items-center gap-3 bg-warning/10 border border-warning/30">
+          <AlertTriangle className="w-5 h-5 shrink-0 text-warning" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground">{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
-            <p className="text-xs" style={{ color: '#6B7280' }}>{suggestions.slice(0, 3).map((s) => s.name).join(', ')}{suggestions.length > 3 ? '...' : ''}</p>
+            <p className="text-xs text-muted-foreground">{suggestions.slice(0, 3).map((s) => s.name).join(', ')}{suggestions.length > 3 ? '...' : ''}</p>
           </div>
-          <button onClick={handleAddAllSuggestions} className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold text-white" style={{ backgroundColor: '#EA580C' }}>{t.shopping.addAll}</button>
-          <button onClick={() => setSuggestDismissed(true)} className="shrink-0 p-1"><X className="w-4 h-4" style={{ color: '#9CA3AF' }} /></button>
+          <button onClick={handleAddAllSuggestions} className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold text-warning-foreground bg-warning">{t.shopping.addAll}</button>
+          <button onClick={() => setSuggestDismissed(true)} className="shrink-0 p-1"><X className="w-4 h-4 text-muted-foreground" /></button>
         </motion.div>
       )}
 
@@ -374,13 +372,13 @@ const Shopping = () => {
                   <AnimatePresence>
                     {catItems.map((item) => (
                       <motion.div key={item.id} layout initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -60 }}
-                        className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-[#F5F3FF] transition-colors">
-                        <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0" style={{ borderColor: '#DDD6FE' }} />
+                        className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-secondary transition-colors">
+                        <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0 border-border" />
                         <span className="flex-1 text-sm font-medium truncate text-foreground">{item.name}</span>
-                        <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
-                        {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
-                        <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-[#EDE9FE]"><Pencil className="w-3.5 h-3.5" style={{ color: '#7C3AED' }} /></button>
-                        <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-red-50"><Trash2 className="w-3.5 h-3.5" style={{ color: '#DC2626' }} /></button>
+                        <span className="text-xs shrink-0 text-muted-foreground">{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
+                        {item.estimated_price && <span className="text-xs shrink-0 text-muted-foreground/70">{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
+                        <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg hover:bg-secondary"><Pencil className="w-3.5 h-3.5 text-primary" /></button>
+                        <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg hover:bg-destructive/10"><Trash2 className="w-3.5 h-3.5 text-destructive" /></button>
                       </motion.div>
                     ))}
                   </AnimatePresence>
@@ -390,27 +388,27 @@ const Shopping = () => {
           })}
 
           {purchasedItems.length > 0 && (
-            <motion.div {...fadeUp(4)} style={cardStyle} className="p-4">
+            <motion.div {...fadeUp(4)} style={cardStyle} className="p-4 bg-card">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold flex items-center gap-1.5" style={{ color: '#059669' }}>
+                <h3 className="text-sm font-bold flex items-center gap-1.5 text-success">
                   <Check className="w-4 h-4" /> {t.shopping.purchased} ({purchasedItems.length})
                 </h3>
-                <button onClick={handleClearPurchased} className="text-xs font-medium px-3 py-1 rounded-lg" style={{ color: '#DC2626', backgroundColor: '#FEE2E2' }}>
+                <button onClick={handleClearPurchased} className="text-xs font-medium px-3 py-1 rounded-lg text-destructive bg-destructive/10">
                   {t.shopping.clearPurchased}
                 </button>
               </div>
               <div className="space-y-1">
                 {purchasedItems.map((item) => (
                   <div key={item.id} className="flex items-center gap-2 py-2 px-1 rounded-lg">
-                    <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ backgroundColor: '#059669' }}>
-                      <Check className="w-3 h-3 text-white" />
+                    <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded flex items-center justify-center shrink-0 bg-success">
+                      <Check className="w-3 h-3 text-success-foreground" />
                     </button>
-                    <span className="flex-1 text-sm line-through truncate" style={{ color: '#9CA3AF' }}>{item.name}</span>
-                    <span className="text-xs shrink-0" style={{ color: '#D1D5DB' }}>{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
+                    <span className="flex-1 text-sm line-through truncate text-muted-foreground">{item.name}</span>
+                    <span className="text-xs shrink-0 text-muted-foreground/60">{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
                   </div>
                 ))}
               </div>
-              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, currency)}</p>}
+              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium text-success">{t.shopping.spent} {formatMoney(purchasedTotal, currency)}</p>}
             </motion.div>
           )}
         </div>
@@ -424,50 +422,49 @@ const Shopping = () => {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="rounded-2xl max-w-sm">
           <DialogHeader>
-            <DialogTitle style={{ color: '#1E1B4B' }}>{editItem ? t.shopping.editItem : t.shopping.addItemTitle}</DialogTitle>
+            <DialogTitle className="text-foreground">{editItem ? t.shopping.editItem : t.shopping.addItemTitle}</DialogTitle>
             <DialogDescription>{editItem ? t.shopping.editDesc : t.shopping.addDesc}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 mt-2">
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.name}</label>
+              <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.name}</label>
               <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t.shopping.namePlaceholder}
-                className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+                className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-primary border-border bg-secondary text-foreground" />
             </div>
             <div className="flex gap-2">
               <div className="flex-1">
-                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.qty}</label>
+                <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.qty}</label>
                 <input type="number" value={formQty} onChange={(e) => setFormQty(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-primary border-border bg-secondary text-foreground" />
               </div>
               <div className="flex-1">
-                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.unit}</label>
+                <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.unit}</label>
                 <select value={formUnit} onChange={(e) => setFormUnit(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED] appearance-none" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }}>
+                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-primary appearance-none border-border bg-secondary text-foreground">
                   {getUnits(language).map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
                 </select>
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.category}</label>
+              <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.category}</label>
               <div className="flex flex-wrap gap-1.5">
                 {CATEGORIES.map((c) => (
                   <button key={c.id} onClick={() => setFormCategory(c.id)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium border-[1.5px] transition-all"
-                    style={{ borderColor: formCategory === c.id ? '#7C3AED' : '#DDD6FE', backgroundColor: formCategory === c.id ? '#EDE9FE' : 'white', color: formCategory === c.id ? '#7C3AED' : '#6B7280' }}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border-[1.5px] transition-all ${formCategory === c.id ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                     {c.emoji} {c.label}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.estPrice}</label>
+              <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.estPrice}</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium" style={{ color: '#7C3AED' }}>{getCurrencySymbol(currency)}</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-primary">{getCurrencySymbol(currency)}</span>
                 <input type="number" step="0.01" value={formPrice} onChange={(e) => setFormPrice(e.target.value)} placeholder="0.00"
-                  className="w-full h-10 pl-8 pr-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+                  className="w-full h-10 pl-8 pr-3 rounded-xl border text-sm outline-none focus:border-primary border-border bg-secondary text-foreground" />
               </div>
             </div>
-            <button onClick={handleSave} disabled={!formName.trim()} className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{ backgroundColor: '#7C3AED' }}>
+            <button onClick={handleSave} disabled={!formName.trim()} className="w-full h-11 rounded-xl text-sm font-semibold text-primary-foreground disabled:opacity-50 bg-primary">
               {editItem ? t.shopping.update : t.shopping.addToList}
             </button>
           </div>
@@ -477,15 +474,15 @@ const Shopping = () => {
       <Dialog open={!!confirmItem} onOpenChange={() => setConfirmItem(null)}>
         <DialogContent className="rounded-2xl max-w-xs text-center">
           <DialogHeader>
-            <DialogTitle style={{ color: '#1E1B4B' }}>{t.shopping.addToInventory}</DialogTitle>
+            <DialogTitle className="text-foreground">{t.shopping.addToInventory}</DialogTitle>
             <DialogDescription>{t.shopping.addToInventoryDesc.replace('{name}', confirmItem?.name || '')}</DialogDescription>
           </DialogHeader>
           <div className="flex gap-2 mt-3">
-            <button onClick={() => confirmPurchase(true)} className="flex-1 h-10 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: '#059669' }}>
-              <PackagePlus className="w-4 h-4 inline mr-1" /> {t.shopping.yes}
-            </button>
-            <button onClick={() => confirmPurchase(false)} className="flex-1 h-10 rounded-xl text-sm font-semibold border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
-              {t.shopping.no}
+             <button onClick={() => confirmPurchase(true)} className="flex-1 h-10 rounded-xl text-sm font-semibold text-success-foreground bg-success">
+               <PackagePlus className="w-4 h-4 inline mr-1" /> {t.shopping.yes}
+             </button>
+             <button onClick={() => confirmPurchase(false)} className="flex-1 h-10 rounded-xl text-sm font-semibold border-[1.5px] border-border text-muted-foreground">
+               {t.shopping.no}
             </button>
           </div>
         </DialogContent>
