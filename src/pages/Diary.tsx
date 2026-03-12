@@ -238,8 +238,8 @@ const Diary = () => {
                             {(entry.total_carbs ?? 0) > 0 && ` · ${(t.mealPlan as any)?.carbsShort || 'C'}:${entry.total_carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`}
                           </p>
                         </div>
-                        <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-red-50 shrink-0">
-                          <X className="w-3.5 h-3.5" style={{ color: '#DC2626' }} />
+                        <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-destructive/10 shrink-0">
+                          <X className="w-3.5 h-3.5 text-destructive" />
                         </button>
                       </div>
                     ))}
