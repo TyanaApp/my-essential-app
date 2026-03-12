@@ -150,7 +150,7 @@ const NutritionAnalysis = () => {
         {loading ? (
           <div className="flex flex-col items-center py-8 gap-3">
             <div className="w-7 h-7 border-[3px] rounded-full animate-spin" style={{ borderColor: '#EDE9FE', borderTopColor: '#7C3AED' }} />
-            <span className="text-sm" style={{ color: '#9CA3AF' }}>{tr.analyzing || 'Analyzing your data...'}</span>
+            <span className="text-sm text-muted-foreground">{tr.analyzing || 'Analyzing your data...'}</span>
           </div>
         ) : (
           <div className="space-y-4">
