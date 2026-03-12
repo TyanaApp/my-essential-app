@@ -777,6 +777,9 @@ export const translations = {
       noCookableItems: 'В холодильнике нет продуктов для готовки', noCookableHint: 'Вот что можно приготовить если докупить',
       addProducts: '+ Добавить продукты',
       onlyFromHome: 'Только из того что есть дома', addProductsEmpty: 'Добавь продукты чтобы получить рецепты',
+      fewIngredientsMsg: 'У тебя мало продуктов для готовки. Вот что можно приготовить:',
+      buyForVariety: 'Что докупить для большего выбора',
+      stapleEggs: 'Яйца', stapleMilk: 'Молоко', stapleBread: 'Хлеб', stapleButter: 'Масло', stapleVeggies: 'Овощи', stapleGrains: 'Крупы',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
