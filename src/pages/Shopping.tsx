@@ -408,7 +408,7 @@ const Shopping = () => {
                   </div>
                 ))}
               </div>
-              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium" style={{ color: '#059669' }}>{t.shopping.spent} {formatMoney(purchasedTotal, currency)}</p>}
+              {purchasedTotal > 0 && <p className="text-xs mt-3 font-medium text-success">{t.shopping.spent} {formatMoney(purchasedTotal, currency)}</p>}
             </motion.div>
           )}
         </div>
