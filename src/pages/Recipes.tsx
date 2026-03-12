@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ChevronDown, Clock, Trash2, RefreshCw } from 'lucide-react';
+import { Heart, ChevronDown, Clock, Trash2, RefreshCw, ShoppingCart, Plus } from 'lucide-react';
 import RecipePhoto from '@/components/RecipePhoto';
 import RecipeDetailModal from '@/components/recipes/RecipeDetailModal';
 import { Loader2 } from 'lucide-react';
@@ -19,13 +19,32 @@ const NutritionCalculator = lazy(() => import('@/pages/NutritionCalculator'));
 
 interface Ingredient { name: string; amount: string; inFridge: boolean; }
 interface Nutrition { calories: number; protein: number; fat: number; carbs: number; }
-interface Recipe { title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[]; nutrition: Nutrition; prepTime: number; estimatedCost: number; }
+interface Recipe {
+  title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
+  nutrition: Nutrition; prepTime: number; estimatedCost: number;
+  category?: 'now' | 'buy'; missingIngredients?: string[]; estimatedShoppingCost?: number;
+}
 interface SavedRecipe { id: string; title: string; ingredients: Ingredient[] | null; instructions: string[] | null; nutrition: Nutrition | null; prep_time: number | null; estimated_cost: number | null; is_favorite: boolean; }
 
 const MEAL_TYPE_KEYS = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
 const TIME_OPTION_KEYS = ['time15', 'time30', 'time1h', 'timeAny'] as const;
 const TIME_VALUES = ['<15 min', '30 min', '1 hour', 'Any'];
 const SERVING_OPTIONS = [1, 2, 3, 4, 5];
+
+// Track previously generated recipes to avoid duplicates
+const getPreviousRecipes = (userId: string): string[] => {
+  try {
+    const stored = localStorage.getItem(`generated_recipes_${userId}`);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+};
+
+const savePreviousRecipes = (userId: string, titles: string[]) => {
+  const existing = getPreviousRecipes(userId);
+  const updated = [...existing, ...titles.map(t => t.toLowerCase().trim())];
+  const trimmed = updated.slice(-20);
+  localStorage.setItem(`generated_recipes_${userId}`, JSON.stringify(trimmed));
+};
 
 const Recipes = () => {
   const { user } = useAuth();
@@ -56,10 +75,7 @@ const Recipes = () => {
   const [addedIngredients, setAddedIngredients] = useState<Set<string>>(new Set());
   const [showSettings, setShowSettings] = useState(true);
 
-  // Inner tab: 'suggested' or 'saved'
   const [recipeTab, setRecipeTab] = useState<'suggested' | 'saved'>('suggested');
-
-  // Track which generated recipes have been saved (by title)
   const [savedTitles, setSavedTitles] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -89,20 +105,28 @@ const Recipes = () => {
   const favoriteRecipes = savedRecipes.filter(r => r.is_favorite);
   const favCount = favoriteRecipes.length;
 
+  // Split generated recipes into categories
+  const nowRecipes = generatedRecipes.filter(r => r.category === 'now');
+  const buyRecipes = generatedRecipes.filter(r => r.category === 'buy');
+  // Fallback: if no category field, treat all as "now"
+  const uncategorized = generatedRecipes.filter(r => !r.category);
+
   const handleGenerate = async (append = false) => {
-    if (!user || inventory.length === 0) return;
+    if (!user) return;
     if (append) setLoadingMore(true); else setGenerating(true);
     try {
       const excludeNames = savedRecipes.map(r => r.title);
       if (!append) {
-        // also exclude currently generated
         generatedRecipes.forEach(r => excludeNames.push(r.title));
       }
+      const previousRecipes = getPreviousRecipes(user.id);
+
       const { data, error } = await supabase.functions.invoke('generate-recipes', {
         body: {
-          mealType: selectedMeals.join(', '), cookingFor, timeAvailable, useOnlyInventory,
+          mealType: selectedMeals.join(', '), cookingFor, timeAvailable,
           inventory, userGoals: userGoals || {}, language,
           excludeRecipes: excludeNames,
+          previousRecipes,
           familyMembers: familyMode ? subMembers.map(m => ({
             name: m.name, age: m.age, allergies: m.allergies, diet_type: m.diet_type,
           })) : undefined,
@@ -113,6 +137,9 @@ const Recipes = () => {
       if (recipes.length === 0) {
         toast.error(t.recipes.noRecipesGenerated);
       } else {
+        // Save to previous recipes tracker
+        savePreviousRecipes(user.id, recipes.map(r => r.title));
+
         if (append) {
           setGeneratedRecipes(prev => [...prev, ...recipes]);
         } else {
@@ -200,6 +227,18 @@ const Recipes = () => {
     toast.success(t.recipes.itemsAdded.replace('{count}', String(missing.length)));
   };
 
+  const addMissingListToShopping = async (missingItems: string[]) => {
+    if (!user || missingItems.length === 0) return;
+    const items = missingItems.map(name => ({ user_id: user.id, name, quantity: 1, unit: 'pcs' }));
+    await supabase.from('shopping_items').insert(items as any);
+    setAddedIngredients(prev => {
+      const next = new Set(prev);
+      missingItems.forEach(n => next.add(n));
+      return next;
+    });
+    toast.success(t.recipes.itemsAdded.replace('{count}', String(missingItems.length)));
+  };
+
   const addSingleToShopping = async (ing: Ingredient) => {
     if (!user) return;
     await supabase.from('shopping_items').insert({
@@ -224,11 +263,15 @@ const Recipes = () => {
     return r;
   };
 
+  const rt = (t.recipes as any);
+
   // Suggested recipe card
   const SuggestedCard = ({ recipe }: { recipe: Recipe }) => {
     const n = recipe;
     const isSaved = savedTitles.has(n.title.toLowerCase());
     const matchPct = getMatchPercent(n.ingredients);
+    const isBuyCategory = n.category === 'buy';
+    const missingAlreadyAdded = (n.missingIngredients || []).every(m => addedIngredients.has(m));
 
     return (
       <motion.div
@@ -257,13 +300,33 @@ const Recipes = () => {
         <div className="p-3">
           <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 mb-1.5">{n.title}</h3>
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-            <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" /> {n.prepTime} {(t.recipes as any)?.minUnit || 'min'}</span>
+            <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" /> {n.prepTime} {rt?.minUnit || 'min'}</span>
             <span>🔥 {n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}</span>
           </div>
-          {matchPct > 0 && (
+          {!isBuyCategory && matchPct > 0 && (
             <p className="text-[11px] font-medium mt-1" style={{ color: matchPct >= 80 ? '#059669' : '#EA580C' }}>
-              ✅ {((t.recipes as any).matchPercent || '{pct}% from inventory').replace('{pct}', String(matchPct))}
+              ✅ {(rt.matchPercent || '{pct}% from inventory').replace('{pct}', String(matchPct))}
             </p>
+          )}
+          {isBuyCategory && (n.missingIngredients || []).length > 0 && (
+            <div className="mt-1.5">
+              <p className="text-[10px] text-muted-foreground line-clamp-1">
+                {rt.buyNeeded || 'Need'}: {(n.missingIngredients || []).join(', ')}
+                {n.estimatedShoppingCost ? ` (~€${n.estimatedShoppingCost})` : ''}
+              </p>
+              {!missingAlreadyAdded && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addMissingListToShopping(n.missingIngredients || []);
+                  }}
+                  className="mt-1 flex items-center gap-1 text-[10px] font-semibold text-primary"
+                >
+                  <Plus className="w-3 h-3" />
+                  {rt.addToShoppingShort || 'Add to list'}
+                </button>
+              )}
+            </div>
           )}
         </div>
       </motion.div>
@@ -297,7 +360,7 @@ const Recipes = () => {
         <div className="p-3">
           <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 mb-1.5">{n.title}</h3>
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-            <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" /> {n.prepTime} {(t.recipes as any)?.minUnit || 'min'}</span>
+            <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" /> {n.prepTime} {rt?.minUnit || 'min'}</span>
             <span>🔥 {n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}</span>
           </div>
         </div>
@@ -323,9 +386,12 @@ const Recipes = () => {
   };
   const tabLabels = TAB_LABELS[language] || TAB_LABELS.en;
 
+  const hasNowRecipes = nowRecipes.length > 0 || uncategorized.length > 0;
+  const hasBuyRecipes = buyRecipes.length > 0;
+
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
-      {/* Main tab bar: Recipes / Plan / Calc */}
+      {/* Main tab bar */}
       <div className="flex gap-1 mb-5 bg-secondary rounded-xl p-1">
         {(['recipes', 'plan', 'calc'] as const).map(tab => (
           <button
@@ -350,7 +416,7 @@ const Recipes = () => {
         </Suspense>
       ) : (
       <>
-      {/* Inner tab bar: Suggested / Saved */}
+      {/* Inner tab bar */}
       <div className="flex gap-1 mb-4 bg-secondary rounded-xl p-1">
         <button
           onClick={() => setRecipeTab('suggested')}
@@ -360,7 +426,7 @@ const Recipes = () => {
             color: recipeTab === 'suggested' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
           }}
         >
-          {(t.recipes as any).tabSuggested || '✨ Suggested'}
+          {rt.tabSuggested || '✨ Suggested'}
         </button>
         <button
           onClick={() => setRecipeTab('saved')}
@@ -370,7 +436,7 @@ const Recipes = () => {
             color: recipeTab === 'saved' ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))',
           }}
         >
-          {(t.recipes as any).tabSaved || '♥️ Saved'}
+          {rt.tabSaved || '♥️ Saved'}
           {favCount > 0 && recipeTab !== 'saved' && (
             <span className="ml-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold rounded-full bg-primary text-primary-foreground">
               {favCount}
@@ -398,7 +464,7 @@ const Recipes = () => {
                   className="flex items-center gap-1.5 text-xs font-semibold text-primary"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${generating ? 'animate-spin' : ''}`} />
-                  {(t.recipes as any).newRecipes || '🔄 New recipes'}
+                  {rt.newRecipes || '🔄 New recipes'}
                 </button>
               )}
             </div>
@@ -440,66 +506,81 @@ const Recipes = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-foreground">{t.recipes.onlyHome}</span>
-                      <button onClick={() => setUseOnlyInventory(!useOnlyInventory)}
-                        className="w-11 h-6 rounded-full relative transition-colors"
-                        style={{ backgroundColor: useOnlyInventory ? 'hsl(var(--primary))' : 'hsl(var(--muted))' }}>
-                        <div className="w-5 h-5 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: useOnlyInventory ? '22px' : '2px' }} />
-                      </button>
-                    </div>
 
-                    {!loading && inventory.length === 0 ? (
-                      <div className="text-center py-4 rounded-xl bg-card">
-                        <div className="text-4xl mb-2">🧊</div>
-                        <p className="text-sm font-bold mb-1 text-foreground">{t.recipes.noInventory}</p>
-                        <p className="text-xs mb-3 text-muted-foreground">{t.recipes.noInventoryHint}</p>
-                        <button onClick={() => navigate('/inventory')} className="px-4 py-2 rounded-xl text-sm font-semibold text-primary-foreground bg-primary">
-                          {t.recipes.goToInventory}
-                        </button>
-                      </div>
-                    ) : (
-                      <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
-                        className="w-full h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
-                        {generating ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                            {t.recipes.generating}
-                          </span>
-                        ) : t.recipes.generateBtn}
-                      </button>
-                    )}
+                    <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
+                      className="w-full h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
+                      {generating ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                          {t.recipes.generating}
+                        </span>
+                      ) : t.recipes.generateBtn}
+                    </button>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Suggested recipes grid */}
+          {/* Two-category recipe display */}
           {generatedRecipes.length > 0 && (
-            <div>
-              <div className="grid grid-cols-2 gap-3">
-                {generatedRecipes.map((r, idx) => (
-                  <SuggestedCard key={`gen-${idx}-${r.title}`} recipe={r} />
-                ))}
-              </div>
+            <div className="space-y-6">
+              {/* Category A: Cook right now */}
+              {hasNowRecipes && (
+                <div>
+                  <h2 className="text-base font-bold text-foreground mb-1">🥘 {rt.categoryNowTitle || 'Cook right now'}</h2>
+                  <p className="text-xs text-muted-foreground mb-3">{rt.categoryNowSub || 'From what you have'}</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[...nowRecipes, ...uncategorized].map((r, idx) => (
+                      <SuggestedCard key={`now-${idx}-${r.title}`} recipe={r} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Category B: Buy a little more */}
+              {hasBuyRecipes && (
+                <div>
+                  <h2 className="text-base font-bold text-foreground mb-1">🛒 {rt.categoryBuyTitle || 'Buy a little more'}</h2>
+                  <p className="text-xs text-muted-foreground mb-3">{rt.categoryBuySub || 'Better with a few additions'}</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {buyRecipes.map((r, idx) => (
+                      <SuggestedCard key={`buy-${idx}-${r.title}`} recipe={r} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* No cookable ingredients message */}
+              {!hasNowRecipes && hasBuyRecipes && (
+                <div className="bg-secondary rounded-2xl p-4 text-center mb-4">
+                  <p className="text-sm font-medium text-foreground mb-2">{rt.noCookableItems || 'No cookable ingredients at home'}</p>
+                  <p className="text-xs text-muted-foreground mb-3">{rt.noCookableHint || 'Here\'s what you can make if you shop'}</p>
+                  <div className="flex gap-2 justify-center">
+                    <button onClick={() => navigate('/inventory')} className="px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground">
+                      {rt.addProducts || '+ Add products'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Load more */}
               <button
                 onClick={() => handleGenerate(true)}
                 disabled={loadingMore}
-                className="w-full mt-4 py-3 rounded-xl border border-border text-sm font-semibold text-primary bg-card hover:bg-secondary transition-colors"
+                className="w-full py-3 rounded-xl border border-border text-sm font-semibold text-primary bg-card hover:bg-secondary transition-colors"
               >
                 {loadingMore ? (
                   <span className="flex items-center justify-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     {t.recipes.generating}
                   </span>
-                ) : ((t.recipes as any).loadMore || '+ Show more recipes')}
+                ) : (rt.loadMore || '+ Show more recipes')}
               </button>
             </div>
           )}
 
-          {/* Empty state for suggested */}
+          {/* Empty state */}
           {generatedRecipes.length === 0 && !showSettings && (
             <div className="text-center py-16">
               <div className="text-5xl mb-4">🍳</div>
@@ -509,7 +590,7 @@ const Recipes = () => {
           )}
         </>
       ) : (
-        /* Saved (favorites) tab */
+        /* Saved tab */
         <>
           {loading ? (
             <div className="flex justify-center py-12">
@@ -525,10 +606,10 @@ const Recipes = () => {
             <div className="text-center py-16">
               <div className="text-5xl mb-4">♥️</div>
               <p className="text-base font-medium mb-1 text-foreground">
-                {(t.recipes as any).emptyFavTitle || 'Your favorite recipes will appear here'}
+                {rt.emptyFavTitle || 'Your favorite recipes will appear here'}
               </p>
               <p className="text-sm text-muted-foreground">
-                {(t.recipes as any).emptyFavHint || 'Tap ♡ on any recipe to save it'}
+                {rt.emptyFavHint || 'Tap ♡ on any recipe to save it'}
               </p>
             </div>
           )}
@@ -546,10 +627,9 @@ const Recipes = () => {
             if (current) {
               setUnfavConfirmId(id);
             } else {
-              // save it
               supabase.from('recipes').update({ is_favorite: true }).eq('id', id).then(() => {
                 setSavedRecipes(prev => prev.map(r => r.id === id ? { ...r, is_favorite: true } : r));
-                toast.success((t.recipes as any).savedToFavorites || 'Saved to favorites ♥️');
+                toast.success(rt.savedToFavorites || 'Saved to favorites ♥️');
               });
             }
           }}
@@ -561,14 +641,14 @@ const Recipes = () => {
 
       <UpgradeModal open={upgradeOpen} onOpenChange={setUpgradeOpen} />
 
-      {/* Unfavorite confirmation dialog */}
+      {/* Unfavorite confirmation */}
       <AnimatePresence>
         {unfavConfirmId && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setUnfavConfirmId(null)}>
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
               className="bg-card rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
               <p className="text-base font-semibold mb-4 text-foreground">
-                {(t.recipes as any).removeFromSaved || 'Remove from saved?'}
+                {rt.removeFromSaved || 'Remove from saved?'}
               </p>
               <div className="flex gap-3">
                 <button onClick={() => setUnfavConfirmId(null)}
@@ -577,7 +657,7 @@ const Recipes = () => {
                 </button>
                 <button onClick={() => handleUnfavorite(unfavConfirmId)}
                   className="flex-1 h-10 rounded-xl font-semibold text-sm text-primary-foreground bg-destructive">
-                  {(t.recipes as any).removeBtn || 'Remove'}
+                  {rt.removeBtn || 'Remove'}
                 </button>
               </div>
             </motion.div>
@@ -585,14 +665,14 @@ const Recipes = () => {
         )}
       </AnimatePresence>
 
-      {/* Delete confirmation dialog (legacy) */}
+      {/* Delete confirmation */}
       <AnimatePresence>
         {deleteConfirmId && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setDeleteConfirmId(null)}>
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
               className="bg-card rounded-2xl p-6 w-full max-w-xs text-center" onClick={(e) => e.stopPropagation()}>
               <p className="text-base font-semibold mb-4 text-foreground">
-                {(t.recipes as any).deleteFromSaved || 'Remove from saved?'}
+                {rt.deleteFromSaved || 'Remove from saved?'}
               </p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirmId(null)}
