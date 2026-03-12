@@ -306,8 +306,7 @@ const Shopping = () => {
         </button>
         <button onClick={handleVoiceInput}
           disabled={isListening}
-          className="flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all disabled:opacity-50"
-          style={{ borderColor: isListening ? '#7C3AED' : '#DDD6FE', backgroundColor: isListening ? '#EDE9FE' : 'transparent', color: isListening ? '#7C3AED' : '#6B7280' }}
+          className={`flex items-center justify-center w-10 h-10 rounded-xl border-[1.5px] transition-all disabled:opacity-50 ${isListening ? 'border-primary bg-primary/15 text-primary' : 'border-border text-muted-foreground'}`}
           aria-label="Voice input">
           {isListening ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : '🎤'}
         </button>
