@@ -84,7 +84,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           <span>{language === 'ru' ? 'Язык' : language === 'lv' ? 'Valoda' : 'Language'}</span>
         </div>
       )}
-      <div className="flex gap-2">
+      <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'thin' }}>
         {languages.map((lang) => (
           <motion.button
             key={lang.code}
