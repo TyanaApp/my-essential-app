@@ -2460,6 +2460,7 @@ export const translations = {
       per100g: 'На 100г', pointCamera: 'Наведіть камеру на штрихкод', lookingUp: 'Шукаємо продукт...',
       scanError: 'Не вдалося зчитати штрихкод', notThis: 'Не те', searching: 'Пошук...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ІІ-оцінка',
+      cameraPermission: 'Немає доступу до камери',
     },
     workout: {
       todayQuestion: 'Тренування сьогодні?', addWorkout: 'Додати тренування', added: 'Тренування додано',
