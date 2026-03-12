@@ -83,6 +83,11 @@ export const translations = {
       emptyFavHint: 'Tap ♡ on any recipe to save it', loadMore: '+ Show more recipes',
       newRecipes: '🔄 New recipes', cook: '👨‍🍳 Cook',
       matchPercent: '{pct}% from inventory',
+      categoryNowTitle: 'Cook right now', categoryNowSub: 'From what you have',
+      categoryBuyTitle: 'Buy a little more', categoryBuySub: 'Better with a few additions',
+      buyNeeded: 'Need', addToShoppingShort: '+ Add to list',
+      noCookableItems: 'No cookable ingredients at home', noCookableHint: 'Here\'s what you can make if you shop',
+      addProducts: '+ Add products',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
