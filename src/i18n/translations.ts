@@ -88,6 +88,7 @@ export const translations = {
       buyNeeded: 'Need', addToShoppingShort: '+ Add to list',
       noCookableItems: 'No cookable ingredients at home', noCookableHint: 'Here\'s what you can make if you shop',
       addProducts: '+ Add products',
+      onlyFromHome: 'Only from what I have at home', addProductsEmpty: 'Add products to get recipes',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
