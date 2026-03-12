@@ -311,8 +311,7 @@ const Shopping = () => {
           {isListening ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : '🎤'}
         </button>
         <button onClick={() => setReceiptModalOpen(true)}
-          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px]"
-          style={{ borderColor: '#DDD6FE', color: '#7C3AED', backgroundColor: '#F5F3FF' }}>
+          className="flex items-center gap-1.5 px-3 h-10 rounded-xl text-sm font-medium border-[1.5px] border-border text-primary bg-secondary">
           🧾 {(t as any).receipt?.scanBtn || 'Scan receipt'}
         </button>
         <div className="flex items-center gap-1.5">
