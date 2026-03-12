@@ -794,7 +794,7 @@ export const translations = {
       mealPlaceholder: 'напр. Овсянка с бананом',
     },
     mealScan: {
-      scanMeal: '📸 Сфото блюда', scanMealBtn: '📸',
+      scanMeal: '📸 Фото блюда', scanMealBtn: '📸',
       analyzing: '🤖 Анализируем...', aiFound: '✅ ИИ определил:',
       takePhoto: 'Сфотографируйте ваше блюдо',
       analyzingHint: 'Анализируем блюдо... ~10 секунд',
