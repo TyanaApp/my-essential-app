@@ -670,6 +670,7 @@ export const translations = {
       per100g: 'Per 100g', pointCamera: 'Point camera at barcode', lookingUp: 'Looking up product...',
       scanError: 'Could not read barcode', notThis: 'Not this', searching: 'Searching...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 AI estimate',
+      cameraPermission: 'Camera permission denied',
     },
     workout: {
       todayQuestion: 'Workout today?', addWorkout: 'Add workout', added: 'Workout logged',
@@ -946,6 +947,18 @@ export const translations = {
       upgradeBtn: 'Обновить за €6.49/мес', continueFree: 'Продолжить бесплатно',
       changeGoal: 'Изменить цель', goalUpdated: 'Цель обновлена! Рецепты адаптируются.',
       smartDevices: 'Умные устройства', notifyDevice: 'Мы сообщим, когда будет готово!',
+    },
+    tips: {
+      title: 'Совет дня: ноль отходов',
+      daily: [
+        'Используй остаток риса для жареного риса завтра',
+        'Из овощных обрезков получается отличный бульон',
+        'Заморозь хлеб, пока не зачерствел',
+        'Вянут травы? Сделай масло из трав',
+        'Скоро просрочится йогурт? Идеально для смузи',
+        'Планируй еду в воскресенье — выбросишь на 40% меньше',
+        'Проверь холодильник перед походом за продуктами',
+      ],
     },
     streak: {
       daysInRow: 'дней подряд', achievements: 'Достижения',
@@ -1276,6 +1289,7 @@ export const translations = {
       per100g: 'На 100г', pointCamera: 'Наведи камеру на штрихкод', lookingUp: 'Ищем продукт...',
       scanError: 'Не удалось считать штрихкод', notThis: 'Не то', searching: 'Поиск...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ИИ-оценка',
+      cameraPermission: 'Нет доступа к камере',
     },
     workout: {
       todayQuestion: 'Тренировка сегодня?', addWorkout: 'Добавить тренировку', added: 'Тренировка добавлена',
@@ -1860,6 +1874,7 @@ export const translations = {
       per100g: 'Uz 100g', pointCamera: 'Pavērs kameru uz svītrkodu', lookingUp: 'Meklējam produktu...',
       scanError: 'Neizdevās nolasīt svītrkodu', notThis: 'Nav tas', searching: 'Meklē...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 MI novērtējums',
+      cameraPermission: 'Kamerai nav piekļuves',
     },
     workout: {
       todayQuestion: 'Treniņš šodien?', addWorkout: 'Pievienot treniņu', added: 'Treniņš pievienots',
@@ -2445,6 +2460,7 @@ export const translations = {
       per100g: 'На 100г', pointCamera: 'Наведіть камеру на штрихкод', lookingUp: 'Шукаємо продукт...',
       scanError: 'Не вдалося зчитати штрихкод', notThis: 'Не те', searching: 'Пошук...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 ІІ-оцінка',
+      cameraPermission: 'Немає доступу до камери',
     },
     workout: {
       todayQuestion: 'Тренування сьогодні?', addWorkout: 'Додати тренування', added: 'Тренування додано',
