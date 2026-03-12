@@ -670,6 +670,7 @@ export const translations = {
       per100g: 'Per 100g', pointCamera: 'Point camera at barcode', lookingUp: 'Looking up product...',
       scanError: 'Could not read barcode', notThis: 'Not this', searching: 'Searching...',
       sourceLabel: '📊 Open Food Facts', sourceAI: '🤖 AI estimate',
+      cameraPermission: 'Camera permission denied',
     },
     workout: {
       todayQuestion: 'Workout today?', addWorkout: 'Add workout', added: 'Workout logged',
