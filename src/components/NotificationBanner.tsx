@@ -33,33 +33,28 @@ const NotificationBanner = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="rounded-2xl p-4 mb-4 flex items-center gap-3"
-          style={{
-            backgroundColor: '#EDE9FE',
-            border: '1px solid #DDD6FE',
-          }}
+          className="rounded-2xl p-4 mb-4 flex items-center gap-3 bg-secondary border border-border"
         >
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: '#7C3AED' }}>
-            <Bell className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-primary">
+            <Bell className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold" style={{ color: '#1E1B4B' }}>
+            <p className="text-sm font-semibold text-foreground">
               {t.notifications.bannerTitle}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={handleEnable}
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg text-white"
-              style={{ backgroundColor: '#7C3AED' }}
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-primary text-primary-foreground"
             >
               {t.notifications.enable}
             </button>
             <button
               onClick={handleDismiss}
-              className="p-1 rounded-lg hover:bg-white/50 transition-colors"
+              className="p-1 rounded-lg hover:bg-accent transition-colors"
             >
-              <X className="w-4 h-4" style={{ color: '#6B7280' }} />
+              <X className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
         </motion.div>
