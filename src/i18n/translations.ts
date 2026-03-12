@@ -773,6 +773,7 @@ export const translations = {
       buyNeeded: 'Докупить', addToShoppingShort: '+ В список покупок',
       noCookableItems: 'В холодильнике нет продуктов для готовки', noCookableHint: 'Вот что можно приготовить если докупить',
       addProducts: '+ Добавить продукты',
+      onlyFromHome: 'Только из того что есть дома', addProductsEmpty: 'Добавь продукты чтобы получить рецепты',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
