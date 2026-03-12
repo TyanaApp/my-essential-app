@@ -474,7 +474,7 @@ const Shopping = () => {
       <Dialog open={!!confirmItem} onOpenChange={() => setConfirmItem(null)}>
         <DialogContent className="rounded-2xl max-w-xs text-center">
           <DialogHeader>
-            <DialogTitle style={{ color: '#1E1B4B' }}>{t.shopping.addToInventory}</DialogTitle>
+            <DialogTitle className="text-foreground">{t.shopping.addToInventory}</DialogTitle>
             <DialogDescription>{t.shopping.addToInventoryDesc.replace('{name}', confirmItem?.name || '')}</DialogDescription>
           </DialogHeader>
           <div className="flex gap-2 mt-3">
