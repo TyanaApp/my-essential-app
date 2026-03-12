@@ -452,7 +452,17 @@ const Recipes = () => {
         </button>
       </div>
 
-      {/* Only from inventory toggle - removed, moved next to generate button */}
+      {/* Only from inventory toggle */}
+      <div className="flex items-center justify-between mb-4 px-1">
+        <span className="text-sm text-foreground">{rt.onlyFromHome || 'Only from what I have at home'}</span>
+        <Switch
+          checked={useOnlyInventory}
+          onCheckedChange={(checked) => {
+            setUseOnlyInventory(checked);
+            localStorage.setItem('only_from_inventory', String(checked));
+          }}
+        />
+      </div>
 
       {recipeTab === 'suggested' ? (
         <>
