@@ -48,7 +48,7 @@ const DeviceRow = ({ emoji, name, badge }: { emoji: string; name: string; badge:
         <span className="text-sm font-medium text-muted-foreground">{name}</span>
       </div>
       <div className="flex items-center gap-2">
-        <Badge className="bg-purple-100 text-purple-600 border-purple-200 text-[10px] px-2 py-0.5">
+        <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px] px-2 py-0.5">
           {badge}
         </Badge>
         <Switch checked={notify} onCheckedChange={handleNotify} />

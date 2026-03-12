@@ -162,11 +162,11 @@ const Inventory = () => {
 
   const expiryColor = (date: string | null) => {
     const d = daysUntilExpiry(date);
-    if (d === null) return { bg: '#F3F4F6', text: '#9CA3AF', label: t.inventory.noDate };
-    if (d < 0) return { bg: '#FEE2E2', text: '#DC2626', label: t.inventory.expired };
-    if (d <= 3) return { bg: '#FEE2E2', text: '#DC2626', label: `${d}${t.inventory.daysLeft}` };
-    if (d <= 7) return { bg: '#FEF3C7', text: '#EA580C', label: `${d}${t.inventory.daysLeft}` };
-    return { bg: '#D1FAE5', text: '#059669', label: `${d}${t.inventory.daysLeft}` };
+    if (d === null) return { bg: 'hsl(var(--muted))', text: 'hsl(var(--muted-foreground))', label: t.inventory.noDate };
+    if (d < 0) return { bg: 'hsl(var(--destructive) / 0.15)', text: 'hsl(var(--destructive))', label: t.inventory.expired };
+    if (d <= 3) return { bg: 'hsl(var(--destructive) / 0.15)', text: 'hsl(var(--destructive))', label: `${d}${t.inventory.daysLeft}` };
+    if (d <= 7) return { bg: 'hsl(var(--warning) / 0.15)', text: 'hsl(var(--warning))', label: `${d}${t.inventory.daysLeft}` };
+    return { bg: 'hsl(var(--success) / 0.15)', text: 'hsl(var(--success))', label: `${d}${t.inventory.daysLeft}` };
   };
 
   return (
