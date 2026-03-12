@@ -89,6 +89,9 @@ export const translations = {
       noCookableItems: 'No cookable ingredients at home', noCookableHint: 'Here\'s what you can make if you shop',
       addProducts: '+ Add products',
       onlyFromHome: 'Only from what I have at home', addProductsEmpty: 'Add products to get recipes',
+      fewIngredientsMsg: 'You have few ingredients. Here\'s what you can make:',
+      buyForVariety: 'What to buy for more variety',
+      stapleEggs: 'Eggs', stapleMilk: 'Milk', stapleBread: 'Bread', stapleButter: 'Butter', stapleVeggies: 'Vegetables', stapleGrains: 'Grains',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
