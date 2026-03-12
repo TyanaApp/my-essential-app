@@ -460,13 +460,13 @@ const Recipes = () => {
             setUseOnlyInventory(next);
             localStorage.setItem('only_from_inventory', String(next));
           }}
-          className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 mb-4 text-sm font-semibold transition-all border ${
+          className={`inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 mb-4 text-sm font-medium transition-all border ${
             useOnlyInventory
-              ? 'bg-primary text-primary-foreground border-primary shadow-md'
-              : 'bg-card text-muted-foreground border-border hover:border-primary/40'
+              ? 'bg-primary/10 text-primary border-primary/30 shadow-sm'
+              : 'bg-card text-muted-foreground border-border hover:border-primary/30'
           }`}
         >
-          <span>🏠</span>
+          <span className="text-base">🏠</span>
           <span>{rt.onlyFromHome || 'Only from what I have at home'}</span>
         </button>
       )}
