@@ -338,7 +338,7 @@ const Shopping = () => {
 
       {suggestions.length > 0 && !suggestDismissed && (
         <motion.div {...fadeUp(2)} className="mb-5 p-4 rounded-2xl flex items-center gap-3 bg-warning/10 border border-warning/30">
-          <AlertTriangle className="w-5 h-5 shrink-0" style={{ color: '#EA580C' }} />
+          <AlertTriangle className="w-5 h-5 shrink-0 text-warning" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground">{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
             <p className="text-xs" style={{ color: '#6B7280' }}>{suggestions.slice(0, 3).map((s) => s.name).join(', ')}{suggestions.length > 3 ? '...' : ''}</p>
