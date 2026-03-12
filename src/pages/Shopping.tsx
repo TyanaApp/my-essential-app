@@ -373,7 +373,7 @@ const Shopping = () => {
                     {catItems.map((item) => (
                       <motion.div key={item.id} layout initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -60 }}
                         className="flex items-center gap-2 py-2 px-1 rounded-lg hover:bg-secondary transition-colors">
-                        <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0" style={{ borderColor: '#DDD6FE' }} />
+                        <button onClick={() => handleTogglePurchase(item)} className="w-5 h-5 rounded border-[1.5px] flex items-center justify-center shrink-0 border-border" />
                         <span className="flex-1 text-sm font-medium truncate text-foreground">{item.name}</span>
                         <span className="text-xs shrink-0" style={{ color: '#6B7280' }}>{item.quantity || 1} {getUnitLabel(language, item.unit || 'pcs')}</span>
                         {item.estimated_price && <span className="text-xs shrink-0" style={{ color: '#9CA3AF' }}>{formatMoney(item.estimated_price * (item.quantity || 1), currency)}</span>}
