@@ -132,7 +132,7 @@ const NutritionAnalysis = () => {
           {macroItems.map(m => (
             <div key={m.label}>
               <div className="flex justify-between text-xs mb-1">
-                <span style={{ color: '#6B7280' }}>{m.label}</span>
+                <span className="text-muted-foreground">{m.label}</span>
                 <span className="font-bold" style={{ color: macroColor(m.value, m.target) }}>
                   {m.value} / {m.target}g
                 </span>
