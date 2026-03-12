@@ -120,7 +120,7 @@ const NutritionAnalysis = () => {
         <div className="space-y-3">
           <div>
             <div className="flex justify-between text-xs mb-1">
-              <span style={{ color: '#6B7280' }}>{tr.calories || 'Calories'}</span>
+              <span className="text-muted-foreground">{tr.calories || 'Calories'}</span>
               <span className="font-bold" style={{ color: macroColor(macros.calories, macros.targets.calories) }}>
                 {macros.calories} / {macros.targets.calories} kcal
               </span>
