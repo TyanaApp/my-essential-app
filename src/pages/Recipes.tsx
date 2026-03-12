@@ -142,6 +142,7 @@ const Recipes = () => {
       } else {
         // Save to previous recipes tracker
         savePreviousRecipes(user.id, recipes.map(r => r.title));
+        setFewIngredients(!!data?.fewIngredients);
 
         if (append) {
           setGeneratedRecipes(prev => [...prev, ...recipes]);
