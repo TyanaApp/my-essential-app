@@ -179,8 +179,7 @@ const NutritionAnalysis = () => {
       <button
         onClick={fetchAnalysis}
         disabled={loading}
-        className="w-full py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
-        style={{ backgroundColor: '#7C3AED', color: 'white', opacity: loading ? 0.5 : 1 }}
+        className="w-full py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2 bg-primary text-primary-foreground disabled:opacity-50"
       >
         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         {tr.refreshAnalysis || 'Refresh analysis'}
