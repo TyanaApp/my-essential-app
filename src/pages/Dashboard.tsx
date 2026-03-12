@@ -278,19 +278,25 @@ const Dashboard = () => {
       // ADAPTIVE CALORIE TARGET: call recalculation every day with full profile analysis
       let caloriesTarget = goalsData?.daily_calories_target || 2000;
       
-      // Check if we need to recalculate today
+      // Always recalculate if new day — never use stale cached value
       const recalcCacheKey = `tyana_calorie_recalc_${user.id}`;
       const cachedRecalc = localStorage.getItem(recalcCacheKey);
       let needsRecalc = true;
       
       if (cachedRecalc) {
         try {
-          const { date, target } = JSON.parse(cachedRecalc);
-          if (date === today && target) {
-            caloriesTarget = target;
+          const parsed = JSON.parse(cachedRecalc);
+          // Only skip recalc if same calendar day AND target exists
+          if (parsed.date === today && parsed.target) {
+            caloriesTarget = parsed.target;
             needsRecalc = false;
+          } else {
+            // Different day — clear stale cache
+            localStorage.removeItem(recalcCacheKey);
           }
-        } catch {}
+        } catch {
+          localStorage.removeItem(recalcCacheKey);
+        }
       }
 
       // Recalculate if needed (once per day, uses full profile analysis)
