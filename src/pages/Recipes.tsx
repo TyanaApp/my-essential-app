@@ -460,10 +460,11 @@ const Recipes = () => {
             setUseOnlyInventory(next);
             localStorage.setItem('only_from_inventory', String(next));
           }}
-          className={`inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 mb-4 text-sm font-medium transition-all border ${
+          style={{ borderRadius: '999px', padding: '8px 16px', width: 'auto', display: 'inline-flex' }}
+          className={`items-center gap-2 mb-4 text-sm font-medium transition-all border ${
             useOnlyInventory
-              ? 'bg-primary/10 text-primary border-primary/30 shadow-sm'
-              : 'bg-card text-muted-foreground border-border hover:border-primary/30'
+              ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+              : 'bg-transparent text-primary border-primary'
           }`}
         >
           <span className="text-base">🏠</span>
