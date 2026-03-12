@@ -1377,6 +1377,9 @@ export const translations = {
       noCookableItems: 'Nav gatavošanai derīgu produktu', noCookableHint: 'Lūk ko vari pagatavot ja iepirksi',
       addProducts: '+ Pievienot produktus',
       onlyFromHome: 'Tikai no tā kas ir mājās', addProductsEmpty: 'Pievieno produktus lai iegūtu receptes',
+      fewIngredientsMsg: 'Tev ir maz produktu gatavošanai. Lūk ko vari pagatavot:',
+      buyForVariety: 'Ko nopirkt lielākai izvēlei',
+      stapleEggs: 'Olas', stapleMilk: 'Piens', stapleBread: 'Maize', stapleButter: 'Sviests', stapleVeggies: 'Dārzeņi', stapleGrains: 'Graudaugi',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
