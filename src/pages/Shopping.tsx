@@ -343,8 +343,8 @@ const Shopping = () => {
             <p className="text-sm font-semibold text-foreground">{t.shopping.suggests.replace('{count}', String(suggestions.length))}</p>
             <p className="text-xs text-muted-foreground">{suggestions.slice(0, 3).map((s) => s.name).join(', ')}{suggestions.length > 3 ? '...' : ''}</p>
           </div>
-          <button onClick={handleAddAllSuggestions} className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold text-white" style={{ backgroundColor: '#EA580C' }}>{t.shopping.addAll}</button>
-          <button onClick={() => setSuggestDismissed(true)} className="shrink-0 p-1"><X className="w-4 h-4" style={{ color: '#9CA3AF' }} /></button>
+          <button onClick={handleAddAllSuggestions} className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold text-warning-foreground bg-warning">{t.shopping.addAll}</button>
+          <button onClick={() => setSuggestDismissed(true)} className="shrink-0 p-1"><X className="w-4 h-4 text-muted-foreground" /></button>
         </motion.div>
       )}
 
