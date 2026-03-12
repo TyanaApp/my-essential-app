@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ChevronDown, Clock, Trash2, RefreshCw, ShoppingCart, Plus } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import RecipePhoto from '@/components/RecipePhoto';
 import RecipeDetailModal from '@/components/recipes/RecipeDetailModal';
 import { Loader2 } from 'lucide-react';
@@ -452,7 +453,17 @@ const Recipes = () => {
         </button>
       </div>
 
-      {/* Only from inventory toggle - removed, moved next to generate button */}
+      {/* Only from inventory toggle */}
+      <div className="flex items-center justify-between mb-4 px-1">
+        <span className="text-sm text-foreground">{rt.onlyFromHome || 'Only from what I have at home'}</span>
+        <Switch
+          checked={useOnlyInventory}
+          onCheckedChange={(checked) => {
+            setUseOnlyInventory(checked);
+            localStorage.setItem('only_from_inventory', String(checked));
+          }}
+        />
+      </div>
 
       {recipeTab === 'suggested' ? (
         <>
@@ -513,33 +524,15 @@ const Recipes = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
-                      <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
-                        className="flex-1 h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
-                        {generating ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                            {t.recipes.generating}
-                          </span>
-                        ) : t.recipes.generateBtn}
-                      </button>
-                      <button
-                        onClick={() => {
-                          const next = !useOnlyInventory;
-                          setUseOnlyInventory(next);
-                          localStorage.setItem('only_from_inventory', String(next));
-                        }}
-                        title={rt.onlyFromHome || 'Only from what I have at home'}
-                        className={`shrink-0 h-11 rounded-xl flex items-center justify-center gap-1.5 px-3 text-xs font-medium transition-all border-[1.5px] ${
-                          useOnlyInventory
-                            ? 'bg-primary border-primary text-primary-foreground shadow-sm'
-                            : 'bg-card border-border text-muted-foreground hover:border-primary hover:text-primary'
-                        }`}
-                      >
-                        🏠
-                        <span className="whitespace-nowrap">{useOnlyInventory ? (rt.filterOn || 'Из дома') : (rt.filterOff || 'Из дома')}</span>
-                      </button>
-                    </div>
+                    <button onClick={() => handleGenerate(false)} disabled={generating || selectedMeals.length === 0}
+                      className="w-full h-12 rounded-xl text-primary-foreground font-semibold text-sm transition-opacity disabled:opacity-40 bg-primary">
+                      {generating ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                          {t.recipes.generating}
+                        </span>
+                      ) : t.recipes.generateBtn}
+                    </button>
                   </div>
                 </motion.div>
               )}
