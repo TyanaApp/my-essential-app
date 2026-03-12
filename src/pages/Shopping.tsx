@@ -433,9 +433,9 @@ const Shopping = () => {
             </div>
             <div className="flex gap-2">
               <div className="flex-1">
-                <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.qty}</label>
+                <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.qty}</label>
                 <input type="number" value={formQty} onChange={(e) => setFormQty(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+                  className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-primary border-border bg-secondary text-foreground" />
               </div>
               <div className="flex-1">
                 <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.unit}</label>
