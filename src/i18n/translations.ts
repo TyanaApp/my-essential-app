@@ -89,6 +89,9 @@ export const translations = {
       noCookableItems: 'No cookable ingredients at home', noCookableHint: 'Here\'s what you can make if you shop',
       addProducts: '+ Add products',
       onlyFromHome: 'Only from what I have at home', addProductsEmpty: 'Add products to get recipes',
+      fewIngredientsMsg: 'You have few ingredients. Here\'s what you can make:',
+      buyForVariety: 'What to buy for more variety',
+      stapleEggs: 'Eggs', stapleMilk: 'Milk', stapleBread: 'Bread', stapleButter: 'Butter', stapleVeggies: 'Vegetables', stapleGrains: 'Grains',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
@@ -774,6 +777,9 @@ export const translations = {
       noCookableItems: 'В холодильнике нет продуктов для готовки', noCookableHint: 'Вот что можно приготовить если докупить',
       addProducts: '+ Добавить продукты',
       onlyFromHome: 'Только из того что есть дома', addProductsEmpty: 'Добавь продукты чтобы получить рецепты',
+      fewIngredientsMsg: 'У тебя мало продуктов для готовки. Вот что можно приготовить:',
+      buyForVariety: 'Что докупить для большего выбора',
+      stapleEggs: 'Яйца', stapleMilk: 'Молоко', stapleBread: 'Хлеб', stapleButter: 'Масло', stapleVeggies: 'Овощи', stapleGrains: 'Крупы',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -1371,6 +1377,9 @@ export const translations = {
       noCookableItems: 'Nav gatavošanai derīgu produktu', noCookableHint: 'Lūk ko vari pagatavot ja iepirksi',
       addProducts: '+ Pievienot produktus',
       onlyFromHome: 'Tikai no tā kas ir mājās', addProductsEmpty: 'Pievieno produktus lai iegūtu receptes',
+      fewIngredientsMsg: 'Tev ir maz produktu gatavošanai. Lūk ko vari pagatavot:',
+      buyForVariety: 'Ko nopirkt lielākai izvēlei',
+      stapleEggs: 'Olas', stapleMilk: 'Piens', stapleBread: 'Maize', stapleButter: 'Sviests', stapleVeggies: 'Dārzeņi', stapleGrains: 'Graudaugi',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
@@ -1952,6 +1961,9 @@ export const translations = {
       noCookableItems: 'Немає продуктів для готування', noCookableHint: 'Ось що можна приготувати якщо докупити',
       addProducts: '+ Додати продукти',
       onlyFromHome: 'Тільки з того що є вдома', addProductsEmpty: 'Додай продукти щоб отримати рецепти',
+      fewIngredientsMsg: 'У тебе мало продуктів для готування. Ось що можна приготувати:',
+      buyForVariety: 'Що докупити для більшого вибору',
+      stapleEggs: 'Яйця', stapleMilk: 'Молоко', stapleBread: 'Хліб', stapleButter: 'Масло', stapleVeggies: 'Овочі', stapleGrains: 'Крупи',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',

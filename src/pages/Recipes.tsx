@@ -68,6 +68,7 @@ const Recipes = () => {
   const [loadingMore, setLoadingMore] = useState(false);
 
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
+  const [fewIngredients, setFewIngredients] = useState(false);
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
   const [inventory, setInventory] = useState<any[]>([]);
   const [userGoals, setUserGoals] = useState<any>(null);
@@ -141,6 +142,7 @@ const Recipes = () => {
       } else {
         // Save to previous recipes tracker
         savePreviousRecipes(user.id, recipes.map(r => r.title));
+        setFewIngredients(!!data?.fewIngredients);
 
         if (append) {
           setGeneratedRecipes(prev => [...prev, ...recipes]);
@@ -548,6 +550,25 @@ const Recipes = () => {
           {/* Two-category recipe display */}
           {generatedRecipes.length > 0 && (
             <div className="space-y-6">
+              {/* Few ingredients banner */}
+              {fewIngredients && (
+                <div className="bg-secondary rounded-2xl p-4 border border-border">
+                  <p className="text-sm font-medium text-foreground mb-2">💡 {rt.fewIngredientsMsg || 'You have few ingredients. Here\'s what you can make:'}</p>
+                  <details className="mt-2">
+                    <summary className="text-xs font-semibold text-primary cursor-pointer">
+                      🛒 {rt.buyForVariety || 'What to buy for more variety'}
+                    </summary>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {['stapleEggs', 'stapleMilk', 'stapleBread', 'stapleButter', 'stapleVeggies', 'stapleGrains'].map(key => (
+                        <span key={key} className="px-2.5 py-1 rounded-full bg-card text-xs text-foreground border border-border">
+                          {(rt as any)[key] || key}
+                        </span>
+                      ))}
+                    </div>
+                  </details>
+                </div>
+              )}
+
               {/* Category A: Cook right now */}
               {hasNowRecipes && (
                 <div>
