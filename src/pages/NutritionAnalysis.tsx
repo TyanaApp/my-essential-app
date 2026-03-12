@@ -104,8 +104,8 @@ const NutritionAnalysis = () => {
   return (
     <div className="min-h-screen p-6 pb-mobile-safe">
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl" style={{ backgroundColor: '#F5F3FF' }}>
-          <ArrowLeft className="w-5 h-5" style={{ color: '#7C3AED' }} />
+        <button onClick={() => navigate(-1)} className="p-2 rounded-xl bg-secondary">
+          <ArrowLeft className="w-5 h-5 text-primary" />
         </button>
         <h1 className="text-xl font-bold text-foreground">
           🧠 {tr.fullAnalysis || 'Nutrition Analysis'}
