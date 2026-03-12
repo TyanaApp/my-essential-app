@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ChevronDown, Clock, Trash2, RefreshCw, ShoppingCart, Plus } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import RecipePhoto from '@/components/RecipePhoto';
 import RecipeDetailModal from '@/components/recipes/RecipeDetailModal';
 import { Loader2 } from 'lucide-react';
