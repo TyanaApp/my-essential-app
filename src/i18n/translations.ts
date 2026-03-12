@@ -88,6 +88,7 @@ export const translations = {
       buyNeeded: 'Need', addToShoppingShort: '+ Add to list',
       noCookableItems: 'No cookable ingredients at home', noCookableHint: 'Here\'s what you can make if you shop',
       addProducts: '+ Add products',
+      onlyFromHome: 'Only from what I have at home', addProductsEmpty: 'Add products to get recipes',
     },
     shopping: {
       title: 'My Shopping List', addItem: 'Add Item', budget: 'Budget:', empty: 'Your list is empty',
@@ -772,6 +773,7 @@ export const translations = {
       buyNeeded: 'Докупить', addToShoppingShort: '+ В список покупок',
       noCookableItems: 'В холодильнике нет продуктов для готовки', noCookableHint: 'Вот что можно приготовить если докупить',
       addProducts: '+ Добавить продукты',
+      onlyFromHome: 'Только из того что есть дома', addProductsEmpty: 'Добавь продукты чтобы получить рецепты',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Добавить', budget: 'Бюджет:', empty: 'Список пуст',
@@ -1368,6 +1370,7 @@ export const translations = {
       buyNeeded: 'Vajag', addToShoppingShort: '+ Pievienot sarakstam',
       noCookableItems: 'Nav gatavošanai derīgu produktu', noCookableHint: 'Lūk ko vari pagatavot ja iepirksi',
       addProducts: '+ Pievienot produktus',
+      onlyFromHome: 'Tikai no tā kas ir mājās', addProductsEmpty: 'Pievieno produktus lai iegūtu receptes',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
@@ -1948,6 +1951,7 @@ export const translations = {
       buyNeeded: 'Докупити', addToShoppingShort: '+ До списку покупок',
       noCookableItems: 'Немає продуктів для готування', noCookableHint: 'Ось що можна приготувати якщо докупити',
       addProducts: '+ Додати продукти',
+      onlyFromHome: 'Тільки з того що є вдома', addProductsEmpty: 'Додай продукти щоб отримати рецепти',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
