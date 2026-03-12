@@ -446,12 +446,11 @@ const Shopping = () => {
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.category}</label>
+              <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.category}</label>
               <div className="flex flex-wrap gap-1.5">
                 {CATEGORIES.map((c) => (
                   <button key={c.id} onClick={() => setFormCategory(c.id)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium border-[1.5px] transition-all"
-                    style={{ borderColor: formCategory === c.id ? '#7C3AED' : '#DDD6FE', backgroundColor: formCategory === c.id ? '#EDE9FE' : 'white', color: formCategory === c.id ? '#7C3AED' : '#6B7280' }}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border-[1.5px] transition-all ${formCategory === c.id ? 'border-primary bg-primary/15 text-primary' : 'border-border bg-card text-muted-foreground'}`}>
                     {c.emoji} {c.label}
                   </button>
                 ))}
