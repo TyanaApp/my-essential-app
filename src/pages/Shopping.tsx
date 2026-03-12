@@ -427,9 +427,9 @@ const Shopping = () => {
           </DialogHeader>
           <div className="space-y-3 mt-2">
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: '#6B7280' }}>{t.shopping.name}</label>
+              <label className="text-xs font-medium mb-1 block text-muted-foreground">{t.shopping.name}</label>
               <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder={t.shopping.namePlaceholder}
-                className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-[#7C3AED]" style={{ borderColor: '#DDD6FE', backgroundColor: '#F5F3FF' }} />
+                className="w-full h-10 px-3 rounded-xl border text-sm outline-none focus:border-primary border-border bg-secondary text-foreground" />
             </div>
             <div className="flex gap-2">
               <div className="flex-1">
