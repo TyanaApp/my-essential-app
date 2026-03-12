@@ -125,7 +125,7 @@ const NutritionAnalysis = () => {
                 {macros.calories} / {macros.targets.calories} kcal
               </span>
             </div>
-            <div className="h-2 rounded-full" style={{ backgroundColor: '#F3F4F6' }}>
+            <div className="h-2 rounded-full bg-muted">
               <div className="h-full rounded-full transition-all duration-500" style={{ backgroundColor: macroColor(macros.calories, macros.targets.calories), width: `${Math.min((macros.calories / macros.targets.calories) * 100, 100)}%` }} />
             </div>
           </div>
