@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, Plus, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,13 +19,13 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
   const { t, language } = useTranslation();
   const off = (t as any).openFoodFacts || {};
   const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const readerRef = useRef<any>(null);
+  const controlsRef = useRef<{ stop: () => void } | null>(null);
   const [scanning, setScanning] = useState(false);
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<OFFProduct | null>(null);
   const [adding, setAdding] = useState(false);
+  const [lastScannedBarcode, setLastScannedBarcode] = useState('');
+  const lookingUpRef = useRef(false);
 
   useEffect(() => {
     if (open) {
@@ -34,21 +34,24 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
     return () => stopScanning();
   }, [open]);
 
-  const startScanning = async () => {
-    setProduct(null);
-    setScanning(true);
+  const stopScanning = useCallback(() => {
+    if (controlsRef.current) {
+      try { controlsRef.current.stop(); } catch {}
+      controlsRef.current = null;
+    }
+    setScanning(false);
+  }, []);
+
+  const handleBarcodeFound = useCallback(async (barcode: string) => {
+    // Prevent duplicate lookups for the same barcode
+    if (lookingUpRef.current) return;
+    lookingUpRef.current = true;
+
+    setLastScannedBarcode(barcode);
+    stopScanning();
+    setLoading(true);
+
     try {
-      // Dynamic import to avoid bundling if not used
-      const { BrowserMultiFormatReader } = await import('@zxing/browser');
-      const reader = new BrowserMultiFormatReader();
-      readerRef.current = reader;
-
-      const result = await reader.decodeOnceFromVideoDevice(undefined, videoRef.current!);
-      const barcode = result.getText();
-
-      setScanning(false);
-      setLoading(true);
-
       const found = await getProductByBarcode(barcode);
       setLoading(false);
 
@@ -56,25 +59,53 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
         setProduct(found);
       } else {
         toast.error(off.notInDatabase || 'Product not found in database');
-        // Let user try again
+        // Let user try again after a short delay
+        lookingUpRef.current = false;
         setTimeout(() => startScanning(), 1500);
       }
+    } catch (e) {
+      console.error('Product lookup error:', e);
+      setLoading(false);
+      lookingUpRef.current = false;
+      toast.error(off.scanError || 'Could not look up product');
+      setTimeout(() => startScanning(), 1500);
+    }
+  }, [off, stopScanning]);
+
+  const startScanning = async () => {
+    setProduct(null);
+    setScanning(true);
+    lookingUpRef.current = false;
+
+    try {
+      const { BrowserMultiFormatReader } = await import('@zxing/browser');
+      const reader = new BrowserMultiFormatReader();
+
+      // Use continuous scanning for reliable barcode detection
+      const controls = await reader.decodeFromVideoDevice(
+        undefined,
+        videoRef.current!,
+        (result, error, controls) => {
+          if (result) {
+            const barcode = result.getText();
+            if (barcode && barcode.length >= 4) {
+              handleBarcodeFound(barcode);
+            }
+          }
+          // NotFoundException is normal during scanning — ignore it
+        }
+      );
+
+      controlsRef.current = controls;
     } catch (e: any) {
       console.error('Barcode scan error:', e);
       setScanning(false);
-      if (e?.name !== 'NotFoundException') {
-        toast.error(off.scanError || 'Could not read barcode');
+      if (e?.name === 'NotAllowedError') {
+        toast.error(off.cameraPermission || 'Camera permission denied');
+      } else if (e?.name !== 'NotFoundException') {
+        toast.error(off.scanError || 'Could not start camera');
       }
     }
-  };
-
-  const stopScanning = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    // BrowserMultiFormatReader doesn't have a stop method in newer versions
-    readerRef.current = null;
   };
 
   const handleAddToInventory = async () => {
@@ -101,6 +132,12 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
     }
   };
 
+  const handleClose = () => {
+    stopScanning();
+    lookingUpRef.current = false;
+    onClose();
+  };
+
   if (!open) return null;
 
   return (
@@ -116,7 +153,7 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
           <h2 className="text-white font-bold text-lg">
             {off.scanBarcode || 'Scan barcode'}
           </h2>
-          <button onClick={onClose} className="text-white p-2">
+          <button onClick={handleClose} className="text-white p-2">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -131,7 +168,6 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
               playsInline
               muted
             />
-            <canvas ref={canvasRef} className="hidden" />
 
             {/* Scanning overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -158,6 +194,12 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
 
               {loading && (
                 <Loader2 className="w-6 h-6 text-white animate-spin mt-2" />
+              )}
+
+              {lastScannedBarcode && !loading && (
+                <p className="text-white/50 text-xs mt-2">
+                  {lastScannedBarcode}
+                </p>
               )}
             </div>
           </div>
@@ -232,6 +274,7 @@ const BarcodeScannerModal = ({ open, onClose, onProductAdded }: BarcodeScannerMo
                   className="flex-1 gap-1"
                   onClick={() => {
                     setProduct(null);
+                    lookingUpRef.current = false;
                     startScanning();
                   }}
                 >
