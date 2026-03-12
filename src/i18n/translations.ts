@@ -1363,6 +1363,11 @@ export const translations = {
       emptyFavHint: 'Spied ♡ uz jebkuras receptes lai saglabātu', loadMore: '+ Rādīt vairāk receptes',
       newRecipes: '🔄 Jaunas receptes', cook: '👨‍🍳 Gatavot',
       matchPercent: '{pct}% no produktiem',
+      categoryNowTitle: 'Gatavo tūlīt', categoryNowSub: 'No tā kas ir mājās',
+      categoryBuyTitle: 'Nopirkt nedaudz', categoryBuySub: 'Labāk ar dažiem papildinājumiem',
+      buyNeeded: 'Vajag', addToShoppingShort: '+ Pievienot sarakstam',
+      noCookableItems: 'Nav gatavošanai derīgu produktu', noCookableHint: 'Lūk ko vari pagatavot ja iepirksi',
+      addProducts: '+ Pievienot produktus',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
