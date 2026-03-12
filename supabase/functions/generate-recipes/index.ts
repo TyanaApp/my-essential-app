@@ -119,7 +119,7 @@ ${familyMembers.map((m: any) =>
 
     const prompt = `You are a practical home cooking assistant. Respond ENTIRELY in ${lang}.
 
-REAL INGREDIENTS the user can cook with:
+REAL INGREDIENTS the user has at home:
 ${ingredientList}
 
 PACKAGED SNACKS (eat as-is, NOT for cooking):
@@ -139,32 +139,35 @@ Diet: ${userGoals?.diet_type || 'omnivore'}
 Daily calories: ${userGoals?.daily_calories_target || 2000} kcal
 
 RULES:
-1. Only use ingredients EXPLICITLY listed above as real ingredients
-2. NEVER invent or hallucinate ingredients not in the list
-3. NEVER decompose packaged products into components
-4. If very few ingredients → suggest simple honest recipes (omelette, fried eggs, toast, etc.)
-5. Each recipe must be genuinely different (different main ingredient, different method)
-${hasFewIngredients ? '6. User has very few ingredients — be honest, suggest only what is genuinely possible' : ''}
+1. For "now" category: use ONLY ingredients listed above
+2. For "buy" category: think of POPULAR, DELICIOUS, SIMPLE everyday recipes first, then check which ingredients the user already has and list only the missing ones to buy
+3. NEVER invent or hallucinate that the user has ingredients not listed
+4. NEVER decompose packaged products into components
+5. Each recipe must be genuinely different (different cuisine, main ingredient, or cooking method)
+6. "buy" recipes should be REAL crowd-pleasers: pasta, stir-fry, curry, soup, salad, casserole, etc. — things people actually love to cook and eat
+7. Keep missing ingredients to a MINIMUM (1-4 cheap staples), total shopping cost under €5
+8. Assume the user has basic seasonings (salt, pepper, oil) unless diet restricts them
+${hasFewIngredients ? '9. User has very few ingredients — for "now" suggest only what is genuinely possible, focus on good "buy" recipes instead' : ''}
 
 Generate ${totalCount} recipes:
-${nowCount > 0 ? `- ${nowCount} for category "now": use ONLY listed real ingredients` : '- 0 for category "now" (no cookable ingredients)'}
-- ${buyCount} for category "buy": use listed ingredients + 1-3 extra items to purchase (show what to buy, keep under €5)
+${nowCount > 0 ? `- ${nowCount} for category "now": use ONLY the user's real ingredients` : '- 0 for category "now" (no cookable ingredients)'}
+- ${buyCount} for category "buy": suggest GOOD, POPULAR, TASTY recipes. Use what the user has + list the minimum extra items to buy. Prioritize recipes that are simple, satisfying, and well-known. Think: what would a normal person enjoy cooking for dinner?
 
 Return ONLY a valid JSON array (no markdown, no code fences):
 [{
   "category": "now" or "buy",
   "title": "Recipe name in ${lang}",
-  "imageQuery": "english food name 2-4 words",
-  "ingredients": [{"name":"in ${lang}","amount":"qty","inFridge":true/false}],
-  "missingIngredients": ["items to buy in ${lang}"],
-  "estimatedShoppingCost": 0,
-  "instructions": ["step1","step2"],
+  "imageQuery": "english food name for photo search, 2-4 words, appetizing",
+  "ingredients": [{"name":"ingredient in ${lang}","amount":"quantity with unit","inFridge":true/false}],
+  "missingIngredients": ["items to buy in ${lang} with quantities"],
+  "estimatedShoppingCost": 2.50,
+  "instructions": ["step1","step2","step3"],
   "nutrition": {"calories":400,"protein":25,"fat":12,"carbs":45},
-  "prepTime": 20,
-  "estimatedCost": 3.50
+  "prepTime": 25,
+  "estimatedCost": 4.00
 }]
 
-"imageQuery" MUST be in English. "inFridge"=true if from inventory, false if to buy. "missingIngredients" empty for "now" category.`;
+"imageQuery" MUST be in English, descriptive for food photography. "inFridge"=true if user has it, false if to buy. "missingIngredients" empty array for "now" category. "estimatedShoppingCost" = cost of ONLY the missing items.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
