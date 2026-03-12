@@ -1370,6 +1370,7 @@ export const translations = {
       buyNeeded: 'Vajag', addToShoppingShort: '+ Pievienot sarakstam',
       noCookableItems: 'Nav gatavošanai derīgu produktu', noCookableHint: 'Lūk ko vari pagatavot ja iepirksi',
       addProducts: '+ Pievienot produktus',
+      onlyFromHome: 'Tikai no tā kas ir mājās', addProductsEmpty: 'Pievieno produktus lai iegūtu receptes',
     },
     shopping: {
       title: 'Iepirkumu saraksts', addItem: 'Pievienot', budget: 'Budžets:', empty: 'Saraksts ir tukšs',
