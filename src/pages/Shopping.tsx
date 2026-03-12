@@ -478,11 +478,11 @@ const Shopping = () => {
             <DialogDescription>{t.shopping.addToInventoryDesc.replace('{name}', confirmItem?.name || '')}</DialogDescription>
           </DialogHeader>
           <div className="flex gap-2 mt-3">
-            <button onClick={() => confirmPurchase(true)} className="flex-1 h-10 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: '#059669' }}>
-              <PackagePlus className="w-4 h-4 inline mr-1" /> {t.shopping.yes}
-            </button>
-            <button onClick={() => confirmPurchase(false)} className="flex-1 h-10 rounded-xl text-sm font-semibold border-[1.5px]" style={{ borderColor: '#DDD6FE', color: '#6B7280' }}>
-              {t.shopping.no}
+             <button onClick={() => confirmPurchase(true)} className="flex-1 h-10 rounded-xl text-sm font-semibold text-success-foreground bg-success">
+               <PackagePlus className="w-4 h-4 inline mr-1" /> {t.shopping.yes}
+             </button>
+             <button onClick={() => confirmPurchase(false)} className="flex-1 h-10 rounded-xl text-sm font-semibold border-[1.5px] border-border text-muted-foreground">
+               {t.shopping.no}
             </button>
           </div>
         </DialogContent>

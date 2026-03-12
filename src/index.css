@@ -333,6 +333,20 @@
   border-top-color: hsl(263, 70%, 65%) !important;
 }
 
+/* ——— DARK: Additional text color fixes ——— */
+.dark [style*="color: #D1D5DB"],
+.dark [style*="color: rgb(209, 213, 219)"] {
+  color: hsl(220, 10%, 50%) !important;
+}
+
+/* ——— DARK: hover bg fix ——— */
+.dark .hover\:bg-\[\#F5F3FF\]:hover {
+  background-color: hsl(244, 30%, 20%) !important;
+}
+.dark .hover\:bg-red-50:hover {
+  background-color: hsl(0, 30%, 18%) !important;
+}
+
 /* ——— DARK: Fix Tailwind color utility classes ——— */
 .dark .hover\:bg-gray-50:hover {
   background-color: hsl(244, 30%, 18%) !important;
