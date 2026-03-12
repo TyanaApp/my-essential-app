@@ -68,6 +68,7 @@ const Recipes = () => {
   const [loadingMore, setLoadingMore] = useState(false);
 
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
+  const [fewIngredients, setFewIngredients] = useState(false);
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
   const [inventory, setInventory] = useState<any[]>([]);
   const [userGoals, setUserGoals] = useState<any>(null);
