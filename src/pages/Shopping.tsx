@@ -464,7 +464,7 @@ const Shopping = () => {
                   className="w-full h-10 pl-8 pr-3 rounded-xl border text-sm outline-none focus:border-primary border-border bg-secondary text-foreground" />
               </div>
             </div>
-            <button onClick={handleSave} disabled={!formName.trim()} className="w-full h-11 rounded-xl text-sm font-semibold text-white disabled:opacity-50" style={{ backgroundColor: '#7C3AED' }}>
+            <button onClick={handleSave} disabled={!formName.trim()} className="w-full h-11 rounded-xl text-sm font-semibold text-primary-foreground disabled:opacity-50 bg-primary">
               {editItem ? t.shopping.update : t.shopping.addToList}
             </button>
           </div>
