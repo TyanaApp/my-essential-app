@@ -1961,6 +1961,9 @@ export const translations = {
       noCookableItems: 'Немає продуктів для готування', noCookableHint: 'Ось що можна приготувати якщо докупити',
       addProducts: '+ Додати продукти',
       onlyFromHome: 'Тільки з того що є вдома', addProductsEmpty: 'Додай продукти щоб отримати рецепти',
+      fewIngredientsMsg: 'У тебе мало продуктів для готування. Ось що можна приготувати:',
+      buyForVariety: 'Що докупити для більшого вибору',
+      stapleEggs: 'Яйця', stapleMilk: 'Молоко', stapleBread: 'Хліб', stapleButter: 'Масло', stapleVeggies: 'Овочі', stapleGrains: 'Крупи',
     },
     shopping: {
       title: 'Список покупок', addItem: 'Додати', budget: 'Бюджет:', empty: 'Список порожній',
