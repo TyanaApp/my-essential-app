@@ -107,7 +107,7 @@ Return ONLY a valid JSON array, no markdown or code fences:
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("OpenAI error:", response.status, errorText);
+        console.error("AI gateway error:", response.status, errorText);
         return [];
       }
 
