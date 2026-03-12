@@ -301,7 +301,7 @@ const Shopping = () => {
       </motion.div>
 
       <motion.div {...fadeUp(1)} className="flex flex-wrap items-center gap-2 mb-4">
-        <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-white" style={{ backgroundColor: '#7C3AED' }}>
+        <button onClick={openAdd} className="flex items-center gap-1.5 px-4 h-10 rounded-xl text-sm font-medium text-primary-foreground bg-primary">
           <Plus className="w-4 h-4" /> {t.shopping.addItem}
         </button>
         <button onClick={handleVoiceInput}
