@@ -351,7 +351,13 @@ const Dashboard = () => {
         currency: profileData?.currency || 'EUR',
         useItUpRecipe,
         inventoryCount: inventoryCountRes.count || 0,
-        streakCurrent: (profileData as any)?.streak_current || 0,
+        streakCurrent: (() => {
+          const lastAct = (profileData as any)?.streak_last_activity;
+          const todayStr = new Date().toISOString().split('T')[0];
+          const yesterdayStr = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+          const alive = lastAct === todayStr || lastAct === yesterdayStr;
+          return alive ? ((profileData as any)?.streak_current || 0) : 0;
+        })(),
         streakLongest: (profileData as any)?.streak_longest || 0,
         missingBodyData,
       });

@@ -130,10 +130,27 @@ export const useStreak = () => {
       .eq('user_id', user.id)
       .maybeSingle();
     if (!data) return null;
+
+    const streakCurrent = (data as any).streak_current || 0;
+    const lastActivity = (data as any).streak_last_activity;
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+    // If last activity is not today and not yesterday — streak is broken, reset to 0
+    const isStreakAlive = lastActivity === today || lastActivity === yesterday;
+    const actualCurrent = isStreakAlive ? streakCurrent : 0;
+
+    // If streak was broken, update DB to reflect reset
+    if (!isStreakAlive && streakCurrent > 0) {
+      await supabase.from('profiles').update({
+        streak_current: 0,
+      } as any).eq('user_id', user.id);
+    }
+
     return {
-      streak_current: (data as any).streak_current || 0,
+      streak_current: actualCurrent,
       streak_longest: (data as any).streak_longest || 0,
-      streak_last_activity: (data as any).streak_last_activity,
+      streak_last_activity: lastActivity,
       streak_badges: (data as any).streak_badges || [],
       bonus_scans: (data as any).bonus_scans || 0,
     };
