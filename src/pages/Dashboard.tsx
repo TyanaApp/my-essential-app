@@ -128,6 +128,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { checkSubscription } = useSubscription();
+  const { isPro: isPlanPro } = usePlanLimits();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingBudget, setEditingBudget] = useState(false);
@@ -143,6 +144,8 @@ const Dashboard = () => {
   const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string; confidence?: string; based_on?: string; why_valuable?: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
   const [workoutBurned, setWorkoutBurned] = useState(0);
+  const [watchCalorieAdj, setWatchCalorieAdj] = useState(0);
+  const [watchAdvice, setWatchAdvice] = useState<{ tipEmoji?: string; tip?: string; calorieAdjustment?: number; adjustmentReason?: string } | null>(null);
 
   // Recipe dismiss logic with daily reset
   const [dismissedRecipes, setDismissedRecipes] = useState<string[]>(() => {
