@@ -4,6 +4,7 @@ import { Plus, ChevronRight, AlertTriangle, Check, Sparkles, Brain, RefreshCw } 
 import CalorieTargetCard from '@/components/dashboard/CalorieTargetCard';
 import EatingInsightsCard from '@/components/dashboard/EatingInsightsCard';
 import WorkoutWidget from '@/components/dashboard/WorkoutWidget';
+import WatchDataWidget from '@/components/dashboard/WatchDataWidget';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
