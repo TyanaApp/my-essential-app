@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useSubscription } from '@/hooks/useSubscription';
+import { usePlanLimits } from '@/hooks/usePlanLimits';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
