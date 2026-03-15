@@ -803,6 +803,72 @@ export type Database = {
         }
         Relationships: []
       }
+      watch_data: {
+        Row: {
+          active_minutes: number | null
+          advice: Json | null
+          blood_oxygen: number | null
+          calories_burned: number | null
+          confidence: string | null
+          created_at: string
+          date: string
+          distance_km: number | null
+          heart_rate: number | null
+          heart_rate_max: number | null
+          heart_rate_min: number | null
+          id: string
+          raw_metrics: Json | null
+          sleep_hours: number | null
+          sleep_quality: string | null
+          steps: number | null
+          stress_level: number | null
+          user_id: string
+          watch_brand: string | null
+        }
+        Insert: {
+          active_minutes?: number | null
+          advice?: Json | null
+          blood_oxygen?: number | null
+          calories_burned?: number | null
+          confidence?: string | null
+          created_at?: string
+          date?: string
+          distance_km?: number | null
+          heart_rate?: number | null
+          heart_rate_max?: number | null
+          heart_rate_min?: number | null
+          id?: string
+          raw_metrics?: Json | null
+          sleep_hours?: number | null
+          sleep_quality?: string | null
+          steps?: number | null
+          stress_level?: number | null
+          user_id: string
+          watch_brand?: string | null
+        }
+        Update: {
+          active_minutes?: number | null
+          advice?: Json | null
+          blood_oxygen?: number | null
+          calories_burned?: number | null
+          confidence?: string | null
+          created_at?: string
+          date?: string
+          distance_km?: number | null
+          heart_rate?: number | null
+          heart_rate_max?: number | null
+          heart_rate_min?: number | null
+          id?: string
+          raw_metrics?: Json | null
+          sleep_hours?: number | null
+          sleep_quality?: string | null
+          steps?: number | null
+          stress_level?: number | null
+          user_id?: string
+          watch_brand?: string | null
+        }
+        Relationships: []
+      }
       weight_history: {
         Row: {
           created_at: string
