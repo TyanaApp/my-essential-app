@@ -742,6 +742,20 @@ const Dashboard = () => {
                 </p>
               )}
 
+              {watchCalorieAdj > 0 && (
+                <p className="text-xs font-medium mt-0.5" style={{ color: '#059669' }}>
+                  {(() => {
+                    const labels: Record<string, string> = {
+                      en: `⌚️ +${watchCalorieAdj} kcal from watch data`,
+                      ru: `⌚️ +${watchCalorieAdj} ккал по данным часов`,
+                      uk: `⌚️ +${watchCalorieAdj} ккал з даних годинника`,
+                      lv: `⌚️ +${watchCalorieAdj} kcal no pulksteņa`,
+                    };
+                    return labels[language] || labels.en;
+                  })()}
+                </p>
+              )}
+
               <button
                 onClick={() => navigate('/diary')}
                 className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px] border-primary text-primary"
