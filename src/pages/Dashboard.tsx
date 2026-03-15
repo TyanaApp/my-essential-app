@@ -607,7 +607,7 @@ const Dashboard = () => {
 
    if (!data) return null;
 
-  const adjustedTarget = data.caloriesTarget + workoutBurned;
+  const adjustedTarget = data.caloriesTarget + workoutBurned + watchCalorieAdj;
   const caloriesConsumed = data.caloriesConsumed;
   const remaining = adjustedTarget - caloriesConsumed;
   const pct = Math.min(data.caloriesConsumed / adjustedTarget, 1);
