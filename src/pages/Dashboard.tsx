@@ -4,11 +4,13 @@ import { Plus, ChevronRight, AlertTriangle, Check, Sparkles, Brain, RefreshCw } 
 import CalorieTargetCard from '@/components/dashboard/CalorieTargetCard';
 import EatingInsightsCard from '@/components/dashboard/EatingInsightsCard';
 import WorkoutWidget from '@/components/dashboard/WorkoutWidget';
+import WatchDataWidget from '@/components/dashboard/WatchDataWidget';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useSubscription } from '@/hooks/useSubscription';
+import { usePlanLimits } from '@/hooks/usePlanLimits';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import SkeletonCard from '@/components/SkeletonCard';
 import NotificationBanner from '@/components/NotificationBanner';
@@ -126,6 +128,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { checkSubscription } = useSubscription();
+  const { isPro: isPlanPro } = usePlanLimits();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingBudget, setEditingBudget] = useState(false);
@@ -141,6 +144,8 @@ const Dashboard = () => {
   const [zeroWasteTip, setZeroWasteTip] = useState<{ tip: string; emoji: string; title: string; category: string; product: string; confidence?: string; based_on?: string; why_valuable?: string } | null>(null);
   const [tipLoading, setTipLoading] = useState(false);
   const [workoutBurned, setWorkoutBurned] = useState(0);
+  const [watchCalorieAdj, setWatchCalorieAdj] = useState(0);
+  const [watchAdvice, setWatchAdvice] = useState<{ tipEmoji?: string; tip?: string; calorieAdjustment?: number; adjustmentReason?: string } | null>(null);
 
   // Recipe dismiss logic with daily reset
   const [dismissedRecipes, setDismissedRecipes] = useState<string[]>(() => {
@@ -602,7 +607,7 @@ const Dashboard = () => {
 
    if (!data) return null;
 
-  const adjustedTarget = data.caloriesTarget + workoutBurned;
+  const adjustedTarget = data.caloriesTarget + workoutBurned + watchCalorieAdj;
   const caloriesConsumed = data.caloriesConsumed;
   const remaining = adjustedTarget - caloriesConsumed;
   const pct = Math.min(data.caloriesConsumed / adjustedTarget, 1);
@@ -737,6 +742,20 @@ const Dashboard = () => {
                 </p>
               )}
 
+              {watchCalorieAdj > 0 && (
+                <p className="text-xs font-medium mt-0.5" style={{ color: '#059669' }}>
+                  {(() => {
+                    const labels: Record<string, string> = {
+                      en: `⌚️ +${watchCalorieAdj} kcal from watch data`,
+                      ru: `⌚️ +${watchCalorieAdj} ккал по данным часов`,
+                      uk: `⌚️ +${watchCalorieAdj} ккал з даних годинника`,
+                      lv: `⌚️ +${watchCalorieAdj} kcal no pulksteņa`,
+                    };
+                    return labels[language] || labels.en;
+                  })()}
+                </p>
+              )}
+
               <button
                 onClick={() => navigate('/diary')}
                 className="mt-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border-[1.5px] border-primary text-primary"
@@ -750,6 +769,15 @@ const Dashboard = () => {
 
         {/* Workout Widget */}
         <WorkoutWidget onCalorieAdjust={setWorkoutBurned} fadeUp={fadeUp} cardClass={cardClass} />
+
+        {/* Watch Data Widget */}
+        <WatchDataWidget
+          fadeUp={fadeUp}
+          cardClass={cardClass}
+          isPro={isPlanPro}
+          onWatchCalories={(_burned, adj) => setWatchCalorieAdj(adj)}
+          onWatchAdvice={(adv) => setWatchAdvice(adv)}
+        />
 
         {/* Missing body data banner */}
         {data.missingBodyData && (
@@ -794,6 +822,8 @@ const Dashboard = () => {
               <div className="w-4 h-4 border-2 rounded-full animate-spin border-accent border-t-primary" />
               <span className="text-xs text-muted-foreground">{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
             </div>
+          ) : watchAdvice?.tip ? (
+            <p className="text-[15px] leading-[1.7] text-foreground/90">{watchAdvice.tipEmoji} {watchAdvice.tip}</p>
           ) : advice ? (
             <p className="text-[15px] leading-[1.7] text-foreground/90">{advice}</p>
           ) : (
