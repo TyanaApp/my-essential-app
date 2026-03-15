@@ -770,6 +770,15 @@ const Dashboard = () => {
         {/* Workout Widget */}
         <WorkoutWidget onCalorieAdjust={setWorkoutBurned} fadeUp={fadeUp} cardClass={cardClass} />
 
+        {/* Watch Data Widget */}
+        <WatchDataWidget
+          fadeUp={fadeUp}
+          cardClass={cardClass}
+          isPro={isPlanPro}
+          onWatchCalories={(_burned, adj) => setWatchCalorieAdj(adj)}
+          onWatchAdvice={(adv) => setWatchAdvice(adv)}
+        />
+
         {/* Missing body data banner */}
         {data.missingBodyData && (
           <motion.div {...fadeUp(1.5)}>
