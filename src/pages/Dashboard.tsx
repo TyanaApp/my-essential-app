@@ -822,6 +822,8 @@ const Dashboard = () => {
               <div className="w-4 h-4 border-2 rounded-full animate-spin border-accent border-t-primary" />
               <span className="text-xs text-muted-foreground">{(t as any).nutritionAdvice?.loading || 'Thinking...'}</span>
             </div>
+          ) : watchAdvice?.tip ? (
+            <p className="text-[15px] leading-[1.7] text-foreground/90">{watchAdvice.tipEmoji} {watchAdvice.tip}</p>
           ) : advice ? (
             <p className="text-[15px] leading-[1.7] text-foreground/90">{advice}</p>
           ) : (
