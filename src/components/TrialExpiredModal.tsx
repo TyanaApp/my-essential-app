@@ -29,9 +29,9 @@ const T = {
     title: 'Jūsu Pro izmēģinājums beidzies',
     desc: 'Ceram, ka TYANA jums palīdzēja šajās 7 dienās! Jūsu dati ir drošībā. Izvēlieties plānu, lai turpinātu pilnā apjomā.',
     free: 'Free — €0',
-    lite: 'Lite — €4.99/mēn',
+    lite: 'Lite — €5.99/mēn',
     proFounding: 'Pro — €6.49/mēn',
-    proRegular: 'Pro — €9.99/mēn',
+    proRegular: 'Pro — €12.99/mēn',
     continueWithFree: 'Turpināt ar Free',
   },
   uk: {
