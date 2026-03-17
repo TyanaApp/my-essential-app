@@ -61,7 +61,7 @@ const T = {
     startTrial: 'Start 7 days free',
     getProSubscribe: '🚀 Get Pro — €6.49/mo',
     getProRegular: '🚀 Get Pro — €6.49/mo',
-    getLite: 'Get Lite — €4.99/mo',
+    getLite: 'Get Lite — €5.99/mo',
     switchToFree: 'Switch to Free',
     switchToLite: 'Switch to Lite',
     switchToPro: 'Switch to Pro',
