@@ -38,9 +38,9 @@ const T = {
     title: 'Твій Pro доступ завершився',
     desc: 'Сподіваємось TYANA допомогла тобі ці 7 днів! Твої дані в безпеці. Обери план щоб продовжити на повну.',
     free: 'Free — €0',
-    lite: 'Lite — €4.99/міс',
+    lite: 'Lite — €5.99/міс',
     proFounding: 'Pro — €6.49/міс',
-    proRegular: 'Pro — €9.99/міс',
+    proRegular: 'Pro — €12.99/міс',
     continueWithFree: 'Продовжити з Free',
   },
 };

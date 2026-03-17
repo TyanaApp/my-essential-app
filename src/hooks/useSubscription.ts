@@ -25,7 +25,7 @@ export const SUBSCRIPTION_PLANS = {
     priceId: 'price_1T79vc2N2asjxki4EpkvxSDD',
     productId: 'prod_U5Ka0ihj35s3M0',
     name: 'TYANA Pro',
-    price: 9.99,
+    price: 12.99,
     currency: '€',
     interval: 'month',
   },

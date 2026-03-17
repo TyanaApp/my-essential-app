@@ -274,8 +274,8 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
     },
     {
       key: 'pro', name: t.proName, tag: isFoundingMember ? t.foundingTag : t.proTag,
-      price: isFoundingMember ? '€6.49' : '€9.99',
-      originalPrice: isFoundingMember ? '€9.99' : undefined,
+      price: isFoundingMember ? '€6.49' : '€12.99',
+      originalPrice: isFoundingMember ? '€12.99' : undefined,
       features: [
         { has: t.unlimited, label: t.fProducts }, { has: t.unlimited, label: t.fShopping },
         { has: t.unlimited, label: t.fAiDaily }, { has: t.unlimited, label: t.fRecipesDaily },
