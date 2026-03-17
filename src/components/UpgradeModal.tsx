@@ -262,7 +262,7 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
       ],
     },
     {
-      key: 'lite', name: t.liteName, tag: t.liteTag, price: '€4.99',
+      key: 'lite', name: t.liteName, tag: t.liteTag, price: '€5.99',
       features: [
         { has: '100', label: t.fProducts }, { has: t.unlimited, label: t.fShopping },
         { has: '10', label: t.fAiDaily }, { has: '5', label: t.fRecipesDaily },
