@@ -102,7 +102,7 @@ export const dismissBanner = () => localStorage.setItem('tyana_notif_banner_dism
 export const useNotifications = () => {
   const { user } = useAuth();
   const { language: currentLanguage } = useLanguage();
-  const ni = NOTIF_I18N[currentLanguage] || NOTIF_I18N.en;
+  const ni = NOTIF_I18N[currentLanguage] || NOTIF_I18N.ru;
   const [alerts, setAlerts] = useState<AppAlert[]>(getStoredAlerts());
   const [settings, setSettings] = useState<NotificationSettings>(() => {
     const s = getNotificationSettings();
@@ -253,18 +253,40 @@ export const useNotifications = () => {
 
     localStorage.setItem(WEEKLY_CHECK_KEY, thisWeek);
 
-    const body = `This week: €${totalSaved.toFixed(2)} saved. ${expiringCount} items expiring this week.`;
+    const lang = currentLanguage || 'ru';
+
+    const weeklyTexts: Record<string, { title: string; body: (saved: string, exp: number) => string }> = {
+      ru: {
+        title: '📊 Итоги недели в TYANA',
+        body: (saved, exp) => `За неделю: €${saved} сэкономлено. ${exp} продуктов истекают на этой неделе.`,
+      },
+      en: {
+        title: '📊 Your TYANA weekly report',
+        body: (saved, exp) => `This week: €${saved} saved. ${exp} items expiring this week.`,
+      },
+      uk: {
+        title: '📊 Підсумки тижня в TYANA',
+        body: (saved, exp) => `За тиждень: €${saved} зекономлено. ${exp} продуктів спливають цього тижня.`,
+      },
+      lv: {
+        title: '📊 TYANA nedēļas kopsavilkums',
+        body: (saved, exp) => `Šajā nedēļā: €${saved} ietaupīts. ${exp} produktiem beidzas derīguma termiņš.`,
+      },
+    };
+
+    const wt = weeklyTexts[lang] || weeklyTexts.ru;
+    const body = wt.body(totalSaved.toFixed(2), expiringCount);
 
     addAlert({
       type: 'savings',
-      title: '📊 Your TYANA weekly report',
+      title: wt.title,
       body,
       icon: '✅',
       link: '/savings',
     });
 
-    sendBrowserNotification('📊 Your TYANA weekly report', body, '/savings');
-  }, [user, settings.weeklySummary, addAlert, sendBrowserNotification]);
+    sendBrowserNotification(wt.title, body, '/savings');
+  }, [user, settings.weeklySummary, addAlert, sendBrowserNotification, currentLanguage]);
 
   useEffect(() => {
     if (!user) return;

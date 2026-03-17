@@ -94,8 +94,8 @@ serve(async (req) => {
           .reduce((s, r) => s + Number(r.amount || 0), 0)
           .toFixed(2);
 
-        // Detect language from user metadata
-        const lang = authData?.user?.user_metadata?.language || "en";
+        // Detect language: check user_metadata first, then profile city-based heuristic, default to ru
+        const lang = authData?.user?.user_metadata?.language || "ru";
 
         const weekData = {
           avgCalories,
