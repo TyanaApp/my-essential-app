@@ -93,7 +93,7 @@ export const useMealReminders = (language: string) => {
       if (data && data.length > 0) continue; // Already logged
 
       // Send notification
-      const lang = language in mealMessages ? language : 'en';
+      const lang = language in mealMessages ? language : 'ru';
       const msg = mealMessages[lang][meal];
       new Notification(msg.title, {
         body: msg.body,
