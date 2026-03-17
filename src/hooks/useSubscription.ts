@@ -8,7 +8,7 @@ export const SUBSCRIPTION_PLANS = {
     priceId: 'price_1T79tP2N2asjxki49FFBKFeL',
     productId: 'prod_U5KY1HNe6IirjK',
     name: 'TYANA Lite',
-    price: 4.99,
+    price: 5.99,
     currency: '€',
     interval: 'month',
   },
