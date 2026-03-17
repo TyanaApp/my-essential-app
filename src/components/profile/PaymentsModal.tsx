@@ -122,7 +122,7 @@ const T = {
     startTrial: 'Начать 7 дней бесплатно',
     getProSubscribe: '🚀 Оформить Pro — €6.49/мес',
     getProRegular: '🚀 Перейти на Pro — €6.49/мес',
-    getLite: 'Перейти на Lite — €4.99/мес',
+    getLite: 'Перейти на Lite — €5.99/мес',
     switchToFree: 'Перейти на бесплатный',
     switchToLite: 'Перейти на Lite',
     switchToPro: 'Перейти на Pro',
