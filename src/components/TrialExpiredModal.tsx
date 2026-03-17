@@ -11,9 +11,9 @@ const T = {
     title: 'Your Pro trial ended',
     desc: 'We hope TYANA helped you these 7 days! Your data is safe. Choose a plan to continue at full power.',
     free: 'Free — €0',
-    lite: 'Lite — €4.99/mo',
+    lite: 'Lite — €5.99/mo',
     proFounding: 'Pro — €6.49/mo',
-    proRegular: 'Pro — €9.99/mo',
+    proRegular: 'Pro — €12.99/mo',
     continueWithFree: 'Continue with Free',
   },
   ru: {
