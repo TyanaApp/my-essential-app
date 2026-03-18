@@ -380,7 +380,7 @@ const Onboarding = () => {
   // Derived
   const weightKg = weightUnit === 'kg' ? weightVal : Math.round(weightVal / 2.205);
   const heightCm = heightUnit === 'cm' ? heightVal : Math.round(heightVal * 2.54); // stored as total inches when ft
-  const calories = (gender && activity && goal) ? calcCalories(gender, weightKg, heightCm, age, activity, goal) : 2000;
+  const calories = (gender && activity && goal) ? calcCalories(gender, weightKg, heightCm, age, activity, goal, weightLossSpeed) : 2000;
   const macros = calcMacros(calories);
 
   const goNext = () => { setDirection(1); setStep(s => s + 1); };
