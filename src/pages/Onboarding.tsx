@@ -15,6 +15,7 @@ type Gender = 'male' | 'female';
 type WeightUnit = 'kg' | 'lbs';
 type HeightUnit = 'cm' | 'ft';
 type WeightLossSpeed = 'slow' | 'moderate' | 'fast' | 'intense';
+type MuscleGainSpeed = 'slow' | 'moderate' | 'active';
 
 const TOTAL_STEPS = 6;
 
