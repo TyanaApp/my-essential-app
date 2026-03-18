@@ -22,7 +22,15 @@ const TOTAL_STEPS = 6;
 const T: Record<string, any> = {
   en: {
     step1: { title: "Hey! I'm TYANA", sub: "Let's get started — what's your name?", placeholder: "Your name", btn: (n: string) => `Hello, ${n}! →` },
-    step2: { title: "What's your main goal?", sub: "Pick one — you can change it later", btn: "Continue →" },
+    step2: { title: "What's your main goal?", sub: "Pick one — you can change it later", btn: "Continue →",
+      loseSpeedTitle: "How fast do you want to lose weight?",
+      loseSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Slowly', desc: '−0.25 kg/week', sub: 'Gentle, no stress' },
+        { id: 'moderate', emoji: '⚖️', title: 'Moderate', desc: '−0.5 kg/week', sub: 'Optimal pace', recommended: true },
+        { id: 'fast', emoji: '🏃', title: 'Fast', desc: '−0.75 kg/week', sub: 'Noticeable results' },
+        { id: 'intense', emoji: '⚡', title: 'Intense', desc: '−1 kg/week', sub: 'Maximum deficit' },
+      ],
+    },
     step3: { title: "A little about you", sub: "We'll calculate your personal calorie goal", gender: { male: "Male", female: "Female" }, age: "Age", weight: "Weight", height: "Height", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Continue →" },
     step4: { title: "How do you eat?", sub: "We'll match recipes to you", allergiesTitle: "Any allergies?", allergiesSub: "Optional — can add later", btn: "Continue →" },
     step5: { title: "Who do you cook for?", sub: "We'll adjust portion sizes", dislikesTitle: "What don't you like?", dislikesPlaceholder: "E.g. cilantro, liver, eggplant...", optional: "Optional", btn: "Continue →" },
