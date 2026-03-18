@@ -441,7 +441,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 <Pencil className="w-3.5 h-3.5" /> {ms.editManually || 'Edit manually'}
               </button>
               <button
-                onClick={() => { reset(); fileRef.current?.click(); }}
+                onClick={() => { reset(); setShowSourcePicker(true); }}
                 className="flex-1 h-10 rounded-xl text-sm font-medium border-[1.5px] flex items-center justify-center gap-1 border-border text-muted-foreground"
               >
                 <RotateCcw className="w-3.5 h-3.5" /> {ms.scanAgain || 'Scan again'}
@@ -449,6 +449,47 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
             </div>
           </div>
         )}
+
+        {/* Source picker bottom sheet */}
+        <AnimatePresence>
+          {showSourcePicker && (
+            <div className="fixed inset-0 z-[80]" onClick={() => setShowSourcePicker(false)}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/40"
+              />
+              <motion.div
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="absolute bottom-0 left-0 right-0 bg-card rounded-t-2xl p-4 pb-8 space-y-3"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-2" />
+                <h3 className="text-base font-semibold text-foreground text-center">
+                  {ms.chooseSource || 'Add meal photo'}
+                </h3>
+                <button
+                  onClick={() => { setShowSourcePicker(false); cameraRef.current?.click(); }}
+                  className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                >
+                  <Camera className="w-5 h-5" />
+                  {ms.takePhotoBtn || '📷 Take photo'}
+                </button>
+                <button
+                  onClick={() => { setShowSourcePicker(false); galleryRef.current?.click(); }}
+                  className="w-full h-14 rounded-xl border-[1.5px] border-border text-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                >
+                  <Image className="w-5 h-5" />
+                  {ms.fromGalleryBtn || '🖼 From gallery'}
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
