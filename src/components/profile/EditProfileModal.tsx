@@ -125,7 +125,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
     const loadGoals = async () => {
       const { data } = await supabase
         .from('user_goals')
-        .select('weight_kg, height_cm, age, activity_level, disliked_foods, weight_loss_speed, goals')
+        .select('weight_kg, height_cm, age, activity_level, disliked_foods, weight_loss_speed, muscle_gain_speed, goals')
         .eq('user_id', user.id)
         .maybeSingle();
       if (data) {
@@ -133,6 +133,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
         if (data.height_cm) setHeightInput(String(data.height_cm));
         setActivityLevel(data.activity_level || 'moderate');
         setWeightLossSpeed((data as any).weight_loss_speed || 'moderate');
+        setMuscleGainSpeed((data as any).muscle_gain_speed || 'moderate');
         setCurrentGoals((data as any).goals || []);
         // Parse existing dislikes back into chips + free text
         const existing: string[] = (data as any).disliked_foods || [];
