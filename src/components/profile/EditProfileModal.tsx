@@ -183,11 +183,16 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
         : 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
       let TDEE = BMR * mult;
 
-      const userGoals: string[] = existingGoals?.goals || [];
-      if (userGoals.includes('lose_weight')) TDEE -= 400;
-      if (userGoals.includes('gain_muscle')) TDEE += 300;
+      const userGoals: string[] = existingGoals?.goals || currentGoals;
+      let target = TDEE;
+      if (userGoals.includes('lose_weight') || userGoals.includes('lose')) {
+        target = TDEE + (DEFICIT_MAP[weightLossSpeed] || -500);
+      }
+      if (userGoals.includes('build_muscle') || userGoals.includes('gain')) target = TDEE + 200;
 
-      const target = Math.round(TDEE);
+      // Safety minimum
+      const minCal = gender === 'male' ? 1500 : 1200;
+      target = Math.round(Math.max(target, minCal));
       await supabase.from('user_goals').update({ daily_calories_target: target } as any).eq('user_id', user.id);
 
       const kcalUnit = (t as any).diary?.kcalUnit || 'kcal';
