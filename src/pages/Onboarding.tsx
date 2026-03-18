@@ -413,6 +413,7 @@ const Onboarding = () => {
   const [householdSize, setHouseholdSize] = useState<number | null>(null);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
   const [weightLossSpeed, setWeightLossSpeed] = useState<WeightLossSpeed>('moderate');
+  const [muscleGainSpeed, setMuscleGainSpeed] = useState<MuscleGainSpeed>('moderate');
 
   // Pre-fill name
   useEffect(() => {
