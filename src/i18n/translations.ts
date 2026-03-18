@@ -137,6 +137,7 @@ export const translations = {
       confHigh: 'High confidence', confMedium: 'Estimated', confLow: 'Low confidence',
       tapToEdit: 'Tap item name to edit & recalculate',
       recalculated: 'Recalculated ✓', recalcFailed: 'Recalculation failed',
+      takePhotoBtn: '📷 Take photo', fromGalleryBtn: '🖼 From gallery', chooseSource: 'Add meal photo',
     },
     dashboard: {
       morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
