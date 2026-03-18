@@ -1131,7 +1131,9 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                     </AnimatePresence>
                   </div>
                 )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
