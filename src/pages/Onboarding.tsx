@@ -100,6 +100,12 @@ const T: Record<string, any> = {
         { id: 'fast', emoji: '🏃', title: 'Быстро', desc: '−0.75 кг/нед', sub: 'Заметный результат' },
         { id: 'intense', emoji: '⚡', title: 'Интенсивно', desc: '−1 кг/нед', sub: 'Максимальный дефицит' },
       ],
+      gainSpeedTitle: "Какой результат хочешь?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Медленно', desc: '+0.25 кг/мес', sub: 'Минимум жира' },
+        { id: 'moderate', emoji: '⚖️', title: 'Умеренно', desc: '+0.5 кг/мес', sub: 'Оптимальный баланс', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Активно', desc: '+0.75 кг/мес', sub: 'Нужны регулярные тренировки' },
+      ],
     },
     step3: { title: "Немного о себе", sub: "Рассчитаем твою личную норму калорий", gender: { male: "Мужчина", female: "Женщина" }, age: "Возраст", weight: "Вес", height: "Рост", kg: "кг", lbs: "фунты", cm: "см", ft: "футы", btn: "Продолжить →" },
     step4: { title: "Как ты питаешься?", sub: "Подберём рецепты под тебя", allergiesTitle: "Есть аллергии?", allergiesSub: "Необязательно — можно добавить позже", btn: "Продолжить →" },
