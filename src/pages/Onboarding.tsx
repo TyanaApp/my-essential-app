@@ -277,12 +277,17 @@ const T: Record<string, any> = {
 /* ───────── helpers ───────── */
 const ACTIVITY_FACTORS: Record<Activity, number> = { low: 1.2, moderate: 1.375, active: 1.55, very_active: 1.725 };
 
-const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: number, activity: Activity, goal: Goal): number => {
+const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+
+const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: number, activity: Activity, goal: Goal, lossSpeed: WeightLossSpeed = 'moderate'): number => {
   const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + (gender === 'male' ? 5 : -161);
   const tdee = bmr * ACTIVITY_FACTORS[activity];
-  if (goal === 'lose') return Math.round(tdee - 400);
-  if (goal === 'gain') return Math.round(tdee + 300);
-  return Math.round(tdee);
+  let target = tdee;
+  if (goal === 'lose') target = tdee + (DEFICIT_MAP[lossSpeed] || -500);
+  else if (goal === 'gain') target = tdee + 200;
+  // Safety minimums
+  const minCal = gender === 'male' ? 1500 : 1200;
+  return Math.round(Math.max(target, minCal));
 };
 
 const calcMacros = (cal: number) => ({
