@@ -758,6 +758,7 @@ export type Database = {
           id: string
           last_recalculated: string | null
           monthly_budget: number | null
+          muscle_gain_speed: string | null
           stores: string[] | null
           updated_at: string | null
           user_id: string
@@ -778,6 +779,7 @@ export type Database = {
           id?: string
           last_recalculated?: string | null
           monthly_budget?: number | null
+          muscle_gain_speed?: string | null
           stores?: string[] | null
           updated_at?: string | null
           user_id: string
@@ -798,6 +800,7 @@ export type Database = {
           id?: string
           last_recalculated?: string | null
           monthly_budget?: number | null
+          muscle_gain_speed?: string | null
           stores?: string[] | null
           updated_at?: string | null
           user_id?: string

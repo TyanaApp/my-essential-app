@@ -45,6 +45,13 @@ const WEIGHT_LOSS_SPEEDS = [
   { id: 'intense', emoji: '⚡' },
 ] as const;
 
+const MUSCLE_GAIN_SPEEDS = [
+  { id: 'slow', emoji: '🐢' },
+  { id: 'moderate', emoji: '⚖️' },
+  { id: 'active', emoji: '🏋️' },
+] as const;
+
+const SURPLUS_MAP: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
 const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
@@ -64,6 +71,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const [dislikedFoods, setDislikedFoods] = useState<string[]>([]);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
   const [weightLossSpeed, setWeightLossSpeed] = useState('moderate');
+  const [muscleGainSpeed, setMuscleGainSpeed] = useState('moderate');
   const [currentGoals, setCurrentGoals] = useState<string[]>([]);
 
   const ep = (t as any).editProfile || {};
@@ -86,6 +94,21 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   };
 
   const hasLoseGoal = currentGoals.some(g => g === 'lose_weight' || g === 'lose');
+  const hasGainGoal = currentGoals.some(g => g === 'build_muscle' || g === 'gain');
+
+  const getGainSpeedLabel = (id: string) => {
+    const labels: Record<string, Record<string, string>> = {
+      slow: { ru: 'Медленно', en: 'Slowly', uk: 'Повільно', lv: 'Lēni' },
+      moderate: { ru: 'Умеренно', en: 'Moderate', uk: 'Помірно', lv: 'Mēreni' },
+      active: { ru: 'Активно', en: 'Active', uk: 'Активно', lv: 'Aktīvi' },
+    };
+    const lang = (t as any)._lang || 'ru';
+    return labels[id]?.[lang] || labels[id]?.en || id;
+  };
+  const getGainSpeedDesc = (id: string) => {
+    const descs: Record<string, string> = { slow: '+150', moderate: '+200', active: '+300' };
+    return `${descs[id] || '+200'} kcal`;
+  };
 
   const getDislikeLabel = (id: string) => dl[id] || id;
 
@@ -102,7 +125,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
     const loadGoals = async () => {
       const { data } = await supabase
         .from('user_goals')
-        .select('weight_kg, height_cm, age, activity_level, disliked_foods, weight_loss_speed, goals')
+        .select('weight_kg, height_cm, age, activity_level, disliked_foods, weight_loss_speed, muscle_gain_speed, goals')
         .eq('user_id', user.id)
         .maybeSingle();
       if (data) {
@@ -110,6 +133,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
         if (data.height_cm) setHeightInput(String(data.height_cm));
         setActivityLevel(data.activity_level || 'moderate');
         setWeightLossSpeed((data as any).weight_loss_speed || 'moderate');
+        setMuscleGainSpeed((data as any).muscle_gain_speed || 'moderate');
         setCurrentGoals((data as any).goals || []);
         // Parse existing dislikes back into chips + free text
         const existing: string[] = (data as any).disliked_foods || [];
@@ -177,6 +201,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       activity_level: activityLevel,
       disliked_foods: buildDislikeArray(),
       weight_loss_speed: weightLossSpeed,
+      muscle_gain_speed: muscleGainSpeed,
     };
 
     const { data: existingGoals } = await supabase
@@ -206,7 +231,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       if (userGoals.includes('lose_weight') || userGoals.includes('lose')) {
         target = TDEE + (DEFICIT_MAP[weightLossSpeed] || -500);
       }
-      if (userGoals.includes('build_muscle') || userGoals.includes('gain')) target = TDEE + 200;
+      if (userGoals.includes('build_muscle') || userGoals.includes('gain')) {
+        let surplus = SURPLUS_MAP[muscleGainSpeed] || 200;
+        if (activityLevel === 'very_active') surplus = Math.min(surplus, 400);
+        surplus = Math.min(surplus, 500);
+        target = TDEE + surplus;
+      }
 
       // Safety minimum
       const minCal = gender === 'male' ? 1500 : 1200;
@@ -409,6 +439,32 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
                   >
                     {emoji} {getSpeedLabel(id)}
                     <span className="block text-[10px] text-muted-foreground">{getSpeedDesc(id)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Muscle gain speed selector (only for build_muscle goal) */}
+          {hasGainGoal && (
+            <div className="space-y-2">
+              <Label className="font-exo text-muted-foreground">
+                {ep.gainSpeedTitle || 'Muscle gain pace'}
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                {MUSCLE_GAIN_SPEEDS.map(({ id, emoji }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setMuscleGainSpeed(id)}
+                    className={`p-2.5 rounded-xl text-sm font-exo text-left transition-all border ${
+                      muscleGainSpeed === id
+                        ? 'border-primary bg-primary/10 text-foreground'
+                        : 'border-border bg-secondary/30 text-muted-foreground hover:bg-secondary/50'
+                    }`}
+                  >
+                    {emoji} {getGainSpeedLabel(id)}
+                    <span className="block text-[10px] text-muted-foreground">{getGainSpeedDesc(id)}</span>
                   </button>
                 ))}
               </div>

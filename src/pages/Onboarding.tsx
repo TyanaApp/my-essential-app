@@ -15,6 +15,7 @@ type Gender = 'male' | 'female';
 type WeightUnit = 'kg' | 'lbs';
 type HeightUnit = 'cm' | 'ft';
 type WeightLossSpeed = 'slow' | 'moderate' | 'fast' | 'intense';
+type MuscleGainSpeed = 'slow' | 'moderate' | 'active';
 
 const TOTAL_STEPS = 6;
 
@@ -29,6 +30,12 @@ const T: Record<string, any> = {
         { id: 'moderate', emoji: '⚖️', title: 'Moderate', desc: '−0.5 kg/week', sub: 'Optimal pace', recommended: true },
         { id: 'fast', emoji: '🏃', title: 'Fast', desc: '−0.75 kg/week', sub: 'Noticeable results' },
         { id: 'intense', emoji: '⚡', title: 'Intense', desc: '−1 kg/week', sub: 'Maximum deficit' },
+      ],
+      gainSpeedTitle: "What result do you want?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Slowly', desc: '+0.25 kg/month', sub: 'Minimum fat gain' },
+        { id: 'moderate', emoji: '⚖️', title: 'Moderate', desc: '+0.5 kg/month', sub: 'Optimal balance', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Active', desc: '+0.75 kg/month', sub: 'Requires regular training' },
       ],
     },
     step3: { title: "A little about you", sub: "We'll calculate your personal calorie goal", gender: { male: "Male", female: "Female" }, age: "Age", weight: "Weight", height: "Height", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Continue →" },
@@ -93,6 +100,12 @@ const T: Record<string, any> = {
         { id: 'fast', emoji: '🏃', title: 'Быстро', desc: '−0.75 кг/нед', sub: 'Заметный результат' },
         { id: 'intense', emoji: '⚡', title: 'Интенсивно', desc: '−1 кг/нед', sub: 'Максимальный дефицит' },
       ],
+      gainSpeedTitle: "Какой результат хочешь?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Медленно', desc: '+0.25 кг/мес', sub: 'Минимум жира' },
+        { id: 'moderate', emoji: '⚖️', title: 'Умеренно', desc: '+0.5 кг/мес', sub: 'Оптимальный баланс', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Активно', desc: '+0.75 кг/мес', sub: 'Нужны регулярные тренировки' },
+      ],
     },
     step3: { title: "Немного о себе", sub: "Рассчитаем твою личную норму калорий", gender: { male: "Мужчина", female: "Женщина" }, age: "Возраст", weight: "Вес", height: "Рост", kg: "кг", lbs: "фунты", cm: "см", ft: "футы", btn: "Продолжить →" },
     step4: { title: "Как ты питаешься?", sub: "Подберём рецепты под тебя", allergiesTitle: "Есть аллергии?", allergiesSub: "Необязательно — можно добавить позже", btn: "Продолжить →" },
@@ -155,6 +168,12 @@ const T: Record<string, any> = {
         { id: 'moderate', emoji: '⚖️', title: 'Помірно', desc: '−0.5 кг/тижд', sub: 'Оптимальний темп', recommended: true },
         { id: 'fast', emoji: '🏃', title: 'Швидко', desc: '−0.75 кг/тижд', sub: 'Помітний результат' },
         { id: 'intense', emoji: '⚡', title: 'Інтенсивно', desc: '−1 кг/тижд', sub: 'Максимальний дефіцит' },
+      ],
+      gainSpeedTitle: "Який результат хочеш?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Повільно', desc: '+0.25 кг/міс', sub: 'Мінімум жиру' },
+        { id: 'moderate', emoji: '⚖️', title: 'Помірно', desc: '+0.5 кг/міс', sub: 'Оптимальний баланс', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Активно', desc: '+0.75 кг/міс', sub: 'Потрібні регулярні тренування' },
       ],
     },
     step3: { title: "Трохи про себе", sub: "Розрахуємо твою особисту норму калорій", gender: { male: "Чоловік", female: "Жінка" }, age: "Вік", weight: "Вага", height: "Зріст", kg: "кг", lbs: "фунти", cm: "см", ft: "фути", btn: "Продовжити →" },
@@ -219,6 +238,12 @@ const T: Record<string, any> = {
         { id: 'fast', emoji: '🏃', title: 'Ātri', desc: '−0.75 kg/ned', sub: 'Pamanāms rezultāts' },
         { id: 'intense', emoji: '⚡', title: 'Intensīvi', desc: '−1 kg/ned', sub: 'Maksimāls deficīts' },
       ],
+      gainSpeedTitle: "Kādu rezultātu vēlies?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Lēni', desc: '+0.25 kg/mēn', sub: 'Minimāls tauku pieaugums' },
+        { id: 'moderate', emoji: '⚖️', title: 'Mēreni', desc: '+0.5 kg/mēn', sub: 'Optimāls līdzsvars', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Aktīvi', desc: '+0.75 kg/mēn', sub: 'Nepieciešami regulāri treniņi' },
+      ],
     },
     step3: { title: "Nedaudz par sevi", sub: "Aprēķināsim tavu personīgo kaloriju normu", gender: { male: "Vīrietis", female: "Sieviete" }, age: "Vecums", weight: "Svars", height: "Augums", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Turpināt →" },
     step4: { title: "Kā tu ēd?", sub: "Pielāgosim receptes tev", allergiesTitle: "Vai ir alerģijas?", allergiesSub: "Neobligāti — var pievienot vēlāk", btn: "Turpināt →" },
@@ -278,23 +303,42 @@ const T: Record<string, any> = {
 const ACTIVITY_FACTORS: Record<Activity, number> = { low: 1.2, moderate: 1.375, active: 1.55, very_active: 1.725 };
 
 const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+const SURPLUS_MAP: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
 
-const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: number, activity: Activity, goal: Goal, lossSpeed: WeightLossSpeed = 'moderate'): number => {
+const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: number, activity: Activity, goal: Goal, lossSpeed: WeightLossSpeed = 'moderate', gainSpeed: MuscleGainSpeed = 'moderate'): number => {
   const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + (gender === 'male' ? 5 : -161);
   const tdee = bmr * ACTIVITY_FACTORS[activity];
   let target = tdee;
   if (goal === 'lose') target = tdee + (DEFICIT_MAP[lossSpeed] || -500);
-  else if (goal === 'gain') target = tdee + 200;
+  else if (goal === 'gain') {
+    let surplus = SURPLUS_MAP[gainSpeed] || 200;
+    // Safety cap: never exceed TDEE + 500, cap at +400 for very_active
+    if (activity === 'very_active') surplus = Math.min(surplus, 400);
+    surplus = Math.min(surplus, 500);
+    target = tdee + surplus;
+  }
   // Safety minimums
   const minCal = gender === 'male' ? 1500 : 1200;
   return Math.round(Math.max(target, minCal));
 };
 
-const calcMacros = (cal: number) => ({
-  protein: Math.round((cal * 0.25) / 4),
-  fat: Math.round((cal * 0.30) / 9),
-  carbs: Math.round((cal * 0.45) / 4),
-});
+const calcMacros = (cal: number, goal?: Goal | null, weightKg?: number) => {
+  if ((goal === 'gain') && weightKg) {
+    const proteinG = Math.round(weightKg * 2.0);
+    const proteinCals = proteinG * 4;
+    const remaining = cal - proteinCals;
+    return {
+      protein: proteinG,
+      fat: Math.round((remaining * 0.30) / 9),
+      carbs: Math.round(Math.max((remaining * 0.70) / 4, 0)),
+    };
+  }
+  return {
+    protein: Math.round((cal * 0.25) / 4),
+    fat: Math.round((cal * 0.30) / 9),
+    carbs: Math.round((cal * 0.45) / 4),
+  };
+};
 
 /* ───────── Confetti component ───────── */
 const Confetti = () => {
@@ -369,6 +413,7 @@ const Onboarding = () => {
   const [householdSize, setHouseholdSize] = useState<number | null>(null);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
   const [weightLossSpeed, setWeightLossSpeed] = useState<WeightLossSpeed>('moderate');
+  const [muscleGainSpeed, setMuscleGainSpeed] = useState<MuscleGainSpeed>('moderate');
 
   // Pre-fill name
   useEffect(() => {
@@ -380,8 +425,8 @@ const Onboarding = () => {
   // Derived
   const weightKg = weightUnit === 'kg' ? weightVal : Math.round(weightVal / 2.205);
   const heightCm = heightUnit === 'cm' ? heightVal : Math.round(heightVal * 2.54); // stored as total inches when ft
-  const calories = (gender && activity && goal) ? calcCalories(gender, weightKg, heightCm, age, activity, goal, weightLossSpeed) : 2000;
-  const macros = calcMacros(calories);
+  const calories = (gender && activity && goal) ? calcCalories(gender, weightKg, heightCm, age, activity, goal, weightLossSpeed, muscleGainSpeed) : 2000;
+  const macros = calcMacros(calories, goal, weightKg);
 
   const goNext = () => { setDirection(1); setStep(s => s + 1); };
   const goBack = () => { setDirection(-1); setStep(s => Math.max(0, s - 1)); };
@@ -418,6 +463,7 @@ const Onboarding = () => {
         age,
         activity_level: activity || 'moderate',
         weight_loss_speed: goal === 'lose' ? weightLossSpeed : null,
+        muscle_gain_speed: goal === 'gain' ? muscleGainSpeed : null,
       } as any, { onConflict: 'user_id' });
 
       supabase.functions.invoke('send-welcome-email', {
@@ -431,7 +477,7 @@ const Onboarding = () => {
     } finally {
       setSaving(false);
     }
-  }, [user, name, gender, goal, dietType, householdSize, selectedAllergies, dislikedFreeText, calories, weightKg, heightCm, age, activity, weightLossSpeed, language, navigate, t]);
+  }, [user, name, gender, goal, dietType, householdSize, selectedAllergies, dislikedFreeText, calories, weightKg, heightCm, age, activity, weightLossSpeed, muscleGainSpeed, language, navigate, t]);
 
   // Can proceed checks
   const canProceed = [
@@ -554,6 +600,52 @@ const Onboarding = () => {
                               key={s.id}
                               whileTap={{ scale: 0.97 }}
                               onClick={() => setWeightLossSpeed(s.id)}
+                              className={`w-full flex items-center gap-3 p-3 rounded-2xl border-2 text-left transition-all ${
+                                selected ? 'border-primary bg-primary/5' : 'border-border bg-card'
+                              }`}
+                            >
+                              <span className="text-xl">{s.emoji}</span>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-foreground text-sm">{s.title}</p>
+                                  {s.recommended && (
+                                    <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">★</span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground">{s.desc} · {s.sub}</p>
+                              </div>
+                              {selected && (
+                                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
+                                  <span className="text-white text-xs">✓</span>
+                                </motion.div>
+                              )}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Muscle gain speed selector */}
+                <AnimatePresence>
+                  {goal === 'gain' && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="font-semibold text-foreground text-sm mt-6 mb-3 text-center">{t.step2.gainSpeedTitle}</p>
+                      <div className="space-y-2">
+                        {t.step2.gainSpeeds.map((s: any) => {
+                          const selected = muscleGainSpeed === s.id;
+                          return (
+                            <motion.button
+                              key={s.id}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => setMuscleGainSpeed(s.id)}
                               className={`w-full flex items-center gap-3 p-3 rounded-2xl border-2 text-left transition-all ${
                                 selected ? 'border-primary bg-primary/5' : 'border-border bg-card'
                               }`}

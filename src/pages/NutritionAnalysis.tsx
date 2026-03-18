@@ -189,15 +189,22 @@ const NutritionAnalysis = () => {
 };
 
 export function calcMacroTargets(weightKg: number, caloriesTarget: number, goals: string[]) {
+  // Muscle building: 2g protein per kg bodyweight
+  if (goals.includes('build_muscle') || goals.includes('gain') || goals.includes('gain_muscle')) {
+    const protein = Math.round(weightKg * 2.0);
+    const proteinCals = protein * 4;
+    const remaining = caloriesTarget - proteinCals;
+    const fat = Math.round((remaining * 0.30) / 9);
+    const carbs = Math.round(Math.max((remaining * 0.70) / 4, 0));
+    return { protein, fat, carbs };
+  }
+
   let proteinPerKg = 1.6;
   let fatPct = 0.3;
 
-  if (goals.includes('lose_weight')) {
+  if (goals.includes('lose_weight') || goals.includes('lose')) {
     proteinPerKg = 2.0;
     fatPct = 0.25;
-  } else if (goals.includes('gain_muscle')) {
-    proteinPerKg = 2.2;
-    fatPct = 0.3;
   }
 
   const protein = Math.round(weightKg * proteinPerKg);

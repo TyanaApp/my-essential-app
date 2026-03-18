@@ -63,6 +63,7 @@ const Diary = () => {
   const [loading, setLoading] = useState(true);
   const [dailyTarget, setDailyTarget] = useState(2000);
   const [macroTargets, setMacroTargets] = useState({ protein: 120, fat: 60, carbs: 250 });
+  const [isMuscleGoal, setIsMuscleGoal] = useState(false);
 
 
   // Scan modal state
@@ -94,6 +95,7 @@ const Diary = () => {
           const cal = goalsRes.data.daily_calories_target || 2000;
           const g: string[] = (goalsRes.data as any).goals || [];
           setMacroTargets(calcMacroTargets(w, cal, g));
+          setIsMuscleGoal(g.includes('build_muscle') || g.includes('gain'));
         }
       } catch {
         toast.error(t.common.error);
@@ -248,6 +250,41 @@ const Diary = () => {
               </motion.div>
             );
           })}
+        </div>
+      )}
+
+      {/* Protein progress bar for muscle building users */}
+      {isMuscleGoal && !loading && (
+        <div className="mb-4 bg-card rounded-2xl p-4 shadow-[0_2px_12px_rgba(124,58,237,0.06)]">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-sm font-bold text-foreground">
+              💪 {(t as any).diary?.proteinToday || 'Protein today'}
+            </span>
+            <span className="text-sm font-bold" style={{
+              color: (() => {
+                const ratio = macroTargets.protein > 0 ? totals.protein / macroTargets.protein : 0;
+                if (ratio >= 0.8) return '#059669';
+                if (ratio >= 0.5) return '#EA580C';
+                return '#DC2626';
+              })()
+            }}>
+              {Math.round(totals.protein)}{(t.nutritionCalc as any)?.unitG || 'g'} / {macroTargets.protein}{(t.nutritionCalc as any)?.unitG || 'g'}
+            </span>
+          </div>
+          <div className="h-2.5 rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${Math.min((totals.protein / macroTargets.protein) * 100, 100)}%`,
+                backgroundColor: (() => {
+                  const ratio = macroTargets.protein > 0 ? totals.protein / macroTargets.protein : 0;
+                  if (ratio >= 0.8) return '#059669';
+                  if (ratio >= 0.5) return '#EA580C';
+                  return '#DC2626';
+                })()
+              }}
+            />
+          </div>
         </div>
       )}
 

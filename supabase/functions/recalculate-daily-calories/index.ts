@@ -37,7 +37,7 @@ serve(async (req) => {
     // Get goals
     const { data: goals } = await supabase
       .from("user_goals")
-      .select("weight_kg, height_cm, age, activity_level, goals, daily_calories_target, weight_loss_speed")
+      .select("weight_kg, height_cm, age, activity_level, goals, daily_calories_target, weight_loss_speed, muscle_gain_speed")
       .eq("user_id", userId)
       .maybeSingle();
 
@@ -78,13 +78,22 @@ serve(async (req) => {
 
     // Deficit/surplus based on goal
     const deficitMap: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+    const surplusMap: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
     const userGoals: string[] = goals.goals || [];
     let baseTarget = TDEE;
     if (userGoals.includes("lose_weight") || userGoals.includes("lose")) {
       const speed = (goals as any).weight_loss_speed || "moderate";
       baseTarget = TDEE + (deficitMap[speed] || -500);
     }
-    if (userGoals.includes("build_muscle") || userGoals.includes("gain")) baseTarget = TDEE + 200;
+    if (userGoals.includes("build_muscle") || userGoals.includes("gain")) {
+      const gainSpeed = (goals as any).muscle_gain_speed || "moderate";
+      let surplus = surplusMap[gainSpeed] || 200;
+      // Safety cap
+      const actLevel = goals.activity_level || "moderate";
+      if (actLevel === "very_active") surplus = Math.min(surplus, 400);
+      surplus = Math.min(surplus, 500);
+      baseTarget = TDEE + surplus;
+    }
 
     // Safety minimums
     const minCal = gender === "male" ? 1500 : 1200;
@@ -149,7 +158,9 @@ serve(async (req) => {
       day_type: dayOfWeek === 0 || dayOfWeek === 6 ? "weekend" : dayOfWeek === 1 ? "monday" : "weekday",
       goal_adjustment: userGoals.includes("lose_weight") || userGoals.includes("lose")
         ? (deficitMap[(goals as any).weight_loss_speed || "moderate"] || -500)
-        : userGoals.includes("build_muscle") || userGoals.includes("gain") ? 200 : 0,
+        : userGoals.includes("build_muscle") || userGoals.includes("gain")
+          ? (surplusMap[(goals as any).muscle_gain_speed || "moderate"] || 200)
+          : 0,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
