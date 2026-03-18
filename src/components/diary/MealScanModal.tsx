@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { X, Camera, RotateCcw, Pencil, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Camera, RotateCcw, Pencil, Loader2, Image } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -39,9 +39,11 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
   const { user } = useAuth();
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<'capture' | 'analyzing' | 'results'>('capture');
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
   const [photo, setPhoto] = useState<string | null>(null);
   const [result, setResult] = useState<MealScanResult | null>(null);
   const [portion, setPortion] = useState('full');
@@ -62,6 +64,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
     setEditName('');
     setEditingItemIdx(null);
     setEditingItemName('');
+    setShowSourcePicker(false);
   };
 
   const handleClose = () => { reset(); onClose(); };
