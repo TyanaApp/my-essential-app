@@ -137,6 +137,7 @@ export const translations = {
       confHigh: 'High confidence', confMedium: 'Estimated', confLow: 'Low confidence',
       tapToEdit: 'Tap item name to edit & recalculate',
       recalculated: 'Recalculated ✓', recalcFailed: 'Recalculation failed',
+      takePhotoBtn: '📷 Take photo', fromGalleryBtn: '🖼 From gallery', chooseSource: 'Add meal photo',
     },
     dashboard: {
       morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening',
@@ -826,6 +827,7 @@ export const translations = {
       confHigh: 'Высокая точность', confMedium: 'Приблизительно', confLow: 'Низкая точность',
       tapToEdit: 'Нажмите на название чтобы изменить',
       recalculated: 'Пересчитано ✓', recalcFailed: 'Ошибка пересчёта',
+      takePhotoBtn: '📷 Сделать фото', fromGalleryBtn: '🖼 Из галереи', chooseSource: 'Фото блюда',
     },
     dashboard: {
       morning: 'Доброе утро', afternoon: 'Добрый день', evening: 'Добрый вечер',
@@ -1429,6 +1431,7 @@ export const translations = {
       portionEaten: 'Cik apēdāt:', portionExtra: '150%', portionFull: 'Visu', portionThreeQuarters: '¾', portionHalf: 'Pusi', portionQuarter: '¼',
       confHigh: 'Augsta precizitāte', confMedium: 'Aptuveni', confLow: 'Zema precizitāte',
       tapToEdit: 'Nospiediet nosaukumu lai rediģētu', recalculated: 'Pārrēķināts ✓', recalcFailed: 'Pārrēķins neizdevās',
+      takePhotoBtn: '📷 Uzņemt foto', fromGalleryBtn: '🖼 No galerijas', chooseSource: 'Ēdiena foto',
     },
     dashboard: {
       morning: 'Labrīt', afternoon: 'Labdien', evening: 'Labvakar',
@@ -2014,6 +2017,7 @@ export const translations = {
       portionEaten: 'Скільки з\'їли:', portionExtra: '150%', portionFull: 'Все', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
       confHigh: 'Висока точність', confMedium: 'Приблизно', confLow: 'Низька точність',
       tapToEdit: 'Натисніть на назву щоб змінити', recalculated: 'Перераховано ✓', recalcFailed: 'Помилка перерахунку',
+      takePhotoBtn: '📷 Зробити фото', fromGalleryBtn: '🖼 З галереї', chooseSource: 'Фото страви',
     },
     dashboard: {
       morning: 'Доброго ранку', afternoon: 'Добрий день', evening: 'Добрий вечір',

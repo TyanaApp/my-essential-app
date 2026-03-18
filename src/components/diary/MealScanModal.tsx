@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { X, Camera, RotateCcw, Pencil, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Camera, RotateCcw, Pencil, Loader2, Image } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -39,9 +39,11 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
   const { user } = useAuth();
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<'capture' | 'analyzing' | 'results'>('capture');
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
   const [photo, setPhoto] = useState<string | null>(null);
   const [result, setResult] = useState<MealScanResult | null>(null);
   const [portion, setPortion] = useState('full');
@@ -62,6 +64,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
     setEditName('');
     setEditingItemIdx(null);
     setEditingItemName('');
+    setShowSourcePicker(false);
   };
 
   const handleClose = () => { reset(); onClose(); };
@@ -238,10 +241,20 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
           {step === 'capture' && (
             <div className="text-center py-6">
               <input
-                ref={fileRef}
+                ref={cameraRef}
                 type="file"
                 accept="image/*"
                 capture="environment"
+                className="hidden"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFile(file);
+                }}
+              />
+              <input
+                ref={galleryRef}
+                type="file"
+                accept="image/*"
                 className="hidden"
                 onChange={e => {
                   const file = e.target.files?.[0];
@@ -252,7 +265,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 <img src={photo} alt="meal" className="w-full max-h-64 object-cover rounded-xl mb-4" />
               ) : (
                 <div
-                  onClick={() => fileRef.current?.click()}
+                  onClick={() => setShowSourcePicker(true)}
                   className="w-full aspect-[4/3] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary hover:bg-accent transition-colors border-border"
                 >
                   <Camera className="w-12 h-12 text-primary" />
@@ -403,7 +416,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
         {step === 'capture' && !photo && (
           <div className="modal-actions rounded-b-2xl">
             <button
-              onClick={() => fileRef.current?.click()}
+              onClick={() => setShowSourcePicker(true)}
               className="w-full h-14 rounded-2xl text-primary-foreground font-semibold text-sm bg-primary"
             >
               📸 {ms.scanMeal || 'Scan meal'}
@@ -428,7 +441,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 <Pencil className="w-3.5 h-3.5" /> {ms.editManually || 'Edit manually'}
               </button>
               <button
-                onClick={() => { reset(); fileRef.current?.click(); }}
+                onClick={() => { reset(); setShowSourcePicker(true); }}
                 className="flex-1 h-10 rounded-xl text-sm font-medium border-[1.5px] flex items-center justify-center gap-1 border-border text-muted-foreground"
               >
                 <RotateCcw className="w-3.5 h-3.5" /> {ms.scanAgain || 'Scan again'}
@@ -436,6 +449,47 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
             </div>
           </div>
         )}
+
+        {/* Source picker bottom sheet */}
+        <AnimatePresence>
+          {showSourcePicker && (
+            <div className="fixed inset-0 z-[80]" onClick={() => setShowSourcePicker(false)}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/40"
+              />
+              <motion.div
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="absolute bottom-0 left-0 right-0 bg-card rounded-t-2xl p-4 pb-8 space-y-3"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-2" />
+                <h3 className="text-base font-semibold text-foreground text-center">
+                  {ms.chooseSource || 'Add meal photo'}
+                </h3>
+                <button
+                  onClick={() => { setShowSourcePicker(false); cameraRef.current?.click(); }}
+                  className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                >
+                  <Camera className="w-5 h-5" />
+                  {ms.takePhotoBtn || '📷 Take photo'}
+                </button>
+                <button
+                  onClick={() => { setShowSourcePicker(false); galleryRef.current?.click(); }}
+                  className="w-full h-14 rounded-xl border-[1.5px] border-border text-foreground font-semibold text-sm flex items-center justify-center gap-2"
+                >
+                  <Image className="w-5 h-5" />
+                  {ms.fromGalleryBtn || '🖼 From gallery'}
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
