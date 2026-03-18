@@ -2017,6 +2017,7 @@ export const translations = {
       portionEaten: 'Скільки з\'їли:', portionExtra: '150%', portionFull: 'Все', portionThreeQuarters: '¾', portionHalf: 'Половину', portionQuarter: '¼',
       confHigh: 'Висока точність', confMedium: 'Приблизно', confLow: 'Низька точність',
       tapToEdit: 'Натисніть на назву щоб змінити', recalculated: 'Перераховано ✓', recalcFailed: 'Помилка перерахунку',
+      takePhotoBtn: '📷 Зробити фото', fromGalleryBtn: '🖼 З галереї', chooseSource: 'Фото страви',
     },
     dashboard: {
       morning: 'Доброго ранку', afternoon: 'Добрий день', evening: 'Добрий вечір',
