@@ -463,6 +463,7 @@ const Onboarding = () => {
         age,
         activity_level: activity || 'moderate',
         weight_loss_speed: goal === 'lose' ? weightLossSpeed : null,
+        muscle_gain_speed: goal === 'gain' ? muscleGainSpeed : null,
       } as any, { onConflict: 'user_id' });
 
       supabase.functions.invoke('send-welcome-email', {
