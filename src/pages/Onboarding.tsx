@@ -368,6 +368,7 @@ const Onboarding = () => {
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
   const [householdSize, setHouseholdSize] = useState<number | null>(null);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
+  const [weightLossSpeed, setWeightLossSpeed] = useState<WeightLossSpeed>('moderate');
 
   // Pre-fill name
   useEffect(() => {
