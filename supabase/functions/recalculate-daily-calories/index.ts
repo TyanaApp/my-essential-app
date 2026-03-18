@@ -102,7 +102,7 @@ serve(async (req) => {
     if (dayOfWeek === 0 || dayOfWeek === 6) adjustment += 100; // Weekend
     if (dayOfWeek === 1) adjustment -= 50; // Monday
 
-    const finalTarget = Math.round(baseTarget + adjustment);
+    let finalTarget = Math.round(Math.max(baseTarget + adjustment, minCal));
 
     // Get yesterday's target for comparison
     const yesterday = new Date();
