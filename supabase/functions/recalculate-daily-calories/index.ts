@@ -158,7 +158,9 @@ serve(async (req) => {
       day_type: dayOfWeek === 0 || dayOfWeek === 6 ? "weekend" : dayOfWeek === 1 ? "monday" : "weekday",
       goal_adjustment: userGoals.includes("lose_weight") || userGoals.includes("lose")
         ? (deficitMap[(goals as any).weight_loss_speed || "moderate"] || -500)
-        : userGoals.includes("build_muscle") || userGoals.includes("gain") ? 200 : 0,
+        : userGoals.includes("build_muscle") || userGoals.includes("gain")
+          ? (surplusMap[(goals as any).muscle_gain_speed || "moderate"] || 200)
+          : 0,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
