@@ -462,6 +462,113 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
   };
 
   const handleAnalyze = async () => {
+    if (!mealText.trim() && gramsItems.length === 0) return;
+
+    // Multi-item grams mode
+    if (inputMode === 'grams' && gramsItems.length > 0) {
+      const validItems = gramsItems.filter(i => i.name.trim() && i.grams.trim());
+      if (validItems.length === 0) return;
+
+      setStep('analyzing');
+      try {
+        const combinedDesc = validItems.map(i => `${i.name.trim()}: ${i.grams}г`).join('\n');
+        const cacheKey = ('multi|' + combinedDesc + '|' + language).toLowerCase().replace(/\s+/g, '_');
+        const cached = getCachedResult(cacheKey);
+        if (cached) {
+          setResult(cached);
+          setStep('result');
+          return;
+        }
+
+        const { data } = await supabase.functions.invoke('calculate-meal-calories', {
+          body: {
+            mealDescription: combinedDesc,
+            quantityDescription: validItems.map(i => `${i.name.trim()}: ${i.grams}g`).join(', '),
+            foodCategory: 'mixed',
+            clarifications: '',
+            language,
+          },
+        });
+
+        const resultData: MealResult = (data && (data.total_calories || data.calories))
+          ? data as MealResult
+          : {
+              meal_name: validItems.map(i => i.name).join(' + '),
+              total_calories: 200,
+              protein: 10, fat: 8, carbs: 25,
+              confidence: 'low', data_source: 'estimation',
+            };
+
+        // Build multi-item result for display
+        if (data?.breakdown && Array.isArray(data.breakdown)) {
+          setMultiItemResult({
+            items: data.breakdown.map((b: any) => ({
+              name: b.ingredient || b.name || '',
+              grams: parseInt(b.amount) || 0,
+              calories: b.calories || 0,
+              protein: b.protein || 0,
+              fat: b.fat || 0,
+              carbs: b.carbs || 0,
+            })),
+            total: {
+              calories: resultData.total_calories,
+              protein: resultData.protein,
+              fat: resultData.fat,
+              carbs: resultData.carbs,
+            },
+          });
+        }
+
+        setResult(resultData);
+        setCachedResult(cacheKey, resultData);
+        setStep('result');
+      } catch {
+        const fb: MealResult = {
+          meal_name: gramsItems.map(i => i.name).join(' + '),
+          total_calories: 200, protein: 10, fat: 8, carbs: 25,
+          confidence: 'low', data_source: 'estimation',
+        };
+        setResult(fb);
+        setStep('result');
+      }
+      return;
+    }
+
+    // Single item grams mode
+    if (inputMode === 'grams' && mealText.trim() && gramsValue.trim()) {
+      const isFood = await validateFood(mealText.trim());
+      if (!isFood) return;
+
+      const qtyDesc = `${gramsValue}g`;
+      const cacheKey = (mealText.trim() + '|' + qtyDesc + '|' + language).toLowerCase().replace(/\s+/g, '_');
+      const cached = getCachedResult(cacheKey);
+      if (cached) { setResult(cached); setStep('result'); return; }
+
+      setStep('analyzing');
+      try {
+        const { data } = await supabase.functions.invoke('calculate-meal-calories', {
+          body: {
+            mealDescription: mealText.trim(),
+            quantityDescription: qtyDesc,
+            foodCategory,
+            clarifications: clarifications.join(', '),
+            language,
+          },
+        });
+        const resultData: MealResult = (data && (data.total_calories || data.calories))
+          ? data as MealResult
+          : { meal_name: mealText.trim(), total_calories: 200, protein: 10, fat: 8, carbs: 25, confidence: 'low', data_source: 'estimation' };
+        setResult(resultData);
+        setCachedResult(cacheKey, resultData);
+        setStep('result');
+      } catch {
+        setResult({ meal_name: mealText.trim(), total_calories: 200, protein: 10, fat: 8, carbs: 25, confidence: 'low', data_source: 'estimation' });
+        setStep('result');
+      }
+      return;
+    }
+
+    // Original portion-based flow
     if (!mealText.trim()) return;
 
     const isFood = await validateFood(mealText.trim());
