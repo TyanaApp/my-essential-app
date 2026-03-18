@@ -158,6 +158,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       age: age || null,
       activity_level: activityLevel,
       disliked_foods: buildDislikeArray(),
+      weight_loss_speed: weightLossSpeed,
     };
 
     const { data: existingGoals } = await supabase
