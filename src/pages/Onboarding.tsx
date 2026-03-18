@@ -211,7 +211,15 @@ const T: Record<string, any> = {
   },
   lv: {
     step1: { title: "Sveiki! Es esmu TYANA", sub: "Iepazīsimies — kā tevi sauc?", placeholder: "Tavs vārds", btn: (n: string) => `Sveiki, ${n}! →` },
-    step2: { title: "Kāds ir galvenais mērķis?", sub: "Izvēlies vienu — vēlāk var mainīt", btn: "Turpināt →" },
+    step2: { title: "Kāds ir galvenais mērķis?", sub: "Izvēlies vienu — vēlāk var mainīt", btn: "Turpināt →",
+      loseSpeedTitle: "Cik ātri vēlies zaudēt svaru?",
+      loseSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Lēni', desc: '−0.25 kg/ned', sub: 'Maigi, bez stresa' },
+        { id: 'moderate', emoji: '⚖️', title: 'Mēreni', desc: '−0.5 kg/ned', sub: 'Optimāls temps', recommended: true },
+        { id: 'fast', emoji: '🏃', title: 'Ātri', desc: '−0.75 kg/ned', sub: 'Pamanāms rezultāts' },
+        { id: 'intense', emoji: '⚡', title: 'Intensīvi', desc: '−1 kg/ned', sub: 'Maksimāls deficīts' },
+      ],
+    },
     step3: { title: "Nedaudz par sevi", sub: "Aprēķināsim tavu personīgo kaloriju normu", gender: { male: "Vīrietis", female: "Sieviete" }, age: "Vecums", weight: "Svars", height: "Augums", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Turpināt →" },
     step4: { title: "Kā tu ēd?", sub: "Pielāgosim receptes tev", allergiesTitle: "Vai ir alerģijas?", allergiesSub: "Neobligāti — var pievienot vēlāk", btn: "Turpināt →" },
     step5: { title: "Kam tu gatavo?", sub: "Pielāgosim porciju izmērus", dislikesTitle: "Ko tu nemīli?", dislikesPlaceholder: "Piemēram: koriandrs, aknas, baklažāni...", optional: "Neobligāti", btn: "Turpināt →" },
