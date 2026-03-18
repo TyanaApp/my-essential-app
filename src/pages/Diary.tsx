@@ -95,6 +95,7 @@ const Diary = () => {
           const cal = goalsRes.data.daily_calories_target || 2000;
           const g: string[] = (goalsRes.data as any).goals || [];
           setMacroTargets(calcMacroTargets(w, cal, g));
+          setIsMuscleGoal(g.includes('build_muscle') || g.includes('gain'));
         }
       } catch {
         toast.error(t.common.error);
