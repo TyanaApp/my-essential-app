@@ -90,7 +90,9 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       if (data) {
         if (data.weight_kg) setWeightInput(String(data.weight_kg));
         if (data.height_cm) setHeightInput(String(data.height_cm));
-        setActivityLevel(data.activity_level || 'normal');
+        setActivityLevel(data.activity_level || 'moderate');
+        setWeightLossSpeed((data as any).weight_loss_speed || 'moderate');
+        setCurrentGoals((data as any).goals || []);
         // Parse existing dislikes back into chips + free text
         const existing: string[] = (data as any).disliked_foods || [];
         const chipIds: string[] = [];
