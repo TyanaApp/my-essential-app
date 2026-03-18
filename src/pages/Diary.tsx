@@ -253,7 +253,40 @@ const Diary = () => {
         </div>
       )}
 
-      {/* Daily totals bar */}
+      {/* Protein progress bar for muscle building users */}
+      {isMuscleGoal && !loading && (
+        <div className="mb-4 bg-card rounded-2xl p-4 shadow-[0_2px_12px_rgba(124,58,237,0.06)]">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-sm font-bold text-foreground">
+              💪 {(t as any).diary?.proteinToday || 'Protein today'}
+            </span>
+            <span className="text-sm font-bold" style={{
+              color: (() => {
+                const ratio = macroTargets.protein > 0 ? totals.protein / macroTargets.protein : 0;
+                if (ratio >= 0.8) return '#059669';
+                if (ratio >= 0.5) return '#EA580C';
+                return '#DC2626';
+              })()
+            }}>
+              {Math.round(totals.protein)}{(t.nutritionCalc as any)?.unitG || 'g'} / {macroTargets.protein}{(t.nutritionCalc as any)?.unitG || 'g'}
+            </span>
+          </div>
+          <div className="h-2.5 rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${Math.min((totals.protein / macroTargets.protein) * 100, 100)}%`,
+                backgroundColor: (() => {
+                  const ratio = macroTargets.protein > 0 ? totals.protein / macroTargets.protein : 0;
+                  if (ratio >= 0.8) return '#059669';
+                  if (ratio >= 0.5) return '#EA580C';
+                  return '#DC2626';
+                })()
+              }}
+            />
+          </div>
+        </div>
+      )
       <div
         className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] md:bottom-0 left-0 right-0 md:left-60 px-6 py-3 z-40 bg-card/95 backdrop-blur-sm border-t border-border"
       >
