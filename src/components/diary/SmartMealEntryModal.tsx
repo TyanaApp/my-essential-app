@@ -296,6 +296,21 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
   const [mixedUnit, setMixedUnit] = useState<'g' | 'kg'>('g');
   const [showBreakdown, setShowBreakdown] = useState(false);
 
+  // Grams mode state
+  const [inputMode, setInputMode] = useState<'portion' | 'grams'>('portion');
+  const [gramsValue, setGramsValue] = useState('');
+  const [gramsItems, setGramsItems] = useState<{ name: string; grams: string }[]>([]);
+  const [multiItemResult, setMultiItemResult] = useState<{ items: { name: string; grams: number; calories: number; protein: number; fat: number; carbs: number }[]; total: { calories: number; protein: number; fat: number; carbs: number } } | null>(null);
+
+  // Localized labels for grams mode
+  const gramsLabels: Record<string, Record<string, string>> = {
+    en: { howMuchAte: 'How much did you eat?', inGrams: '⚖️ In grams', byPortion: '🍽 Portion', gUnit: 'g', addMore: '+ Add another item', itemName: 'Product name', weight: 'Weight', total: 'Total', logToDiary: '✓ Log to diary', remove: 'Remove' },
+    ru: { howMuchAte: 'Сколько съела?', inGrams: '⚖️ В граммах', byPortion: '🍽 Порция', gUnit: 'г', addMore: '+ Добавить ещё блюдо', itemName: 'Название продукта', weight: 'Вес', total: 'Итого', logToDiary: '✓ Записать в дневник', remove: 'Удалить' },
+    uk: { howMuchAte: 'Скільки з\'їла?', inGrams: '⚖️ В грамах', byPortion: '🍽 Порція', gUnit: 'г', addMore: '+ Додати ще страву', itemName: 'Назва продукту', weight: 'Вага', total: 'Разом', logToDiary: '✓ Записати в щоденник', remove: 'Видалити' },
+    lv: { howMuchAte: 'Cik daudz ēdi?', inGrams: '⚖️ Gramos', byPortion: '🍽 Porcija', gUnit: 'g', addMore: '+ Pievienot vēl', itemName: 'Produkta nosaukums', weight: 'Svars', total: 'Kopā', logToDiary: '✓ Ierakstīt dienasgrāmatā', remove: 'Noņemt' },
+  };
+  const gl = gramsLabels[language] || gramsLabels.en;
+
   // Load favorite recipes and recent meals
   useEffect(() => {
     if (!user || !open) return;
