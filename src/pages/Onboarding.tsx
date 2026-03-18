@@ -169,6 +169,12 @@ const T: Record<string, any> = {
         { id: 'fast', emoji: '🏃', title: 'Швидко', desc: '−0.75 кг/тижд', sub: 'Помітний результат' },
         { id: 'intense', emoji: '⚡', title: 'Інтенсивно', desc: '−1 кг/тижд', sub: 'Максимальний дефіцит' },
       ],
+      gainSpeedTitle: "Який результат хочеш?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Повільно', desc: '+0.25 кг/міс', sub: 'Мінімум жиру' },
+        { id: 'moderate', emoji: '⚖️', title: 'Помірно', desc: '+0.5 кг/міс', sub: 'Оптимальний баланс', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Активно', desc: '+0.75 кг/міс', sub: 'Потрібні регулярні тренування' },
+      ],
     },
     step3: { title: "Трохи про себе", sub: "Розрахуємо твою особисту норму калорій", gender: { male: "Чоловік", female: "Жінка" }, age: "Вік", weight: "Вага", height: "Зріст", kg: "кг", lbs: "фунти", cm: "см", ft: "фути", btn: "Продовжити →" },
     step4: { title: "Як ти харчуєшся?", sub: "Підберемо рецепти для тебе", allergiesTitle: "Є алергії?", allergiesSub: "Необов'язково — можна додати пізніше", btn: "Продовжити →" },
