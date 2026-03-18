@@ -835,129 +835,242 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 <p className="text-sm font-medium text-foreground">{mealText}</p>
               </div>
 
-              {/* Clarification chips */}
-              {chips.length > 0 && (
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-2">{sm.clarify || 'Clarify (optional):'}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {chips.map((chip) => (
-                      <button
-                        key={chip.value}
-                        onClick={() => toggleClarification(chip.value)}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium transition-all border"
-                        style={{
-                          borderColor: clarifications.includes(chip.value) ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                          backgroundColor: clarifications.includes(chip.value) ? 'hsl(var(--primary) / 0.15)' : 'transparent',
-                          color: clarifications.includes(chip.value) ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-                        }}
-                      >
-                        {chip.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Smart quantity selector */}
+              {/* GRAMS / PORTION TOGGLE */}
               <div>
-                <p className="text-xs font-semibold text-foreground mb-3">{qtyPresets.question}</p>
+                <p className="text-xs font-semibold text-foreground mb-2">{gl.howMuchAte}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { setInputMode('grams'); setGramsValue(''); setGramsItems([]); }}
+                    className="py-2.5 px-3 rounded-xl text-sm font-semibold transition-all border-2"
+                    style={{
+                      borderColor: inputMode === 'grams' ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                      backgroundColor: inputMode === 'grams' ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                      color: inputMode === 'grams' ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                    }}
+                  >
+                    {gl.inGrams}
+                  </button>
+                  <button
+                    onClick={() => setInputMode('portion')}
+                    className="py-2.5 px-3 rounded-xl text-sm font-semibold transition-all border-2"
+                    style={{
+                      borderColor: inputMode === 'portion' ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                      backgroundColor: inputMode === 'portion' ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                      color: inputMode === 'portion' ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                    }}
+                  >
+                    {gl.byPortion}
+                  </button>
+                </div>
+              </div>
 
-                {/* For mixed mode: show mode selector first */}
-                {foodCategory === 'mixed' && !mixedMode && (
-                  <div className="flex flex-col gap-2">
-                    {qtyPresets.options.map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => {
-                          if (opt.value === '__mode_count') setMixedMode('count');
-                          else if (opt.value === '__mode_weight') setMixedMode('weight');
-                          else if (opt.value === '__mode_portion') { setMixedMode('portion'); setSelectedQty('normal portion'); }
-                        }}
-                        className="w-full py-3 px-4 rounded-xl text-sm font-medium transition-all border-2 text-left border-border hover:border-primary/40"
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Mixed mode: count input */}
-                {foodCategory === 'mixed' && mixedMode === 'count' && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
+              {/* GRAMS MODE */}
+              {inputMode === 'grams' && (
+                <div className="space-y-3">
+                  {/* Single item grams input */}
+                  {gramsItems.length === 0 && (
+                    <div className="flex items-center gap-2">
                       <input
                         type="number"
-                        value={mixedValue}
-                        onChange={(e) => setMixedValue(e.target.value)}
-                        placeholder="1"
+                        value={gramsValue}
+                        onChange={(e) => setGramsValue(e.target.value)}
+                        placeholder="100"
                         className="flex-1 h-12 px-4 rounded-xl border text-center text-lg font-bold outline-none bg-secondary/50 border-border focus:border-primary text-foreground"
                         autoFocus
                         min="1"
                       />
-                      <span className="text-sm font-medium text-muted-foreground">
-                        {language === 'ru' ? 'шт' : language === 'uk' ? 'шт' : language === 'lv' ? 'gab' : 'pcs'}
-                      </span>
+                      <span className="text-sm font-medium text-muted-foreground">{gl.gUnit}</span>
                     </div>
-                    <button onClick={() => setMixedMode(null)} className="text-xs text-muted-foreground underline">
-                      ← {sm.back || 'Back'}
-                    </button>
-                  </div>
-                )}
+                  )}
 
-                {/* Mixed mode: weight input */}
-                {foodCategory === 'mixed' && mixedMode === 'weight' && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        value={mixedValue}
-                        onChange={(e) => setMixedValue(e.target.value)}
-                        placeholder="100"
-                        className="flex-1 h-12 px-4 rounded-xl border text-center text-lg font-bold outline-none bg-secondary/50 border-border focus:border-primary text-foreground"
-                        autoFocus
-                      />
-                      <div className="flex rounded-xl border border-border overflow-hidden">
-                        {(['g', 'kg'] as const).map((u) => (
+                  {/* Multi-item list */}
+                  {gramsItems.length > 0 && (
+                    <div className="space-y-2">
+                      {gramsItems.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={item.name}
+                            onChange={(e) => {
+                              const updated = [...gramsItems];
+                              updated[idx].name = e.target.value;
+                              setGramsItems(updated);
+                            }}
+                            placeholder={gl.itemName}
+                            className="flex-1 h-10 px-3 rounded-xl border text-sm outline-none bg-secondary/50 border-border focus:border-primary text-foreground"
+                          />
+                          <input
+                            type="number"
+                            value={item.grams}
+                            onChange={(e) => {
+                              const updated = [...gramsItems];
+                              updated[idx].grams = e.target.value;
+                              setGramsItems(updated);
+                            }}
+                            placeholder="100"
+                            className="w-20 h-10 px-2 rounded-xl border text-center text-sm font-bold outline-none bg-secondary/50 border-border focus:border-primary text-foreground"
+                            min="1"
+                          />
+                          <span className="text-xs text-muted-foreground">{gl.gUnit}</span>
                           <button
-                            key={u}
-                            onClick={() => setMixedUnit(u)}
-                            className="px-4 py-2.5 text-sm font-semibold transition-colors"
+                            onClick={() => setGramsItems(gramsItems.filter((_, i) => i !== idx))}
+                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                            title={gl.remove}
+                          >
+                            🗑
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add more button */}
+                  <button
+                    onClick={() => {
+                      if (gramsItems.length === 0) {
+                        // Move current single item to multi-item mode
+                        setGramsItems([
+                          { name: mealText, grams: gramsValue },
+                          { name: '', grams: '' },
+                        ]);
+                        setGramsValue('');
+                      } else {
+                        setGramsItems([...gramsItems, { name: '', grams: '' }]);
+                      }
+                    }}
+                    className="w-full py-2.5 rounded-xl text-sm font-medium border border-dashed border-border text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors"
+                  >
+                    {gl.addMore}
+                  </button>
+                </div>
+              )}
+
+              {/* PORTION MODE - existing behavior */}
+              {inputMode === 'portion' && (
+                <>
+                  {/* Clarification chips */}
+                  {chips.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground mb-2">{sm.clarify || 'Clarify (optional):'}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {chips.map((chip) => (
+                          <button
+                            key={chip.value}
+                            onClick={() => toggleClarification(chip.value)}
+                            className="px-3 py-1.5 rounded-full text-xs font-medium transition-all border"
                             style={{
-                              backgroundColor: mixedUnit === u ? 'hsl(var(--primary) / 0.15)' : 'transparent',
-                              color: mixedUnit === u ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                              borderColor: clarifications.includes(chip.value) ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                              backgroundColor: clarifications.includes(chip.value) ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                              color: clarifications.includes(chip.value) ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
                             }}
                           >
-                            {u === 'g' ? (language === 'ru' || language === 'uk' ? 'г' : 'g') : (language === 'ru' || language === 'uk' ? 'кг' : 'kg')}
+                            {chip.label}
                           </button>
                         ))}
                       </div>
                     </div>
-                    <button onClick={() => setMixedMode(null)} className="text-xs text-muted-foreground underline">
-                      ← {sm.back || 'Back'}
-                    </button>
-                  </div>
-                )}
+                  )}
 
-                {/* Mixed mode: portion selector */}
-                {foodCategory === 'mixed' && mixedMode === 'portion' && (
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-2">
-                      {portionSubOptions.map((opt) => (
-                        <button
-                          key={opt.value}
-                          onClick={() => setSelectedQty(opt.value)}
-                          className="flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all border-2"
-                          style={{
-                            borderColor: selectedQty === opt.value ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                            backgroundColor: selectedQty === opt.value ? 'hsl(var(--primary) / 0.15)' : 'transparent',
-                          }}
-                        >
-                          <span className="text-sm font-semibold" style={{ color: selectedQty === opt.value ? 'hsl(var(--primary))' : 'hsl(var(--foreground))' }}>
+                  {/* Smart quantity selector */}
+                  <div>
+                    <p className="text-xs font-semibold text-foreground mb-3">{qtyPresets.question}</p>
+
+                    {/* For mixed mode: show mode selector first */}
+                    {foodCategory === 'mixed' && !mixedMode && (
+                      <div className="flex flex-col gap-2">
+                        {qtyPresets.options.map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() => {
+                              if (opt.value === '__mode_count') setMixedMode('count');
+                              else if (opt.value === '__mode_weight') setMixedMode('weight');
+                              else if (opt.value === '__mode_portion') { setMixedMode('portion'); setSelectedQty('normal portion'); }
+                            }}
+                            className="w-full py-3 px-4 rounded-xl text-sm font-medium transition-all border-2 text-left border-border hover:border-primary/40"
+                          >
                             {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Mixed mode: count input */}
+                    {foodCategory === 'mixed' && mixedMode === 'count' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="number"
+                            value={mixedValue}
+                            onChange={(e) => setMixedValue(e.target.value)}
+                            placeholder="1"
+                            className="flex-1 h-12 px-4 rounded-xl border text-center text-lg font-bold outline-none bg-secondary/50 border-border focus:border-primary text-foreground"
+                            autoFocus
+                            min="1"
+                          />
+                          <span className="text-sm font-medium text-muted-foreground">
+                            {language === 'ru' ? 'шт' : language === 'uk' ? 'шт' : language === 'lv' ? 'gab' : 'pcs'}
                           </span>
+                        </div>
+                        <button onClick={() => setMixedMode(null)} className="text-xs text-muted-foreground underline">
+                          ← {sm.back || 'Back'}
                         </button>
-                      ))}
-                    </div>
+                      </div>
+                    )}
+
+                    {/* Mixed mode: weight input */}
+                    {foodCategory === 'mixed' && mixedMode === 'weight' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={mixedValue}
+                            onChange={(e) => setMixedValue(e.target.value)}
+                            placeholder="100"
+                            className="flex-1 h-12 px-4 rounded-xl border text-center text-lg font-bold outline-none bg-secondary/50 border-border focus:border-primary text-foreground"
+                            autoFocus
+                          />
+                          <div className="flex rounded-xl border border-border overflow-hidden">
+                            {(['g', 'kg'] as const).map((u) => (
+                              <button
+                                key={u}
+                                onClick={() => setMixedUnit(u)}
+                                className="px-4 py-2.5 text-sm font-semibold transition-colors"
+                                style={{
+                                  backgroundColor: mixedUnit === u ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                                  color: mixedUnit === u ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                                }}
+                              >
+                                {u === 'g' ? (language === 'ru' || language === 'uk' ? 'г' : 'g') : (language === 'ru' || language === 'uk' ? 'кг' : 'kg')}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <button onClick={() => setMixedMode(null)} className="text-xs text-muted-foreground underline">
+                          ← {sm.back || 'Back'}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Mixed mode: portion selector */}
+                    {foodCategory === 'mixed' && mixedMode === 'portion' && (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          {portionSubOptions.map((opt) => (
+                            <button
+                              key={opt.value}
+                              onClick={() => setSelectedQty(opt.value)}
+                              className="flex flex-col items-center gap-1 py-3 px-2 rounded-xl transition-all border-2"
+                              style={{
+                                borderColor: selectedQty === opt.value ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                                backgroundColor: selectedQty === opt.value ? 'hsl(var(--primary) / 0.15)' : 'transparent',
+                              }}
+                            >
+                              <span className="text-sm font-semibold" style={{ color: selectedQty === opt.value ? 'hsl(var(--primary))' : 'hsl(var(--foreground))' }}>
+                                {opt.label}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
                     <button onClick={() => { setMixedMode(null); setSelectedQty(null); }} className="text-xs text-muted-foreground underline">
                       ← {sm.back || 'Back'}
                     </button>
