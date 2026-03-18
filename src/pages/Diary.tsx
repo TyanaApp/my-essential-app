@@ -63,6 +63,7 @@ const Diary = () => {
   const [loading, setLoading] = useState(true);
   const [dailyTarget, setDailyTarget] = useState(2000);
   const [macroTargets, setMacroTargets] = useState({ protein: 120, fat: 60, carbs: 250 });
+  const [isMuscleGoal, setIsMuscleGoal] = useState(false);
 
 
   // Scan modal state
