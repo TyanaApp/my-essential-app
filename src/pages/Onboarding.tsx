@@ -431,7 +431,7 @@ const Onboarding = () => {
     } finally {
       setSaving(false);
     }
-  }, [user, name, gender, goal, dietType, householdSize, selectedAllergies, dislikedFreeText, calories, weightKg, heightCm, age, activity, language, navigate, t]);
+  }, [user, name, gender, goal, dietType, householdSize, selectedAllergies, dislikedFreeText, calories, weightKg, heightCm, age, activity, weightLossSpeed, language, navigate, t]);
 
   // Can proceed checks
   const canProceed = [
