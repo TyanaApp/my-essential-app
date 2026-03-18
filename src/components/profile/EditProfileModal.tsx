@@ -45,7 +45,13 @@ const WEIGHT_LOSS_SPEEDS = [
   { id: 'intense', emoji: '⚡' },
 ] as const;
 
-const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+const MUSCLE_GAIN_SPEEDS = [
+  { id: 'slow', emoji: '🐢' },
+  { id: 'moderate', emoji: '⚖️' },
+  { id: 'active', emoji: '🏋️' },
+] as const;
+
+const SURPLUS_MAP: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
