@@ -231,7 +231,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       if (userGoals.includes('lose_weight') || userGoals.includes('lose')) {
         target = TDEE + (DEFICIT_MAP[weightLossSpeed] || -500);
       }
-      if (userGoals.includes('build_muscle') || userGoals.includes('gain')) target = TDEE + 200;
+      if (userGoals.includes('build_muscle') || userGoals.includes('gain')) {
+        let surplus = SURPLUS_MAP[muscleGainSpeed] || 200;
+        if (activityLevel === 'very_active') surplus = Math.min(surplus, 400);
+        surplus = Math.min(surplus, 500);
+        target = TDEE + surplus;
+      }
 
       // Safety minimum
       const minCal = gender === 'male' ? 1500 : 1200;
