@@ -70,6 +70,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const [dislikedFoods, setDislikedFoods] = useState<string[]>([]);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
   const [weightLossSpeed, setWeightLossSpeed] = useState('moderate');
+  const [muscleGainSpeed, setMuscleGainSpeed] = useState('moderate');
   const [currentGoals, setCurrentGoals] = useState<string[]>([]);
 
   const ep = (t as any).editProfile || {};

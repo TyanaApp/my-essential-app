@@ -78,13 +78,22 @@ serve(async (req) => {
 
     // Deficit/surplus based on goal
     const deficitMap: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+    const surplusMap: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
     const userGoals: string[] = goals.goals || [];
     let baseTarget = TDEE;
     if (userGoals.includes("lose_weight") || userGoals.includes("lose")) {
       const speed = (goals as any).weight_loss_speed || "moderate";
       baseTarget = TDEE + (deficitMap[speed] || -500);
     }
-    if (userGoals.includes("build_muscle") || userGoals.includes("gain")) baseTarget = TDEE + 200;
+    if (userGoals.includes("build_muscle") || userGoals.includes("gain")) {
+      const gainSpeed = (goals as any).muscle_gain_speed || "moderate";
+      let surplus = surplusMap[gainSpeed] || 200;
+      // Safety cap
+      const actLevel = goals.activity_level || "moderate";
+      if (actLevel === "very_active") surplus = Math.min(surplus, 400);
+      surplus = Math.min(surplus, 500);
+      baseTarget = TDEE + surplus;
+    }
 
     // Safety minimums
     const minCal = gender === "male" ? 1500 : 1200;
