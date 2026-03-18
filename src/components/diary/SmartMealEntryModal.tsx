@@ -1292,11 +1292,17 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                 <button
                   onClick={handleAnalyze}
                   disabled={
-                    (foodCategory === 'mixed' && !mixedMode) ||
-                    (foodCategory === 'mixed' && mixedMode === 'count' && !mixedValue.trim()) ||
-                    (foodCategory === 'mixed' && mixedMode === 'weight' && !mixedValue.trim()) ||
-                    (foodCategory !== 'mixed' && !selectedQty && !showCustom) ||
-                    (showCustom && !customQty.trim())
+                    inputMode === 'grams'
+                      ? (gramsItems.length > 0
+                          ? gramsItems.every(i => !i.name.trim() || !i.grams.trim())
+                          : !gramsValue.trim())
+                      : (
+                          (foodCategory === 'mixed' && !mixedMode) ||
+                          (foodCategory === 'mixed' && mixedMode === 'count' && !mixedValue.trim()) ||
+                          (foodCategory === 'mixed' && mixedMode === 'weight' && !mixedValue.trim()) ||
+                          (foodCategory !== 'mixed' && !selectedQty && !showCustom) ||
+                          (showCustom && !customQty.trim())
+                        )
                   }
                   className="w-full h-12 rounded-xl text-sm font-semibold text-primary-foreground bg-primary disabled:opacity-40"
                 >
