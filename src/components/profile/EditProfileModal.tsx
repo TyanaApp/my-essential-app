@@ -94,6 +94,21 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   };
 
   const hasLoseGoal = currentGoals.some(g => g === 'lose_weight' || g === 'lose');
+  const hasGainGoal = currentGoals.some(g => g === 'build_muscle' || g === 'gain');
+
+  const getGainSpeedLabel = (id: string) => {
+    const labels: Record<string, Record<string, string>> = {
+      slow: { ru: 'Медленно', en: 'Slowly', uk: 'Повільно', lv: 'Lēni' },
+      moderate: { ru: 'Умеренно', en: 'Moderate', uk: 'Помірно', lv: 'Mēreni' },
+      active: { ru: 'Активно', en: 'Active', uk: 'Активно', lv: 'Aktīvi' },
+    };
+    const lang = (t as any)._lang || 'ru';
+    return labels[id]?.[lang] || labels[id]?.en || id;
+  };
+  const getGainSpeedDesc = (id: string) => {
+    const descs: Record<string, string> = { slow: '+150', moderate: '+200', active: '+300' };
+    return `${descs[id] || '+200'} kcal`;
+  };
 
   const getDislikeLabel = (id: string) => dl[id] || id;
 
