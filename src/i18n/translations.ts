@@ -1431,6 +1431,7 @@ export const translations = {
       portionEaten: 'Cik apēdāt:', portionExtra: '150%', portionFull: 'Visu', portionThreeQuarters: '¾', portionHalf: 'Pusi', portionQuarter: '¼',
       confHigh: 'Augsta precizitāte', confMedium: 'Aptuveni', confLow: 'Zema precizitāte',
       tapToEdit: 'Nospiediet nosaukumu lai rediģētu', recalculated: 'Pārrēķināts ✓', recalcFailed: 'Pārrēķins neizdevās',
+      takePhotoBtn: '📷 Uzņemt foto', fromGalleryBtn: '🖼 No galerijas', chooseSource: 'Ēdiena foto',
     },
     dashboard: {
       morning: 'Labrīt', afternoon: 'Labdien', evening: 'Labvakar',
