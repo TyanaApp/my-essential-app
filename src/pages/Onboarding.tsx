@@ -31,6 +31,12 @@ const T: Record<string, any> = {
         { id: 'fast', emoji: '🏃', title: 'Fast', desc: '−0.75 kg/week', sub: 'Noticeable results' },
         { id: 'intense', emoji: '⚡', title: 'Intense', desc: '−1 kg/week', sub: 'Maximum deficit' },
       ],
+      gainSpeedTitle: "What result do you want?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Slowly', desc: '+0.25 kg/month', sub: 'Minimum fat gain' },
+        { id: 'moderate', emoji: '⚖️', title: 'Moderate', desc: '+0.5 kg/month', sub: 'Optimal balance', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Active', desc: '+0.75 kg/month', sub: 'Requires regular training' },
+      ],
     },
     step3: { title: "A little about you", sub: "We'll calculate your personal calorie goal", gender: { male: "Male", female: "Female" }, age: "Age", weight: "Weight", height: "Height", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Continue →" },
     step4: { title: "How do you eat?", sub: "We'll match recipes to you", allergiesTitle: "Any allergies?", allergiesSub: "Optional — can add later", btn: "Continue →" },
