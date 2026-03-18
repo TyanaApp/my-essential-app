@@ -407,7 +407,7 @@ const Onboarding = () => {
 
       await supabase.from('user_goals').upsert({
         user_id: user.id,
-        goals: goal ? [goal] : [],
+        goals: goal ? [goal === 'lose' ? 'lose_weight' : goal === 'gain' ? 'build_muscle' : goal] : [],
         diet_type: dietType || 'omnivore',
         household_size: householdSize || 1,
         allergies: selectedAllergies,
@@ -417,6 +417,7 @@ const Onboarding = () => {
         height_cm: heightCm,
         age,
         activity_level: activity || 'moderate',
+        weight_loss_speed: goal === 'lose' ? weightLossSpeed : null,
       } as any, { onConflict: 'user_id' });
 
       supabase.functions.invoke('send-welcome-email', {
