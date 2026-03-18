@@ -416,7 +416,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
         {step === 'capture' && !photo && (
           <div className="modal-actions rounded-b-2xl">
             <button
-              onClick={() => fileRef.current?.click()}
+              onClick={() => setShowSourcePicker(true)}
               className="w-full h-14 rounded-2xl text-primary-foreground font-semibold text-sm bg-primary"
             >
               📸 {ms.scanMeal || 'Scan meal'}
