@@ -1153,7 +1153,29 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
           {/* RESULT STEP */}
           {step === 'result' && result && (
             <div className="space-y-4">
+              {/* Multi-item breakdown for grams mode */}
+              {multiItemResult && multiItemResult.items.length > 0 && (
+                <div className="space-y-2">
+                  {multiItemResult.items.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between px-3 py-2 rounded-xl bg-muted/30 border border-border">
+                      <span className="text-sm text-foreground">{item.name} {item.grams}{gl.gUnit}</span>
+                      <span className="text-sm font-bold text-foreground tabular-nums">{item.calories} {(t as any).diary?.kcalUnit || 'kcal'}</span>
+                    </div>
+                  ))}
+                  <div className="border-t border-border pt-2 px-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-foreground">{gl.total}:</span>
+                      <span className="text-lg font-bold text-primary">{multiItemResult.total.calories} {(t as any).diary?.kcalUnit || 'kcal'}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {(t as any).dashboard?.protein || 'P'}: {multiItemResult.total.protein}{gl.gUnit} | {(t as any).dashboard?.fat || 'F'}: {multiItemResult.total.fat}{gl.gUnit} | {(t as any).dashboard?.carbs || 'C'}: {multiItemResult.total.carbs}{gl.gUnit}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Meal name & data source */}
+              {!multiItemResult && (
               <div className="text-center">
                 <h3 className="text-lg font-bold text-foreground">🍽 {result.meal_name}</h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -1161,6 +1183,7 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
                   {result.data_source && ` • ${getDataSourceLabel(result.data_source)}`}
                 </p>
               </div>
+              )}
 
               {/* Big calorie number */}
               <div className="text-center py-2">
