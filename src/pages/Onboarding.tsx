@@ -534,6 +534,52 @@ const Onboarding = () => {
                     );
                   })}
                 </div>
+
+                {/* Weight loss speed selector */}
+                <AnimatePresence>
+                  {goal === 'lose' && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="font-semibold text-foreground text-sm mt-6 mb-3 text-center">{t.step2.loseSpeedTitle}</p>
+                      <div className="space-y-2">
+                        {t.step2.loseSpeeds.map((s: any) => {
+                          const selected = weightLossSpeed === s.id;
+                          return (
+                            <motion.button
+                              key={s.id}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => setWeightLossSpeed(s.id)}
+                              className={`w-full flex items-center gap-3 p-3 rounded-2xl border-2 text-left transition-all ${
+                                selected ? 'border-primary bg-primary/5' : 'border-border bg-card'
+                              }`}
+                            >
+                              <span className="text-xl">{s.emoji}</span>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-foreground text-sm">{s.title}</p>
+                                  {s.recommended && (
+                                    <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">★</span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground">{s.desc} · {s.sub}</p>
+                              </div>
+                              {selected && (
+                                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
+                                  <span className="text-white text-xs">✓</span>
+                                </motion.div>
+                              )}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
 
