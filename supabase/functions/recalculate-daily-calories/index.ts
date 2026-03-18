@@ -37,7 +37,7 @@ serve(async (req) => {
     // Get goals
     const { data: goals } = await supabase
       .from("user_goals")
-      .select("weight_kg, height_cm, age, activity_level, goals, daily_calories_target")
+      .select("weight_kg, height_cm, age, activity_level, goals, daily_calories_target, weight_loss_speed")
       .eq("user_id", userId)
       .maybeSingle();
 
