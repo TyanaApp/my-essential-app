@@ -52,6 +52,7 @@ const MUSCLE_GAIN_SPEEDS = [
 ] as const;
 
 const SURPLUS_MAP: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
+const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
