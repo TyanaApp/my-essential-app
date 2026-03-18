@@ -84,7 +84,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
     const loadGoals = async () => {
       const { data } = await supabase
         .from('user_goals')
-        .select('weight_kg, height_cm, age, activity_level, disliked_foods')
+        .select('weight_kg, height_cm, age, activity_level, disliked_foods, weight_loss_speed, goals')
         .eq('user_id', user.id)
         .maybeSingle();
       if (data) {
