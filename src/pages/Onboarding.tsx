@@ -322,11 +322,23 @@ const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: n
   return Math.round(Math.max(target, minCal));
 };
 
-const calcMacros = (cal: number) => ({
-  protein: Math.round((cal * 0.25) / 4),
-  fat: Math.round((cal * 0.30) / 9),
-  carbs: Math.round((cal * 0.45) / 4),
-});
+const calcMacros = (cal: number, goal?: Goal | null, weightKg?: number) => {
+  if ((goal === 'gain') && weightKg) {
+    const proteinG = Math.round(weightKg * 2.0);
+    const proteinCals = proteinG * 4;
+    const remaining = cal - proteinCals;
+    return {
+      protein: proteinG,
+      fat: Math.round((remaining * 0.30) / 9),
+      carbs: Math.round(Math.max((remaining * 0.70) / 4, 0)),
+    };
+  }
+  return {
+    protein: Math.round((cal * 0.25) / 4),
+    fat: Math.round((cal * 0.30) / 9),
+    carbs: Math.round((cal * 0.45) / 4),
+  };
+};
 
 /* ───────── Confetti component ───────── */
 const Confetti = () => {
