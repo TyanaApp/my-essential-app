@@ -241,10 +241,20 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
           {step === 'capture' && (
             <div className="text-center py-6">
               <input
-                ref={fileRef}
+                ref={cameraRef}
                 type="file"
                 accept="image/*"
                 capture="environment"
+                className="hidden"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFile(file);
+                }}
+              />
+              <input
+                ref={galleryRef}
+                type="file"
+                accept="image/*"
                 className="hidden"
                 onChange={e => {
                   const file = e.target.files?.[0];
@@ -255,7 +265,7 @@ const MealScanModal = ({ open, onClose, mealType, dateStr, onSaved }: MealScanMo
                 <img src={photo} alt="meal" className="w-full max-h-64 object-cover rounded-xl mb-4" />
               ) : (
                 <div
-                  onClick={() => fileRef.current?.click()}
+                  onClick={() => setShowSourcePicker(true)}
                   className="w-full aspect-[4/3] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary hover:bg-accent transition-colors border-border"
                 >
                   <Camera className="w-12 h-12 text-primary" />
