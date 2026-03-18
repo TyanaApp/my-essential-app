@@ -38,6 +38,15 @@ const DISLIKE_CHIPS = [
   { id: 'garlic', emoji: '🧄' },
 ];
 
+const WEIGHT_LOSS_SPEEDS = [
+  { id: 'slow', emoji: '🐢' },
+  { id: 'moderate', emoji: '⚖️' },
+  { id: 'fast', emoji: '🏃' },
+  { id: 'intense', emoji: '⚡' },
+] as const;
+
+const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
   const { profile, updateProfile } = useProfile();
@@ -54,9 +63,29 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [dislikedFoods, setDislikedFoods] = useState<string[]>([]);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
+  const [weightLossSpeed, setWeightLossSpeed] = useState('moderate');
+  const [currentGoals, setCurrentGoals] = useState<string[]>([]);
 
   const ep = (t as any).editProfile || {};
   const dl = (t as any).dislikes || {};
+  const wls = (t as any).weightLossSpeed || {};
+
+  const getSpeedLabel = (id: string) => {
+    const labels: Record<string, Record<string, string>> = {
+      slow: { ru: 'Медленно', en: 'Slowly', uk: 'Повільно', lv: 'Lēni' },
+      moderate: { ru: 'Умеренно', en: 'Moderate', uk: 'Помірно', lv: 'Mēreni' },
+      fast: { ru: 'Быстро', en: 'Fast', uk: 'Швидко', lv: 'Ātri' },
+      intense: { ru: 'Интенсивно', en: 'Intense', uk: 'Інтенсивно', lv: 'Intensīvi' },
+    };
+    const lang = (t as any)._lang || 'ru';
+    return wls[id] || labels[id]?.[lang] || labels[id]?.en || id;
+  };
+  const getSpeedDesc = (id: string) => {
+    const descs: Record<string, string> = { slow: '−250', moderate: '−500', fast: '−750', intense: '−1000' };
+    return `${descs[id] || '−500'} kcal`;
+  };
+
+  const hasLoseGoal = currentGoals.some(g => g === 'lose_weight' || g === 'lose');
 
   const getDislikeLabel = (id: string) => dl[id] || id;
 
@@ -73,13 +102,15 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
     const loadGoals = async () => {
       const { data } = await supabase
         .from('user_goals')
-        .select('weight_kg, height_cm, age, activity_level, disliked_foods')
+        .select('weight_kg, height_cm, age, activity_level, disliked_foods, weight_loss_speed, goals')
         .eq('user_id', user.id)
         .maybeSingle();
       if (data) {
         if (data.weight_kg) setWeightInput(String(data.weight_kg));
         if (data.height_cm) setHeightInput(String(data.height_cm));
-        setActivityLevel(data.activity_level || 'normal');
+        setActivityLevel(data.activity_level || 'moderate');
+        setWeightLossSpeed((data as any).weight_loss_speed || 'moderate');
+        setCurrentGoals((data as any).goals || []);
         // Parse existing dislikes back into chips + free text
         const existing: string[] = (data as any).disliked_foods || [];
         const chipIds: string[] = [];
@@ -145,6 +176,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
       age: age || null,
       activity_level: activityLevel,
       disliked_foods: buildDislikeArray(),
+      weight_loss_speed: weightLossSpeed,
     };
 
     const { data: existingGoals } = await supabase
@@ -169,11 +201,16 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
         : 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
       let TDEE = BMR * mult;
 
-      const userGoals: string[] = existingGoals?.goals || [];
-      if (userGoals.includes('lose_weight')) TDEE -= 400;
-      if (userGoals.includes('gain_muscle')) TDEE += 300;
+      const userGoals: string[] = existingGoals?.goals || currentGoals;
+      let target = TDEE;
+      if (userGoals.includes('lose_weight') || userGoals.includes('lose')) {
+        target = TDEE + (DEFICIT_MAP[weightLossSpeed] || -500);
+      }
+      if (userGoals.includes('build_muscle') || userGoals.includes('gain')) target = TDEE + 200;
 
-      const target = Math.round(TDEE);
+      // Safety minimum
+      const minCal = gender === 'male' ? 1500 : 1200;
+      target = Math.round(Math.max(target, minCal));
       await supabase.from('user_goals').update({ daily_calories_target: target } as any).eq('user_id', user.id);
 
       const kcalUnit = (t as any).diary?.kcalUnit || 'kcal';
@@ -351,6 +388,32 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
               className="bg-secondary/50 border-border"
             />
           </div>
+
+          {/* Weight loss speed selector (only for lose_weight goal) */}
+          {hasLoseGoal && (
+            <div className="space-y-2">
+              <Label className="font-exo text-muted-foreground">
+                {wls.title || (ep.loseSpeedTitle || 'Weight loss pace')}
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                {WEIGHT_LOSS_SPEEDS.map(({ id, emoji }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setWeightLossSpeed(id)}
+                    className={`p-2.5 rounded-xl text-sm font-exo text-left transition-all border ${
+                      weightLossSpeed === id
+                        ? 'border-primary bg-primary/10 text-foreground'
+                        : 'border-border bg-secondary/30 text-muted-foreground hover:bg-secondary/50'
+                    }`}
+                  >
+                    {emoji} {getSpeedLabel(id)}
+                    <span className="block text-[10px] text-muted-foreground">{getSpeedDesc(id)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Change Goal button */}
           <Button

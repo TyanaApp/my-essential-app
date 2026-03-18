@@ -1,0 +1,1 @@
+ALTER TABLE public.user_goals ADD COLUMN IF NOT EXISTS weight_loss_speed TEXT DEFAULT 'moderate';

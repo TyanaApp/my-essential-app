@@ -37,7 +37,7 @@ serve(async (req) => {
     // Get goals
     const { data: goals } = await supabase
       .from("user_goals")
-      .select("weight_kg, height_cm, age, activity_level, goals, daily_calories_target")
+      .select("weight_kg, height_cm, age, activity_level, goals, daily_calories_target, weight_loss_speed")
       .eq("user_id", userId)
       .maybeSingle();
 
@@ -73,14 +73,22 @@ serve(async (req) => {
     const activityMultiplier: Record<string, number> = {
       low: 1.2, normal: 1.375, moderate: 1.375, active: 1.55, very_active: 1.725,
     };
-    const mult = activityMultiplier[goals.activity_level || "normal"] || 1.375;
+    const mult = activityMultiplier[goals.activity_level || "moderate"] || 1.375;
     const TDEE = BMR * mult;
 
-    // Goal adjustment
+    // Deficit/surplus based on goal
+    const deficitMap: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
     const userGoals: string[] = goals.goals || [];
     let baseTarget = TDEE;
-    if (userGoals.includes("lose_weight")) baseTarget = TDEE - 400;
-    if (userGoals.includes("gain_muscle")) baseTarget = TDEE + 300;
+    if (userGoals.includes("lose_weight") || userGoals.includes("lose")) {
+      const speed = (goals as any).weight_loss_speed || "moderate";
+      baseTarget = TDEE + (deficitMap[speed] || -500);
+    }
+    if (userGoals.includes("build_muscle") || userGoals.includes("gain")) baseTarget = TDEE + 200;
+
+    // Safety minimums
+    const minCal = gender === "male" ? 1500 : 1200;
+    baseTarget = Math.max(baseTarget, minCal);
 
     // Adaptive adjustment based on last 7 days
     let adjustment = 0;
@@ -94,7 +102,7 @@ serve(async (req) => {
     if (dayOfWeek === 0 || dayOfWeek === 6) adjustment += 100; // Weekend
     if (dayOfWeek === 1) adjustment -= 50; // Monday
 
-    const finalTarget = Math.round(baseTarget + adjustment);
+    let finalTarget = Math.round(Math.max(baseTarget + adjustment, minCal));
 
     // Get yesterday's target for comparison
     const yesterday = new Date();
@@ -139,7 +147,9 @@ serve(async (req) => {
       avg_last_7_days: Math.round(avgCalories),
       change,
       day_type: dayOfWeek === 0 || dayOfWeek === 6 ? "weekend" : dayOfWeek === 1 ? "monday" : "weekday",
-      goal_adjustment: userGoals.includes("lose_weight") ? -400 : userGoals.includes("gain_muscle") ? 300 : 0,
+      goal_adjustment: userGoals.includes("lose_weight") || userGoals.includes("lose")
+        ? (deficitMap[(goals as any).weight_loss_speed || "moderate"] || -500)
+        : userGoals.includes("build_muscle") || userGoals.includes("gain") ? 200 : 0,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

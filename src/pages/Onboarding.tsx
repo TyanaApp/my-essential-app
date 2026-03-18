@@ -14,6 +14,7 @@ type Activity = 'low' | 'moderate' | 'active' | 'very_active';
 type Gender = 'male' | 'female';
 type WeightUnit = 'kg' | 'lbs';
 type HeightUnit = 'cm' | 'ft';
+type WeightLossSpeed = 'slow' | 'moderate' | 'fast' | 'intense';
 
 const TOTAL_STEPS = 6;
 
@@ -21,7 +22,15 @@ const TOTAL_STEPS = 6;
 const T: Record<string, any> = {
   en: {
     step1: { title: "Hey! I'm TYANA", sub: "Let's get started — what's your name?", placeholder: "Your name", btn: (n: string) => `Hello, ${n}! →` },
-    step2: { title: "What's your main goal?", sub: "Pick one — you can change it later", btn: "Continue →" },
+    step2: { title: "What's your main goal?", sub: "Pick one — you can change it later", btn: "Continue →",
+      loseSpeedTitle: "How fast do you want to lose weight?",
+      loseSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Slowly', desc: '−0.25 kg/week', sub: 'Gentle, no stress' },
+        { id: 'moderate', emoji: '⚖️', title: 'Moderate', desc: '−0.5 kg/week', sub: 'Optimal pace', recommended: true },
+        { id: 'fast', emoji: '🏃', title: 'Fast', desc: '−0.75 kg/week', sub: 'Noticeable results' },
+        { id: 'intense', emoji: '⚡', title: 'Intense', desc: '−1 kg/week', sub: 'Maximum deficit' },
+      ],
+    },
     step3: { title: "A little about you", sub: "We'll calculate your personal calorie goal", gender: { male: "Male", female: "Female" }, age: "Age", weight: "Weight", height: "Height", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Continue →" },
     step4: { title: "How do you eat?", sub: "We'll match recipes to you", allergiesTitle: "Any allergies?", allergiesSub: "Optional — can add later", btn: "Continue →" },
     step5: { title: "Who do you cook for?", sub: "We'll adjust portion sizes", dislikesTitle: "What don't you like?", dislikesPlaceholder: "E.g. cilantro, liver, eggplant...", optional: "Optional", btn: "Continue →" },
@@ -76,7 +85,15 @@ const T: Record<string, any> = {
   },
   ru: {
     step1: { title: "Привет! Я TYANA", sub: "Давай познакомимся — как тебя зовут?", placeholder: "Твоё имя", btn: (n: string) => `Привет, ${n}! →` },
-    step2: { title: "Какая главная цель?", sub: "Выбери одну — потом можно изменить", btn: "Продолжить →" },
+    step2: { title: "Какая главная цель?", sub: "Выбери одну — потом можно изменить", btn: "Продолжить →",
+      loseSpeedTitle: "Как быстро хочешь худеть?",
+      loseSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Медленно', desc: '−0.25 кг/нед', sub: 'Мягко, без стресса' },
+        { id: 'moderate', emoji: '⚖️', title: 'Умеренно', desc: '−0.5 кг/нед', sub: 'Оптимальный темп', recommended: true },
+        { id: 'fast', emoji: '🏃', title: 'Быстро', desc: '−0.75 кг/нед', sub: 'Заметный результат' },
+        { id: 'intense', emoji: '⚡', title: 'Интенсивно', desc: '−1 кг/нед', sub: 'Максимальный дефицит' },
+      ],
+    },
     step3: { title: "Немного о себе", sub: "Рассчитаем твою личную норму калорий", gender: { male: "Мужчина", female: "Женщина" }, age: "Возраст", weight: "Вес", height: "Рост", kg: "кг", lbs: "фунты", cm: "см", ft: "футы", btn: "Продолжить →" },
     step4: { title: "Как ты питаешься?", sub: "Подберём рецепты под тебя", allergiesTitle: "Есть аллергии?", allergiesSub: "Необязательно — можно добавить позже", btn: "Продолжить →" },
     step5: { title: "Для кого готовишь?", sub: "Подберём размер порций", dislikesTitle: "Что не любишь?", dislikesPlaceholder: "Например: кинза, печень, баклажаны...", optional: "Необязательно", btn: "Продолжить →" },
@@ -131,7 +148,15 @@ const T: Record<string, any> = {
   },
   uk: {
     step1: { title: "Привіт! Я TYANA", sub: "Давай познайомимось — як тебе звати?", placeholder: "Твоє ім'я", btn: (n: string) => `Привіт, ${n}! →` },
-    step2: { title: "Яка головна ціль?", sub: "Вибери одну — потім можна змінити", btn: "Продовжити →" },
+    step2: { title: "Яка головна ціль?", sub: "Вибери одну — потім можна змінити", btn: "Продовжити →",
+      loseSpeedTitle: "Як швидко хочеш худнути?",
+      loseSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Повільно', desc: '−0.25 кг/тижд', sub: 'М\'яко, без стресу' },
+        { id: 'moderate', emoji: '⚖️', title: 'Помірно', desc: '−0.5 кг/тижд', sub: 'Оптимальний темп', recommended: true },
+        { id: 'fast', emoji: '🏃', title: 'Швидко', desc: '−0.75 кг/тижд', sub: 'Помітний результат' },
+        { id: 'intense', emoji: '⚡', title: 'Інтенсивно', desc: '−1 кг/тижд', sub: 'Максимальний дефіцит' },
+      ],
+    },
     step3: { title: "Трохи про себе", sub: "Розрахуємо твою особисту норму калорій", gender: { male: "Чоловік", female: "Жінка" }, age: "Вік", weight: "Вага", height: "Зріст", kg: "кг", lbs: "фунти", cm: "см", ft: "фути", btn: "Продовжити →" },
     step4: { title: "Як ти харчуєшся?", sub: "Підберемо рецепти для тебе", allergiesTitle: "Є алергії?", allergiesSub: "Необов'язково — можна додати пізніше", btn: "Продовжити →" },
     step5: { title: "Для кого готуєш?", sub: "Підберемо розмір порцій", dislikesTitle: "Що не любиш?", dislikesPlaceholder: "Наприклад: кінза, печінка, баклажани...", optional: "Необов'язково", btn: "Продовжити →" },
@@ -186,7 +211,15 @@ const T: Record<string, any> = {
   },
   lv: {
     step1: { title: "Sveiki! Es esmu TYANA", sub: "Iepazīsimies — kā tevi sauc?", placeholder: "Tavs vārds", btn: (n: string) => `Sveiki, ${n}! →` },
-    step2: { title: "Kāds ir galvenais mērķis?", sub: "Izvēlies vienu — vēlāk var mainīt", btn: "Turpināt →" },
+    step2: { title: "Kāds ir galvenais mērķis?", sub: "Izvēlies vienu — vēlāk var mainīt", btn: "Turpināt →",
+      loseSpeedTitle: "Cik ātri vēlies zaudēt svaru?",
+      loseSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Lēni', desc: '−0.25 kg/ned', sub: 'Maigi, bez stresa' },
+        { id: 'moderate', emoji: '⚖️', title: 'Mēreni', desc: '−0.5 kg/ned', sub: 'Optimāls temps', recommended: true },
+        { id: 'fast', emoji: '🏃', title: 'Ātri', desc: '−0.75 kg/ned', sub: 'Pamanāms rezultāts' },
+        { id: 'intense', emoji: '⚡', title: 'Intensīvi', desc: '−1 kg/ned', sub: 'Maksimāls deficīts' },
+      ],
+    },
     step3: { title: "Nedaudz par sevi", sub: "Aprēķināsim tavu personīgo kaloriju normu", gender: { male: "Vīrietis", female: "Sieviete" }, age: "Vecums", weight: "Svars", height: "Augums", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Turpināt →" },
     step4: { title: "Kā tu ēd?", sub: "Pielāgosim receptes tev", allergiesTitle: "Vai ir alerģijas?", allergiesSub: "Neobligāti — var pievienot vēlāk", btn: "Turpināt →" },
     step5: { title: "Kam tu gatavo?", sub: "Pielāgosim porciju izmērus", dislikesTitle: "Ko tu nemīli?", dislikesPlaceholder: "Piemēram: koriandrs, aknas, baklažāni...", optional: "Neobligāti", btn: "Turpināt →" },
@@ -244,12 +277,17 @@ const T: Record<string, any> = {
 /* ───────── helpers ───────── */
 const ACTIVITY_FACTORS: Record<Activity, number> = { low: 1.2, moderate: 1.375, active: 1.55, very_active: 1.725 };
 
-const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: number, activity: Activity, goal: Goal): number => {
+const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+
+const calcCalories = (gender: Gender, weightKg: number, heightCm: number, age: number, activity: Activity, goal: Goal, lossSpeed: WeightLossSpeed = 'moderate'): number => {
   const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + (gender === 'male' ? 5 : -161);
   const tdee = bmr * ACTIVITY_FACTORS[activity];
-  if (goal === 'lose') return Math.round(tdee - 400);
-  if (goal === 'gain') return Math.round(tdee + 300);
-  return Math.round(tdee);
+  let target = tdee;
+  if (goal === 'lose') target = tdee + (DEFICIT_MAP[lossSpeed] || -500);
+  else if (goal === 'gain') target = tdee + 200;
+  // Safety minimums
+  const minCal = gender === 'male' ? 1500 : 1200;
+  return Math.round(Math.max(target, minCal));
 };
 
 const calcMacros = (cal: number) => ({
@@ -330,6 +368,7 @@ const Onboarding = () => {
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
   const [householdSize, setHouseholdSize] = useState<number | null>(null);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
+  const [weightLossSpeed, setWeightLossSpeed] = useState<WeightLossSpeed>('moderate');
 
   // Pre-fill name
   useEffect(() => {
@@ -341,7 +380,7 @@ const Onboarding = () => {
   // Derived
   const weightKg = weightUnit === 'kg' ? weightVal : Math.round(weightVal / 2.205);
   const heightCm = heightUnit === 'cm' ? heightVal : Math.round(heightVal * 2.54); // stored as total inches when ft
-  const calories = (gender && activity && goal) ? calcCalories(gender, weightKg, heightCm, age, activity, goal) : 2000;
+  const calories = (gender && activity && goal) ? calcCalories(gender, weightKg, heightCm, age, activity, goal, weightLossSpeed) : 2000;
   const macros = calcMacros(calories);
 
   const goNext = () => { setDirection(1); setStep(s => s + 1); };
@@ -368,7 +407,7 @@ const Onboarding = () => {
 
       await supabase.from('user_goals').upsert({
         user_id: user.id,
-        goals: goal ? [goal] : [],
+        goals: goal ? [goal === 'lose' ? 'lose_weight' : goal === 'gain' ? 'build_muscle' : goal] : [],
         diet_type: dietType || 'omnivore',
         household_size: householdSize || 1,
         allergies: selectedAllergies,
@@ -378,6 +417,7 @@ const Onboarding = () => {
         height_cm: heightCm,
         age,
         activity_level: activity || 'moderate',
+        weight_loss_speed: goal === 'lose' ? weightLossSpeed : null,
       } as any, { onConflict: 'user_id' });
 
       supabase.functions.invoke('send-welcome-email', {
@@ -391,7 +431,7 @@ const Onboarding = () => {
     } finally {
       setSaving(false);
     }
-  }, [user, name, gender, goal, dietType, householdSize, selectedAllergies, dislikedFreeText, calories, weightKg, heightCm, age, activity, language, navigate, t]);
+  }, [user, name, gender, goal, dietType, householdSize, selectedAllergies, dislikedFreeText, calories, weightKg, heightCm, age, activity, weightLossSpeed, language, navigate, t]);
 
   // Can proceed checks
   const canProceed = [
@@ -494,6 +534,52 @@ const Onboarding = () => {
                     );
                   })}
                 </div>
+
+                {/* Weight loss speed selector */}
+                <AnimatePresence>
+                  {goal === 'lose' && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="font-semibold text-foreground text-sm mt-6 mb-3 text-center">{t.step2.loseSpeedTitle}</p>
+                      <div className="space-y-2">
+                        {t.step2.loseSpeeds.map((s: any) => {
+                          const selected = weightLossSpeed === s.id;
+                          return (
+                            <motion.button
+                              key={s.id}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={() => setWeightLossSpeed(s.id)}
+                              className={`w-full flex items-center gap-3 p-3 rounded-2xl border-2 text-left transition-all ${
+                                selected ? 'border-primary bg-primary/5' : 'border-border bg-card'
+                              }`}
+                            >
+                              <span className="text-xl">{s.emoji}</span>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-foreground text-sm">{s.title}</p>
+                                  {s.recommended && (
+                                    <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">★</span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground">{s.desc} · {s.sub}</p>
+                              </div>
+                              {selected && (
+                                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
+                                  <span className="text-white text-xs">✓</span>
+                                </motion.div>
+                              )}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
 
