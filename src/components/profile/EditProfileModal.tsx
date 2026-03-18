@@ -389,6 +389,32 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
             />
           </div>
 
+          {/* Weight loss speed selector (only for lose_weight goal) */}
+          {hasLoseGoal && (
+            <div className="space-y-2">
+              <Label className="font-exo text-muted-foreground">
+                {wls.title || (ep.loseSpeedTitle || 'Weight loss pace')}
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                {WEIGHT_LOSS_SPEEDS.map(({ id, emoji }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setWeightLossSpeed(id)}
+                    className={`p-2.5 rounded-xl text-sm font-exo text-left transition-all border ${
+                      weightLossSpeed === id
+                        ? 'border-primary bg-primary/10 text-foreground'
+                        : 'border-border bg-secondary/30 text-muted-foreground hover:bg-secondary/50'
+                    }`}
+                  >
+                    {emoji} {getSpeedLabel(id)}
+                    <span className="block text-[10px] text-muted-foreground">{getSpeedDesc(id)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Change Goal button */}
           <Button
             variant="outline"
