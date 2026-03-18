@@ -827,6 +827,7 @@ export const translations = {
       confHigh: 'Высокая точность', confMedium: 'Приблизительно', confLow: 'Низкая точность',
       tapToEdit: 'Нажмите на название чтобы изменить',
       recalculated: 'Пересчитано ✓', recalcFailed: 'Ошибка пересчёта',
+      takePhotoBtn: '📷 Сделать фото', fromGalleryBtn: '🖼 Из галереи', chooseSource: 'Фото блюда',
     },
     dashboard: {
       morning: 'Доброе утро', afternoon: 'Добрый день', evening: 'Добрый вечер',
