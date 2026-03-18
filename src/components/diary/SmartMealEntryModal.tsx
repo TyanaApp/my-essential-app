@@ -418,6 +418,10 @@ const SmartMealEntryModal = ({ open, onClose, mealType, dateStr, onSaved }: Smar
     setMixedUnit('g');
     setFoodCategory('mixed');
     setShowBreakdown(false);
+    setInputMode('portion');
+    setGramsValue('');
+    setGramsItems([]);
+    setMultiItemResult(null);
   };
 
   const handleClose = () => { reset(); onClose(); };
