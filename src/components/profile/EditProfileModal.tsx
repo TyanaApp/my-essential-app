@@ -445,7 +445,31 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
             </div>
           )}
 
-          {/* Change Goal button */}
+          {/* Muscle gain speed selector (only for build_muscle goal) */}
+          {hasGainGoal && (
+            <div className="space-y-2">
+              <Label className="font-exo text-muted-foreground">
+                {ep.gainSpeedTitle || 'Muscle gain pace'}
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                {MUSCLE_GAIN_SPEEDS.map(({ id, emoji }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setMuscleGainSpeed(id)}
+                    className={`p-2.5 rounded-xl text-sm font-exo text-left transition-all border ${
+                      muscleGainSpeed === id
+                        ? 'border-primary bg-primary/10 text-foreground'
+                        : 'border-border bg-secondary/30 text-muted-foreground hover:bg-secondary/50'
+                    }`}
+                  >
+                    {emoji} {getGainSpeedLabel(id)}
+                    <span className="block text-[10px] text-muted-foreground">{getGainSpeedDesc(id)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )
           <Button
             variant="outline"
             onClick={() => setGoalModalOpen(true)}
