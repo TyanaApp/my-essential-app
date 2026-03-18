@@ -238,6 +238,12 @@ const T: Record<string, any> = {
         { id: 'fast', emoji: '🏃', title: 'Ātri', desc: '−0.75 kg/ned', sub: 'Pamanāms rezultāts' },
         { id: 'intense', emoji: '⚡', title: 'Intensīvi', desc: '−1 kg/ned', sub: 'Maksimāls deficīts' },
       ],
+      gainSpeedTitle: "Kādu rezultātu vēlies?",
+      gainSpeeds: [
+        { id: 'slow', emoji: '🐢', title: 'Lēni', desc: '+0.25 kg/mēn', sub: 'Minimāls tauku pieaugums' },
+        { id: 'moderate', emoji: '⚖️', title: 'Mēreni', desc: '+0.5 kg/mēn', sub: 'Optimāls līdzsvars', recommended: true },
+        { id: 'active', emoji: '🏋️', title: 'Aktīvi', desc: '+0.75 kg/mēn', sub: 'Nepieciešami regulāri treniņi' },
+      ],
     },
     step3: { title: "Nedaudz par sevi", sub: "Aprēķināsim tavu personīgo kaloriju normu", gender: { male: "Vīrietis", female: "Sieviete" }, age: "Vecums", weight: "Svars", height: "Augums", kg: "kg", lbs: "lbs", cm: "cm", ft: "ft", btn: "Turpināt →" },
     step4: { title: "Kā tu ēd?", sub: "Pielāgosim receptes tev", allergiesTitle: "Vai ir alerģijas?", allergiesSub: "Neobligāti — var pievienot vēlāk", btn: "Turpināt →" },
