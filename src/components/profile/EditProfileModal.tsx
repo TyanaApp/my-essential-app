@@ -38,6 +38,15 @@ const DISLIKE_CHIPS = [
   { id: 'garlic', emoji: '🧄' },
 ];
 
+const WEIGHT_LOSS_SPEEDS = [
+  { id: 'slow', emoji: '🐢' },
+  { id: 'moderate', emoji: '⚖️' },
+  { id: 'fast', emoji: '🏃' },
+  { id: 'intense', emoji: '⚡' },
+] as const;
+
+const DEFICIT_MAP: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
+
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange }) => {
   const { t } = useTranslation();
   const { profile, updateProfile } = useProfile();
@@ -54,6 +63,8 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [dislikedFoods, setDislikedFoods] = useState<string[]>([]);
   const [dislikedFreeText, setDislikedFreeText] = useState('');
+  const [weightLossSpeed, setWeightLossSpeed] = useState('moderate');
+  const [currentGoals, setCurrentGoals] = useState<string[]>([]);
 
   const ep = (t as any).editProfile || {};
   const dl = (t as any).dislikes || {};
