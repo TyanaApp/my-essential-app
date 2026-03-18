@@ -469,7 +469,9 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onOpenChange 
                 ))}
               </div>
             </div>
-          )
+          )}
+
+          {/* Change Goal button */}
           <Button
             variant="outline"
             onClick={() => setGoalModalOpen(true)}
