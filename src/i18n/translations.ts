@@ -123,6 +123,13 @@ export const translations = {
       logged: 'logged ✓', meal: 'Meal', kcalUnit: 'kcal',
       mealPlaceholder: 'e.g. Oatmeal with banana',
     },
+    didntFinish: {
+      btn: '✏️ Didn\'t finish', title: 'How much did you leave?',
+      ateAbout: 'Ate approximately:', orExact: 'Or specify exactly:',
+      of: 'of', result: 'Result', was: 'was',
+      recalculateBtn: '✓ Recalculate', recalculated: 'Calories recalculated ✓',
+      error: 'Error updating',
+    },
     mealScan: {
       scanMeal: '📸 Scan meal', scanMealBtn: '📸',
       analyzing: '🤖 Analyzing...', aiFound: '✅ AI found:',
