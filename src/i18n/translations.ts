@@ -123,6 +123,13 @@ export const translations = {
       logged: 'logged ✓', meal: 'Meal', kcalUnit: 'kcal',
       mealPlaceholder: 'e.g. Oatmeal with banana',
     },
+    didntFinish: {
+      btn: '✏️ Didn\'t finish', title: 'How much did you leave?',
+      ateAbout: 'Ate approximately:', orExact: 'Or specify exactly:',
+      of: 'of', result: 'Result', was: 'was',
+      recalculateBtn: '✓ Recalculate', recalculated: 'Calories recalculated ✓',
+      error: 'Error updating',
+    },
     mealScan: {
       scanMeal: '📸 Scan meal', scanMealBtn: '📸',
       analyzing: '🤖 Analyzing...', aiFound: '✅ AI found:',
@@ -813,6 +820,13 @@ export const translations = {
       logged: 'записано ✓', meal: 'Блюдо', kcalUnit: 'ккал',
       mealPlaceholder: 'напр. Овсянка с бананом',
     },
+    didntFinish: {
+      btn: '✏️ Не доела', title: 'Сколько оставила?',
+      ateAbout: 'Съела примерно:', orExact: 'Или укажи точно:',
+      of: 'из', result: 'Итого', was: 'было',
+      recalculateBtn: '✓ Пересчитать', recalculated: 'Калории пересчитаны ✓',
+      error: 'Ошибка обновления',
+    },
     mealScan: {
       scanMeal: '📸 Фото блюда', scanMealBtn: '📸',
       analyzing: '🤖 Анализируем...', aiFound: '✅ ИИ определил:',
@@ -1424,6 +1438,13 @@ export const translations = {
       protein: 'Olbaltumvielas (g)', fat: 'Tauki (g)', carbs: 'Ogļhidrāti (g)', logMeal: 'Ierakstīt',
       logged: 'ierakstīts ✓', meal: 'Ēdiens', kcalUnit: 'kcal', mealPlaceholder: 'piem. Auzu pārslas ar banānu',
     },
+    didntFinish: {
+      btn: '✏️ Neapēdu', title: 'Cik atstāji?',
+      ateAbout: 'Apēdu aptuveni:', orExact: 'Vai norādi precīzi:',
+      of: 'no', result: 'Rezultāts', was: 'bija',
+      recalculateBtn: '✓ Pārrēķināt', recalculated: 'Kalorijas pārrēķinātas ✓',
+      error: 'Kļūda atjauninot',
+    },
     mealScan: {
       scanMeal: '📸 Fotografēt ēdienu', scanMealBtn: '📸', analyzing: '🤖 Analizē...', aiFound: '✅ AI atrada:',
       takePhoto: 'Nofotografējiet savu ēdienu', analyzingHint: 'Analizējam ēdienu... ~10 sekundes',
@@ -2009,6 +2030,13 @@ export const translations = {
       noMatchingRecipes: 'Рецепти не знайдено', name: 'Назва', calories: 'Калорії',
       protein: 'Білок (г)', fat: 'Жир (г)', carbs: 'Вуглеводи (г)', logMeal: 'Записати',
       logged: 'записано ✓', meal: 'Страва', kcalUnit: 'ккал', mealPlaceholder: 'напр. Вівсянка з бананом',
+    },
+    didntFinish: {
+      btn: '✏️ Не доїла', title: 'Скільки залишила?',
+      ateAbout: 'З\'їла приблизно:', orExact: 'Або вкажи точно:',
+      of: 'з', result: 'Підсумок', was: 'було',
+      recalculateBtn: '✓ Перерахувати', recalculated: 'Калорії перераховані ✓',
+      error: 'Помилка оновлення',
     },
     mealScan: {
       scanMeal: '📸 Фото страви', scanMealBtn: '📸', analyzing: '🤖 Аналізуємо...', aiFound: '✅ ШІ визначив:',

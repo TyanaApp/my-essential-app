@@ -12,6 +12,7 @@ import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import FridgePickerModal from '@/components/diary/FridgePickerModal';
 import SmartMealEntryModal from '@/components/diary/SmartMealEntryModal';
+import DidntFinishSheet from '@/components/diary/DidntFinishSheet';
 
 interface MealEntry {
   id: string;
@@ -74,6 +75,9 @@ const Diary = () => {
   // Smart entry modal state
   const [smartEntryOpen, setSmartEntryOpen] = useState(false);
   const [smartEntryMealType, setSmartEntryMealType] = useState('breakfast');
+  // Didn't finish sheet state
+  const [didntFinishOpen, setDidntFinishOpen] = useState(false);
+  const [didntFinishEntry, setDidntFinishEntry] = useState<MealEntry | null>(null);
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
@@ -230,18 +234,26 @@ const Diary = () => {
                 ) : (
                   <div className="space-y-1.5">
                     {sectionEntries.map((entry) => (
-                      <div key={entry.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-muted/30">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate text-foreground">{entry.custom_name || t.diary.meal}</p>
-                          <p className="text-[10px] text-muted-foreground">
-                            {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
-                            {(entry.total_protein ?? 0) > 0 && ` · ${(t.mealPlan as any)?.proteinShort || 'P'}:${entry.total_protein}${(t.nutritionCalc as any)?.unitG || 'g'}`}
-                            {(entry.total_fat ?? 0) > 0 && ` · ${(t.mealPlan as any)?.fatShort || 'F'}:${entry.total_fat}${(t.nutritionCalc as any)?.unitG || 'g'}`}
-                            {(entry.total_carbs ?? 0) > 0 && ` · ${(t.mealPlan as any)?.carbsShort || 'C'}:${entry.total_carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`}
-                          </p>
+                      <div key={entry.id} className="py-1.5 px-2 rounded-lg bg-muted/30">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate text-foreground">{entry.custom_name || t.diary.meal}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {entry.total_calories || 0} {(t as any).diary?.kcalUnit || 'kcal'}
+                              {(entry.total_protein ?? 0) > 0 && ` · ${(t.mealPlan as any)?.proteinShort || 'P'}:${entry.total_protein}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                              {(entry.total_fat ?? 0) > 0 && ` · ${(t.mealPlan as any)?.fatShort || 'F'}:${entry.total_fat}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                              {(entry.total_carbs ?? 0) > 0 && ` · ${(t.mealPlan as any)?.carbsShort || 'C'}:${entry.total_carbs}${(t.nutritionCalc as any)?.unitG || 'g'}`}
+                            </p>
+                          </div>
+                          <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-destructive/10 shrink-0">
+                            <X className="w-3.5 h-3.5 text-destructive" />
+                          </button>
                         </div>
-                        <button onClick={() => handleDelete(entry.id)} className="p-1 rounded-lg hover:bg-destructive/10 shrink-0">
-                          <X className="w-3.5 h-3.5 text-destructive" />
+                        <button
+                          onClick={() => { setDidntFinishEntry(entry); setDidntFinishOpen(true); }}
+                          className="mt-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          {(t as any).didntFinish?.btn || '✏️ Didn\'t finish'}
                         </button>
                       </div>
                     ))}
@@ -345,6 +357,14 @@ const Diary = () => {
         mealType={smartEntryMealType}
         dateStr={dateStr}
         onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
+      />
+      <DidntFinishSheet
+        open={didntFinishOpen}
+        onClose={() => { setDidntFinishOpen(false); setDidntFinishEntry(null); }}
+        entry={didntFinishEntry}
+        onUpdated={(id, updated) => {
+          setEntries(prev => prev.map(e => e.id === id ? { ...e, ...updated } as MealEntry : e));
+        }}
       />
       <RewardModal
         open={!!streakReward}
