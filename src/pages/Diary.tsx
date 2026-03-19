@@ -75,6 +75,9 @@ const Diary = () => {
   // Smart entry modal state
   const [smartEntryOpen, setSmartEntryOpen] = useState(false);
   const [smartEntryMealType, setSmartEntryMealType] = useState('breakfast');
+  // Didn't finish sheet state
+  const [didntFinishOpen, setDidntFinishOpen] = useState(false);
+  const [didntFinishEntry, setDidntFinishEntry] = useState<MealEntry | null>(null);
 
   const dateStr = selectedDate.toISOString().split('T')[0];
   const weekDays = useMemo(() => getWeekDays(selectedDate), [dateStr]);
