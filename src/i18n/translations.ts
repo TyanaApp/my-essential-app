@@ -820,6 +820,13 @@ export const translations = {
       logged: 'записано ✓', meal: 'Блюдо', kcalUnit: 'ккал',
       mealPlaceholder: 'напр. Овсянка с бананом',
     },
+    didntFinish: {
+      btn: '✏️ Не доела', title: 'Сколько оставила?',
+      ateAbout: 'Съела примерно:', orExact: 'Или укажи точно:',
+      of: 'из', result: 'Итого', was: 'было',
+      recalculateBtn: '✓ Пересчитать', recalculated: 'Калории пересчитаны ✓',
+      error: 'Ошибка обновления',
+    },
     mealScan: {
       scanMeal: '📸 Фото блюда', scanMealBtn: '📸',
       analyzing: '🤖 Анализируем...', aiFound: '✅ ИИ определил:',
