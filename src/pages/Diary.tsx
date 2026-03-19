@@ -12,6 +12,7 @@ import RewardModal from '@/components/RewardModal';
 import MealScanModal from '@/components/diary/MealScanModal';
 import FridgePickerModal from '@/components/diary/FridgePickerModal';
 import SmartMealEntryModal from '@/components/diary/SmartMealEntryModal';
+import DidntFinishSheet from '@/components/diary/DidntFinishSheet';
 
 interface MealEntry {
   id: string;
