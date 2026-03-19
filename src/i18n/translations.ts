@@ -1438,6 +1438,13 @@ export const translations = {
       protein: 'Olbaltumvielas (g)', fat: 'Tauki (g)', carbs: 'Ogļhidrāti (g)', logMeal: 'Ierakstīt',
       logged: 'ierakstīts ✓', meal: 'Ēdiens', kcalUnit: 'kcal', mealPlaceholder: 'piem. Auzu pārslas ar banānu',
     },
+    didntFinish: {
+      btn: '✏️ Neapēdu', title: 'Cik atstāji?',
+      ateAbout: 'Apēdu aptuveni:', orExact: 'Vai norādi precīzi:',
+      of: 'no', result: 'Rezultāts', was: 'bija',
+      recalculateBtn: '✓ Pārrēķināt', recalculated: 'Kalorijas pārrēķinātas ✓',
+      error: 'Kļūda atjauninot',
+    },
     mealScan: {
       scanMeal: '📸 Fotografēt ēdienu', scanMealBtn: '📸', analyzing: '🤖 Analizē...', aiFound: '✅ AI atrada:',
       takePhoto: 'Nofotografējiet savu ēdienu', analyzingHint: 'Analizējam ēdienu... ~10 sekundes',
