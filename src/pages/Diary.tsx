@@ -358,6 +358,14 @@ const Diary = () => {
         dateStr={dateStr}
         onSaved={(entry) => { if (entry) setEntries(prev => [...prev, entry]); }}
       />
+      <DidntFinishSheet
+        open={didntFinishOpen}
+        onClose={() => { setDidntFinishOpen(false); setDidntFinishEntry(null); }}
+        entry={didntFinishEntry}
+        onUpdated={(id, updated) => {
+          setEntries(prev => prev.map(e => e.id === id ? { ...e, ...updated } as MealEntry : e));
+        }}
+      />
       <RewardModal
         open={!!streakReward}
         onClose={() => setStreakReward(null)}

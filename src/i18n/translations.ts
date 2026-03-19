@@ -2031,6 +2031,13 @@ export const translations = {
       protein: 'Білок (г)', fat: 'Жир (г)', carbs: 'Вуглеводи (г)', logMeal: 'Записати',
       logged: 'записано ✓', meal: 'Страва', kcalUnit: 'ккал', mealPlaceholder: 'напр. Вівсянка з бананом',
     },
+    didntFinish: {
+      btn: '✏️ Не доїла', title: 'Скільки залишила?',
+      ateAbout: 'З\'їла приблизно:', orExact: 'Або вкажи точно:',
+      of: 'з', result: 'Підсумок', was: 'було',
+      recalculateBtn: '✓ Перерахувати', recalculated: 'Калорії перераховані ✓',
+      error: 'Помилка оновлення',
+    },
     mealScan: {
       scanMeal: '📸 Фото страви', scanMealBtn: '📸', analyzing: '🤖 Аналізуємо...', aiFound: '✅ ШІ визначив:',
       takePhoto: 'Сфотографуйте вашу страву', analyzingHint: 'Аналізуємо страву... ~10 секунд',
