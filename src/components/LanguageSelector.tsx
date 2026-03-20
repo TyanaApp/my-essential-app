@@ -53,7 +53,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -4, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 bottom-full mb-1 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[120px]"
+              className="absolute right-0 top-full mt-1 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 min-w-[120px]"
             >
               {languages.map((lang) => (
                 <button
