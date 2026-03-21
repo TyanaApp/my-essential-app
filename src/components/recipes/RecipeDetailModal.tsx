@@ -14,6 +14,7 @@ interface Nutrition { calories: number; protein: number; fat: number; carbs: num
 interface NormalizedRecipe {
   title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
   nutrition: Nutrition; prepTime: number; estimatedCost: number;
+  servings?: number; caloriesPerServing?: number; totalCalories?: number;
 }
 
 interface RecipeDetailModalProps {
