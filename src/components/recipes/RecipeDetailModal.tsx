@@ -146,9 +146,15 @@ const RecipeDetailModal = ({
   const navigate = useNavigate();
   const ct = COOK_TRANSLATIONS[language] || COOK_TRANSLATIONS.en;
 
-  const [portions, setPortions] = useState(2);
-  const basePortion = 2; // recipes default to 2 portions
+  const recipeServings = recipe.servings || 2;
+  const [portions, setPortions] = useState(recipeServings);
+  const basePortion = recipeServings;
   const portionMultiplier = portions / basePortion;
+
+  // Portion eaten tracking
+  const [eatenFraction, setEatenFraction] = useState(1); // 1 = one serving
+  const [customGrams, setCustomGrams] = useState('');
+  const [useCustomGrams, setUseCustomGrams] = useState(false);
 
   const [step, setStep] = useState<FlowStep>('detail');
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
