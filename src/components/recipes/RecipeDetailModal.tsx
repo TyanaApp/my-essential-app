@@ -344,19 +344,27 @@ const RecipeDetailModal = ({
                 <Clock className="w-3 h-3" /> {recipe.prepTime} {language === 'ru' || language === 'uk' ? 'мин' : language === 'lv' ? 'min' : 'min'}
               </span>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: cc.bg, color: cc.text }}>
-                {recipe.nutrition.calories} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}
+                📊 {perServingCal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}/{ct.perServing}
               </span>
             </div>
 
-            {/* Macros */}
-            <div className="px-5 pt-3 grid grid-cols-3 gap-2">
+            {/* Per serving + total nutrition */}
+            <div className="px-5 pt-3">
+              <p className="text-xs font-semibold text-foreground mb-1">📊 {ct.perServing}: {perServingCal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}</p>
+              {recipeServings > 1 && (
+                <p className="text-xs text-muted-foreground mb-2">👨‍👩‍👧 {ct.totalForAll.replace('{n}', String(portions))}: {Math.round(perServingCal * portions)} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}</p>
+              )}
+            </div>
+
+            {/* Macros per serving */}
+            <div className="px-5 pt-1 grid grid-cols-3 gap-2">
               {[
-                { label: language === 'ru' || language === 'uk' ? 'Белок' : language === 'lv' ? 'Olbaltumvielas' : 'Protein', value: recipe.nutrition.protein, color: '#059669' },
-                { label: language === 'ru' || language === 'uk' ? 'Жир' : language === 'lv' ? 'Tauki' : 'Fat', value: recipe.nutrition.fat, color: '#EA580C' },
-                { label: language === 'ru' || language === 'uk' ? 'Углеводы' : language === 'lv' ? 'Ogļhidrāti' : 'Carbs', value: recipe.nutrition.carbs, color: '#2563EB' },
+                { label: language === 'ru' || language === 'uk' ? 'Белок' : language === 'lv' ? 'Olbaltumvielas' : 'Protein', value: perServingProt, color: '#059669' },
+                { label: language === 'ru' || language === 'uk' ? 'Жир' : language === 'lv' ? 'Tauki' : 'Fat', value: perServingFat, color: '#EA580C' },
+                { label: language === 'ru' || language === 'uk' ? 'Углеводы' : language === 'lv' ? 'Ogļhidrāti' : 'Carbs', value: perServingCarbs, color: '#2563EB' },
               ].map(m => (
                 <div key={m.label} className="text-center p-2.5 rounded-xl bg-secondary">
-                  <p className="text-lg font-bold" style={{ color: m.color }}>{Math.round(m.value * portionMultiplier)}g</p>
+                  <p className="text-lg font-bold" style={{ color: m.color }}>{Math.round(m.value)}g</p>
                   <p className="text-[10px] font-medium text-muted-foreground">{m.label}</p>
                 </div>
               ))}
