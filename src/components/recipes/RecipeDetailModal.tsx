@@ -373,7 +373,7 @@ const RecipeDetailModal = ({
             {/* Ingredients */}
             <div className="px-5 pt-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-bold text-foreground">{ct.ingredients}</h2>
+                <h2 className="text-base font-bold text-foreground">{recipeServings > 1 ? ct.ingredientsForServings.replace('{n}', String(portions)) : ct.ingredients}</h2>
                 <div className="flex items-center gap-2 bg-secondary rounded-xl px-1">
                   <button onClick={() => setPortions(Math.max(1, portions - 1))} className="w-8 h-8 flex items-center justify-center">
                     <Minus className="w-4 h-4 text-foreground" />
