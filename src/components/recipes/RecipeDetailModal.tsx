@@ -252,7 +252,7 @@ const RecipeDetailModal = ({
     });
   };
 
-  const handleConfirmCook = () => setStep('meal_type');
+  const handleConfirmCook = () => setStep('portion_select');
 
   const handleLogMeal = async (mealType: string) => {
     if (!user) return;
