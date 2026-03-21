@@ -198,11 +198,34 @@ const RecipeDetailModal = ({
 
   const handleConfirmCook = () => setStep('portion_select');
 
+  const perServingCal = recipe.caloriesPerServing || recipe.nutrition.calories;
+  const perServingProt = recipe.nutrition.protein;
+  const perServingFat = recipe.nutrition.fat;
+  const perServingCarbs = recipe.nutrition.carbs;
+
+  const getEatenCalories = () => {
+    if (useCustomGrams && customGrams) {
+      const totalWeight = recipeServings * 350;
+      const fraction = parseFloat(customGrams) / totalWeight;
+      return {
+        cal: Math.round(perServingCal * recipeServings * fraction),
+        prot: Math.round(perServingProt * recipeServings * fraction),
+        fat: Math.round(perServingFat * recipeServings * fraction),
+        carbs: Math.round(perServingCarbs * recipeServings * fraction),
+      };
+    }
+    return {
+      cal: Math.round(perServingCal * eatenFraction),
+      prot: Math.round(perServingProt * eatenFraction),
+      fat: Math.round(perServingFat * eatenFraction),
+      carbs: Math.round(perServingCarbs * eatenFraction),
+    };
+  };
+
   const handleLogMeal = async (mealType: string) => {
     if (!user) return;
     setProcessing(true);
     try {
-      // THING 1: Deduct from inventory
       let deductedCount = 0;
       let savedAmount = 0;
       let hasPriceData = false;
@@ -211,64 +234,37 @@ const RecipeDetailModal = ({
       for (const idx of checkedIngredients) {
         const ing = ingredientAvailability[idx];
         if (!ing?.inInventory || !ing.inventoryItem) continue;
-
         const item = ing.inventoryItem;
-        // Parse amount from ingredient
         const match = ing.amount.match(/^([\d.,]+)/);
-        const usedQty = match ? parseFloat(match[1].replace(',', '.')) * portionMultiplier : 1;
-
+        const usedQty = match ? parseFloat(match[1].replace(',', '.')) : 1;
         const currentQty = item.quantity || 1;
         const remaining = currentQty - usedQty;
-
         if (remaining <= 0) {
           await supabase.from('inventory_items').delete().eq('id', item.id);
         } else {
           await supabase.from('inventory_items').update({ quantity: remaining }).eq('id', item.id);
         }
         deductedCount++;
-
-        // Calculate savings
         if (item.price_per_unit && item.expires_at && item.expires_at >= today) {
           savedAmount += (item.price_per_unit * Math.min(usedQty, currentQty));
           hasPriceData = true;
         }
       }
 
-      // THING 2: Log to diary
-      const cal = Math.round(recipe.nutrition.calories * portionMultiplier);
-      const prot = Math.round(recipe.nutrition.protein * portionMultiplier);
-      const fat = Math.round(recipe.nutrition.fat * portionMultiplier);
-      const carbs = Math.round(recipe.nutrition.carbs * portionMultiplier);
-
+      const eaten = getEatenCalories();
       await supabase.from('meal_entries').insert({
-        user_id: user.id,
-        date: new Date().toISOString().split('T')[0],
-        meal_type: mealType,
-        custom_name: recipe.title,
-        total_calories: Math.min(cal, 9999),
-        total_protein: prot,
-        total_fat: fat,
-        total_carbs: carbs,
+        user_id: user.id, date: today, meal_type: mealType, custom_name: recipe.title,
+        total_calories: Math.min(eaten.cal, 9999), total_protein: eaten.prot,
+        total_fat: eaten.fat, total_carbs: eaten.carbs,
       });
-
-      // THING 3: Update streak
       await updateStreak();
-
-      // Log savings
       if (savedAmount > 0) {
         await supabase.from('savings_log').insert({
-          user_id: user.id,
-          amount: Math.round(savedAmount * 100) / 100,
-          type: 'recipe_cooked',
-          description: recipe.title,
+          user_id: user.id, amount: Math.round(savedAmount * 100) / 100,
+          type: 'recipe_cooked', description: recipe.title,
         });
       }
-
-      setSuccessData({
-        deducted: deductedCount,
-        calories: cal,
-        savedAmount: hasPriceData ? Math.round(savedAmount * 100) / 100 : null,
-      });
+      setSuccessData({ deducted: deductedCount, calories: eaten.cal, savedAmount: hasPriceData ? Math.round(savedAmount * 100) / 100 : null });
       setStep('success');
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 3000);
