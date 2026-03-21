@@ -504,7 +504,62 @@ const RecipeDetailModal = ({
           </motion.div>
         )}
 
-        {/* ═══ MEAL TYPE PICKER ═══ */}
+        {/* ═══ PORTION SELECT ═══ */}
+        {step === 'portion_select' && (
+          <motion.div key="portion_select" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
+            className="min-h-screen flex flex-col items-center justify-center bg-background px-5">
+            <h2 className="text-lg font-bold text-foreground mb-2">{ct.howMuchAte}</h2>
+            <p className="text-xs text-muted-foreground mb-6">
+              {ct.perServing}: {perServingCal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}
+            </p>
+            <div className="grid grid-cols-2 gap-3 w-full max-w-xs mb-4">
+              {[
+                { fraction: 1, label: ct.oneServing, cal: perServingCal },
+                { fraction: 0.5, label: ct.halfServing, cal: Math.round(perServingCal * 0.5) },
+                { fraction: 1/3, label: ct.thirdServing, cal: Math.round(perServingCal / 3) },
+              ].map(opt => (
+                <button key={opt.fraction} onClick={() => { setEatenFraction(opt.fraction); setUseCustomGrams(false); }}
+                  className="py-3 rounded-2xl font-bold text-sm border-2 transition-all active:scale-95"
+                  style={{
+                    borderColor: !useCustomGrams && eatenFraction === opt.fraction ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                    backgroundColor: !useCustomGrams && eatenFraction === opt.fraction ? 'hsl(var(--primary) / 0.1)' : 'transparent',
+                    color: 'hsl(var(--foreground))',
+                  }}>
+                  <span className="block">{opt.label}</span>
+                  <span className="block text-xs font-normal text-muted-foreground">{opt.cal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}</span>
+                </button>
+              ))}
+              <button onClick={() => setUseCustomGrams(true)}
+                className="py-3 rounded-2xl font-bold text-sm border-2 transition-all active:scale-95"
+                style={{
+                  borderColor: useCustomGrams ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                  backgroundColor: useCustomGrams ? 'hsl(var(--primary) / 0.1)' : 'transparent',
+                  color: 'hsl(var(--foreground))',
+                }}>
+                {ct.otherAmount}
+              </button>
+            </div>
+            {useCustomGrams && (
+              <div className="flex items-center gap-2 mb-4">
+                <input type="number" value={customGrams} onChange={e => setCustomGrams(e.target.value)}
+                  placeholder="200" className="w-24 h-10 rounded-xl border border-border bg-secondary text-center text-foreground font-bold" />
+                <span className="text-sm text-muted-foreground">{language === 'ru' || language === 'uk' ? 'г' : 'g'}</span>
+              </div>
+            )}
+            <p className="text-sm font-semibold text-primary mb-6">
+              🔥 {getEatenCalories().cal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}
+            </p>
+            <button onClick={() => setStep('meal_type')}
+              className="w-full max-w-xs h-14 rounded-2xl text-white font-bold text-base"
+              style={{ backgroundColor: '#7C3AED' }}>
+              ✓ {language === 'ru' ? 'Далее' : language === 'uk' ? 'Далі' : language === 'lv' ? 'Tālāk' : 'Next'}
+            </button>
+            <button onClick={() => setStep('confirm')} className="mt-2 text-sm text-muted-foreground">
+              {ct.cancel}
+            </button>
+          </motion.div>
+        )}
+
         {step === 'meal_type' && (
           <motion.div key="meal_type" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
             className="min-h-screen flex flex-col items-center justify-center bg-background px-5">
