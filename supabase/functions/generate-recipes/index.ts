@@ -118,6 +118,29 @@ Disliked foods: ${dislikedFoods}
 Meal type: ${mealType || 'any'}
 Time available: ${timeAvailable || 'any'}
 Daily calories target: ${userGoals?.daily_calories_target || 2000} kcal
+Household size: ${householdSize} people
+
+STRICT MEAL TYPE RULES - only suggest appropriate dishes:
+breakfast → porridge, eggs, toast, smoothie, yogurt, pancakes, omelette
+lunch → soup, main course with side dish, salad + protein, pasta, rice dishes, meat/fish + vegetables + carbs
+dinner → lighter main course, fish, vegetables, light protein
+snack → fruit, nuts, yogurt, small bites
+
+For LUNCH specifically:
+- Must include protein (meat/fish/eggs/legumes)
+- Must include side dish (rice/pasta/potatoes/grains)
+- Must include vegetables
+- NEVER suggest pancakes, oatmeal, or typical breakfast foods for lunch
+- Think: chicken + rice + salad, pasta bolognese, fish + mashed potato
+
+For DINNER specifically:
+- Lighter than lunch
+- NEVER suggest heavy breakfast foods like pancakes or oatmeal
+- Think: fish + vegetables, chicken salad, light soup
+
+PORTION SCALING:
+ALL ingredient amounts must be for ${householdSize} people.
+Example for 4 people: Chicken breast: 800g (not 200g), Rice: 320g dry (not 80g).
 
 YOUR TASK:
 Generate 6 real, tasty, simple recipes (max 30 min to cook).
@@ -135,10 +158,12 @@ For each recipe:
 - "category": "now" (can make immediately) or "buy" (needs 1-3 extra items)
 - "title": tasty descriptive name in ${lang}
 - "imageQuery": english food name for photo search, 2-4 words
-- "calories": realistic number
-- "nutrition": {"calories": N, "protein": N, "fat": N, "carbs": N}
+- "servings": ${householdSize}
+- "caloriesPerServing": realistic calories for ONE serving (1 person)
+- "totalCalories": caloriesPerServing × ${householdSize}
+- "nutrition": {"calories": per serving, "protein": per serving, "fat": per serving, "carbs": per serving}
 - "prepTime": minutes
-- "ingredients": [{"name":"...", "amount":"qty with unit", "inFridge": true/false}]
+- "ingredients": [{"name":"...", "amount":"qty with unit FOR ${householdSize} PEOPLE", "inFridge": true/false}]
 - "missingIngredients": ["items to buy in ${lang} with quantities"] (empty for "now")
 - "estimatedShoppingCost": cost of missing items in EUR (0 for "now")
 - "instructions": ["step1","step2","step3"]

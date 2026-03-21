@@ -24,6 +24,7 @@ interface Recipe {
   title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
   nutrition: Nutrition; prepTime: number; estimatedCost: number;
   category?: 'now' | 'buy'; missingIngredients?: string[]; estimatedShoppingCost?: number;
+  servings?: number; caloriesPerServing?: number; totalCalories?: number;
 }
 interface SavedRecipe { id: string; title: string; ingredients: Ingredient[] | null; instructions: string[] | null; nutrition: Nutrition | null; prep_time: number | null; estimated_cost: number | null; is_favorite: boolean; }
 
@@ -306,8 +307,13 @@ const Recipes = () => {
           <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 mb-1.5">{n.title}</h3>
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
             <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" /> {n.prepTime} {rt?.minUnit || 'min'}</span>
-            <span>🔥 {n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}</span>
+            <span>🔥 {n.caloriesPerServing || n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}</span>
           </div>
+          {(n.servings || cookingFor) > 1 && (
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              🍽 {(n.servings || cookingFor)} {rt.servingsLabel || 'servings'} • {n.caloriesPerServing || n.nutrition.calories} {(t.diary as any)?.kcalUnit || 'kcal'}/{rt.perServingShort || 'serving'}
+            </p>
+          )}
           {!isBuyCategory && matchPct > 0 && (
             <p className="text-[11px] font-medium mt-1" style={{ color: matchPct >= 80 ? '#059669' : '#EA580C' }}>
               ✅ {(rt.matchPercent || '{pct}% from inventory').replace('{pct}', String(matchPct))}

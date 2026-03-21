@@ -14,6 +14,7 @@ interface Nutrition { calories: number; protein: number; fat: number; carbs: num
 interface NormalizedRecipe {
   title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
   nutrition: Nutrition; prepTime: number; estimatedCost: number;
+  servings?: number; caloriesPerServing?: number; totalCalories?: number;
 }
 
 interface RecipeDetailModalProps {
@@ -29,112 +30,56 @@ interface RecipeDetailModalProps {
 
 const COOK_TRANSLATIONS: Record<string, any> = {
   en: {
-    cookDish: '👨‍🍳 Cook this dish',
-    portions: 'portions',
-    haveAtHome: 'Have at home',
-    needBuy: 'Need to buy',
-    addMissingShopping: '🛒 Add missing to shopping',
-    ingredientsOf: '✅ {have} of {total} ingredients at home',
-    steps: 'Steps',
-    loadingSteps: 'Generating cooking steps...',
-    confirmTitle: 'Confirm what you used:',
-    confirmNote: "We'll only deduct checked items that are in your inventory",
-    cooked: 'I cooked it! Deduct ingredients',
-    cancel: 'Cancel',
-    logAs: 'Log to diary as:',
-    breakfast: '🌅 Breakfast',
-    lunch: '☀️ Lunch',
-    dinner: '🌙 Dinner',
-    snack: '🍎 Snack',
-    bonAppetit: 'Bon appétit!',
-    deducted: '📦 {count} items deducted from inventory',
-    logged: '📊 +{cal} kcal logged to diary',
-    saved: '💚 Saved €{amount} (used before expiry)',
-    usedBeforeExpiry: '💚 Items used before expiry ✓',
-    done: 'Great! ✓',
-    ingredients: 'Ingredients',
+    cookDish: '👨‍🍳 Cook this dish', portions: 'portions', haveAtHome: 'Have at home', needBuy: 'Need to buy',
+    addMissingShopping: '🛒 Add missing to shopping', ingredientsOf: '✅ {have} of {total} ingredients at home',
+    steps: 'Steps', loadingSteps: 'Generating cooking steps...', confirmTitle: 'Confirm what you used:',
+    confirmNote: "We'll only deduct checked items that are in your inventory", cooked: 'I cooked it! Deduct ingredients',
+    cancel: 'Cancel', logAs: 'Log to diary as:', breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner', snack: '🍎 Snack',
+    bonAppetit: 'Bon appétit!', deducted: '📦 {count} items deducted from inventory', logged: '📊 +{cal} kcal logged to diary',
+    saved: '💚 Saved €{amount} (used before expiry)', usedBeforeExpiry: '💚 Items used before expiry ✓', done: 'Great! ✓',
+    ingredients: 'Ingredients', howMuchAte: 'How much did you eat?', oneServing: '1 serving', halfServing: '½ serving',
+    thirdServing: '⅓ serving', otherAmount: 'Other', perServing: 'Per serving', totalForAll: 'Total for {n} servings',
+    ingredientsForServings: 'Ingredients for {n} servings', loggedPortion: 'Logged: {cal} kcal ({portion})',
   },
   ru: {
-    cookDish: '👨‍🍳 Приготовить это блюдо',
-    portions: 'порций',
-    haveAtHome: 'Есть дома',
-    needBuy: 'Нужно купить',
-    addMissingShopping: '🛒 Добавить недостающее в покупки',
-    ingredientsOf: '✅ {have} из {total} ингредиентов есть дома',
-    steps: 'Приготовление',
-    loadingSteps: 'Генерируем шаги приготовления...',
-    confirmTitle: 'Подтверди что использовала:',
-    confirmNote: 'Спишем только отмеченные продукты которые есть в инвентаре',
-    cooked: 'Приготовила! Списать продукты',
-    cancel: 'Отмена',
-    logAs: 'Записать в дневник как:',
-    breakfast: '🌅 Завтрак',
-    lunch: '☀️ Обед',
-    dinner: '🌙 Ужин',
-    snack: '🍎 Перекус',
-    bonAppetit: 'Приятного аппетита!',
-    deducted: '📦 Списано {count} продуктов из инвентаря',
-    logged: '📊 +{cal} ккал записано в дневник',
-    saved: '💚 Сэкономлено €{amount} (использовала до истечения срока)',
-    usedBeforeExpiry: '💚 Продукты использованы до истечения ✓',
-    done: 'Отлично! ✓',
-    ingredients: 'Ингредиенты',
+    cookDish: '👨‍🍳 Приготовить это блюдо', portions: 'порций', haveAtHome: 'Есть дома', needBuy: 'Нужно купить',
+    addMissingShopping: '🛒 Добавить недостающее в покупки', ingredientsOf: '✅ {have} из {total} ингредиентов есть дома',
+    steps: 'Приготовление', loadingSteps: 'Генерируем шаги приготовления...', confirmTitle: 'Подтверди что использовала:',
+    confirmNote: 'Спишем только отмеченные продукты которые есть в инвентаре', cooked: 'Приготовила! Списать продукты',
+    cancel: 'Отмена', logAs: 'Записать в дневник как:', breakfast: '🌅 Завтрак', lunch: '☀️ Обед', dinner: '🌙 Ужин', snack: '🍎 Перекус',
+    bonAppetit: 'Приятного аппетита!', deducted: '📦 Списано {count} продуктов из инвентаря', logged: '📊 +{cal} ккал записано в дневник',
+    saved: '💚 Сэкономлено €{amount} (использовала до истечения срока)', usedBeforeExpiry: '💚 Продукты использованы до истечения ✓',
+    done: 'Отлично! ✓', ingredients: 'Ингредиенты', howMuchAte: 'Сколько съела?', oneServing: '1 порция', halfServing: '½ порции',
+    thirdServing: '⅓ порции', otherAmount: 'Другое', perServing: 'На 1 порцию', totalForAll: 'Всего на {n} порций',
+    ingredientsForServings: 'Ингредиенты на {n} порций', loggedPortion: 'Записано: {cal} ккал ({portion})',
   },
   uk: {
-    cookDish: '👨‍🍳 Приготувати цю страву',
-    portions: 'порцій',
-    haveAtHome: 'Є вдома',
-    needBuy: 'Потрібно купити',
-    addMissingShopping: '🛒 Додати те що бракує до покупок',
-    ingredientsOf: '✅ {have} з {total} інгредієнтів є вдома',
-    steps: 'Приготування',
-    loadingSteps: 'Генеруємо кроки приготування...',
-    confirmTitle: 'Підтверди що використала:',
-    confirmNote: 'Спишемо лише відмічені продукти які є в інвентарі',
-    cooked: 'Приготувала! Списати продукти',
-    cancel: 'Скасувати',
-    logAs: 'Записати в щоденник як:',
-    breakfast: '🌅 Сніданок',
-    lunch: '☀️ Обід',
-    dinner: '🌙 Вечеря',
-    snack: '🍎 Перекус',
-    bonAppetit: 'Смачного!',
-    deducted: '📦 Списано {count} продуктів з інвентарю',
-    logged: '📊 +{cal} ккал записано в щоденник',
-    saved: '💚 Зекономлено €{amount} (використано до закінчення терміну)',
-    usedBeforeExpiry: '💚 Продукти використані до закінчення терміну ✓',
-    done: 'Чудово! ✓',
-    ingredients: 'Інгредієнти',
+    cookDish: '👨‍🍳 Приготувати цю страву', portions: 'порцій', haveAtHome: 'Є вдома', needBuy: 'Потрібно купити',
+    addMissingShopping: '🛒 Додати те що бракує до покупок', ingredientsOf: '✅ {have} з {total} інгредієнтів є вдома',
+    steps: 'Приготування', loadingSteps: 'Генеруємо кроки приготування...', confirmTitle: 'Підтверди що використала:',
+    confirmNote: 'Спишемо лише відмічені продукти які є в інвентарі', cooked: 'Приготувала! Списати продукти',
+    cancel: 'Скасувати', logAs: 'Записати в щоденник як:', breakfast: '🌅 Сніданок', lunch: '☀️ Обід', dinner: '🌙 Вечеря', snack: '🍎 Перекус',
+    bonAppetit: 'Смачного!', deducted: '📦 Списано {count} продуктів з інвентарю', logged: '📊 +{cal} ккал записано в щоденник',
+    saved: '💚 Зекономлено €{amount} (використано до закінчення терміну)', usedBeforeExpiry: '💚 Продукти використані до закінчення терміну ✓',
+    done: 'Чудово! ✓', ingredients: 'Інгредієнти', howMuchAte: 'Скільки з\'їла?', oneServing: '1 порція', halfServing: '½ порції',
+    thirdServing: '⅓ порції', otherAmount: 'Інше', perServing: 'На 1 порцію', totalForAll: 'Всього на {n} порцій',
+    ingredientsForServings: 'Інгредієнти на {n} порцій', loggedPortion: 'Записано: {cal} ккал ({portion})',
   },
   lv: {
-    cookDish: '👨‍🍳 Pagatavot šo ēdienu',
-    portions: 'porcijas',
-    haveAtHome: 'Ir mājās',
-    needBuy: 'Jāpērk',
-    addMissingShopping: '🛒 Pievienot trūkstošo iepirkumiem',
-    ingredientsOf: '✅ {have} no {total} sastāvdaļām ir mājās',
-    steps: 'Gatavošana',
-    loadingSteps: 'Ģenerējam gatavošanas soļus...',
-    confirmTitle: 'Apstipriniet ko izmantojāt:',
-    confirmNote: 'Norakstīsim tikai atzīmētos produktus kas ir inventārā',
-    cooked: 'Pagatavoju! Norakstīt produktus',
-    cancel: 'Atcelt',
-    logAs: 'Ierakstīt dienasgrāmatā kā:',
-    breakfast: '🌅 Brokastis',
-    lunch: '☀️ Pusdienas',
-    dinner: '🌙 Vakariņas',
-    snack: '🍎 Uzkoda',
-    bonAppetit: 'Labu apetīti!',
-    deducted: '📦 {count} produkti norakstīti no inventāra',
-    logged: '📊 +{cal} kcal ierakstīts dienasgrāmatā',
-    saved: '💚 Ietaupīts €{amount} (izmantots pirms derīguma termiņa)',
-    usedBeforeExpiry: '💚 Produkti izmantoti pirms termiņa beigām ✓',
-    done: 'Lieliski! ✓',
-    ingredients: 'Sastāvdaļas',
+    cookDish: '👨‍🍳 Pagatavot šo ēdienu', portions: 'porcijas', haveAtHome: 'Ir mājās', needBuy: 'Jāpērk',
+    addMissingShopping: '🛒 Pievienot trūkstošo iepirkumiem', ingredientsOf: '✅ {have} no {total} sastāvdaļām ir mājās',
+    steps: 'Gatavošana', loadingSteps: 'Ģenerējam gatavošanas soļus...', confirmTitle: 'Apstipriniet ko izmantojāt:',
+    confirmNote: 'Norakstīsim tikai atzīmētos produktus kas ir inventārā', cooked: 'Pagatavoju! Norakstīt produktus',
+    cancel: 'Atcelt', logAs: 'Ierakstīt dienasgrāmatā kā:', breakfast: '🌅 Brokastis', lunch: '☀️ Pusdienas', dinner: '🌙 Vakariņas', snack: '🍎 Uzkoda',
+    bonAppetit: 'Labu apetīti!', deducted: '📦 {count} produkti norakstīti no inventāra', logged: '📊 +{cal} kcal ierakstīts dienasgrāmatā',
+    saved: '💚 Ietaupīts €{amount} (izmantots pirms derīguma termiņa)', usedBeforeExpiry: '💚 Produkti izmantoti pirms termiņa beigām ✓',
+    done: 'Lieliski! ✓', ingredients: 'Sastāvdaļas', howMuchAte: 'Cik apēdi?', oneServing: '1 porcija', halfServing: '½ porcijas',
+    thirdServing: '⅓ porcijas', otherAmount: 'Cits', perServing: 'Uz 1 porciju', totalForAll: 'Kopā uz {n} porcijām',
+    ingredientsForServings: 'Sastāvdaļas {n} porcijām', loggedPortion: 'Ierakstīts: {cal} kcal ({portion})',
   },
 };
 
-type FlowStep = 'detail' | 'confirm' | 'meal_type' | 'success';
+type FlowStep = 'detail' | 'confirm' | 'portion_select' | 'meal_type' | 'success';
 
 const RecipeDetailModal = ({
   recipe, savedId, isFavorite, onClose, onToggleFavorite, onSave, inventory, dailyTarget,
@@ -145,9 +90,15 @@ const RecipeDetailModal = ({
   const navigate = useNavigate();
   const ct = COOK_TRANSLATIONS[language] || COOK_TRANSLATIONS.en;
 
-  const [portions, setPortions] = useState(2);
-  const basePortion = 2; // recipes default to 2 portions
+  const recipeServings = recipe.servings || 2;
+  const [portions, setPortions] = useState(recipeServings);
+  const basePortion = recipeServings;
   const portionMultiplier = portions / basePortion;
+
+  // Portion eaten tracking
+  const [eatenFraction, setEatenFraction] = useState(1); // 1 = one serving
+  const [customGrams, setCustomGrams] = useState('');
+  const [useCustomGrams, setUseCustomGrams] = useState(false);
 
   const [step, setStep] = useState<FlowStep>('detail');
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
@@ -245,13 +196,36 @@ const RecipeDetailModal = ({
     });
   };
 
-  const handleConfirmCook = () => setStep('meal_type');
+  const handleConfirmCook = () => setStep('portion_select');
+
+  const perServingCal = recipe.caloriesPerServing || recipe.nutrition.calories;
+  const perServingProt = recipe.nutrition.protein;
+  const perServingFat = recipe.nutrition.fat;
+  const perServingCarbs = recipe.nutrition.carbs;
+
+  const getEatenCalories = () => {
+    if (useCustomGrams && customGrams) {
+      const totalWeight = recipeServings * 350;
+      const fraction = parseFloat(customGrams) / totalWeight;
+      return {
+        cal: Math.round(perServingCal * recipeServings * fraction),
+        prot: Math.round(perServingProt * recipeServings * fraction),
+        fat: Math.round(perServingFat * recipeServings * fraction),
+        carbs: Math.round(perServingCarbs * recipeServings * fraction),
+      };
+    }
+    return {
+      cal: Math.round(perServingCal * eatenFraction),
+      prot: Math.round(perServingProt * eatenFraction),
+      fat: Math.round(perServingFat * eatenFraction),
+      carbs: Math.round(perServingCarbs * eatenFraction),
+    };
+  };
 
   const handleLogMeal = async (mealType: string) => {
     if (!user) return;
     setProcessing(true);
     try {
-      // THING 1: Deduct from inventory
       let deductedCount = 0;
       let savedAmount = 0;
       let hasPriceData = false;
@@ -260,64 +234,37 @@ const RecipeDetailModal = ({
       for (const idx of checkedIngredients) {
         const ing = ingredientAvailability[idx];
         if (!ing?.inInventory || !ing.inventoryItem) continue;
-
         const item = ing.inventoryItem;
-        // Parse amount from ingredient
         const match = ing.amount.match(/^([\d.,]+)/);
-        const usedQty = match ? parseFloat(match[1].replace(',', '.')) * portionMultiplier : 1;
-
+        const usedQty = match ? parseFloat(match[1].replace(',', '.')) : 1;
         const currentQty = item.quantity || 1;
         const remaining = currentQty - usedQty;
-
         if (remaining <= 0) {
           await supabase.from('inventory_items').delete().eq('id', item.id);
         } else {
           await supabase.from('inventory_items').update({ quantity: remaining }).eq('id', item.id);
         }
         deductedCount++;
-
-        // Calculate savings
         if (item.price_per_unit && item.expires_at && item.expires_at >= today) {
           savedAmount += (item.price_per_unit * Math.min(usedQty, currentQty));
           hasPriceData = true;
         }
       }
 
-      // THING 2: Log to diary
-      const cal = Math.round(recipe.nutrition.calories * portionMultiplier);
-      const prot = Math.round(recipe.nutrition.protein * portionMultiplier);
-      const fat = Math.round(recipe.nutrition.fat * portionMultiplier);
-      const carbs = Math.round(recipe.nutrition.carbs * portionMultiplier);
-
+      const eaten = getEatenCalories();
       await supabase.from('meal_entries').insert({
-        user_id: user.id,
-        date: new Date().toISOString().split('T')[0],
-        meal_type: mealType,
-        custom_name: recipe.title,
-        total_calories: Math.min(cal, 9999),
-        total_protein: prot,
-        total_fat: fat,
-        total_carbs: carbs,
+        user_id: user.id, date: today, meal_type: mealType, custom_name: recipe.title,
+        total_calories: Math.min(eaten.cal, 9999), total_protein: eaten.prot,
+        total_fat: eaten.fat, total_carbs: eaten.carbs,
       });
-
-      // THING 3: Update streak
       await updateStreak();
-
-      // Log savings
       if (savedAmount > 0) {
         await supabase.from('savings_log').insert({
-          user_id: user.id,
-          amount: Math.round(savedAmount * 100) / 100,
-          type: 'recipe_cooked',
-          description: recipe.title,
+          user_id: user.id, amount: Math.round(savedAmount * 100) / 100,
+          type: 'recipe_cooked', description: recipe.title,
         });
       }
-
-      setSuccessData({
-        deducted: deductedCount,
-        calories: cal,
-        savedAmount: hasPriceData ? Math.round(savedAmount * 100) / 100 : null,
-      });
+      setSuccessData({ deducted: deductedCount, calories: eaten.cal, savedAmount: hasPriceData ? Math.round(savedAmount * 100) / 100 : null });
       setStep('success');
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 3000);
@@ -397,19 +344,27 @@ const RecipeDetailModal = ({
                 <Clock className="w-3 h-3" /> {recipe.prepTime} {language === 'ru' || language === 'uk' ? 'мин' : language === 'lv' ? 'min' : 'min'}
               </span>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: cc.bg, color: cc.text }}>
-                {recipe.nutrition.calories} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}
+                📊 {perServingCal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}/{ct.perServing}
               </span>
             </div>
 
-            {/* Macros */}
-            <div className="px-5 pt-3 grid grid-cols-3 gap-2">
+            {/* Per serving + total nutrition */}
+            <div className="px-5 pt-3">
+              <p className="text-xs font-semibold text-foreground mb-1">📊 {ct.perServing}: {perServingCal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}</p>
+              {recipeServings > 1 && (
+                <p className="text-xs text-muted-foreground mb-2">👨‍👩‍👧 {ct.totalForAll.replace('{n}', String(portions))}: {Math.round(perServingCal * portions)} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}</p>
+              )}
+            </div>
+
+            {/* Macros per serving */}
+            <div className="px-5 pt-1 grid grid-cols-3 gap-2">
               {[
-                { label: language === 'ru' || language === 'uk' ? 'Белок' : language === 'lv' ? 'Olbaltumvielas' : 'Protein', value: recipe.nutrition.protein, color: '#059669' },
-                { label: language === 'ru' || language === 'uk' ? 'Жир' : language === 'lv' ? 'Tauki' : 'Fat', value: recipe.nutrition.fat, color: '#EA580C' },
-                { label: language === 'ru' || language === 'uk' ? 'Углеводы' : language === 'lv' ? 'Ogļhidrāti' : 'Carbs', value: recipe.nutrition.carbs, color: '#2563EB' },
+                { label: language === 'ru' || language === 'uk' ? 'Белок' : language === 'lv' ? 'Olbaltumvielas' : 'Protein', value: perServingProt, color: '#059669' },
+                { label: language === 'ru' || language === 'uk' ? 'Жир' : language === 'lv' ? 'Tauki' : 'Fat', value: perServingFat, color: '#EA580C' },
+                { label: language === 'ru' || language === 'uk' ? 'Углеводы' : language === 'lv' ? 'Ogļhidrāti' : 'Carbs', value: perServingCarbs, color: '#2563EB' },
               ].map(m => (
                 <div key={m.label} className="text-center p-2.5 rounded-xl bg-secondary">
-                  <p className="text-lg font-bold" style={{ color: m.color }}>{Math.round(m.value * portionMultiplier)}g</p>
+                  <p className="text-lg font-bold" style={{ color: m.color }}>{Math.round(m.value)}g</p>
                   <p className="text-[10px] font-medium text-muted-foreground">{m.label}</p>
                 </div>
               ))}
@@ -418,7 +373,7 @@ const RecipeDetailModal = ({
             {/* Ingredients */}
             <div className="px-5 pt-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-bold text-foreground">{ct.ingredients}</h2>
+                <h2 className="text-base font-bold text-foreground">{recipeServings > 1 ? ct.ingredientsForServings.replace('{n}', String(portions)) : ct.ingredients}</h2>
                 <div className="flex items-center gap-2 bg-secondary rounded-xl px-1">
                   <button onClick={() => setPortions(Math.max(1, portions - 1))} className="w-8 h-8 flex items-center justify-center">
                     <Minus className="w-4 h-4 text-foreground" />
@@ -549,7 +504,62 @@ const RecipeDetailModal = ({
           </motion.div>
         )}
 
-        {/* ═══ MEAL TYPE PICKER ═══ */}
+        {/* ═══ PORTION SELECT ═══ */}
+        {step === 'portion_select' && (
+          <motion.div key="portion_select" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
+            className="min-h-screen flex flex-col items-center justify-center bg-background px-5">
+            <h2 className="text-lg font-bold text-foreground mb-2">{ct.howMuchAte}</h2>
+            <p className="text-xs text-muted-foreground mb-6">
+              {ct.perServing}: {perServingCal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}
+            </p>
+            <div className="grid grid-cols-2 gap-3 w-full max-w-xs mb-4">
+              {[
+                { fraction: 1, label: ct.oneServing, cal: perServingCal },
+                { fraction: 0.5, label: ct.halfServing, cal: Math.round(perServingCal * 0.5) },
+                { fraction: 1/3, label: ct.thirdServing, cal: Math.round(perServingCal / 3) },
+              ].map(opt => (
+                <button key={opt.fraction} onClick={() => { setEatenFraction(opt.fraction); setUseCustomGrams(false); }}
+                  className="py-3 rounded-2xl font-bold text-sm border-2 transition-all active:scale-95"
+                  style={{
+                    borderColor: !useCustomGrams && eatenFraction === opt.fraction ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                    backgroundColor: !useCustomGrams && eatenFraction === opt.fraction ? 'hsl(var(--primary) / 0.1)' : 'transparent',
+                    color: 'hsl(var(--foreground))',
+                  }}>
+                  <span className="block">{opt.label}</span>
+                  <span className="block text-xs font-normal text-muted-foreground">{opt.cal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}</span>
+                </button>
+              ))}
+              <button onClick={() => setUseCustomGrams(true)}
+                className="py-3 rounded-2xl font-bold text-sm border-2 transition-all active:scale-95"
+                style={{
+                  borderColor: useCustomGrams ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                  backgroundColor: useCustomGrams ? 'hsl(var(--primary) / 0.1)' : 'transparent',
+                  color: 'hsl(var(--foreground))',
+                }}>
+                {ct.otherAmount}
+              </button>
+            </div>
+            {useCustomGrams && (
+              <div className="flex items-center gap-2 mb-4">
+                <input type="number" value={customGrams} onChange={e => setCustomGrams(e.target.value)}
+                  placeholder="200" className="w-24 h-10 rounded-xl border border-border bg-secondary text-center text-foreground font-bold" />
+                <span className="text-sm text-muted-foreground">{language === 'ru' || language === 'uk' ? 'г' : 'g'}</span>
+              </div>
+            )}
+            <p className="text-sm font-semibold text-primary mb-6">
+              🔥 {getEatenCalories().cal} {language === 'ru' || language === 'uk' ? 'ккал' : 'kcal'}
+            </p>
+            <button onClick={() => setStep('meal_type')}
+              className="w-full max-w-xs h-14 rounded-2xl text-white font-bold text-base"
+              style={{ backgroundColor: '#7C3AED' }}>
+              ✓ {language === 'ru' ? 'Далее' : language === 'uk' ? 'Далі' : language === 'lv' ? 'Tālāk' : 'Next'}
+            </button>
+            <button onClick={() => setStep('confirm')} className="mt-2 text-sm text-muted-foreground">
+              {ct.cancel}
+            </button>
+          </motion.div>
+        )}
+
         {step === 'meal_type' && (
           <motion.div key="meal_type" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }}
             className="min-h-screen flex flex-col items-center justify-center bg-background px-5">
