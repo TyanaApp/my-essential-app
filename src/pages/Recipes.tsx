@@ -24,6 +24,7 @@ interface Recipe {
   title: string; imageQuery?: string; ingredients: Ingredient[]; instructions: string[];
   nutrition: Nutrition; prepTime: number; estimatedCost: number;
   category?: 'now' | 'buy'; missingIngredients?: string[]; estimatedShoppingCost?: number;
+  servings?: number; caloriesPerServing?: number; totalCalories?: number;
 }
 interface SavedRecipe { id: string; title: string; ingredients: Ingredient[] | null; instructions: string[] | null; nutrition: Nutrition | null; prep_time: number | null; estimated_cost: number | null; is_favorite: boolean; }
 
