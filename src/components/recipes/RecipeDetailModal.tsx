@@ -135,7 +135,7 @@ const COOK_TRANSLATIONS: Record<string, any> = {
   },
 };
 
-type FlowStep = 'detail' | 'confirm' | 'meal_type' | 'success';
+type FlowStep = 'detail' | 'confirm' | 'portion_select' | 'meal_type' | 'success';
 
 const RecipeDetailModal = ({
   recipe, savedId, isFavorite, onClose, onToggleFavorite, onSave, inventory, dailyTarget,
