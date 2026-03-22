@@ -114,10 +114,30 @@ serve(async (req) => {
           },
           {
             role: "user",
-            content: `Calculate nutrition for: "${mealDescription}"
+            content: `Calculate ACCURATE calories for this meal. Be PRECISE - do not overestimate.
+
+Meal: "${mealDescription}"
 Quantity: ${qtyInfo}
 Category: ${foodCategory || "unknown"}
 Extra info: ${clarifications || "none"}
+
+CRITICAL RULES:
+- Use standard Eastern European portion sizes (not American restaurant portions)
+- Bread slice = 30-40g = 70-80 kcal
+- Butter thin spread on bread = 5-8g = 35-55 kcal
+- Sausage slice (вареная колбаса) = 15-20g = 35-50 kcal
+- Cheese slice = 15-20g = 50-70 kcal
+- Tea with 1 tsp sugar = 15-20 kcal
+- Do NOT assume thick butter layers
+- Do NOT assume large portions unless explicitly specified
+- "Sandwich" = 1 slice bread + thin fillings, NOT a large restaurant sandwich
+- When in doubt → use LOWER estimate
+- Always sanity-check: does the total make sense for a normal home meal?
+
+Reference values per 100g:
+White bread: 265 kcal | Butter: 748 kcal | Boiled sausage: 260 kcal
+Hard cheese: 350-400 kcal | Tea: 0 kcal | Sugar: 400 kcal
+Chicken breast: 165 kcal | Rice cooked: 130 kcal | Potato boiled: 77 kcal
 
 Return ONLY this JSON (no text, no markdown, no explanation):
 {
@@ -138,8 +158,8 @@ Return ONLY this JSON (no text, no markdown, no explanation):
 Rules:
 - All numeric fields MUST be numbers, not strings
 - Never return null for calories
-- If unsure, make a reasonable estimate
-- confidence: "high" for known products, "medium" for recipes, "low" for guesses`,
+- confidence: "high" ONLY for very certain known products, "medium" for estimates
+- If unsure, use conservative (lower) estimate`,
           },
         ],
         max_tokens: 500,

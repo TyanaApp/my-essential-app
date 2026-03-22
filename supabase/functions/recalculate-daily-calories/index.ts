@@ -60,15 +60,36 @@ serve(async (req) => {
       ? mealData.reduce((s, m) => s + (m.total_calories || 0), 0) / 7
       : 0;
 
+    // Adjusted weight calculation for overweight users (Devine formula)
+    const calculateAdjustedWeight = (actualWeight: number, heightCm: number, genderVal: string) => {
+      let idealWeight: number;
+      if (genderVal === 'male') {
+        idealWeight = 50 + 2.3 * ((heightCm - 152.4) / 2.54);
+      } else {
+        idealWeight = 45.5 + 2.3 * ((heightCm - 152.4) / 2.54);
+      }
+      if (actualWeight > idealWeight * 1.2) {
+        return Math.round(idealWeight + 0.25 * (actualWeight - idealWeight));
+      }
+      return actualWeight;
+    };
+
     // BMR (Mifflin-St Jeor)
     const weight = Number(goals.weight_kg);
     const height = Number(goals.height_cm);
     const age = Number(goals.age);
     const gender = profile?.gender || "female";
+    const userGoals: string[] = goals.goals || [];
+    const isWeightLoss = userGoals.includes("lose_weight") || userGoals.includes("lose");
+
+    // Use adjusted weight ONLY for weight loss goal
+    const weightForCalc = isWeightLoss
+      ? calculateAdjustedWeight(weight, height, gender)
+      : weight;
 
     const BMR = gender === "male"
-      ? 10 * weight + 6.25 * height - 5 * age + 5
-      : 10 * weight + 6.25 * height - 5 * age - 161;
+      ? 10 * weightForCalc + 6.25 * height - 5 * age + 5
+      : 10 * weightForCalc + 6.25 * height - 5 * age - 161;
 
     const activityMultiplier: Record<string, number> = {
       low: 1.2, normal: 1.375, moderate: 1.375, active: 1.55, very_active: 1.725,
@@ -79,16 +100,14 @@ serve(async (req) => {
     // Deficit/surplus based on goal
     const deficitMap: Record<string, number> = { slow: -250, moderate: -500, fast: -750, intense: -1000 };
     const surplusMap: Record<string, number> = { slow: 150, moderate: 200, active: 300 };
-    const userGoals: string[] = goals.goals || [];
     let baseTarget = TDEE;
-    if (userGoals.includes("lose_weight") || userGoals.includes("lose")) {
+    if (isWeightLoss) {
       const speed = (goals as any).weight_loss_speed || "moderate";
       baseTarget = TDEE + (deficitMap[speed] || -500);
     }
     if (userGoals.includes("build_muscle") || userGoals.includes("gain")) {
       const gainSpeed = (goals as any).muscle_gain_speed || "moderate";
       let surplus = surplusMap[gainSpeed] || 200;
-      // Safety cap
       const actLevel = goals.activity_level || "moderate";
       if (actLevel === "very_active") surplus = Math.min(surplus, 400);
       surplus = Math.min(surplus, 500);
@@ -98,6 +117,11 @@ serve(async (req) => {
     // Safety minimums
     const minCal = gender === "male" ? 1500 : 1200;
     baseTarget = Math.max(baseTarget, minCal);
+
+    // Hard cap for weight loss: never above 2000 regardless of size
+    if (isWeightLoss) {
+      baseTarget = Math.min(baseTarget, 2000);
+    }
 
     // Adaptive adjustment based on last 7 days
     let adjustment = 0;
