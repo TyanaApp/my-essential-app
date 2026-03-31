@@ -86,9 +86,9 @@ const TrialExpiredModal: React.FC<TrialExpiredModalProps> = ({
             className="w-full font-semibold text-white"
             style={{ backgroundColor: '#7C3AED' }}
             disabled={!!processing}
-          >
-            {(processing === 'pro_founding' || processing === 'pro_regular') && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-            🚀 {isFoundingMember ? t.proFounding : t.proRegular}
+           >
+             {(processing === 'pro_founding' || processing === 'pro_regular') && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+             🚀 {t.proLabel} — {isFoundingMember ? '€6.49' : '€12.99'}{t.perMonth}
           </Button>
           <Button
             onClick={() => handleCheckout('lite')}
