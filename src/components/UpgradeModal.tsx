@@ -200,6 +200,9 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
   const isOnFree = !isOnPro && !isOnLite;
 
   // Determine button for each plan card
+  const proPrice = isFoundingMember ? '€6.49' : '€12.99';
+  const proPriceLabel = `${proPrice}${t.perMonth}`;
+
   const getPlanButton = (planKey: string) => {
     if (planKey === 'free') {
       if (isOnFree && !isOnTrial) {
@@ -226,14 +229,11 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ open, onOpenChange }) => {
         return { text: t.currentPlan, disabled: true, style: 'gray' as const };
       }
       if (isOnTrial) {
-        // User is ON trial — show subscribe button, NOT trial button
-        return { text: t.getProSubscribe, disabled: false, style: 'violet' as const };
+        return { text: `🚀 ${t.subscribe} Pro — ${proPriceLabel}`, disabled: false, style: 'violet' as const };
       }
       if (trialUsed) {
-        // Trial already used — no free trial option
-        return { text: t.getPro, disabled: false, style: 'violet' as const };
+        return { text: `🚀 Pro — ${proPriceLabel}`, disabled: false, style: 'violet' as const };
       }
-      // Free user, trial NOT used — show trial offer
       return { text: t.tryPro7, disabled: false, style: 'violet' as const };
     }
     return { text: t.subscribe, disabled: false, style: 'violet' as const };
