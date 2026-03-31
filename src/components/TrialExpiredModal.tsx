@@ -12,8 +12,8 @@ const T = {
     desc: 'We hope TYANA helped you these 7 days! Your data is safe. Choose a plan to continue at full power.',
     free: 'Free — €0',
     lite: 'Lite — €5.99/mo',
-    proFounding: 'Pro — €6.49/mo',
-    proRegular: 'Pro — €12.99/mo',
+    proLabel: 'Pro',
+    perMonth: '/mo',
     continueWithFree: 'Continue with Free',
   },
   ru: {
@@ -21,8 +21,8 @@ const T = {
     desc: 'Надеемся TYANA помогла тебе эти 7 дней! Твои данные в безопасности. Выбери план чтобы продолжить в полную силу.',
     free: 'Free — €0',
     lite: 'Lite — €5.99/мес',
-    proFounding: 'Pro — €6.49/мес',
-    proRegular: 'Pro — €12.99/мес',
+    proLabel: 'Pro',
+    perMonth: '/мес',
     continueWithFree: 'Продолжить с Free',
   },
   lv: {
@@ -30,8 +30,8 @@ const T = {
     desc: 'Ceram, ka TYANA jums palīdzēja šajās 7 dienās! Jūsu dati ir drošībā. Izvēlieties plānu, lai turpinātu pilnā apjomā.',
     free: 'Free — €0',
     lite: 'Lite — €5.99/mēn',
-    proFounding: 'Pro — €6.49/mēn',
-    proRegular: 'Pro — €12.99/mēn',
+    proLabel: 'Pro',
+    perMonth: '/mēn',
     continueWithFree: 'Turpināt ar Free',
   },
   uk: {
@@ -39,8 +39,8 @@ const T = {
     desc: 'Сподіваємось TYANA допомогла тобі ці 7 днів! Твої дані в безпеці. Обери план щоб продовжити на повну.',
     free: 'Free — €0',
     lite: 'Lite — €5.99/міс',
-    proFounding: 'Pro — €6.49/міс',
-    proRegular: 'Pro — €12.99/міс',
+    proLabel: 'Pro',
+    perMonth: '/міс',
     continueWithFree: 'Продовжити з Free',
   },
 };
