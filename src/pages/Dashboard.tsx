@@ -1128,7 +1128,7 @@ const Dashboard = () => {
           </div>
           {showCurrencyPicker && (
             <div className="flex flex-wrap gap-1 mt-2">
-              {['EUR', 'USD', 'GBP', 'PLN', 'UAH', 'RUB'].map(code => (
+              {['EUR', 'USD', 'GBP', 'PLN', 'UAH'].map(code => (
                 <button
                   key={code}
                   onClick={() => saveCurrency(code)}

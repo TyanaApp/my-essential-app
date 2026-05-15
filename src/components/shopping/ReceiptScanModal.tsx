@@ -46,7 +46,7 @@ const CURRENCY_OPTIONS = [
   { code: 'EUR', symbol: '€', label: '€ EUR' },
   { code: 'USD', symbol: '$', label: '$ USD' },
   { code: 'GBP', symbol: '£', label: '£ GBP' },
-  { code: 'RUB', symbol: '₽', label: '₽ RUB' },
+  
   { code: 'UAH', symbol: '₴', label: '₴ UAH' },
   { code: 'PLN', symbol: 'zł', label: 'zł PLN' },
 ];

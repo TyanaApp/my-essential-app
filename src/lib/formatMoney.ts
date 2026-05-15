@@ -4,7 +4,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   GBP: '£',
   PLN: 'zł',
   UAH: '₴',
-  RUB: '₽',
+  
 };
 
 export const getCurrencySymbol = (currency: string): string => {
