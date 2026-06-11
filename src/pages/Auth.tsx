@@ -15,6 +15,7 @@ import MobileSplashAuth from '@/components/MobileSplashAuth';
 import LegalFooterPill from '@/components/LegalFooterPill';
 import QRInstallModal from '@/components/install/QRInstallModal';
 import { useIsStandalone } from '@/hooks/useStandalone';
+import SeoHead from '@/components/SeoHead';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -158,6 +159,11 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-background">
+      <SeoHead
+        title="Sign in or create your TYANA account"
+        description="Sign in to TYANA or create a free account. Start your 7-day Pro trial — no credit card required."
+        path="/auth"
+      />
       <button
         onClick={() => navigate('/')}
         className="absolute top-6 left-6 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
