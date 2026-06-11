@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 import TyanaLogo from '@/components/TyanaLogo';
+import SeoHead from '@/components/SeoHead';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-10">
@@ -98,6 +99,11 @@ const CookiesPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead
+        title="Cookie Policy — TYANA"
+        description="Which cookies and tracking technologies TYANA uses, why we use them, and how to control them in your browser."
+        path="/cookies"
+      />
       <div className="max-w-[680px] mx-auto px-6 py-12">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 text-sm mb-8 hover:opacity-70 transition-opacity" style={{ color: '#6B7280' }}>
           <ArrowLeft className="w-4 h-4" />{t.common.back}
@@ -105,7 +111,7 @@ const CookiesPage = () => {
 
         <div className="text-center mb-12">
           <TyanaLogo size="lg" className="mx-auto mb-2" />
-          <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
+          <h1 className="text-2xl font-bold text-foreground">{c.title}</h1>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>
 

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import TyanaLogo from '@/components/TyanaLogo';
 import LanguageSelector from '@/components/LanguageSelector';
+import SeoHead from '@/components/SeoHead';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -113,6 +114,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F3FF' }}>
+      <SeoHead
+        title="TYANA — Personal AI Nutritionist · Photo-based meal tracking"
+        description="Take a photo of your meal — TYANA explains what's happening in your body, what's missing, and what to eat next. No calorie counting. Free 7-day Pro trial."
+        path="/"
+      />
       {/* HEADER */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'backdrop-blur-xl border-b' : ''}`}
@@ -158,6 +164,7 @@ const Index = () => {
       </header>
 
       {/* HERO */}
+      <main>
       <section className="min-h-screen flex items-center pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -562,6 +569,8 @@ const Index = () => {
           </p>
         </div>
       </section>
+
+      </main>
 
       {/* FOOTER */}
       <footer className="py-12 px-6 border-t" style={{ borderColor: '#EDE9FE' }}>

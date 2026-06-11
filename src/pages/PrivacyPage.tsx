@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/hooks/useTranslation';
 import TyanaLogo from '@/components/TyanaLogo';
+import SeoHead from '@/components/SeoHead';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-10">
@@ -284,6 +285,11 @@ const PrivacyPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead
+        title="Privacy Policy — TYANA"
+        description="How TYANA collects, stores, and protects your personal and nutrition data. GDPR compliant. Your data is yours."
+        path="/privacy"
+      />
       <div className="max-w-[680px] mx-auto px-6 py-12">
         <button
           onClick={() => navigate(-1)}
@@ -296,7 +302,7 @@ const PrivacyPage = () => {
 
         <div className="text-center mb-12">
           <TyanaLogo size="lg" className="mx-auto mb-2" />
-          <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
+          <h1 className="text-2xl font-bold text-foreground">{c.title}</h1>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>
 
