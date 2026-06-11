@@ -285,6 +285,11 @@ const PrivacyPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead
+        title="Privacy Policy — TYANA"
+        description="How TYANA collects, stores, and protects your personal and nutrition data. GDPR compliant. Your data is yours."
+        path="/privacy"
+      />
       <div className="max-w-[680px] mx-auto px-6 py-12">
         <button
           onClick={() => navigate(-1)}
