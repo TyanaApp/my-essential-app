@@ -296,7 +296,7 @@ const PrivacyPage = () => {
 
         <div className="text-center mb-12">
           <TyanaLogo size="lg" className="mx-auto mb-2" />
-          <h2 className="text-2xl font-bold text-foreground">{c.title}</h2>
+          <h1 className="text-2xl font-bold text-foreground">{c.title}</h1>
           <p className="text-sm mt-2" style={{ color: '#9CA3AF' }}>{c.lastUpdated}</p>
         </div>
 

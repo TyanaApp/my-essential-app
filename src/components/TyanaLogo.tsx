@@ -19,7 +19,7 @@ const TyanaLogo = ({ size = 'md', variant = 'gradient', className = '' }: TyanaL
       <div className={`${sizeMap[size]} ${className}`} style={{ display: 'inline-block' }}>
         <img
           src={tyanaLogoText}
-          alt="TYANA"
+          alt="TYANA — Personal AI Nutritionist"
           className={`${sizeMap[size]} w-auto object-contain`}
           style={{
             filter: 'brightness(0) invert(1)',
@@ -47,7 +47,7 @@ const TyanaLogo = ({ size = 'md', variant = 'gradient', className = '' }: TyanaL
     >
       <img
         src={tyanaLogoText}
-        alt="TYANA"
+        alt="TYANA — Personal AI Nutritionist"
         className={`${sizeMap[size]} w-auto object-contain`}
         style={{ visibility: 'hidden' }}
       />

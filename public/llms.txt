@@ -1,0 +1,13 @@
+# TYANA
+
+> Personal AI nutritionist. Take a photo of any meal and TYANA explains what's happening in your body, what's missing, and what to eat next — no calorie counting, no manual logging.
+
+TYANA is a multilingual nutrition PWA (English, Russian, Latvian, Ukrainian) that combines AI photo recognition with deep nutrition analysis. It tracks calories, macros, and key micronutrients (iron, B12, magnesium), explains energy crashes and patterns, and gives one personal daily tip. Free plan available; Pro unlocks unlimited photo logging, weekly patterns, and Apple Watch sync.
+
+## Pages
+
+- [Home](/): Product overview, how it works, features, pricing, and FAQ.
+- [Sign in / Sign up](/auth): Create a free account or sign in.
+- [Privacy Policy](/privacy): How TYANA collects, stores, and protects your data (GDPR).
+- [Terms of Service](/terms): Subscription terms, acceptable use, and account rules.
+- [Cookie Policy](/cookies): Cookies and tracking technologies used by TYANA.
