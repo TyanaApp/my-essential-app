@@ -11,21 +11,16 @@ serve(async (req) => {
 
   try {
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
-    }
+    const { requirePaidPlan } = await import("../_shared/plan-check.ts");
+    const planCheck = await requirePaidPlan(req, { cors: corsHeaders });
+    if (!planCheck.ok) return planCheck.response;
+    const userId = planCheck.userId;
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
+      { global: { headers: { Authorization: authHeader! } } }
     );
-
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(authHeader.replace("Bearer ", ""));
-    if (claimsError || !claimsData?.claims) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: corsHeaders });
-    }
-    const userId = claimsData.claims.sub;
 
     const { language } = await req.json();
 
