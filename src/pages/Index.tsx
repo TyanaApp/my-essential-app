@@ -219,71 +219,27 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Phone mockup */}
+          {/* Hero video */}
           <motion.div
-            className="flex justify-center"
+            className="flex justify-center items-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <motion.div
-              className="relative rounded-[2.5rem] p-3 w-[280px] md:w-[320px]"
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              src={heroVideo.url}
               style={{
-                background: 'linear-gradient(180deg, #1E1B4B 0%, #312E81 100%)',
-                boxShadow: '0 20px 60px rgba(124,58,237,0.25)',
+                borderRadius: '24px',
+                boxShadow: '0 20px 60px rgba(109, 40, 217, 0.15)',
+                maxWidth: '480px',
+                width: '100%',
+                objectFit: 'cover',
               }}
-              animate={{ y: [-8, 0, -8] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <div className="bg-white rounded-[2rem] overflow-hidden">
-                {/* Notch */}
-                <div className="flex justify-center pt-2">
-                  <div className="w-20 h-5 rounded-full" style={{ backgroundColor: '#1E1B4B' }} />
-                </div>
-
-                <div className="p-4 space-y-3">
-                  {/* Meal photo */}
-                  <div
-                    className="relative w-full aspect-[4/3] rounded-2xl flex items-center justify-center text-6xl overflow-hidden"
-                    style={{
-                      background: 'linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%)',
-                    }}
-                  >
-                    🍝
-                    <div
-                      className="absolute bottom-2 left-2 right-2 backdrop-blur-md rounded-lg px-2 py-1 flex items-center justify-between text-[10px] font-semibold"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.85)', color: '#1E1B4B' }}
-                    >
-                      <span>📸 Analyzing…</span>
-                      <span style={{ color: '#7C3AED' }}>3s</span>
-                    </div>
-                  </div>
-
-                  {/* Insight card */}
-                  <div
-                    className="rounded-2xl p-3"
-                    style={{ backgroundColor: '#F5F3FF', border: '1px solid #EDE9FE' }}
-                  >
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <span className="text-base">💡</span>
-                      <span className="text-[10px] font-bold tracking-wider uppercase" style={{ color: '#7C3AED' }}>
-                        Today's insight
-                      </span>
-                    </div>
-                    <p className="text-[12px] leading-snug font-medium" style={{ color: '#1E1B4B' }}>
-                      High carbs, low protein. This explains the energy crash at 3pm. Add eggs or Greek yogurt to your next meal.
-                    </p>
-                  </div>
-
-                  {/* Bottom bar */}
-                  <div className="flex items-center justify-around pt-1 pb-1">
-                    {['🏠', '📷', '📊', '⚙️'].map((e, i) => (
-                      <div key={i} className="text-base opacity-60">{e}</div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            />
           </motion.div>
         </div>
       </section>
