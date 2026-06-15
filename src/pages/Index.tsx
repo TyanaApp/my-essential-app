@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import TyanaLogo from '@/components/TyanaLogo';
 import LanguageSelector from '@/components/LanguageSelector';
 import SeoHead from '@/components/SeoHead';
+import heroVideo from '@/assets/tyana-hero-video.mp4.asset.json';
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
